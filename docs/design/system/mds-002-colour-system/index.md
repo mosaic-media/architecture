@@ -2,7 +2,7 @@
 File: docs/design/system/mds-002-colour-system/index.md
 Document: MDS-002
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MDS-002 — Colour System
@@ -13,7 +13,7 @@ Version: 0.2
 
 # Purpose
 
-MDS-001 established how design intent becomes machine-readable through the Design Token Architecture.
+[MDS-001](../mds-001-design-token-architecture/index.md) established how design intent becomes machine-readable through the Design Token Architecture.
 
 MDS-002 defines how colour expresses that intent.
 
@@ -39,43 +39,30 @@ The result is a colour system that is:
 
 # Relationship to Previous Specifications
 
-```
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Principles"]
+N3["Mental Model"]
+N4["Interaction"]
+N5["Composition"]
+N6["Design Tokens"]
+N7["Colour System"]
+N8["Material System"]
+N9["Components"]
 
-Principles
-
-↓
-
-Mental Model
-
-↓
-
-Interaction
-
-↓
-
-Composition
-
-↓
-
-Design Tokens
-
-↓
-
-Colour System
-
-↓
-
-Material System
-
-↓
-
-Components
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
-The Colour System implements the semantic architecture established by MDS-001.
+The Colour System implements the semantic architecture established by [MDS-001](../mds-001-design-token-architecture/index.md).
 
 It never replaces it.
 
@@ -140,16 +127,15 @@ If colour ever becomes the primary source of understanding, accessibility has al
 
 The Mosaic Colour System separates colour into three independent systems.
 
-```
-Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Brand"]
+N2["Semantic"]
+N3["Atmosphere"]
 
-Semantic
-
-↓
-
-Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Each system exists for one purpose.
@@ -176,6 +162,7 @@ without discussing implementation.
 # Repository Structure
 
 ```
+
 design/
 
 └── mds/
@@ -212,9 +199,9 @@ design/
 
         13-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -223,28 +210,12 @@ design/
 
 Required reading:
 
-- MDL-001 → MDL-005
-- MDS-001 Design Token Architecture
+- [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
 
 Downstream specifications:
 
-- MDS-003 Material System
-- MDS-005 Motion System
-- MDS-006 Composition Engine
-- MDS-008 Component Library
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Design Systems Architect
-
-**Next File**
-
-`00-document-control.md`
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)

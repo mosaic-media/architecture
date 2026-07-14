@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 08
 Title: Accessibility
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Accessibility
@@ -56,20 +56,17 @@ It should not destroy comprehension.
 
 One of the defining priorities of the Mosaic Colour System is:
 
-```text
-Accessibility
+```mermaid
+flowchart TD
 
-↓
+N1["Accessibility"]
+N2["Semantic Meaning"]
+N3["Brand"]
+N4["Atmosphere"]
 
-Semantic Meaning
-
-↓
-
-Brand
-
-↓
-
-Atmosphere
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 If Runtime Atmosphere reduces accessibility...
@@ -90,12 +87,13 @@ Example.
 
 Correct.
 
-```text
-Text.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Text.Primary"]
+N2["Higher Contrast"]
 
-Higher Contrast
+N1 --> N2
 ```
 
 Incorrect.
@@ -137,12 +135,13 @@ Examples include:
 
 Instead of:
 
-```
-Green
+```mermaid
+flowchart TD
 
-↓
+N1["Green"]
+N2["Success"]
 
-Success
+N1 --> N2
 ```
 
 Use:
@@ -161,6 +160,7 @@ Together.
 Instead of:
 
 ```
+
 Blue Border
 ```
 
@@ -180,6 +180,7 @@ Together.
 Instead of:
 
 ```
+
 Highlighted Colour
 ```
 
@@ -260,20 +261,17 @@ Motion should reinforce colour rather than compensate for it.
 
 Example.
 
-```
-Status
+```mermaid
+flowchart TD
 
-↓
+N1["Status"]
+N2["Colour"]
+N3["Icon"]
+N4["Subtle Motion"]
 
-Colour
-
-+
-
-Icon
-
-+
-
-Subtle Motion
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 No single mechanism should communicate understanding independently.
@@ -328,12 +326,13 @@ Future accessibility modes may intentionally reduce colour.
 
 Example.
 
-```text
-Runtime Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Atmosphere"]
+N2["Minimal"]
 
-Minimal
+N1 --> N2
 ```
 
 The Composition should remain immediately understandable.
@@ -495,15 +494,3 @@ regardless of:
 - accessibility preferences
 
 The Colour System succeeds when colour becomes a powerful enhancement to understanding rather than a requirement for it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-colour-resolution.md`

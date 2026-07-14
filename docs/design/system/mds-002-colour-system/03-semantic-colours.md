@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 03
 Title: Semantic Colours
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Semantic Colours
@@ -95,20 +95,17 @@ Implementation evolves.
 
 The Colour System intentionally follows the same philosophy as the Token Architecture.
 
-```
-Meaning
+```mermaid
+flowchart TD
 
-↓
+N1["Meaning"]
+N2["Semantic Colour"]
+N3["Primitive Colour"]
+N4["Rendered Colour"]
 
-Semantic Colour
-
-↓
-
-Primitive Colour
-
-↓
-
-Rendered Colour
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Colour should always be the final consequence.
@@ -121,30 +118,33 @@ Never the starting point.
 
 The Mosaic Colour System currently defines the following semantic groups.
 
-```text
-Semantic
+```mermaid
+flowchart TD
 
-├── Surface
+N1["Semantic"]
+N2["Surface"]
+N3["Text"]
+N4["Border"]
+N5["Icon"]
+N6["Action"]
+N7["Status"]
+N8["Focus"]
+N9["Selection"]
+N10["Playback"]
+N11["Navigation"]
+N12["Atmosphere"]
 
-├── Text
-
-├── Border
-
-├── Icon
-
-├── Action
-
-├── Status
-
-├── Focus
-
-├── Selection
-
-├── Playback
-
-├── Navigation
-
-└── Atmosphere
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
+N1 --> N10
+N1 --> N11
+N1 --> N12
 ```
 
 Every category answers a different question.
@@ -160,6 +160,7 @@ Communicate structural hierarchy.
 Examples.
 
 ```
+
 Surface.Canvas
 
 Surface.Primary
@@ -192,6 +193,7 @@ Communicate reading hierarchy.
 Examples.
 
 ```
+
 Text.Primary
 
 Text.Secondary
@@ -218,6 +220,7 @@ Communicate separation.
 Examples.
 
 ```
+
 Border.Subtle
 
 Border.Strong
@@ -240,6 +243,7 @@ Communicate symbolic hierarchy.
 Examples.
 
 ```
+
 Icon.Primary
 
 Icon.Secondary
@@ -262,6 +266,7 @@ Communicate interaction.
 Examples.
 
 ```
+
 Action.Primary
 
 Action.Secondary
@@ -286,6 +291,7 @@ Communicate state.
 Examples.
 
 ```
+
 Status.Success
 
 Status.Warning
@@ -318,6 +324,7 @@ Communicate current attention.
 Examples.
 
 ```
+
 Focus.Primary
 
 Focus.Secondary
@@ -340,6 +347,7 @@ Communicate user ownership.
 Examples.
 
 ```
+
 Selection.Active
 
 Selection.Hover
@@ -362,6 +370,7 @@ Communicate media consumption.
 Examples.
 
 ```
+
 Playback.Progress
 
 Playback.Current
@@ -384,6 +393,7 @@ Communicate orientation.
 Examples.
 
 ```
+
 Navigation.Active
 
 Navigation.Inactive
@@ -404,37 +414,41 @@ Semantic Colour names should remain stable for many years.
 Example.
 
 ```
+
 Surface.Hero
 ```
 
 may resolve to:
 
-```
-Dark Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Dark Theme"]
+N2["Slate"]
 
-Slate
-```
-
-or
-
-```
-Light Theme
-
-↓
-
-Paper White
+N1 --> N2
 ```
 
 or
 
+```mermaid
+flowchart TD
+
+N1["Light Theme"]
+N2["Paper White"]
+
+N1 --> N2
 ```
-Runtime Atmosphere
 
-↓
+or
 
-Artwork Acrylic
+```mermaid
+flowchart TD
+
+N1["Runtime Atmosphere"]
+N2["Artwork Acrylic"]
+
+N1 --> N2
 ```
 
 The semantic role remains identical.
@@ -447,12 +461,13 @@ Semantic Colours inherit from Primitive Colours.
 
 Example.
 
-```
-Surface.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Hero"]
+N2["Primitive.Surface.Dark"]
 
-Primitive.Surface.Dark
+N1 --> N2
 ```
 
 The consuming component should never know which Primitive Colour was selected.
@@ -466,12 +481,14 @@ Meaning remains separated from implementation.
 Incorrect.
 
 ```
+
 Brand.Cyan.Primary
 ```
 
 Correct.
 
 ```
+
 Action.Primary
 ```
 
@@ -489,16 +506,15 @@ Semantic Colours participate in Runtime Resolution.
 
 Example.
 
-```
-Surface.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Hero"]
+N2["Runtime.Atmosphere"]
+N3["Resolved Colour"]
 
-Runtime.Atmosphere
-
-↓
-
-Resolved Colour
+N1 --> N2
+N2 --> N3
 ```
 
 The semantic meaning remains stable.
@@ -515,12 +531,13 @@ Accessibility should never require introducing new semantic concepts.
 
 Instead.
 
-```
-Text.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Text.Primary"]
+N2["Higher Contrast"]
 
-Higher Contrast
+N1 --> N2
 ```
 
 The token remains identical.
@@ -531,28 +548,31 @@ Accessibility simply changes its implementation.
 
 # Good Examples
 
-```
-Surface.Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Canvas"]
+N2["Neutral Background"]
 
-Neutral Background
-```
-
-```
-Action.Primary
-
-↓
-
-Current Brand Accent
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Action.Primary"]
+N2["Current Brand Accent"]
+
+N1 --> N2
 ```
-Playback.Progress
 
-↓
+```mermaid
+flowchart TD
 
-Artwork-Aware Highlight
+N1["Playback.Progress"]
+N2["Artwork-Aware Highlight"]
+
+N1 --> N2
 ```
 
 Each token communicates intent.
@@ -566,6 +586,7 @@ Implementation remains independent.
 ## Colour Names
 
 ```
+
 Blue.Primary
 
 Green.Success
@@ -578,6 +599,7 @@ Meaning depends upon colour.
 ## Component Colours
 
 ```
+
 Button.Blue
 ```
 
@@ -588,6 +610,7 @@ Meaning depends upon implementation.
 ## Brand Leakage
 
 ```
+
 Netflix.Red
 ```
 
@@ -598,6 +621,7 @@ Semantic architecture has become product-specific.
 ## Decorative Semantics
 
 ```
+
 Pretty.Gradient
 ```
 
@@ -655,15 +679,3 @@ They ensure that:
 Every future implementation should therefore consume Semantic Colour roles rather than physical colour values.
 
 That separation allows Mosaic to evolve for years without losing its visual language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-runtime-atmosphere.md`

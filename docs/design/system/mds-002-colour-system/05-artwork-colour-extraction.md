@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 05
 Title: Artwork Colour Extraction
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Artwork Colour Extraction
@@ -73,28 +73,21 @@ It does not control.
 
 The Colour System therefore follows this pipeline.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Visual Analysis"]
+N3["Atmosphere Model"]
+N4["Runtime Atmosphere"]
+N5["Materials"]
+N6["Presentation"]
 
-Visual Analysis
-
-↓
-
-Atmosphere Model
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Materials
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Notice that Semantic Colours are intentionally absent.
@@ -118,6 +111,7 @@ A movie poster containing:
 might incorrectly produce:
 
 ```
+
 Bright Red Interface
 ```
 
@@ -205,22 +199,21 @@ The extraction system should produce a constrained palette.
 
 Conceptually.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Analysis"]
+N3["Primary Atmosphere"]
+N4["Secondary Atmosphere"]
+N5["Accent Reflection"]
+N6["Neutral Balance"]
 
-Analysis
-
-↓
-
-Primary Atmosphere
-
-Secondary Atmosphere
-
-Accent Reflection
-
-Neutral Balance
+N1 --> N2
+N2 --> N3
+N2 --> N4
+N2 --> N5
+N2 --> N6
 ```
 
 Future specifications define the exact algorithms.
@@ -237,34 +230,30 @@ Not a paint bucket.
 
 Poor.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Sample Colour"]
+N3["Interface"]
 
-Sample Colour
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Ambient Light"]
+N3["Reflection"]
+N4["Materials"]
 
-Ambient Light
-
-↓
-
-Reflection
-
-↓
-
-Materials
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This distinction gives Mosaic its distinctive visual identity.
@@ -301,28 +290,31 @@ The Hero Artwork receives the greatest influence.
 
 Examples.
 
-```
-Current Film
+```mermaid
+flowchart TD
 
-↓
+N1["Current Film"]
+N2["Hero Atmosphere"]
 
-Hero Atmosphere
-```
-
-```
-Current Book
-
-↓
-
-Hero Reflection
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Current Book"]
+N2["Hero Reflection"]
+
+N1 --> N2
 ```
-Current Album
 
-↓
+```mermaid
+flowchart TD
 
-Hero Glow
+N1["Current Album"]
+N2["Hero Glow"]
+
+N1 --> N2
 ```
 
 Peripheral artwork should contribute significantly less.
@@ -360,30 +352,28 @@ Atmosphere should therefore evolve.
 
 Preferred.
 
-```text
-Old Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Old Atmosphere"]
+N2["Blend"]
+N3["New Atmosphere"]
 
-Blend
-
-↓
-
-New Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Old Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Old Atmosphere"]
+N2["Instant Replacement"]
+N3["New Atmosphere"]
 
-Instant Replacement
-
-↓
-
-New Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Blending preserves continuity.
@@ -444,22 +434,24 @@ Example.
 
 Anime Module.
 
-```
-Poster
+```mermaid
+flowchart TD
 
-↓
+N1["Poster"]
+N2["Artwork"]
 
-Artwork
+N1 --> N2
 ```
 
 Platform.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
 
-Atmosphere
+N1 --> N2
 ```
 
 This preserves one coherent visual language regardless of content source.
@@ -601,15 +593,3 @@ This creates emotional continuity while preserving:
 - compositional clarity
 
 That balance is one of the defining characteristics of the Mosaic visual language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-theme-architecture.md`

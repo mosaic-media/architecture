@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 02
 Title: Brand Colours
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Brand Colours
@@ -65,16 +65,15 @@ Not compete with it.
 
 The Brand Palette consists of three conceptual layers.
 
-```text
-Core Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Core Brand"]
+N2["Supporting Brand"]
+N3["Accent Brand"]
 
-Supporting Brand
-
-↓
-
-Accent Brand
+N1 --> N2
+N2 --> N3
 ```
 
 Each layer performs one responsibility.
@@ -150,22 +149,24 @@ Example.
 
 Instead of:
 
-```
-Entire Interface
+```mermaid
+flowchart TD
 
-↓
+N1["Entire Interface"]
+N2["Brand Cyan"]
 
-Brand Cyan
+N1 --> N2
 ```
 
 Prefer:
 
-```
-Neutral Interface
+```mermaid
+flowchart TD
 
-↓
+N1["Neutral Interface"]
+N2["Small Brand Moments"]
 
-Small Brand Moments
+N1 --> N2
 ```
 
 This approach creates two advantages.
@@ -214,17 +215,19 @@ Atmosphere.
 
 Example.
 
-```
-Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Brand"]
+N2["Stable Cyan Identity"]
 
-Stable Cyan Identity
+N1 --> N2
 ```
 
 Artwork.
 
 ```
+
 Warm Orange Sunset
 ```
 
@@ -268,36 +271,35 @@ Future Mosaic products should inherit the same Brand Architecture.
 
 Examples include:
 
-```
-Mosaic Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Mosaic Platform"]
+N2["Cyan"]
 
-Cyan
-```
-
-```
-Mosaic Docs
-
-↓
-
-Different Supporting Palette
-
-↓
-
-Shared Brand Identity
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Mosaic Docs"]
+N2["Different Supporting Palette"]
+N3["Shared Brand Identity"]
+
+N1 --> N2
+N2 --> N3
 ```
-Mosaic SDK
 
-↓
+```mermaid
+flowchart TD
 
-Different Supporting Palette
+N1["Mosaic SDK"]
+N2["Different Supporting Palette"]
+N3["Shared Core Brand"]
 
-↓
-
-Shared Core Brand
+N1 --> N2
+N2 --> N3
 ```
 
 Subsystems may evolve their own secondary palettes while remaining unmistakably part of the Mosaic ecosystem.
@@ -334,22 +336,24 @@ Examples.
 
 Allowed.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
 
-Atmosphere
+N1 --> N2
 ```
 
 Not allowed.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Brand.Primary"]
 
-Brand.Primary
+N1 --> N2
 ```
 
 Brand belongs to Mosaic.
@@ -512,15 +516,3 @@ Brand provides identity.
 Artwork provides emotion.
 
 The Colour System exists to ensure those two ideas remain beautifully separate.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-semantic-colours.md`

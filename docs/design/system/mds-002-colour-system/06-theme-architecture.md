@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 06
 Title: Theme Architecture
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Theme Architecture
@@ -74,40 +74,37 @@ Every Theme is an interpretation of the same semantic language.
 
 Example.
 
-```text
-Surface.Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Canvas"]
+N2["Light Theme"]
+N3["Warm Paper"]
 
-Light Theme
-
-↓
-
-Warm Paper
+N1 --> N2
+N2 --> N3
 ```
 
-```text
-Surface.Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Canvas"]
+N2["Dark Theme"]
+N3["Deep Slate"]
 
-Dark Theme
-
-↓
-
-Deep Slate
+N1 --> N2
+N2 --> N3
 ```
 
-```text
-Surface.Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Canvas"]
+N2["OLED Theme"]
+N3["Pure Black"]
 
-OLED Theme
-
-↓
-
-Pure Black
+N1 --> N2
+N2 --> N3
 ```
 
 The semantic meaning remains unchanged.
@@ -120,24 +117,19 @@ Only the visual interpretation differs.
 
 Every Theme is constructed from the same conceptual layers.
 
-```text
-Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Brand"]
+N2["Semantic Colours"]
+N3["Runtime Atmosphere"]
+N4["Accessibility"]
+N5["Resolved Theme"]
 
-Semantic Colours
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Accessibility
-
-↓
-
-Resolved Theme
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer contributes one responsibility.
@@ -173,12 +165,14 @@ These responsibilities belong elsewhere within MDL and MDS.
 The Colour System currently defines two foundational themes.
 
 ```
+
 Light
 ```
 
 and
 
 ```
+
 Dark
 ```
 
@@ -194,28 +188,31 @@ Future implementations may introduce derived themes.
 
 Examples include:
 
-```
-Dark
+```mermaid
+flowchart TD
 
-↓
+N1["Dark"]
+N2["OLED"]
 
-OLED
-```
-
-```
-Dark
-
-↓
-
-Cinema
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Dark"]
+N2["Cinema"]
+
+N1 --> N2
 ```
-Light
 
-↓
+```mermaid
+flowchart TD
 
-Paper
+N1["Light"]
+N2["Paper"]
+
+N1 --> N2
 ```
 
 These remain visual interpretations rather than independent design systems.
@@ -228,16 +225,15 @@ Runtime Atmosphere sits above the Theme.
 
 Conceptually.
 
-```text
-Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Theme"]
+N2["Runtime Atmosphere"]
+N3["Presentation"]
 
-Runtime Atmosphere
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 This ordering is intentional.
@@ -271,28 +267,26 @@ Brand Colours should remain recognisable across every Theme.
 
 Examples.
 
+```mermaid
+flowchart TD
+
+N1["Brand.Primary"]
+N2["Light Theme"]
+N3["Adjusted Luminance"]
+
+N1 --> N2
+N2 --> N3
 ```
-Brand.Primary
 
-↓
+```mermaid
+flowchart TD
 
-Light Theme
+N1["Brand.Primary"]
+N2["Dark Theme"]
+N3["Adjusted Contrast"]
 
-↓
-
-Adjusted Luminance
-```
-
-```
-Brand.Primary
-
-↓
-
-Dark Theme
-
-↓
-
-Adjusted Contrast
+N1 --> N2
+N2 --> N3
 ```
 
 The Brand adapts for accessibility.
@@ -307,16 +301,15 @@ Themes inherit from Semantic Tokens.
 
 They do not redefine them.
 
-```text
-Semantic
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic"]
+N2["Theme"]
+N3["Resolved Colour"]
 
-Theme
-
-↓
-
-Resolved Colour
+N1 --> N2
+N2 --> N3
 ```
 
 Applications therefore consume identical Semantic Tokens regardless of the active Theme.
@@ -329,16 +322,15 @@ Accessibility modifies Themes rather than replacing them.
 
 Example.
 
-```
-Dark Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Dark Theme"]
+N2["High Contrast"]
+N3["Resolved Theme"]
 
-High Contrast
-
-↓
-
-Resolved Theme
+N1 --> N2
+N2 --> N3
 ```
 
 This layered approach preserves:
@@ -355,24 +347,19 @@ while improving readability.
 
 Future runtime systems should resolve themes using the following conceptual order.
 
-```text
-Base Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Base Theme"]
+N2["Accessibility"]
+N3["Runtime Atmosphere"]
+N4["Device"]
+N5["Presentation"]
 
-Accessibility
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Device
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 This ordering ensures accessibility always possesses higher authority than atmosphere.
@@ -385,38 +372,32 @@ Theme changes should preserve continuity.
 
 Poor.
 
-```
-Dark
+```mermaid
+flowchart TD
 
-↓
+N1["Dark"]
+N2["Light"]
+N3["Flash"]
+N4["Complete Repaint"]
 
-Light
-
-↓
-
-Flash
-
-↓
-
-Complete Repaint
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Dark
+```mermaid
+flowchart TD
 
-↓
+N1["Dark"]
+N2["Blend"]
+N3["Light"]
+N4["Atmosphere Re-evaluates"]
 
-Blend
-
-↓
-
-Light
-
-↓
-
-Atmosphere Re-evaluates
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Theme transitions should feel calm.
@@ -513,6 +494,7 @@ Hierarchy unchanged.
 ## Theme-Specific Semantics
 
 ```
+
 Dark.Surface.Primary
 ```
 
@@ -603,15 +585,3 @@ while allowing implementation to adapt to:
 The user's World remains constant.
 
 The Theme simply provides the most appropriate visual expression of it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-light-and-dark.md`

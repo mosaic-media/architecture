@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 09
 Title: Colour Resolution
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Colour Resolution
@@ -57,16 +57,15 @@ This creates duplication.
 
 Instead:
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Semantic Colour"]
+N3["Resolved Colour"]
 
-Semantic Colour
-
-↓
-
-Resolved Colour
+N1 --> N2
+N2 --> N3
 ```
 
 All complexity remains inside the Colour System.
@@ -77,32 +76,23 @@ All complexity remains inside the Colour System.
 
 Every colour should follow the same conceptual resolution pipeline.
 
-```text
-Primitive Palette
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive Palette"]
+N2["Semantic Colour"]
+N3["Theme"]
+N4["Accessibility"]
+N5["Runtime Atmosphere"]
+N6["Platform Adaptation"]
+N7["Resolved Colour"]
 
-Semantic Colour
-
-↓
-
-Theme
-
-↓
-
-Accessibility
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Platform Adaptation
-
-↓
-
-Resolved Colour
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Each layer contributes one responsibility.
@@ -115,46 +105,23 @@ No layer duplicates another.
 
 Colour Resolution should always occur in the same order.
 
-```text
-1.
+```mermaid
+flowchart TD
 
-Primitive Colour
+N1["1.<br/>Primitive Colour"]
+N2["2.<br/>Semantic Colour"]
+N3["3.<br/>Theme"]
+N4["4.<br/>Accessibility"]
+N5["5.<br/>Runtime Atmosphere"]
+N6["6.<br/>Device Adaptation"]
+N7["7.<br/>Resolved Output"]
 
-↓
-
-2.
-
-Semantic Colour
-
-↓
-
-3.
-
-Theme
-
-↓
-
-4.
-
-Accessibility
-
-↓
-
-5.
-
-Runtime Atmosphere
-
-↓
-
-6.
-
-Device Adaptation
-
-↓
-
-7.
-
-Resolved Output
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Changing this order weakens architectural consistency.
@@ -167,34 +134,30 @@ Accessibility should always possess higher authority than atmosphere.
 
 Incorrect.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Low Contrast"]
+N3["Unreadable Text"]
 
-Low Contrast
-
-↓
-
-Unreadable Text
+N1 --> N2
+N2 --> N3
 ```
 
 Correct.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Accessibility Validation"]
+N3["Adjusted Atmosphere"]
+N4["Readable Interface"]
 
-Accessibility Validation
-
-↓
-
-Adjusted Atmosphere
-
-↓
-
-Readable Interface
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Immersion should never reduce comprehension.
@@ -205,17 +168,19 @@ Immersion should never reduce comprehension.
 
 One of the most important guarantees of the Colour System is:
 
-```
-Semantic Meaning
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic Meaning"]
+N2["Never Changes"]
 
-Never Changes
+N1 --> N2
 ```
 
 Example.
 
 ```
+
 Surface.Hero
 ```
 
@@ -240,20 +205,17 @@ It never replaces semantic meaning.
 
 Example.
 
-```
-Surface.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Hero"]
+N2["Dark Theme"]
+N3["Artwork Reflection"]
+N4["Resolved Hero Surface"]
 
-Dark Theme
-
-↓
-
-Artwork Reflection
-
-↓
-
-Resolved Hero Surface
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Atmosphere subtly influences the final result.
@@ -291,24 +253,19 @@ Colour Resolution should always produce identical outputs.
 
 Example.
 
-```
-Dark Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Dark Theme"]
+N2["Current Artwork"]
+N3["TV"]
+N4["Reduced Motion Disabled"]
+N5["Resolved Colour"]
 
-Current Artwork
-
-↓
-
-TV
-
-↓
-
-Reduced Motion Disabled
-
-↓
-
-Resolved Colour
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every Mosaic client should produce visually equivalent results.
@@ -326,28 +283,21 @@ Determinism improves:
 
 Conceptually, Colour Resolution evaluates:
 
-```text
-Semantic Colour
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic Colour"]
+N2["Theme"]
+N3["Accessibility"]
+N4["Atmosphere"]
+N5["Display Characteristics"]
+N6["User Preferences"]
 
-Theme
-
-↓
-
-Accessibility
-
-↓
-
-Atmosphere
-
-↓
-
-Display Characteristics
-
-↓
-
-User Preferences
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 These inputs refine implementation.
@@ -362,16 +312,15 @@ Every Semantic Colour should possess a valid fallback.
 
 Example.
 
-```
-Artwork Missing
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Missing"]
+N2["Brand Neutrals"]
+N3["Resolved Surface"]
 
-Brand Neutrals
-
-↓
-
-Resolved Surface
+N1 --> N2
+N2 --> N3
 ```
 
 Components should never receive unresolved colours.
@@ -386,20 +335,17 @@ Resolved colours should remain cacheable.
 
 Example.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
+N3["Resolved Palette"]
+N4["Cache"]
 
-Atmosphere
-
-↓
-
-Resolved Palette
-
-↓
-
-Cache
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The cache should invalidate only when:
@@ -429,30 +375,28 @@ Components should consume only resolved Semantic Colours.
 
 Correct.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Surface.Hero"]
 
-Surface.Hero
+N1 --> N2
 ```
 
 Incorrect.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Determine Theme"]
+N3["Determine Atmosphere"]
+N4["Resolve Colour"]
 
-Determine Theme
-
-↓
-
-Determine Atmosphere
-
-↓
-
-Resolve Colour
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Resolution belongs exclusively to the Colour System.
@@ -482,44 +426,39 @@ without module modification.
 
 # Good Examples
 
-```
-Surface.Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Canvas"]
+N2["Dark Theme"]
+N3["Resolved Neutral Surface"]
 
-Dark Theme
-
-↓
-
-Resolved Neutral Surface
-```
-
-```
-Action.Primary
-
-↓
-
-Brand Accent
-
-↓
-
-Accessibility
-
-↓
-
-Resolved Action Colour
+N1 --> N2
+N2 --> N3
 ```
 
+```mermaid
+flowchart TD
+
+N1["Action.Primary"]
+N2["Brand Accent"]
+N3["Accessibility"]
+N4["Resolved Action Colour"]
+
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
-Surface.Hero
 
-↓
+```mermaid
+flowchart TD
 
-Artwork Reflection
+N1["Surface.Hero"]
+N2["Artwork Reflection"]
+N3["Adaptive Acrylic"]
 
-↓
-
-Adaptive Acrylic
+N1 --> N2
+N2 --> N3
 ```
 
 Each example preserves semantic intent.
@@ -613,15 +552,3 @@ Components should simply ask:
 > **"What does this colour mean?"**
 
 The Colour System answers everything else.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-runtime-synthesis.md`

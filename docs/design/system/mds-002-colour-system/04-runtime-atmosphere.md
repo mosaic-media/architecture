@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 04
 Title: Runtime Atmosphere
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Atmosphere
@@ -79,34 +79,30 @@ Runtime Atmosphere should be thought of as **reflection** rather than **replacem
 
 Incorrect.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Entire Interface"]
+N3["Artwork Colours"]
 
-Entire Interface
-
-↓
-
-Artwork Colours
+N1 --> N2
+N2 --> N3
 ```
 
 Correct.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
+N3["Subtle Reflection"]
+N4["Interface"]
 
-Atmosphere
-
-↓
-
-Subtle Reflection
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The interface should feel illuminated by the artwork.
@@ -127,26 +123,26 @@ Example.
 
 Poor.
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Artwork Colour"]
 
-Artwork Colour
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Environment
+```mermaid
+flowchart TD
 
-↓
+N1["Environment"]
+N2["Artwork Reflection"]
+N3["Components Inherit Atmosphere"]
 
-Artwork Reflection
-
-↓
-
-Components Inherit Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Components should remain semantically stable.
@@ -159,32 +155,23 @@ Atmosphere surrounds them.
 
 Runtime Atmosphere may evaluate:
 
-```text
-Current Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Current Focus"]
+N2["Current Artwork"]
+N3["Dominant Palette"]
+N4["Luminance"]
+N5["Contrast"]
+N6["Theme"]
+N7["Accessibility"]
 
-Current Artwork
-
-↓
-
-Dominant Palette
-
-↓
-
-Luminance
-
-↓
-
-Contrast
-
-↓
-
-Theme
-
-↓
-
-Accessibility
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 These inputs collectively determine the environmental atmosphere.
@@ -200,6 +187,7 @@ Runtime Atmosphere produces conceptual outputs.
 Examples include:
 
 ```
+
 Atmosphere.Primary
 
 Atmosphere.Secondary
@@ -223,32 +211,35 @@ Example.
 
 Browsing.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Subtle Reflection"]
 
-Subtle Reflection
+N1 --> N2
 ```
 
 Playback.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Reduced Reflection"]
 
-Reduced Reflection
+N1 --> N2
 ```
 
 Reading.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Soft Reflection"]
 
-Soft Reflection
+N1 --> N2
 ```
 
 The artwork remains identical.
@@ -265,20 +256,22 @@ Brand and Atmosphere intentionally remain separate.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Brand"]
+N2["Stable Identity"]
+
+N1 --> N2
 ```
-Brand
 
-↓
+```mermaid
+flowchart TD
 
-Stable Identity
-```
+N1["Atmosphere"]
+N2["Adaptive Emotion"]
 
-```
-Atmosphere
-
-↓
-
-Adaptive Emotion
+N1 --> N2
 ```
 
 Artwork should never redefine:
@@ -319,28 +312,31 @@ Atmosphere intensity should vary according to Context.
 
 Examples.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Low Intensity"]
 
-Low Intensity
-```
-
-```
-Browsing
-
-↓
-
-Medium Intensity
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Browsing"]
+N2["Medium Intensity"]
+
+N1 --> N2
 ```
-Hero
 
-↓
+```mermaid
+flowchart TD
 
-Highest Intensity
+N1["Hero"]
+N2["Highest Intensity"]
+
+N1 --> N2
 ```
 
 Atmosphere should never reduce readability.
@@ -353,30 +349,19 @@ Understanding always possesses higher priority than immersion.
 
 Future implementations may divide Atmosphere into conceptual regions.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Primary Reflection<br/>Canvas"]
+N3["Supporting Reflection<br/>Navigation"]
+N4["Minimal Reflection<br/>Overlay"]
+N5["Neutral"]
 
-Primary Reflection
-
-Canvas
-
-↓
-
-Supporting Reflection
-
-Navigation
-
-↓
-
-Minimal Reflection
-
-Overlay
-
-↓
-
-Neutral
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 This regional approach prevents atmosphere from overwhelming the interface.
@@ -411,24 +396,19 @@ The Runtime Atmosphere becomes one of the primary inputs into the Mosaic Refract
 
 Conceptually.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Colour Extraction"]
+N3["Runtime Atmosphere"]
+N4["Material Refraction"]
+N5["Rendered Surface"]
 
-Colour Extraction
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Material Refraction
-
-↓
-
-Rendered Surface
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice that artwork never directly colours interface elements.
@@ -445,30 +425,28 @@ Atmosphere should evolve gradually.
 
 Poor.
 
-```
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Entire Interface Changes"]
 
-Entire Interface Changes
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Atmosphere Blends"]
+N3["Materials Adapt"]
+N4["Composition Continues"]
 
-Atmosphere Blends
-
-↓
-
-Materials Adapt
-
-↓
-
-Composition Continues
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Users should experience atmosphere as environmental change.
@@ -634,15 +612,3 @@ Accessibility remains stable.
 Only the atmosphere evolves.
 
 When successful, users should feel that the interface belongs to their current entertainment without ever feeling that it has stopped being unmistakably Mosaic.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-artwork-colour-extraction.md`

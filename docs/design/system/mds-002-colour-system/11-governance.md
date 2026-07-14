@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 11
 Title: Colour System Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Colour System Governance
@@ -57,6 +57,7 @@ Within Mosaic, colour is treated as architecture rather than decoration.
 Changing:
 
 ```
+
 Surface.Hero
 ```
 
@@ -189,6 +190,7 @@ Semantic Colours represent the public language of the Design System.
 Examples.
 
 ```
+
 Surface.Primary
 
 Text.Secondary
@@ -370,15 +372,3 @@ They simply feel that everything belongs together.
 | ADR-094 | Accessibility always has higher authority than runtime atmosphere. |
 | ADR-095 | Brand identity is independent from entertainment atmosphere. |
 | ADR-096 | Modules consume the Colour System but never redefine it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

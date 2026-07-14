@@ -3,7 +3,7 @@ File: docs/design/system/mds-002-colour-system/00-document-control.md
 Document: MDS-002
 Title: Colour System
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -18,9 +18,9 @@ Version: 0.2
 | Title | Mosaic Design System — Colour System |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Design Systems Architect |
-| Parent Specifications | MDL-001 → MDL-005, MDS-001 |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
+| Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md), [MDS-001](../mds-001-design-token-architecture/index.md) |
 | Repository | `/design/mds/MDS-002 Colour System/` |
 
 ---
@@ -98,16 +98,15 @@ It never introduces new semantic meaning.
 
 The Colour System intentionally separates three independent ideas.
 
-```text
-Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Brand"]
+N2["Meaning"]
+N3["Atmosphere"]
 
-Meaning
-
-↓
-
-Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 This separation is fundamental.
@@ -126,12 +125,12 @@ Each layer performs exactly one responsibility.
 
 Before reading this specification contributors should already understand:
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-001 Design Token Architecture
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
 
 This document assumes the conceptual architecture has already been established.
 
@@ -199,24 +198,3 @@ and
 - the feeling of Mosaic.
 
 They should rarely notice the Colour System consciously.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Dependencies**
-
-- MDL-001 → MDL-005
-- MDS-001 Design Token Architecture
-
-**Supersedes**
-
-None.
-
-**Next File**
-
-`01-colour-philosophy.md`

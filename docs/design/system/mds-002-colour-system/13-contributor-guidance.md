@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -78,30 +78,28 @@ Contributors should never manually tint components to match artwork.
 
 Incorrect.
 
-```text
-Poster
+```mermaid
+flowchart TD
 
-↓
+N1["Poster"]
+N2["Tint Button"]
 
-Tint Button
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Poster
+```mermaid
+flowchart TD
 
-↓
+N1["Poster"]
+N2["Runtime Atmosphere"]
+N3["Material"]
+N4["Button"]
 
-Runtime Atmosphere
-
-↓
-
-Material
-
-↓
-
-Button
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Colour System already understands how atmosphere should propagate.
@@ -162,22 +160,24 @@ Examples.
 
 Poor.
 
-```
-Beautiful
+```mermaid
+flowchart TD
 
-↓
+N1["Beautiful"]
+N2["Unreadable"]
 
-Unreadable
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Readable
+```mermaid
+flowchart TD
 
-↓
+N1["Readable"]
+N2["Beautiful"]
 
-Beautiful
+N1 --> N2
 ```
 
 A visually impressive interface that weakens understanding is considered a design failure.
@@ -192,22 +192,24 @@ Example.
 
 Poor.
 
-```text
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Choose Blue"]
 
-Choose Blue
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Action.Primary"]
 
-Action.Primary
+N1 --> N2
 ```
 
 The Design System owns colour.
@@ -377,15 +379,3 @@ When that question becomes habitual, implementation naturally begins to align wi
 The Colour System then ceases to be a palette.
 
 It becomes a language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

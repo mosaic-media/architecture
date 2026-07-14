@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 10
 Title: Runtime Synthesis
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Synthesis
@@ -53,38 +53,32 @@ It is environmental adaptation.
 
 Traditional design systems generally behave like this.
 
-```text
-Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Theme"]
+N2["Static Colours"]
+N3["Interface"]
 
-Static Colours
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
 ```
 
 Mosaic intentionally behaves differently.
 
-```text
-Semantic Meaning
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic Meaning"]
+N2["Runtime Analysis"]
+N3["Atmosphere"]
+N4["Material Response"]
+N5["Interface"]
 
-Runtime Analysis
-
-↓
-
-Atmosphere
-
-↓
-
-Material Response
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The result is an interface that feels alive without becoming unpredictable.
@@ -95,32 +89,23 @@ The result is an interface that feels alive without becoming unpredictable.
 
 Runtime Synthesis intentionally occurs after semantic resolution.
 
-```text
-Semantic Meaning
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic Meaning"]
+N2["Theme"]
+N3["Accessibility"]
+N4["Artwork Analysis"]
+N5["Atmosphere"]
+N6["Material Response"]
+N7["Presentation"]
 
-Theme
-
-↓
-
-Accessibility
-
-↓
-
-Artwork Analysis
-
-↓
-
-Atmosphere
-
-↓
-
-Material Response
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Meaning is established first.
@@ -135,36 +120,25 @@ Future runtime systems may combine information from multiple sources.
 
 Examples include:
 
-```
-Current Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Current Artwork"]
+N2["Current Focus"]
+N3["Current Context"]
+N4["Time Of Day"]
+N5["Device"]
+N6["Accessibility"]
+N7["Theme"]
+N8["Brand"]
 
-Current Focus
-
-↓
-
-Current Context
-
-↓
-
-Time Of Day
-
-↓
-
-Device
-
-↓
-
-Accessibility
-
-↓
-
-Theme
-
-↓
-
-Brand
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Each contributes part of the final atmosphere.
@@ -204,6 +178,7 @@ Semantic colour meaning should also remain fixed.
 Example.
 
 ```
+
 Action.Primary
 ```
 
@@ -233,24 +208,19 @@ Not direct colour.
 
 Example.
 
-```
-Hero Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Artwork"]
+N2["Palette Analysis"]
+N3["Atmosphere"]
+N4["Reflection"]
+N5["Materials"]
 
-Palette Analysis
-
-↓
-
-Atmosphere
-
-↓
-
-Reflection
-
-↓
-
-Materials
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice that components never receive artwork colours directly.
@@ -265,20 +235,17 @@ Runtime Synthesis intentionally stops at Materials.
 
 Example.
 
-```text
-Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Atmosphere"]
+N2["Acrylic"]
+N3["Refraction"]
+N4["Surface"]
 
-Acrylic
-
-↓
-
-Refraction
-
-↓
-
-Surface
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Material System decides:
@@ -300,30 +267,28 @@ Atmosphere should evolve gradually.
 
 Preferred.
 
-```text
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Palette Blend"]
+N3["Atmosphere Blend"]
+N4["Material Update"]
 
-Palette Blend
-
-↓
-
-Atmosphere Blend
-
-↓
-
-Material Update
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Immediate Colour Replacement"]
 
-Immediate Colour Replacement
+N1 --> N2
 ```
 
 The environment should appear to breathe.
@@ -341,24 +306,28 @@ Example.
 Playback.
 
 ```
+
 Minimal Atmosphere
 ```
 
 Browsing.
 
 ```
+
 Moderate Atmosphere
 ```
 
 Reading.
 
 ```
+
 Warm Quiet Atmosphere
 ```
 
 Administration.
 
 ```
+
 Neutral Environment
 ```
 
@@ -375,6 +344,7 @@ Example.
 Anime.
 
 ```
+
 Artwork Influence
 
 High
@@ -383,6 +353,7 @@ High
 Music.
 
 ```
+
 Artwork Influence
 
 Medium
@@ -391,6 +362,7 @@ Medium
 Administration.
 
 ```
+
 Artwork Influence
 
 Minimal
@@ -426,30 +398,28 @@ If Runtime Synthesis cannot produce an atmosphere:
 
 Preferred.
 
-```text
-Neutral Theme
+```mermaid
+flowchart TD
 
-↓
+N1["Neutral Theme"]
+N2["Brand Identity"]
+N3["Continue"]
 
-Brand Identity
-
-↓
-
-Continue
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-No Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["No Artwork"]
+N2["Broken Colours"]
+N3["Visible Error"]
 
-Broken Colours
-
-↓
-
-Visible Error
+N1 --> N2
+N2 --> N3
 ```
 
 Atmosphere is an enhancement.
@@ -628,15 +598,3 @@ It does not create meaning.
 It creates atmosphere.
 
 By combining stable semantic design with subtle environmental adaptation, Mosaic becomes capable of reflecting the user's entertainment while remaining calm, recognisable and unmistakably itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`

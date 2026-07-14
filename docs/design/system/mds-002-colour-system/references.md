@@ -3,7 +3,7 @@ File: docs/design/system/mds-002-colour-system/references.md
 Document: MDS-002
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -48,7 +48,7 @@ External references provide context.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
 
 Provides:
 
@@ -61,7 +61,7 @@ Every colour decision should ultimately reinforce the experience described withi
 
 ---
 
-## MDL-002 — Principles
+## [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
 
 Provides:
 
@@ -76,7 +76,7 @@ It should never replace them.
 
 ---
 
-## MDL-003 — Mental Model
+## [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
 
 Provides:
 
@@ -89,7 +89,7 @@ Runtime Atmosphere intentionally reflects the user's current World rather than a
 
 ---
 
-## MDL-004 — Interaction Model
+## [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
 
 Provides:
 
@@ -101,7 +101,7 @@ Atmosphere should evolve with interaction rather than behaving like independent 
 
 ---
 
-## MDL-005 — Composition Model
+## [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 Provides:
 
@@ -116,7 +116,7 @@ It should never redefine it.
 
 ---
 
-## MDS-001 — Design Token Architecture
+## [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
 
 Provides:
 
@@ -135,12 +135,12 @@ It should not modify it.
 
 The following specifications depend directly upon MDS-002.
 
-- MDS-003 Material System
-- MDS-004 Typography
-- MDS-005 Motion System
-- MDS-006 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 These specifications consume Semantic Colours and Runtime Atmosphere rather than creating independent colour systems.
 
@@ -158,16 +158,15 @@ Traditional colour theory often merges these responsibilities.
 
 Mosaic deliberately separates them into:
 
-```
-Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Brand"]
+N2["Semantic"]
+N3["Atmosphere"]
 
-Semantic
-
-↓
-
-Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 This separation allows each system to evolve independently.
@@ -215,20 +214,17 @@ Accessibility is considered a first-class architectural concern.
 
 The Colour System intentionally assumes:
 
-```
-Accessibility
+```mermaid
+flowchart TD
 
-↓
+N1["Accessibility"]
+N2["Semantic Meaning"]
+N3["Atmosphere"]
+N4["Presentation"]
 
-Semantic Meaning
-
-↓
-
-Atmosphere
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This ordering ensures that runtime adaptation never compromises readability.
@@ -260,20 +256,17 @@ The Colour System intentionally stops at Materials.
 
 Conceptually.
 
-```text
-Colour
+```mermaid
+flowchart TD
 
-↓
+N1["Colour"]
+N2["Atmosphere"]
+N3["Materials"]
+N4["Presentation"]
 
-Atmosphere
-
-↓
-
-Materials
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Materials determine:
@@ -327,24 +320,19 @@ The Runtime Atmosphere defined within MDS-002 intentionally provides one of the 
 
 Conceptually.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Colour Extraction"]
+N3["Runtime Atmosphere"]
+N4["Material Refraction"]
+N5["Presentation"]
 
-Colour Extraction
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Material Refraction
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 This relationship will be formalised within the Material System specification.
@@ -357,12 +345,12 @@ The Colour System intentionally stops before physical rendering begins.
 
 Required reading before contributing to MDS-002.
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-001 Design Token Architecture
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
 
 Together these specifications define the conceptual foundation of the Colour System.
 
@@ -372,10 +360,10 @@ Together these specifications define the conceptual foundation of the Colour Sys
 
 Future contributors may also wish to review:
 
-- MDS-003 Material System
-- MDS-005 Motion System
-- MDS-006 Composition Engine
-- MDS-008 Component Library
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 These specifications describe how colour becomes a rendered experience.
 
@@ -402,9 +390,9 @@ This concludes **MDS-002 — Colour System**.
 
 The next specification in the Mosaic Design System is:
 
-> **MDS-003 — Material System**
+> **[MDS-003 — Material System](../mds-003-material-system/index.md)**
 
-Where MDS-002 defines **how colour communicates meaning**, MDS-003 defines **how those colours physically exist within the Mosaic interface**.
+Where MDS-002 defines **how colour communicates meaning**, [MDS-003](../mds-003-material-system/index.md) defines **how those colours physically exist within the Mosaic interface**.
 
 It formalises:
 

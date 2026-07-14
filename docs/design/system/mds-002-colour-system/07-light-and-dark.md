@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 07
 Title: Light and Dark
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Light and Dark
@@ -57,20 +57,18 @@ Mosaic intentionally rejects maintaining two independent colour systems.
 
 Instead:
 
-```text
-Semantic Colours
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic Colours"]
+N2["Light Theme"]
+N3["Dark Theme"]
+N4["Presentation"]
 
-Light Theme
-
-or
-
-Dark Theme
-
-↓
-
-Presentation
+N1 --> N2
+N1 --> N3
+N2 --> N4
+N3 --> N4
 ```
 
 Both themes inherit identical semantic meaning.
@@ -127,20 +125,17 @@ The interface should quietly recede behind the media.
 
 The following concepts should possess identical hierarchy across both themes.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Supporting"]
+N3["Contextual"]
+N4["Peripheral"]
 
-Supporting
-
-↓
-
-Contextual
-
-↓
-
-Peripheral
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Changing themes should never alter compositional understanding.
@@ -155,24 +150,19 @@ Surface relationships should remain consistent.
 
 Example.
 
-```
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Primary"]
+N3["Secondary"]
+N4["Overlay"]
+N5["Hero"]
 
-Primary
-
-↓
-
-Secondary
-
-↓
-
-Overlay
-
-↓
-
-Hero
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The visual implementation changes.
@@ -248,12 +238,14 @@ Both themes should begin with neutral foundations.
 Light.
 
 ```
+
 Soft Paper
 ```
 
 Dark.
 
 ```
+
 Deep Slate
 ```
 
@@ -274,6 +266,7 @@ Brand identity should remain stable.
 Example.
 
 ```
+
 Brand.Primary
 ```
 
@@ -357,38 +350,32 @@ Not application replacement.
 
 Preferred.
 
-```text
-Dark
+```mermaid
+flowchart TD
 
-↓
+N1["Dark"]
+N2["Blend"]
+N3["Light"]
+N4["Atmosphere Re-evaluates"]
+N5["Materials Update"]
 
-Blend
-
-↓
-
-Light
-
-↓
-
-Atmosphere Re-evaluates
-
-↓
-
-Materials Update
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Avoid.
 
-```text
-Dark
+```mermaid
+flowchart TD
 
-↓
+N1["Dark"]
+N2["Flash"]
+N3["Entire Interface Repaints"]
 
-Flash
-
-↓
-
-Entire Interface Repaints
+N1 --> N2
+N2 --> N3
 ```
 
 Continuity should remain uninterrupted.
@@ -586,15 +573,3 @@ regardless of theme.
 Only the environment changes.
 
 The user's World remains exactly the same.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-accessibility.md`

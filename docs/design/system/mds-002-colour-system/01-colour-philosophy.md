@@ -4,7 +4,7 @@ Document: MDS-002
 Chapter: 01
 Title: Colour Philosophy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Colour Philosophy
@@ -59,16 +59,15 @@ That colour probably does not belong.
 
 The Mosaic Colour System intentionally separates colour into three independent responsibilities.
 
-```text
-Brand
+```mermaid
+flowchart TD
 
-↓
+N1["Brand"]
+N2["Semantic Meaning"]
+N3["Atmosphere"]
 
-Semantic Meaning
-
-↓
-
-Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Each responsibility answers a different question.
@@ -188,6 +187,7 @@ Examples.
 Watching:
 
 ```
+
 Blade Runner 2049
 ```
 
@@ -196,6 +196,7 @@ The interface may become subtly cooler.
 Watching:
 
 ```
+
 Your Name
 ```
 
@@ -204,6 +205,7 @@ The interface may become subtly warmer.
 Reading:
 
 ```
+
 The Hobbit
 ```
 
@@ -299,6 +301,7 @@ The conceptual meaning must remain stable.
 Example.
 
 ```
+
 Surface.Hero
 ```
 
@@ -438,15 +441,3 @@ Instead they should simply feel that:
 - and Mosaic always feels unmistakably like Mosaic.
 
 That balance between identity, meaning and atmosphere is the defining objective of the Mosaic Colour System.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-brand-colours.md`
