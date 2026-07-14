@@ -32,6 +32,7 @@ docs/
     language/    Mosaic Design Language specifications
     system/      Mosaic Design System specifications
   engineering/
+    documentation/  Documentation governance and authoring standards
     architecture/  Platform and system architecture specifications
     guides/        Mosaic Engineering Guidelines specifications
     protocols/     Integration and interoperability protocol specifications
@@ -42,6 +43,7 @@ The current imported specification set lives in:
 
 - `docs/design/language` for MDL documents
 - `docs/design/system` for MDS documents
+- `docs/engineering/documentation` for MDG documents
 - `docs/engineering/guides` for MEG documents
 
 The remaining engineering sections are reserved for future document types.
@@ -51,6 +53,7 @@ The remaining engineering sections are reserved for future document types.
 The structure is intended to support these document families without another major reorganisation:
 
 - `MAC` — Mosaic Architecture
+- `MDG` — Mosaic Documentation Guides
 - `MDP` — Mosaic Design Process
 - `MEG` — Mosaic Engineering Guidelines
 - `MIP` — Mosaic Integration Protocol
@@ -86,6 +89,7 @@ Place decisions close to the system they govern:
 
 - MDL decisions belong under `docs/design/language`
 - MDS decisions belong under `docs/design/system`
+- MDG decisions belong under `docs/engineering/documentation`
 - MEG decisions belong under `docs/engineering/guides`
 - cross-cutting decisions should reference the upstream specification they depend on
 

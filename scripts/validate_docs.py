@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = ROOT / "docs"
 BOOK_ROOTS = [
+    DOCS_ROOT / "engineering" / "documentation",
     DOCS_ROOT / "engineering" / "architecture",
     DOCS_ROOT / "engineering" / "guides",
     DOCS_ROOT / "engineering" / "protocols",
@@ -20,7 +21,7 @@ BOOK_ROOTS = [
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 METADATA_RE = re.compile(r"\A<!--\n(?P<body>.*?)\n-->", re.DOTALL)
 REQUIRED_FIELDS = ("Status:", "Version:")
-DOCUMENT_ID_RE = re.compile(r"\b(?:MAC|MDP|MEG|MIP|MOP|MDL|MDS)-\d{3}\b")
+DOCUMENT_ID_RE = re.compile(r"\b(?:MAC|MDG|MDP|MEG|MIP|MOP|MDL|MDS)-\d{3}\b")
 
 
 def main() -> int:

@@ -14,6 +14,7 @@ docs/
     language/  Mosaic Design Language
     system/    Mosaic Design System
   engineering/
+    documentation/  Mosaic Documentation Guides
     guides/    Mosaic Engineering Guidelines
 ```
 
@@ -33,6 +34,7 @@ references.md
 
 - Keep MDL content under `docs/design/language`.
 - Keep MDS content under `docs/design/system`.
+- Keep MDG content under `docs/engineering/documentation`.
 - Keep MEG content under `docs/engineering/guides`.
 - Preserve existing naming conventions, metadata blocks, and chapter ordering.
 - Keep ADRs and decision notes near the specification they affect.

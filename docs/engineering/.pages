@@ -1,6 +1,7 @@
 title: Engineering
 arrange:
   - index.md
+  - documentation
   - architecture
   - guides
   - protocols

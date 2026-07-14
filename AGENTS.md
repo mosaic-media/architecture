@@ -14,6 +14,7 @@ docs/
     language/  Mosaic Design Language specifications
     system/    Mosaic Design System specifications
   engineering/
+    documentation/  Mosaic Documentation Guides
     guides/    Mosaic Engineering Guidelines specifications
 ```
 
@@ -31,7 +32,7 @@ references.md
 
 ## Documentation Rules
 
-- Follow the existing `MDL-*`, `MDS-*`, and `MEG-*` folder naming conventions.
+- Follow the existing `MDL-*`, `MDS-*`, `MDG-*`, and `MEG-*` folder naming conventions.
 - Use URL-safe lowercase folder slugs in the MkDocs tree, such as `meg-005-runtime-architecture`.
 - Keep one major specification folder per commit when committing documentation imports or large additions.
 - Preserve metadata comments at the top of generated or split files when present.
@@ -48,7 +49,7 @@ The README should remain a current orientation guide for:
 
 - what this repo is for
 - how the documentation is organised
-- where MDL, MDS, and MEG material lives
+- where MDL, MDS, MDG, and MEG material lives
 - how decisions and references should be maintained
 
 Do not let the README drift behind the repository structure.
