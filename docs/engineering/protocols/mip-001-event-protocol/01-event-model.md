@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/01-event-model.md
 Document: MIP-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # 01 — Event Model
@@ -25,16 +25,19 @@ It does not request work, describe intent or represent mutable state.
 
 Events follow a simple lifecycle:
 
-```text
-State Changes
-↓
-Event Created
-↓
-Event Published
-↓
-Event Observed
-↓
-Event Retained
+```mermaid
+flowchart TD
+
+N1["State Changes"]
+N2["Event Created"]
+N3["Event Published"]
+N4["Event Observed"]
+N5["Event Retained"]
+
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each stage preserves history rather than rewriting it.
@@ -81,28 +84,21 @@ Subscribers should treat events as historical facts and publish new events when 
 
 Conceptually.
 
-```text
-Module A
+```mermaid
+flowchart TD
 
-↓
+N1["Module A"]
+N2["Publish Event"]
+N3["Platform Event Bus"]
+N4["Routing"]
+N5["Subscribers"]
+N6["Module B"]
 
-Publish Event
-
-↓
-
-Platform Event Bus
-
-↓
-
-Routing
-
-↓
-
-Subscribers
-
-↓
-
-Module B
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The Platform does not inspect business logic.

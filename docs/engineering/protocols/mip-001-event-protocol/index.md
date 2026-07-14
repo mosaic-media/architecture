@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/index.md
 Document: MIP-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MIP-001 — Event Protocol
@@ -15,7 +15,7 @@ Version: 0.2
 
 MIP-001 defines the canonical event contract used by Mosaic capabilities, modules, Runtime Services and observability tooling.
 
-MEG-002 explains how engineers build event-driven behaviour.
+[MEG-002](../../guides/meg-002-event-driven-runtime/index.md) explains how engineers build event-driven behaviour.
 
 MIP-001 defines the protocol those implementations must preserve.
 

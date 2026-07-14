@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/references.md
 Document: MIP-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -11,9 +11,9 @@ Version: 0.2
 
 # Normative References
 
-- MAC-001 — Platform Architecture
-- MEG-002 — Event-Driven Runtime
-- MEG-008 — Observability
+- [MAC-001 — Platform Architecture](../../architecture/mac-001-platform-architecture/index.md)
+- [MEG-002 — Event-Driven Runtime](../../guides/meg-002-event-driven-runtime/index.md)
+- [MEG-008 — Observability](../../guides/meg-008-observability/index.md)
 
 ---
 

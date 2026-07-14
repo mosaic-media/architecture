@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/03-event-naming.md
 Document: MIP-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # 03 — Event Naming

@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/02-event-envelope.md
 Document: MIP-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # 02 — Event Envelope
@@ -13,10 +13,15 @@ Version: 0.2
 
 Every Mosaic event contains:
 
-```text
-Event
-├── Envelope
-└── Payload
+```mermaid
+flowchart TD
+
+N1["Event"]
+N2["Envelope"]
+N3["Payload"]
+
+N1 --> N2
+N1 --> N3
 ```
 
 The envelope is stable across event families.
@@ -29,14 +34,23 @@ The SDK does not define every event payload.
 
 Conceptually.
 
-```text
-Event
-├── ID
-├── Name
-├── Source
-├── Timestamp
-├── Version
-└── Payload
+```mermaid
+flowchart TD
+
+N1["Event"]
+N2["ID"]
+N3["Name"]
+N4["Source"]
+N5["Timestamp"]
+N6["Version"]
+N7["Payload"]
+
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
 ```
 
 Implementations may expose typed envelopes such as `Event[T]`, but the protocol boundary remains the same.
