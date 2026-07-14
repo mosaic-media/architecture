@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 03
 Title: Expression Mapping
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Expression Mapping
@@ -47,36 +47,32 @@ Without Expression Mapping, rendering systems would need to understand runtime c
 
 Example.
 
-```text
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Widgets"]
 
-Widgets
+N1 --> N2
 ```
 
 This tightly couples behaviour to implementation.
 
 Instead.
 
-```text
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Expressions"]
+N3["Tiles"]
+N4["Components"]
+N5["Rendering"]
 
-Expressions
-
-↓
-
-Tiles
-
-↓
-
-Components
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every layer owns one responsibility.
@@ -89,12 +85,13 @@ Every Expression should normally resolve to one primary Tile.
 
 Example.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Hero Tile"]
 
-Hero Tile
+N1 --> N2
 ```
 
 The Tile may later be implemented differently.
@@ -109,22 +106,24 @@ Mapping should always begin from behavioural meaning.
 
 Incorrect.
 
-```text
-Poster
+```mermaid
+flowchart TD
 
-↓
+N1["Poster"]
+N2["Poster Card"]
 
-Poster Card
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Hero Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Expression"]
+N2["Hero Tile"]
 
-Hero Tile
+N1 --> N2
 ```
 
 Presentation follows behaviour.
@@ -157,24 +156,19 @@ This determinism enables:
 
 Expression Mapping evaluates:
 
-```text
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Runtime Hierarchy"]
+N3["Behaviour"]
+N4["Context"]
+N5["Device Capability"]
 
-Runtime Hierarchy
-
-↓
-
-Behaviour
-
-↓
-
-Context
-
-↓
-
-Device Capability
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Rendering technology is intentionally absent.
@@ -187,24 +181,19 @@ Tiles remain implementation independent.
 
 The Mapping stage produces:
 
-```text
-Tile Identity
+```mermaid
+flowchart TD
 
-↓
+N1["Tile Identity"]
+N2["Material Intent"]
+N3["Typography Intent"]
+N4["Motion Intent"]
+N5["Interaction Intent"]
 
-Material Intent
-
-↓
-
-Typography Intent
-
-↓
-
-Motion Intent
-
-↓
-
-Interaction Intent
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Component Library later consumes these outputs.
@@ -215,12 +204,13 @@ The Component Library later consumes these outputs.
 
 Example.
 
-```text
-Hero Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Expression"]
+N2["Hero Tile"]
 
-Hero Tile
+N1 --> N2
 ```
 
 The Hero Tile inherits:
@@ -237,12 +227,13 @@ The renderer later decides how this appears physically.
 
 Example.
 
-```text
-Timeline Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline Expression"]
+N2["Timeline Tile"]
 
-Timeline Tile
+N1 --> N2
 ```
 
 Timeline Tiles inherit:
@@ -259,12 +250,13 @@ The behavioural role remains identical across every platform.
 
 Example.
 
-```text
-Relationship Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Relationship Expression"]
+N2["Relationship Tile"]
 
-Relationship Tile
+N1 --> N2
 ```
 
 Relationship Tiles communicate:
@@ -282,12 +274,13 @@ without introducing domain-specific presentation.
 
 Example.
 
-```text
-Resume Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Resume Expression"]
+N2["Action Tile"]
 
-Action Tile
+N1 --> N2
 ```
 
 The Tile communicates behavioural opportunity.
@@ -302,12 +295,13 @@ Buttons remain platform components.
 
 Example.
 
-```text
-Metadata Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata Expression"]
+N2["Metadata Tile"]
 
-Metadata Tile
+N1 --> N2
 ```
 
 Metadata remains:
@@ -326,21 +320,21 @@ Runtime Hierarchy may influence Tile behaviour.
 
 Example.
 
-```text
-Content Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Content Expression"]
+N2["Hero"]
+N3["Hero Tile"]
 
-Hero
-
-↓
-
-Hero Tile
+N1 --> N2
+N2 --> N3
 ```
 
 The Expression remains:
 
 ```
+
 Content
 ```
 
@@ -384,16 +378,15 @@ Expression Mapping also assigns Material Intent.
 
 Example.
 
-```text
-Overlay Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Overlay Expression"]
+N2["Overlay Tile"]
+N3["Overlay Material"]
 
-Overlay Tile
-
-↓
-
-Overlay Material
+N1 --> N2
+N2 --> N3
 ```
 
 Rendering systems remain unaware of behavioural reasoning.
@@ -408,28 +401,26 @@ Expressions also inherit editorial behaviour.
 
 Example.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Hero Tile"]
+N3["Heading"]
 
-Hero Tile
-
-↓
-
-Heading
+N1 --> N2
+N2 --> N3
 ```
 
-```text
-Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata"]
+N2["Metadata Tile"]
+N3["Supporting"]
 
-Metadata Tile
-
-↓
-
-Supporting
+N1 --> N2
+N2 --> N3
 ```
 
 Typography therefore becomes another consequence of behavioural mapping.
@@ -470,28 +461,31 @@ Tiles also communicate interaction.
 
 Examples.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Primary Interaction"]
 
-Primary Interaction
+N1 --> N2
 ```
 
-```text
-Relationship Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Relationship Tile"]
+N2["Exploration"]
 
-Exploration
+N1 --> N2
 ```
 
-```text
-Metadata Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata Tile"]
+N2["Passive"]
 
-Passive
+N1 --> N2
 ```
 
 Interaction therefore emerges naturally from behavioural understanding.
@@ -683,15 +677,3 @@ Expressions describe understanding.
 Tiles describe presentation.
 
 Components simply render the result.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-tile-lifecycle.md`

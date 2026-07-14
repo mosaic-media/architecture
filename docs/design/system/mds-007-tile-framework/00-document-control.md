@@ -3,7 +3,7 @@ File: docs/design/system/mds-007-tile-framework/00-document-control.md
 Document: MDS-007
 Title: Tile Framework
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -18,9 +18,9 @@ Version: 0.2
 | Title | Mosaic Design System — Tile Framework |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Runtime Presentation Architecture Team |
-| Parent Specifications | MDL-001 → MDL-005, MDS-001 → MDS-006 |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
+| Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md), [MDS-001](../mds-001-design-token-architecture/index.md) → [MDS-006](../mds-006-composition-engine/index.md) |
 | Repository | `/design/mds/MDS-007 Tile Framework/` |
 
 ---
@@ -125,20 +125,17 @@ Examples include:
 
 Mosaic intentionally introduces an additional abstraction.
 
-```text
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Tile"]
+N3["Component"]
+N4["Rendering"]
 
-Tile
-
-↓
-
-Component
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This separation ensures that behavioural meaning remains independent from implementation.
@@ -149,17 +146,17 @@ This separation ensures that behavioural meaning remains independent from implem
 
 Before reading this specification contributors should already understand:
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-001 Design Token Architecture
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-004 Typography System
-- MDS-005 Motion System
-- MDS-006 Composition Engine
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
 
 The Tile Framework assumes runtime understanding has already been solved.
 
@@ -221,24 +218,3 @@ MDS-007 succeeds when:
 Users should never perceive Tiles directly.
 
 They should simply experience a coherent interface whose behaviour naturally reflects the Runtime World.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Dependencies**
-
-- MDL-001 → MDL-005
-- MDS-001 → MDS-006
-
-**Supersedes**
-
-None.
-
-**Next File**
-
-`01-tile-philosophy.md`

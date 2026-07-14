@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 02
 Title: Tile Taxonomy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Taxonomy
@@ -83,44 +83,29 @@ Many runtime presentations.
 
 The current Tile Framework defines the following conceptual Tile families.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Content"]
+N3["Timeline"]
+N4["Relationship"]
+N5["Action"]
+N6["Metadata"]
+N7["Collection"]
+N8["Navigation"]
+N9["Overlay"]
+N10["Utility"]
 
-Content
-
-↓
-
-Timeline
-
-↓
-
-Relationship
-
-↓
-
-Action
-
-↓
-
-Metadata
-
-↓
-
-Collection
-
-↓
-
-Navigation
-
-↓
-
-Overlay
-
-↓
-
-Utility
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
 ```
 
 Every Tile belongs to exactly one primary family.
@@ -346,12 +331,13 @@ Several responsibilities merged.
 
 Preferred.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Timeline Tile"]
 
-Timeline Tile
+N1 --> N2
 ```
 
 Composition determines relationships.
@@ -367,6 +353,7 @@ Tile identities should remain stable for many years.
 Example.
 
 ```
+
 Timeline Tile
 ```
 
@@ -380,6 +367,7 @@ may later become:
 Its behavioural identity remains:
 
 ```
+
 Timeline Tile
 ```
 
@@ -393,12 +381,13 @@ Runtime Hierarchy influences Tile importance.
 
 Example.
 
-```
-Content Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Content Tile"]
+N2["Hero Tile"]
 
-Hero Tile
+N1 --> N2
 ```
 
 A Content Tile may temporarily become the Hero because behaviour changed.
@@ -681,15 +670,3 @@ It ensures that:
 - Modules remain native.
 
 Every future Mosaic client should therefore communicate one consistent visual language built from the same small vocabulary of behavioural Tiles.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-expression-mapping.md`

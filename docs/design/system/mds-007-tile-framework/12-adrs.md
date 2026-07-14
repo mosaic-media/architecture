@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Architectural Decision Records
@@ -39,7 +39,7 @@ Future contributors should understand these decisions before modifying the Tile 
 
 # Decision Format
 
-Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
+Decision format, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
@@ -345,15 +345,3 @@ Tiles communicate presentation.
 Components implement rendering.
 
 Maintaining these boundaries allows Mosaic to evolve for decades without losing its behavioural language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`13-contributor-guidance.md`

@@ -3,7 +3,7 @@ File: docs/design/system/mds-007-tile-framework/references.md
 Document: MDS-007
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -51,7 +51,7 @@ Rendering technologies merely implement its decisions.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
 
 Provides:
 
@@ -63,7 +63,7 @@ Tiles should communicate the Companion's understanding rather than expose implem
 
 ---
 
-## MDL-002 — Principles
+## [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
 
 Provides:
 
@@ -78,7 +78,7 @@ Presentation should never lead behaviour.
 
 ---
 
-## MDL-003 — Mental Model
+## [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
 
 Provides:
 
@@ -93,7 +93,7 @@ They never define it.
 
 ---
 
-## MDL-004 — Interaction Model
+## [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
 
 Provides:
 
@@ -105,7 +105,7 @@ Tile interaction is a behavioural consequence rather than a component capability
 
 ---
 
-## MDL-005 — Composition Model
+## [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 Provides:
 
@@ -118,18 +118,18 @@ The Tile Framework is the presentation implementation of the Composition Model.
 
 ---
 
-## MDS-001 — Design Token Architecture
+## [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
 
 Provides:
 
 - Runtime Resolution
 - Semantic Tokens
 
-Runtime Tile Resolution extends the deterministic resolution architecture introduced by MDS-001.
+Runtime Tile Resolution extends the deterministic resolution architecture introduced by [MDS-001](../mds-001-design-token-architecture/index.md).
 
 ---
 
-## MDS-002 — Colour System
+## [MDS-002 — Colour System](../mds-002-colour-system/index.md)
 
 Provides:
 
@@ -143,7 +143,7 @@ They never define colours independently.
 
 ---
 
-## MDS-003 — Material System
+## [MDS-003 — Material System](../mds-003-material-system/index.md)
 
 Provides:
 
@@ -158,7 +158,7 @@ They do not create Material behaviour.
 
 ---
 
-## MDS-004 — Typography System
+## [MDS-004 — Typography System](../mds-004-typography-system/index.md)
 
 Provides:
 
@@ -172,7 +172,7 @@ Typography renders it.
 
 ---
 
-## MDS-005 — Motion System
+## [MDS-005 — Motion System](../mds-005-motion-system/index.md)
 
 Provides:
 
@@ -186,7 +186,7 @@ They never define animation independently.
 
 ---
 
-## MDS-006 — Composition Engine
+## [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
 
 Provides:
 
@@ -204,7 +204,7 @@ The Tile Framework exists entirely because the Composition Engine produces Expre
 
 The following specification directly depends upon MDS-007.
 
-- MDS-008 Component Library
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 The Component Library renders Tiles.
 
@@ -218,24 +218,19 @@ The Tile Framework intentionally treats presentation as behavioural communicatio
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Expression"]
+N3["Tile"]
+N4["Component"]
+N5["Rendering"]
 
-Expression
-
-↓
-
-Tile
-
-↓
-
-Component
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Behaviour remains the architectural authority.
@@ -283,24 +278,19 @@ The Tile Framework intentionally continues the runtime resolution model establis
 
 Conceptually.
 
-```text
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Tile"]
+N3["Runtime Resolution"]
+N4["Presentation"]
+N5["Rendering"]
 
-Tile
-
-↓
-
-Runtime Resolution
-
-↓
-
-Presentation
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every layer performs one architectural responsibility.
@@ -311,16 +301,15 @@ Every layer performs one architectural responsibility.
 
 The Tile Framework intentionally separates:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Presentation"]
+N3["Rendering"]
 
-Presentation
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
 ```
 
 Every client therefore shares identical behavioural presentation while remaining free to implement:
@@ -357,24 +346,19 @@ Tiles represent the visible body language of the Companion.
 
 Conceptually.
 
-```text
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Expressions"]
+N3["Tiles"]
+N4["Presentation"]
+N5["User"]
 
-Expressions
-
-↓
-
-Tiles
-
-↓
-
-Presentation
-
-↓
-
-User
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Companion understands first.
@@ -389,17 +373,17 @@ Components merely make it visible.
 
 Required reading before contributing to MDS-007.
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-001 Design Token Architecture
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-004 Typography System
-- MDS-005 Motion System
-- MDS-006 Composition Engine
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
 
 Together these specifications define the conceptual foundation of the Tile Framework.
 
@@ -409,7 +393,7 @@ Together these specifications define the conceptual foundation of the Tile Frame
 
 Future contributors may also wish to review:
 
-- MDS-008 Component Library
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 The Component Library explains how Tiles become concrete UI implementations while preserving every behavioural contract established by the Tile Framework.
 
@@ -436,9 +420,9 @@ This concludes **MDS-007 — Tile Framework**.
 
 The next specification in the Mosaic Design System is:
 
-> **MDS-008 — Component Library**
+> **[MDS-008 — Component Library](../mds-008-component-library/index.md)**
 
-Where MDS-007 defines **how behavioural presentation is represented**, MDS-008 defines **how that presentation is physically implemented**.
+Where MDS-007 defines **how behavioural presentation is represented**, [MDS-008](../mds-008-component-library/index.md) defines **how that presentation is physically implemented**.
 
 It formalises:
 
@@ -452,7 +436,7 @@ It formalises:
 - Component composition
 - Runtime rendering
 
-MDS-008 intentionally becomes the thinnest layer in the entire architecture.
+[MDS-008](../mds-008-component-library/index.md) intentionally becomes the thinnest layer in the entire architecture.
 
 By the time Components are created, every important decision has already been made.
 

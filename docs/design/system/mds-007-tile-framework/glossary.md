@@ -3,7 +3,7 @@ File: docs/design/system/mds-007-tile-framework/glossary.md
 Document: MDS-007
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -314,12 +314,12 @@ Utility Tiles should remain behaviourally secondary.
 
 | Specification | Primary Concepts |
 |---------------|------------------|
-| MDL-001 Vision | Companion |
-| MDL-002 Principles | Behaviour Before Interface |
-| MDL-003 Mental Model | World |
-| MDL-004 Interaction Model | Behaviour |
-| MDL-005 Composition Model | Expressions |
-| MDS-006 Composition Engine | Runtime World, Expressions, Presentation Model |
+| [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md) | Companion |
+| [MDL-002 — Principles](../../language/mdl-002-principles/index.md) | Behaviour Before Interface |
+| [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World |
+| [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Behaviour |
+| [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Expressions |
+| [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) | Runtime World, Expressions, Presentation Model |
 
 ---
 
@@ -334,15 +334,3 @@ Future contributors should:
 - avoid implementation-specific terminology within architectural documentation.
 
 Tile terminology should remain independent from UI frameworks.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

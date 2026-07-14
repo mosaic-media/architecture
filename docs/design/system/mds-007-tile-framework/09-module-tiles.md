@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 09
 Title: Module Tiles
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Module Tiles
@@ -57,24 +57,19 @@ Mosaic intentionally rejects this model.
 
 Instead:
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Expression"]
+N3["Tile Framework"]
+N4["Standard Tile"]
+N5["Presentation"]
 
-Expression
-
-↓
-
-Tile Framework
-
-↓
-
-Standard Tile
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Modules become behaviourally native.
@@ -109,12 +104,13 @@ Modules communicate behavioural meaning.
 
 Example.
 
-```text
-Real-Debrid Stream
+```mermaid
+flowchart TD
 
-↓
+N1["Real-Debrid Stream"]
+N2["Playback Expression"]
 
-Playback Expression
+N1 --> N2
 ```
 
 Not:
@@ -135,20 +131,17 @@ Module Expressions participate identically to native Expressions.
 
 Example.
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Timeline Expression"]
+N3["Timeline Tile"]
+N4["Platform Component"]
 
-Timeline Expression
-
-↓
-
-Timeline Tile
-
-↓
-
-Platform Component
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Composition Engine never distinguishes between native and module Expressions during presentation.
@@ -161,28 +154,21 @@ Only behaviour matters.
 
 Module Expressions pass through the complete runtime pipeline.
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Runtime World"]
+N3["Composition Solver"]
+N4["Expression Resolution"]
+N5["Tile Resolution"]
+N6["Presentation"]
 
-Runtime World
-
-↓
-
-Composition Solver
-
-↓
-
-Expression Resolution
-
-↓
-
-Tile Resolution
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 No shortcuts should exist.
@@ -197,30 +183,28 @@ Modules never assign hierarchy.
 
 Incorrect.
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Hero"]
 
-Hero
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Expression"]
+N3["Composition Solver"]
+N4["Hero"]
 
-Expression
-
-↓
-
-Composition Solver
-
-↓
-
-Hero
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only the Composition Engine determines runtime importance.
@@ -380,12 +364,14 @@ Interaction therefore remains platform independent.
 Users should perceive:
 
 ```
+
 Mosaic
 ```
 
 Not:
 
 ```
+
 Module UI
 ```
 
@@ -661,15 +647,3 @@ Users should never think:
 > "This came from a module."
 
 They should simply feel that Mosaic naturally became more capable.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-tile-orchestration.md`

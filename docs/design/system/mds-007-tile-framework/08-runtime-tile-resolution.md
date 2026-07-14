@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 08
 Title: Runtime Tile Resolution
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Tile Resolution
@@ -61,20 +61,17 @@ Without Runtime Tile Resolution, every component would need to understand:
 
 Instead.
 
-```text
-Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Tile"]
+N2["Runtime Tile Resolver"]
+N3["Resolved Tile"]
+N4["Component"]
 
-Runtime Tile Resolver
-
-↓
-
-Resolved Tile
-
-↓
-
-Component
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Components remain extremely simple.
@@ -85,36 +82,25 @@ Components remain extremely simple.
 
 Every Tile follows the same conceptual pipeline.
 
-```text
-Tile Identity
+```mermaid
+flowchart TD
 
-↓
+N1["Tile Identity"]
+N2["Runtime Hierarchy"]
+N3["Material Intent"]
+N4["Typography Intent"]
+N5["Motion Intent"]
+N6["Accessibility"]
+N7["Adaptive Behaviour"]
+N8["Resolved Tile"]
 
-Runtime Hierarchy
-
-↓
-
-Material Intent
-
-↓
-
-Typography Intent
-
-↓
-
-Motion Intent
-
-↓
-
-Accessibility
-
-↓
-
-Adaptive Behaviour
-
-↓
-
-Resolved Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Each stage contributes one responsibility.
@@ -125,32 +111,23 @@ Each stage contributes one responsibility.
 
 Runtime Tile Resolution evaluates:
 
-```text
-Tile Identity
+```mermaid
+flowchart TD
 
-↓
+N1["Tile Identity"]
+N2["Expression"]
+N3["Runtime Hierarchy"]
+N4["Current Context"]
+N5["Device Profile"]
+N6["Accessibility"]
+N7["Capabilities"]
 
-Expression
-
-↓
-
-Runtime Hierarchy
-
-↓
-
-Current Context
-
-↓
-
-Device Profile
-
-↓
-
-Accessibility
-
-↓
-
-Capabilities
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Rendering technology remains intentionally absent.
@@ -161,28 +138,21 @@ Rendering technology remains intentionally absent.
 
 Resolved Tiles contain:
 
-```text
-Material
+```mermaid
+flowchart TD
 
-↓
+N1["Material"]
+N2["Typography"]
+N3["Motion"]
+N4["Interaction"]
+N5["Adaptive Variant"]
+N6["Presentation Metadata"]
 
-Typography
-
-↓
-
-Motion
-
-↓
-
-Interaction
-
-↓
-
-Adaptive Variant
-
-↓
-
-Presentation Metadata
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 These objects become the direct input to the Component Library.
@@ -193,12 +163,13 @@ These objects become the direct input to the Component Library.
 
 One of the strongest guarantees within Mosaic is:
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Always Hero Tile"]
 
-Always Hero Tile
+N1 --> N2
 ```
 
 Runtime Resolution may alter:
@@ -218,16 +189,15 @@ Material Intent resolves into runtime Materials.
 
 Example.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Hero Material"]
+N3["Resolved Hero Material"]
 
-Hero Material
-
-↓
-
-Resolved Hero Material
+N1 --> N2
+N2 --> N3
 ```
 
 Components should never determine Material behaviour independently.
@@ -240,16 +210,15 @@ Typography Intent resolves similarly.
 
 Example.
 
-```text
-Metadata Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata Tile"]
+N2["Supporting Typography"]
+N3["Resolved Typography"]
 
-Supporting Typography
-
-↓
-
-Resolved Typography
+N1 --> N2
+N2 --> N3
 ```
 
 Editorial hierarchy therefore remains entirely runtime driven.
@@ -262,16 +231,15 @@ Motion Intent resolves into runtime behaviour.
 
 Example.
 
-```text
-Timeline Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline Tile"]
+N2["Supporting Motion"]
+N3["Resolved Motion Profile"]
 
-Supporting Motion
-
-↓
-
-Resolved Motion Profile
+N1 --> N2
+N2 --> N3
 ```
 
 Components consume motion.
@@ -286,24 +254,19 @@ Interaction Intent also resolves.
 
 Examples.
 
-```text
-Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Primary"]
+N2["Touch"]
+N3["Mouse"]
+N4["Remote"]
+N5["Voice"]
 
-Touch
-
-↓
-
-Mouse
-
-↓
-
-Remote
-
-↓
-
-Voice
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Interaction methods adapt.
@@ -376,32 +339,23 @@ Future implementations may internally generate Tile Profiles.
 
 Conceptually.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Tile Profile"]
+N3["Material"]
+N4["Typography"]
+N5["Motion"]
+N6["Interaction"]
+N7["Resolved Tile"]
 
-Tile Profile
-
-↓
-
-Material
-
-↓
-
-Typography
-
-↓
-
-Motion
-
-↓
-
-Interaction
-
-↓
-
-Resolved Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Components consume Tile Profiles.
@@ -429,26 +383,26 @@ Ordinary rendering should reuse existing Tile Profiles whenever practical.
 
 Preferred.
 
-```text
-Timeline Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline Tile"]
+N2["Resolved"]
+N3["Updated"]
 
-Resolved
-
-↓
-
-Updated
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Every Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Every Tile"]
+N2["Resolved Again"]
 
-Resolved Again
+N1 --> N2
 ```
 
 Incremental resolution preserves runtime performance and behavioural continuity.
@@ -668,15 +622,3 @@ Behaviour remains the architectural authority.
 Tiles remain the presentation language of Mosaic.
 
 That separation allows the platform to evolve indefinitely while preserving one coherent runtime experience.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-module-tiles.md`

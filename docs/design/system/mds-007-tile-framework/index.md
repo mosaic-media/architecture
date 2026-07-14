@@ -2,7 +2,7 @@
 File: docs/design/system/mds-007-tile-framework/index.md
 Document: MDS-007
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MDS-007 — Tile Framework
@@ -44,60 +44,37 @@ Tiles are the bridge between runtime understanding and visible interface.
 
 # Relationship to Previous Specifications
 
-```text
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Principles"]
+N3["Mental Model"]
+N4["Interaction"]
+N5["Composition"]
+N6["Tokens"]
+N7["Colour"]
+N8["Materials"]
+N9["Typography"]
+N10["Motion"]
+N11["Composition Engine"]
+N12["Tile Framework"]
+N13["Component Library"]
+N14["Presentation"]
 
-Principles
-
-↓
-
-Mental Model
-
-↓
-
-Interaction
-
-↓
-
-Composition
-
-↓
-
-Tokens
-
-↓
-
-Colour
-
-↓
-
-Materials
-
-↓
-
-Typography
-
-↓
-
-Motion
-
-↓
-
-Composition Engine
-
-↓
-
-Tile Framework
-
-↓
-
-Component Library
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
+N10 --> N11
+N11 --> N12
+N12 --> N13
+N13 --> N14
 ```
 
 The Tile Framework consumes:
@@ -134,7 +111,7 @@ This specification intentionally does **not** define:
 - rendering engines
 - layout systems
 
-Those belong to MDS-008 and platform implementations.
+Those belong to [MDS-008](../mds-008-component-library/index.md) and platform implementations.
 
 ---
 
@@ -164,20 +141,17 @@ This distinction allows behaviour to remain independent from implementation.
 
 The Tile Framework separates runtime presentation into several conceptual layers.
 
-```text
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Tile"]
+N3["Component"]
+N4["Rendering"]
 
-Tile
-
-↓
-
-Component
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Each layer contributes one responsibility.
@@ -240,9 +214,9 @@ design/
 
         13-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -251,25 +225,9 @@ design/
 
 Required reading:
 
-- MDL-001 → MDL-005
-- MDS-001 → MDS-006
+- [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md)
+- [MDS-001](../mds-001-design-token-architecture/index.md) → [MDS-006](../mds-006-composition-engine/index.md)
 
 Downstream specifications:
 
-- MDS-008 Component Library
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Runtime Presentation Architecture Team
-
-**Next File**
-
-`00-document-control.md`
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)

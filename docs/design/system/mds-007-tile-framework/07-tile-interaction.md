@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 07
 Title: Tile Interaction
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Interaction
@@ -43,34 +43,30 @@ Not presentation.
 
 Traditional interfaces frequently model interaction like this.
 
-```text
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Click"]
+N3["Callback"]
 
-Click
-
-↓
-
-Callback
+N1 --> N2
+N2 --> N3
 ```
 
 Mosaic intentionally models interaction differently.
 
-```text
-Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Tile"]
+N2["Behavioural Intent"]
+N3["Runtime Behaviour"]
+N4["Composition Evolves"]
 
-Behavioural Intent
-
-↓
-
-Runtime Behaviour
-
-↓
-
-Composition Evolves
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Users interact with understanding.
@@ -85,22 +81,24 @@ Components should never own behaviour.
 
 Incorrect.
 
-```text
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Play"]
 
-Play
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Action Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Action Tile"]
+N2["Resume Playback"]
 
-Resume Playback
+N1 --> N2
 ```
 
 The component merely renders the Action Tile.
@@ -113,28 +111,21 @@ The Tile owns behavioural meaning.
 
 The Tile Framework recognises several conceptual interaction categories.
 
-```text
-Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Primary"]
+N2["Secondary"]
+N3["Exploration"]
+N4["Navigation"]
+N5["Contextual"]
+N6["Passive"]
 
-Secondary
-
-↓
-
-Exploration
-
-↓
-
-Navigation
-
-↓
-
-Contextual
-
-↓
-
-Passive
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Every Tile exposes one primary interaction category.
@@ -256,12 +247,13 @@ Every interaction communicates behavioural intent.
 
 Example.
 
-```text
-Resume Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Resume Tile"]
+N2["Resume Playback"]
 
-Resume Playback
+N1 --> N2
 ```
 
 Not.
@@ -282,24 +274,19 @@ Tile Interaction resolves into behavioural events.
 
 Conceptually.
 
-```text
-Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Tile"]
+N2["Interaction Intent"]
+N3["Behaviour"]
+N4["Runtime World"]
+N5["Composition"]
 
-Interaction Intent
-
-↓
-
-Behaviour
-
-↓
-
-Runtime World
-
-↓
-
-Composition
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Tiles never mutate the Runtime World directly.
@@ -674,15 +661,3 @@ Users should never feel they are clicking widgets.
 They should feel they are naturally interacting with their current World.
 
 That distinction is one of the defining architectural principles of the Mosaic Tile Framework.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-runtime-tile-resolution.md`

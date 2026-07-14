@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 05
 Title: Adaptive Tiles
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Adaptive Tiles
@@ -57,16 +57,15 @@ Mosaic intentionally avoids this.
 
 Instead.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Adaptive Hero Tile"]
+N3["Platform Presentation"]
 
-Adaptive Hero Tile
-
-↓
-
-Platform Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 One Tile.
@@ -81,26 +80,26 @@ Adaptive Tiles always begin with behaviour.
 
 Incorrect.
 
-```text
-Phone
+```mermaid
+flowchart TD
 
-↓
+N1["Phone"]
+N2["Compact Card"]
 
-Compact Card
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Adaptive Projection"]
+N3["Phone Presentation"]
 
-Adaptive Projection
-
-↓
-
-Phone Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 Devices influence presentation.
@@ -115,33 +114,37 @@ Every Adaptive Tile preserves one stable identity.
 
 Examples.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Desktop"]
 
-Desktop
+N1 --> N2
 ```
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Phone"]
 
-Phone
+N1 --> N2
 ```
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Television"]
 
-Television
+N1 --> N2
 ```
 
 Every presentation remains:
 
 ```
+
 Hero Tile
 ```
 
@@ -153,28 +156,21 @@ The behavioural identity never changes.
 
 Adaptive behaviour evaluates:
 
-```text
-Tile Identity
+```mermaid
+flowchart TD
 
-↓
+N1["Tile Identity"]
+N2["Runtime Hierarchy"]
+N3["Device Class"]
+N4["Viewing Distance"]
+N5["Accessibility"]
+N6["Capabilities"]
 
-Runtime Hierarchy
-
-↓
-
-Device Class
-
-↓
-
-Viewing Distance
-
-↓
-
-Accessibility
-
-↓
-
-Capabilities
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Behaviour has already been solved.
@@ -187,24 +183,19 @@ Adaptive Tiles communicate that behaviour appropriately.
 
 Adaptive Tiles produce:
 
-```text
-Presentation Variant
+```mermaid
+flowchart TD
 
-↓
+N1["Presentation Variant"]
+N2["Material Behaviour"]
+N3["Typography Behaviour"]
+N4["Interaction Behaviour"]
+N5["Layout Constraints"]
 
-Material Behaviour
-
-↓
-
-Typography Behaviour
-
-↓
-
-Interaction Behaviour
-
-↓
-
-Layout Constraints
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 These outputs remain independent from rendering technology.
@@ -276,6 +267,7 @@ Spoken progress.
 Users should always recognise:
 
 ```
+
 Timeline
 ```
 
@@ -546,12 +538,13 @@ Adaptive behaviour should remain independent from specific platforms.
 
 Future devices should require only:
 
-```
-Capability Profile
+```mermaid
+flowchart TD
 
-↓
+N1["Capability Profile"]
+N2["Adaptive Projection"]
 
-Adaptive Projection
+N1 --> N2
 ```
 
 The Tile Framework should remain prepared for technologies that do not yet exist.
@@ -707,15 +700,3 @@ Users should never think:
 They should simply feel that the same Companion naturally adapted to the device they chose to use.
 
 That behavioural continuity is the defining objective of Adaptive Tiles.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-tile-composition.md`

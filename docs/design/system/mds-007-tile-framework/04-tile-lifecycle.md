@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 04
 Title: Tile Lifecycle
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Lifecycle
@@ -50,38 +50,32 @@ Not rendering.
 
 Traditional UI frameworks often behave like this.
 
-```text
-Create Widget
+```mermaid
+flowchart TD
 
-↓
+N1["Create Widget"]
+N2["Render"]
+N3["Destroy Widget"]
 
-Render
-
-↓
-
-Destroy Widget
+N1 --> N2
+N2 --> N3
 ```
 
 Mosaic intentionally behaves differently.
 
-```text
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Tile Appears"]
+N3["Tile Evolves"]
+N4["Tile Adapts"]
+N5["Tile Retires"]
 
-Tile Appears
-
-↓
-
-Tile Evolves
-
-↓
-
-Tile Adapts
-
-↓
-
-Tile Retires
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Users should experience continuous objects rather than disposable interface elements.
@@ -92,28 +86,21 @@ Users should experience continuous objects rather than disposable interface elem
 
 Every Tile progresses through the same conceptual lifecycle.
 
-```text
-Resolved
+```mermaid
+flowchart TD
 
-↓
+N1["Resolved"]
+N2["Materialised"]
+N3["Active"]
+N4["Evolving"]
+N5["Retiring"]
+N6["Released"]
 
-Materialised
-
-↓
-
-Active
-
-↓
-
-Evolving
-
-↓
-
-Retiring
-
-↓
-
-Released
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Each stage communicates one behavioural responsibility.
@@ -276,22 +263,24 @@ Only behaviour changes Tile lifecycle.
 
 Incorrect.
 
-```text
-Scroll
+```mermaid
+flowchart TD
 
-↓
+N1["Scroll"]
+N2["Destroy Tile"]
 
-Destroy Tile
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Behaviour Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour Changes"]
+N2["Tile Retires"]
 
-Tile Retires
+N1 --> N2
 ```
 
 Rendering optimisations should never redefine behavioural lifetime.
@@ -306,26 +295,26 @@ A Tile should evolve rather than be replaced.
 
 Preferred.
 
-```text
-Episode 17
+```mermaid
+flowchart TD
 
-↓
+N1["Episode 17"]
+N2["Episode 18"]
+N3["Hero Tile Evolves"]
 
-Episode 18
-
-↓
-
-Hero Tile Evolves
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Hero Tile Destroyed
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile Destroyed"]
+N2["New Hero Tile Created"]
 
-New Hero Tile Created
+N1 --> N2
 ```
 
 Identity continuity significantly reduces cognitive effort.
@@ -338,12 +327,13 @@ Hierarchy changes may alter a Tile's role.
 
 Example.
 
-```
-Content Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Content Tile"]
+N2["Hero Tile"]
 
-Hero Tile
+N1 --> N2
 ```
 
 The Tile remains behaviourally related.
@@ -454,16 +444,15 @@ Future implementations may reuse Tile instances.
 
 Conceptually.
 
-```text
-Released Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Released Tile"]
+N2["Compatible Expression"]
+N3["Reuse"]
 
-Compatible Expression
-
-↓
-
-Reuse
+N1 --> N2
+N2 --> N3
 ```
 
 Reuse is an implementation optimisation.
@@ -631,15 +620,3 @@ Predictable.
 Tiles should not feel disposable.
 
 They should feel like persistent participants within the user's World, evolving naturally as behaviour changes and quietly departing only when their purpose has truly ended.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-adaptive-tiles.md`

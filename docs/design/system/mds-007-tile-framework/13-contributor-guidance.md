@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -44,22 +44,24 @@ Instead ask:
 
 Good.
 
-```text
-Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline"]
+N2["Timeline Tile"]
 
-Timeline Tile
+N1 --> N2
 ```
 
 Poor.
 
-```text
-Progress Bar
+```mermaid
+flowchart TD
 
-↓
+N1["Progress Bar"]
+N2["Component"]
 
-Component
+N1 --> N2
 ```
 
 Expressions always precede Tiles.
@@ -92,30 +94,28 @@ Every Tile exists because behaviour exists.
 
 Preferred.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Expression"]
+N3["Tile"]
+N4["Component"]
 
-Expression
-
-↓
-
-Tile
-
-↓
-
-Component
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Widget
+```mermaid
+flowchart TD
 
-↓
+N1["Widget"]
+N2["Behaviour"]
 
-Behaviour
+N1 --> N2
 ```
 
 Presentation should always remain downstream from runtime understanding.
@@ -129,6 +129,7 @@ Tiles should remain behaviourally stable.
 Example.
 
 ```
+
 Hero Tile
 ```
 
@@ -142,6 +143,7 @@ may appear differently on:
 It remains:
 
 ```
+
 Hero Tile
 ```
 
@@ -167,22 +169,24 @@ Components should never own behaviour.
 
 Good.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Hero Component"]
 
-Hero Component
+N1 --> N2
 ```
 
 Poor.
 
-```text
-Hero Component
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Component"]
+N2["Hero Behaviour"]
 
-Hero Behaviour
+N1 --> N2
 ```
 
 Components are implementation.
@@ -217,12 +221,13 @@ Do not create:
 
 Instead create:
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Adaptive Projection"]
 
-Adaptive Projection
+N1 --> N2
 ```
 
 Devices change.
@@ -241,22 +246,24 @@ Not be replaced.
 
 Preferred.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Updated Hero Tile"]
 
-Updated Hero Tile
+N1 --> N2
 ```
 
 Avoid.
 
-```text
-Destroy
+```mermaid
+flowchart TD
 
-↓
+N1["Destroy"]
+N2["Create"]
 
-Create
+N1 --> N2
 ```
 
 Users should perceive continuous presentation.
@@ -352,22 +359,24 @@ Performance optimisation should preserve Tile identity.
 
 Preferred.
 
-```text
-Same Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Same Tile"]
+N2["Simpler Rendering"]
 
-Simpler Rendering
+N1 --> N2
 ```
 
 Avoid.
 
-```text
-Different Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Different Tile"]
+N2["Higher Performance"]
 
-Higher Performance
+N1 --> N2
 ```
 
 Optimise implementation.
@@ -465,15 +474,3 @@ When every contributor naturally thinks in Expressions and Tiles rather than com
 A presentation layer that can evolve for decades while the behavioural language remains unchanged.
 
 That separation is the defining strength of the Mosaic Tile Framework.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

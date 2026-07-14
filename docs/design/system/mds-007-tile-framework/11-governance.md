@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 11
 Title: Tile Framework Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Framework Governance
@@ -353,15 +353,3 @@ Only understanding should remain.
 | ADR-165 | Adaptive behaviour never changes Tile identity. |
 | ADR-166 | Runtime Tile Resolution owns presentation behaviour. |
 | ADR-167 | Modules inherit the Tile Framework rather than extending it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

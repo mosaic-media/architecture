@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 01
 Title: Tile Philosophy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Philosophy
@@ -65,20 +65,17 @@ Components should never understand runtime behaviour.
 
 Tiles exist between those worlds.
 
-```text
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Tile"]
+N3["Component"]
+N4["Rendering"]
 
-Tile
-
-↓
-
-Component
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This separation preserves one of the strongest architectural boundaries within Mosaic.
@@ -140,6 +137,7 @@ Tiles become tangible.
 A Timeline remains:
 
 ```
+
 Timeline
 ```
 
@@ -155,6 +153,7 @@ Likewise.
 A Timeline Tile should remain:
 
 ```
+
 Timeline Tile
 ```
 
@@ -189,20 +188,17 @@ Expressions determine Tiles.
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Expression"]
+N3["Tile"]
+N4["Component"]
 
-Expression
-
-↓
-
-Tile
-
-↓
-
-Component
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Responsibility always flows in one direction.
@@ -230,25 +226,23 @@ Tiles intentionally combine into larger experiences.
 
 Example.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Timeline Tile"]
+N3["Metadata Tile"]
+N4["Actions Tile"]
 
-Timeline Tile
-
-↓
-
-Metadata Tile
-
-↓
-
-Actions Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Together they communicate:
 
 ```
+
 Playback
 ```
 
@@ -341,12 +335,13 @@ Tile identity should survive behavioural evolution.
 
 Example.
 
-```
-Episode 17
+```mermaid
+flowchart TD
 
-↓
+N1["Episode 17"]
+N2["Episode 18"]
 
-Episode 18
+N1 --> N2
 ```
 
 The Hero Tile evolves.
@@ -601,15 +596,3 @@ Tiles communicate Expressions.
 Expressions communicate the user's World.
 
 That layered separation is the defining architectural principle of the Mosaic Tile Framework.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-tile-taxonomy.md`

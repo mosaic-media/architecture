@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 06
 Title: Tile Composition
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Composition
@@ -48,38 +48,32 @@ Traditional interfaces frequently compose components.
 
 Examples.
 
-```text
-Card
+```mermaid
+flowchart TD
 
-↓
+N1["Card"]
+N2["Button"]
+N3["List"]
+N4["Grid"]
 
-Button
-
-↓
-
-List
-
-↓
-
-Grid
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Mosaic intentionally composes behavioural concepts.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Timeline Tile"]
+N3["Metadata Tile"]
+N4["Relationship Tile"]
 
-Timeline Tile
-
-↓
-
-Metadata Tile
-
-↓
-
-Relationship Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Presentation emerges naturally from understanding.
@@ -106,24 +100,19 @@ Every Tile Composition originates from runtime behaviour.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Hero"]
+N3["Timeline"]
+N4["Actions"]
+N5["Metadata"]
 
-Hero
-
-↓
-
-Timeline
-
-↓
-
-Actions
-
-↓
-
-Metadata
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 These Tiles form one behavioural experience.
@@ -162,20 +151,17 @@ Groups should remain conceptually independent.
 
 The Hero Group normally contains:
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Timeline Tile"]
+N3["Primary Action Tile"]
+N4["Metadata Tile"]
 
-Timeline Tile
-
-↓
-
-Primary Action Tile
-
-↓
-
-Metadata Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Hero Group represents the behavioural centre of the current World.
@@ -188,20 +174,17 @@ Nothing outside the group should compete for primary attention.
 
 A Reading Group may contain:
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Progress Tile"]
+N3["Bookmarks"]
+N4["Chapter Navigation"]
 
-Progress Tile
-
-↓
-
-Bookmarks
-
-↓
-
-Chapter Navigation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Reading behaviour determines composition.
@@ -214,24 +197,19 @@ Not media type.
 
 Playback naturally groups:
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Timeline"]
+N3["Playback Actions"]
+N4["Audio"]
+N5["Subtitles"]
 
-Timeline
-
-↓
-
-Playback Actions
-
-↓
-
-Audio
-
-↓
-
-Subtitles
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The group should communicate one coherent behavioural task.
@@ -244,20 +222,17 @@ Relationship Tiles naturally compose together.
 
 Examples.
 
-```text
-Cast
+```mermaid
+flowchart TD
 
-↓
+N1["Cast"]
+N2["Studio"]
+N3["Recommendations"]
+N4["Related Works"]
 
-Studio
-
-↓
-
-Recommendations
-
-↓
-
-Related Works
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Relationships should strengthen discovery.
@@ -272,16 +247,15 @@ Utility information should compose separately.
 
 Examples.
 
-```text
-Diagnostics
+```mermaid
+flowchart TD
 
-↓
+N1["Diagnostics"]
+N2["Downloads"]
+N3["Sync Status"]
 
-Downloads
-
-↓
-
-Sync Status
+N1 --> N2
+N2 --> N3
 ```
 
 Utility groups should remain behaviourally peripheral.
@@ -296,16 +270,15 @@ Tile Composition should respect Runtime Hierarchy.
 
 Example.
 
-```text
-Hero Group
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Group"]
+N2["Supporting Groups"]
+N3["Peripheral Groups"]
 
-Supporting Groups
-
-↓
-
-Peripheral Groups
+N1 --> N2
+N2 --> N3
 ```
 
 Groups should never compete equally.
@@ -320,14 +293,17 @@ Groups may contain sub-groups.
 
 Example.
 
-```text
-Hero Group
+```mermaid
+flowchart TD
 
-├── Hero
+N1["Hero Group"]
+N2["Hero"]
+N3["Playback"]
+N4["Metadata"]
 
-├── Playback
-
-└── Metadata
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 Nested groups improve organisation without changing behavioural meaning.
@@ -384,24 +360,17 @@ Editorial hierarchy should remain consistent within groups.
 
 Example.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Heading<br/>Timeline"]
+N3["Supporting<br/>Metadata"]
+N4["Caption"]
 
-Heading
-
-Timeline
-
-↓
-
-Supporting
-
-Metadata
-
-↓
-
-Caption
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Typography should reinforce group structure naturally.
@@ -640,15 +609,3 @@ Tiles should never feel like unrelated interface elements arranged on a screen.
 Instead they should feel like members of one coherent conversation about the user's current World.
 
 That behavioural cohesion is one of the defining characteristics of the Mosaic Tile Framework.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-tile-interaction.md`

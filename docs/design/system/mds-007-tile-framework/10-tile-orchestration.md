@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 10
 Title: Tile Orchestration
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Tile Orchestration
@@ -55,48 +55,38 @@ Behaviour remains the responsibility of the Composition Engine.
 
 Traditional interfaces often behave like this.
 
-```text
-Widget
+```mermaid
+flowchart TD
 
-↓
+N1["Widget"]
+N2["Updates"]
+N3["Neighbour Updates"]
+N4["Animation"]
+N5["Finished"]
 
-Updates
-
-↓
-
-Neighbour Updates
-
-↓
-
-Animation
-
-↓
-
-Finished
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each component behaves independently.
 
 Mosaic intentionally behaves differently.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Composition"]
+N3["Tiles"]
+N4["Presentation"]
+N5["Understanding"]
 
-Composition
-
-↓
-
-Tiles
-
-↓
-
-Presentation
-
-↓
-
-Understanding
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Tiles evolve together because behaviour changed.
@@ -135,32 +125,23 @@ Behaviour always possesses the highest authority.
 
 Every behavioural update follows the same conceptual sequence.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Composition Engine"]
+N3["Expression Resolution"]
+N4["Tile Resolution"]
+N5["Tile Orchestration"]
+N6["Presentation"]
+N7["Rendering"]
 
-Composition Engine
-
-↓
-
-Expression Resolution
-
-↓
-
-Tile Resolution
-
-↓
-
-Tile Orchestration
-
-↓
-
-Presentation
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Tile Orchestration never bypasses earlier runtime stages.
@@ -194,24 +175,19 @@ The Hero remains the behavioural centre.
 
 When orchestration occurs:
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Primary"]
+N3["Supporting"]
+N4["Peripheral"]
+N5["Environment"]
 
-Primary
-
-↓
-
-Supporting
-
-↓
-
-Peripheral
-
-↓
-
-Environment
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Tile evolution should always respect Runtime Hierarchy.
@@ -226,20 +202,17 @@ Example.
 
 Playback.
 
-```text
-Hero Group
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Group"]
+N2["Timeline"]
+N3["Actions"]
+N4["Metadata"]
 
-Timeline
-
-↓
-
-Actions
-
-↓
-
-Metadata
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The entire group should communicate one behavioural transition.
@@ -296,20 +269,17 @@ Tile Orchestration coordinates Motion.
 
 Example.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Hero Motion"]
+N3["Supporting Motion"]
+N4["Environmental Motion"]
 
-Hero Motion
-
-↓
-
-Supporting Motion
-
-↓
-
-Environmental Motion
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Motion should reinforce Tile relationships.
@@ -350,16 +320,15 @@ Future implementations may internally maintain Tile dependency graphs.
 
 Conceptually.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Timeline Tile"]
+N3["Metadata Tile"]
 
-Timeline Tile
-
-↓
-
-Metadata Tile
+N1 --> N2
+N2 --> N3
 ```
 
 Dependencies improve scheduling.
@@ -376,22 +345,24 @@ Tiles should evolve rather than be replaced.
 
 Preferred.
 
-```text
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Updated Hero Tile"]
 
-Updated Hero Tile
+N1 --> N2
 ```
 
 Avoid.
 
-```text
-Hero Removed
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Removed"]
+N2["Hero Created"]
 
-Hero Created
+N1 --> N2
 ```
 
 Identity continuity significantly reduces cognitive effort.
@@ -404,24 +375,19 @@ Environmental presentation should always respond last.
 
 Example.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Tiles"]
+N3["Motion"]
+N4["Atmosphere"]
+N5["Environment Settles"]
 
-Tiles
-
-↓
-
-Motion
-
-↓
-
-Atmosphere
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The world should appear to respond naturally.
@@ -466,12 +432,13 @@ If one Tile cannot update.
 
 Preferred.
 
-```text
-Tile Fallback
+```mermaid
+flowchart TD
 
-↓
+N1["Tile Fallback"]
+N2["Group Continues"]
 
-Group Continues
+N1 --> N2
 ```
 
 Avoid.
@@ -694,15 +661,3 @@ It ensures that:
 Users should never perceive individual Tiles updating.
 
 They should simply feel that their World naturally continued.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`
