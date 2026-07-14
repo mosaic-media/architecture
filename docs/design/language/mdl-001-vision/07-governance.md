@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 07
 Title: Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Governance
@@ -335,19 +335,3 @@ Governance succeeds when:
 | ADR-027 | Significant philosophical changes require formal review and ADRs. |
 | ADR-028 | Governance exists to preserve product identity rather than individual implementation details. |
 | ADR-029 | Design debt should be tracked and reviewed alongside technical debt. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`08-adrs.md`

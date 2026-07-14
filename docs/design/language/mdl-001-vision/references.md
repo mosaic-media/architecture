@@ -3,7 +3,7 @@ File: docs/design/language/mdl-001-vision/references.md
 Document: MDL-001
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -247,10 +247,10 @@ MDL intentionally remains implementation independent while ensuring philosophica
 The following documents should be considered required reading for contributors working on MDL.
 
 - MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
 
 ---
 
@@ -258,9 +258,9 @@ The following documents should be considered required reading for contributors w
 
 The following documents provide additional context.
 
-- MDS-001 Design Token Architecture
-- MDS-002 Material System
-- MDS-003 Composition Engine
+- [MDS-001 — Design Token Architecture](../../system/mds-001-design-token-architecture/index.md)
+- [MDS-003 — Material System](../../system/mds-003-material-system/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
 - Future ADRs
 - Engineering RFCs
 

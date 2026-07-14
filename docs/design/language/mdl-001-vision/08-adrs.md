@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 08
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Architectural Decision Records
@@ -32,7 +32,7 @@ This approach aligns with widely adopted ADR practices, where each decision capt
 
 # Decision Format
 
-Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
+Decision format, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
@@ -85,7 +85,7 @@ Rejected because each encourages software to become the centre of attention.
 ### Related Specifications
 
 - MDL-001 Vision
-- MDL-002 Principles
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
 
 ---
 
@@ -163,9 +163,9 @@ instead of:
 
 ### Related Specifications
 
-MDL-003 Mental Model
+[MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
 
-MDL-004 Interaction Model
+[MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
 
 ---
 
@@ -372,19 +372,3 @@ Superseded ADRs should never be deleted.
 Instead they should reference the ADR that replaces them.
 
 Maintaining this decision history helps future contributors understand how and why the design language evolved, a common recommendation in established ADR practices.  [github.com](https://github.com/architecture-decision-record/architecture-decision-record)
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`09-contributor-guidance.md`

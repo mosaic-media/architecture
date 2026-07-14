@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 02
 Title: Vision
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Vision
@@ -266,21 +266,3 @@ Instead they should describe:
 - the feeling
 
 If implementation details become easier to explain than the vision itself, the product has drifted away from its original purpose.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Architectural Decisions Introduced**
-
-- ADR-007 — Mosaic is an entertainment companion rather than a media platform.
-- ADR-008 — The interface exists to deepen enjoyment, never redirect attention.
-- ADR-009 — Success is measured by immersion rather than feature count.
-
-**Next File**
-
-`03-product-beliefs.md`

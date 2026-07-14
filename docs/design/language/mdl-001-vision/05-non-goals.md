@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 05
 Title: Non-Goals
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Non-Goals
@@ -143,24 +143,19 @@ Design maturity is measured by thoughtful restraint rather than feature quantity
 
 Traditional applications organise experiences around navigation.
 
-```
-Home
+```mermaid
+flowchart TD
 
-↓
+N1["Home"]
+N2["Library"]
+N3["Series"]
+N4["Season"]
+N5["Episode"]
 
-Library
-
-↓
-
-Series
-
-↓
-
-Season
-
-↓
-
-Episode
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Mosaic intentionally moves away from this model.
@@ -324,19 +319,3 @@ They are protections for product identity.
 | ADR-019 | The interface must never become more important than the entertainment. |
 | ADR-020 | Internal architecture must remain invisible to users. |
 | ADR-021 | Product identity is protected through explicit non-goals. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`06-design-philosophy.md`

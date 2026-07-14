@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 10
 Title: Design Review Checklist
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Design Review Checklist
@@ -373,19 +373,3 @@ If the answer is uncertain, the proposal should remain in review.
 | ADR-034 | Design reviews evaluate alignment with MDL rather than personal preference. |
 | ADR-035 | Every significant proposal must leave a documented review trail. |
 | ADR-036 | Existing systems are preferred over introducing isolated exceptions. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`11-future-considerations.md`

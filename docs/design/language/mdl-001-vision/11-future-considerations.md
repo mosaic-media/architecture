@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 11
 Title: Future Considerations
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Future Considerations
@@ -53,20 +53,17 @@ Information is inserted afterwards.
 
 Long-term, Mosaic should move towards the opposite model.
 
-```
-Knowledge
+```mermaid
+flowchart TD
 
-↓
+N1["Knowledge"]
+N2["Relationships"]
+N3["Composition"]
+N4["Presentation"]
 
-Relationships
-
-↓
-
-Composition
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Rather than asking:
@@ -322,19 +319,3 @@ Only the understanding of how best to realise it.
 | ADR-038 | Information is expected to become increasingly independent from presentation. |
 | ADR-039 | Accessibility is considered a driver of better design rather than a compliance exercise. |
 | ADR-040 | Future innovation must strengthen the companion philosophy rather than replace it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-The Information-Driven Experience model should be formalised during MDL-003 (Mental Model) and MDS-003 (Composition Engine).
-
-**Next File**
-
-`glossary.md`

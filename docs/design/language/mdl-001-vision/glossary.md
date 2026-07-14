@@ -3,7 +3,7 @@ File: docs/design/language/mdl-001-vision/glossary.md
 Document: MDL-001
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -298,10 +298,10 @@ The interface should communicate the user's world rather than isolated libraries
 
 | Specification | Primary Terms |
 |--------------|---------------|
-| MDL-002 Principles | Context, Companion, Immersion |
-| MDL-003 Mental Model | World, Focus, Composition |
-| MDL-004 Interaction Model | Composition, Tile, Domain |
-| MDL-005 Composition Model | Tile, Material, Relationship |
+| [MDL-002 — Principles](../mdl-002-principles/index.md) | Context, Companion, Immersion |
+| [MDL-003 — Mental Model](../mdl-003-mental-model/index.md) | World, Focus, Composition |
+| [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md) | Composition, Tile, Domain |
+| [MDL-005 — Composition Model](../mdl-005-composition-model/index.md) | Tile, Material, Relationship |
 | MDS Specifications | Material, Atmosphere, Adaptive |
 
 ---
@@ -319,15 +319,3 @@ New terms should only be introduced when:
 Terminology should remain stable once established.
 
 Renaming foundational concepts should require a formal design review.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

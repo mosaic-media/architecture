@@ -1,9 +1,9 @@
 <!--
 File: docs/design/language/mdl-001-vision/index.md
-Specification: MDL-001
+Document: MDL-001
 Title: Mosaic Design Language Vision
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MDL-001 — Mosaic Design Language Vision
@@ -65,8 +65,8 @@ Those concerns are defined by later MDL and MDS specifications.
 - 09 Contributor Guidance
 - 10 Design Review Checklist
 - 11 Future Considerations
-- Glossary
 - References
+- Glossary
 
 ---
 
@@ -87,8 +87,8 @@ MDL001 --> MDL004["MDL-004 Interaction Model"]
 MDL001 --> MDL005["MDL-005 Composition Model"]
 
 MDL001 --> MDS001["MDS-001 Design Token Architecture"]
-MDL001 --> MDS002["MDS-002 Material System"]
-MDL001 --> MDS003["MDS-003 Composition Engine"]
+MDL001 --> MDS002["MDS-003 Material System"]
+MDL001 --> MDS003["MDS-006 Composition Engine"]
 ```
 
 ---
@@ -106,19 +106,3 @@ Small documents:
 - minimise merge conflicts
 - encourage focused discussion
 - can be assembled into PDF, mdBook or documentation websites using tooling such as mdBook's `SUMMARY.md` and `book.toml`.  [Rust Language](https://rust-lang.github.io/mdBook/guide/creating.html)
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Design Systems Architect
-
-**Next File**
-
-`00-document-control.md`

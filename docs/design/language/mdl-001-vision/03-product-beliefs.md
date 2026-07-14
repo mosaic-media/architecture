@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 03
 Title: Product Beliefs
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Product Beliefs
@@ -321,19 +321,3 @@ Together these beliefs establish the philosophical foundation from which every f
 | ADR-012 | Mosaic behaves as a companion rather than a recommendation engine. |
 | ADR-013 | The interface earns attention instead of demanding it. |
 | ADR-014 | Long-term architecture should favour information over presentation. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`04-goals.md`

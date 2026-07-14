@@ -2,7 +2,7 @@
 File: docs/design/language/mdl-001-vision/00-document-control.md
 Document: MDL-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -18,8 +18,8 @@ Version: 0.2
 | Type | Foundational Specification |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Design Systems Architect |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
 | Repository | `/design/mdl/MDL-001 Vision/` |
 | Parent Standard | DSS-001 Documentation Standard |
 | Target Release | Mosaic v1.0 |
@@ -154,6 +154,7 @@ This approach keeps design intent stable while allowing documentation to evolve 
 | Version | Date | Author | Summary |
 |----------|------|--------|---------|
 | 0.1 | July 2026 | Lead Design Systems Architect | Initial document created following founder discovery workshops. |
+| 0.4 | July 2026 | AdamNi-7080 | Editorial, structural and cross-reference review completed. |
 
 ---
 
@@ -173,13 +174,13 @@ This specification has no upstream dependencies.
 
 Downstream specifications include:
 
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-001 Design Token Architecture
-- MDS-002 Material System
-- MDS-003 Composition Engine
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../../system/mds-001-design-token-architecture/index.md)
+- [MDS-003 — Material System](../../system/mds-003-material-system/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
 
 ```mermaid
 flowchart TD
@@ -208,19 +209,3 @@ If traceability cannot be demonstrated, either:
 2. MDL-001 requires formal revision.
 
 This requirement exists to prevent the design language from gradually drifting through isolated implementation decisions.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`01-background.md`

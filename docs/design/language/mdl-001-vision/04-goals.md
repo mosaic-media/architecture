@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 04
 Title: Goals
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Goals
@@ -285,21 +285,3 @@ When goals conflict, they should be prioritised in the following order.
 5. Introduce new capabilities.
 
 This ordering intentionally favours experience quality over feature quantity.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Architectural Decisions Introduced**
-
-- ADR-015 — Reducing friction is the primary measure of design success.
-- ADR-016 — Entertainment always has priority over interface expression.
-- ADR-017 — New capabilities must strengthen, not weaken, immersion.
-
-**Next File**
-
-`05-non-goals.md`

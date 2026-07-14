@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 06
 Title: Design Philosophy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Design Philosophy
@@ -330,19 +330,3 @@ Every downstream MDL and MDS specification should reinforce these ideas.
 | ADR-023 | Context is considered a more reliable design foundation than behavioural prediction. |
 | ADR-024 | Mosaic behaves as a companion rather than an engagement platform. |
 | ADR-025 | New systems are preferred over isolated feature implementations. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-None.
-
-**Next File**
-
-`07-governance.md`

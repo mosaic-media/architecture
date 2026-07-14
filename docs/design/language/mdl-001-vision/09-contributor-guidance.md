@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 09
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -309,19 +309,3 @@ That is considered success.
 | ADR-031 | Existing systems should be strengthened before new systems are introduced. |
 | ADR-032 | Design discussions should reference MDL rather than personal preference. |
 | ADR-033 | Community contributions are evaluated by alignment with MDL, not popularity. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Outstanding Questions**
-
-The formal terminology table will be expanded by **MDL-005 Vocabulary**.
-
-**Next File**
-
-`10-design-review-checklist.md`

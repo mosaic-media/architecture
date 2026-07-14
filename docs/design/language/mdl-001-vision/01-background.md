@@ -4,7 +4,7 @@ Document: MDL-001
 Chapter: 01
 Title: Background & Problem Statement
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Background & Problem Statement
@@ -312,26 +312,8 @@ The philosophy established within this chapter has direct consequences for futur
 
 | Specification | Consequence |
 |--------------|-------------|
-| MDL-002 Principles | Principles prioritise immersion over engagement. |
-| MDL-003 Mental Model | Users experience a continuous entertainment world rather than isolated applications. |
-| MDL-004 Interaction Model | Interfaces reorganise around changing focus instead of traditional page navigation. |
-| MDL-005 Composition Model | Composition exists to communicate current context while minimising cognitive effort. |
+| [MDL-002 — Principles](../mdl-002-principles/index.md) | Principles prioritise immersion over engagement. |
+| [MDL-003 — Mental Model](../mdl-003-mental-model/index.md) | Users experience a continuous entertainment world rather than isolated applications. |
+| [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md) | Interfaces reorganise around changing focus instead of traditional page navigation. |
+| [MDL-005 — Composition Model](../mdl-005-composition-model/index.md) | Composition exists to communicate current context while minimising cognitive effort. |
 | MDS Specifications | Visual systems support content rather than competing with it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Architectural Decisions Introduced**
-
-- ADR-004: Mosaic optimises for immersion rather than engagement.
-- ADR-005: Context switching is treated as measurable design friction.
-- ADR-006: Software exists to support entertainment rather than become the entertainment.
-
-**Next File**
-
-`02-vision.md`
