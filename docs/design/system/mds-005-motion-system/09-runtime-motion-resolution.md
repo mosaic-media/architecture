@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 09
 Title: Runtime Motion Resolution
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Motion Resolution
@@ -65,20 +65,17 @@ Without Runtime Motion Resolution, every component would need to understand:
 
 Instead.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Runtime Motion Resolver"]
+N3["Resolved Motion"]
+N4["Presentation"]
 
-Runtime Motion Resolver
-
-↓
-
-Resolved Motion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Components remain behaviourally simple.
@@ -91,32 +88,23 @@ The Motion System remains globally consistent.
 
 Every behavioural event follows the same conceptual pipeline.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Motion Hierarchy"]
+N3["Material Identity"]
+N4["Accessibility"]
+N5["Motion Curves"]
+N6["Platform Capability"]
+N7["Resolved Motion"]
 
-Motion Hierarchy
-
-↓
-
-Material Identity
-
-↓
-
-Accessibility
-
-↓
-
-Motion Curves
-
-↓
-
-Platform Capability
-
-↓
-
-Resolved Motion
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Each stage contributes one responsibility.
@@ -127,36 +115,25 @@ Each stage contributes one responsibility.
 
 The Runtime Motion Resolver evaluates:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Composition"]
+N3["Current Context"]
+N4["Material Identity"]
+N5["Accessibility"]
+N6["Device Capability"]
+N7["Platform"]
+N8["Performance Profile"]
 
-Composition
-
-↓
-
-Current Context
-
-↓
-
-Material Identity
-
-↓
-
-Accessibility
-
-↓
-
-Device Capability
-
-↓
-
-Platform
-
-↓
-
-Performance Profile
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 No individual input should override behavioural intent.
@@ -169,46 +146,23 @@ Behaviour remains the highest authority.
 
 Motion should always resolve using the same conceptual order.
 
-```text
-1.
+```mermaid
+flowchart TD
 
-Behaviour
+N1["1.<br/>Behaviour"]
+N2["2.<br/>Motion Hierarchy"]
+N3["3.<br/>Material Response"]
+N4["4.<br/>Accessibility"]
+N5["5.<br/>Motion Curves"]
+N6["6.<br/>Platform Adaptation"]
+N7["7.<br/>Resolved Motion"]
 
-↓
-
-2.
-
-Motion Hierarchy
-
-↓
-
-3.
-
-Material Response
-
-↓
-
-4.
-
-Accessibility
-
-↓
-
-5.
-
-Motion Curves
-
-↓
-
-6.
-
-Platform Adaptation
-
-↓
-
-7.
-
-Resolved Motion
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Meaning always precedes implementation.
@@ -219,12 +173,13 @@ Meaning always precedes implementation.
 
 One of the strongest guarantees within Mosaic is:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Always Behaviour"]
 
-Always Behaviour
+N1 --> N2
 ```
 
 Playback remains Playback.
@@ -284,32 +239,23 @@ Future implementations may internally resolve Motion Profiles.
 
 Conceptually.
 
-```text
-Hero Transition
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Transition"]
+N2["Motion Profile"]
+N3["Hierarchy"]
+N4["Material Motion"]
+N5["Refraction"]
+N6["Timing"]
+N7["Resolved Motion"]
 
-Motion Profile
-
-↓
-
-Hierarchy
-
-↓
-
-Material Motion
-
-↓
-
-Refraction
-
-↓
-
-Timing
-
-↓
-
-Resolved Motion
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Components consume only the completed profile.
@@ -337,26 +283,26 @@ Motion should resolve incrementally.
 
 Preferred.
 
-```text
-Behaviour Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour Changes"]
+N2["Affected Materials Move"]
+N3["Environment Responds"]
 
-Affected Materials Move
-
-↓
-
-Environment Responds
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Behaviour Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour Changes"]
+N2["Entire Interface Re-animates"]
 
-Entire Interface Re-animates
+N1 --> N2
 ```
 
 Incremental movement preserves continuity while reducing unnecessary computation.
@@ -453,28 +399,31 @@ Future runtime implementations may expose conceptual performance profiles.
 
 Examples.
 
-```text
-High
+```mermaid
+flowchart TD
 
-↓
+N1["High"]
+N2["Full Material Behaviour"]
 
-Full Material Behaviour
+N1 --> N2
 ```
 
-```text
-Balanced
+```mermaid
+flowchart TD
 
-↓
+N1["Balanced"]
+N2["Reduced Environmental Motion"]
 
-Reduced Environmental Motion
+N1 --> N2
 ```
 
-```text
-Efficiency
+```mermaid
+flowchart TD
 
-↓
+N1["Efficiency"]
+N2["Simplified Material Motion"]
 
-Simplified Material Motion
+N1 --> N2
 ```
 
 Every profile should preserve behavioural understanding.
@@ -671,15 +620,3 @@ They should simply communicate:
 > **Behaviour changed.**
 
 The Motion System does everything else.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-platform-motion.md`

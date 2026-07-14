@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 11
 Title: Motion System Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Motion System Governance
@@ -362,15 +362,3 @@ Only understanding should remain.
 | ADR-136 | Runtime Motion Resolution owns implementation while preserving behavioural meaning. |
 | ADR-137 | Accessibility always has higher authority than animation fidelity. |
 | ADR-138 | Modules inherit the Motion System rather than extending it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

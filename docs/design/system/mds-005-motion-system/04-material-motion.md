@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 04
 Title: Material Motion
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Material Motion
@@ -187,34 +187,30 @@ Its movement should communicate:
 
 Preferred.
 
-```text
-Overlay
+```mermaid
+flowchart TD
 
-↓
+N1["Overlay"]
+N2["Emerges"]
+N3["Interaction"]
+N4["Returns"]
 
-Emerges
-
-↓
-
-Interaction
-
-↓
-
-Returns
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Overlay
+```mermaid
+flowchart TD
 
-↓
+N1["Overlay"]
+N2["Instantly Appears"]
+N3["Instantly Disappears"]
 
-Instantly Appears
-
-↓
-
-Instantly Disappears
+N1 --> N2
+N2 --> N3
 ```
 
 Users should perceive Overlay as a physical object briefly entering the environment.
@@ -319,26 +315,26 @@ Material Motion should evolve over time.
 
 Preferred.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Material Responds"]
+N3["Environment Settles"]
 
-Material Responds
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Everything Immediately Complete"]
 
-Everything Immediately Complete
+N1 --> N2
 ```
 
 Settling communicates physical realism.
@@ -433,24 +429,19 @@ The physical language should remain understandable even when movement is reduced
 
 The Runtime Motion Resolver should resolve Material Motion according to:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Material Identity"]
+N3["Accessibility"]
+N4["Device Capability"]
+N5["Runtime Motion"]
 
-Material Identity
-
-↓
-
-Accessibility
-
-↓
-
-Device Capability
-
-↓
-
-Runtime Motion
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Components should never manually animate materials.
@@ -639,15 +630,3 @@ Materials should feel:
 Users should never perceive animated panels.
 
 They should perceive one coherent environment naturally responding to the evolution of their entertainment World.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-refraction-motion.md`

@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 05
 Title: Refraction Motion
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Refraction Motion
@@ -87,20 +87,17 @@ These are different behaviours.
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Material Motion"]
+N3["Light Redistribution"]
+N4["Environment Settles"]
 
-Material Motion
-
-↓
-
-Light Redistribution
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Users should perceive:
@@ -118,30 +115,28 @@ Refraction Motion should never occur independently.
 
 Incorrect.
 
-```text
-Light Moves
+```mermaid
+flowchart TD
 
-↓
+N1["Light Moves"]
+N2["Nothing Changed"]
 
-Nothing Changed
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Behaviour Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour Changes"]
+N2["Composition Evolves"]
+N3["Materials Respond"]
+N4["Light Redistributes"]
 
-Composition Evolves
-
-↓
-
-Materials Respond
-
-↓
-
-Light Redistributes
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Light should always appear to respond.
@@ -154,24 +149,19 @@ Never initiate.
 
 Every significant environmental transition should broadly follow the same conceptual sequence.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Material Motion Begins"]
+N3["Refraction Redistributes"]
+N4["Diffusion Softens"]
+N5["Environment Settles"]
 
-Material Motion Begins
-
-↓
-
-Refraction Redistributes
-
-↓
-
-Diffusion Softens
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each stage reinforces physical continuity.
@@ -184,24 +174,19 @@ Hero changes produce the strongest Refraction Motion.
 
 Example.
 
-```
-Old Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Old Hero"]
+N2["New Hero"]
+N3["Atmosphere Blends"]
+N4["Light Field Reprojects"]
+N5["Hero Acrylic Settles"]
 
-New Hero
-
-↓
-
-Atmosphere Blends
-
-↓
-
-Light Field Reprojects
-
-↓
-
-Hero Acrylic Settles
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Hero should appear to illuminate the surrounding environment naturally.
@@ -322,26 +307,26 @@ Diffusion should evolve continuously.
 
 Preferred.
 
-```text
-Strong Reflection
+```mermaid
+flowchart TD
 
-↓
+N1["Strong Reflection"]
+N2["Soft Diffusion"]
+N3["Environmental Balance"]
 
-Soft Diffusion
-
-↓
-
-Environmental Balance
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Strong Reflection
+```mermaid
+flowchart TD
 
-↓
+N1["Strong Reflection"]
+N2["Instant Neutral"]
 
-Instant Neutral
+N1 --> N2
 ```
 
 Users should perceive the atmosphere settling rather than disappearing.
@@ -382,20 +367,17 @@ Runtime Atmosphere should never jump between states.
 
 Preferred.
 
-```text
-Old Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Old Atmosphere"]
+N2["Blend"]
+N3["Redistribution"]
+N4["New Atmosphere"]
 
-Blend
-
-↓
-
-Redistribution
-
-↓
-
-New Atmosphere
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The user should perceive one continuous environment.
@@ -619,15 +601,3 @@ Users should never consciously follow the light.
 They should simply feel that the world around their entertainment naturally responded when something meaningful changed.
 
 That quiet environmental response is one of the defining characteristics of the Mosaic Motion System.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-temporal-continuity.md`

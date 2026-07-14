@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 01
 Title: Motion Philosophy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Motion Philosophy
@@ -72,26 +72,26 @@ Motion should never originate from interface events.
 
 Incorrect.
 
-```text
-Button Click
+```mermaid
+flowchart TD
 
-↓
+N1["Button Click"]
+N2["Animation"]
 
-Animation
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Behaviour Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour Changes"]
+N2["Motion Explains Behaviour"]
+N3["Presentation"]
 
-Motion Explains Behaviour
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 Behaviour always possesses higher authority than animation.
@@ -108,34 +108,30 @@ Motion preserves that continuity.
 
 Instead of:
 
-```text
-Old State
+```mermaid
+flowchart TD
 
-↓
+N1["Old State"]
+N2["Replace"]
+N3["New State"]
 
-Replace
-
-↓
-
-New State
+N1 --> N2
+N2 --> N3
 ```
 
 Mosaic prefers:
 
-```text
-Old State
+```mermaid
+flowchart TD
 
-↓
+N1["Old State"]
+N2["Evolve"]
+N3["Understanding"]
+N4["New State"]
 
-Evolve
-
-↓
-
-Understanding
-
-↓
-
-New State
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Users should perceive evolution.
@@ -279,24 +275,19 @@ Novelty should never become a design objective.
 
 Motion should occur at multiple conceptual layers.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Composition"]
+N3["Materials"]
+N4["Typography"]
+N5["Presentation"]
 
-Composition
-
-↓
-
-Materials
-
-↓
-
-Typography
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every layer contributes movement.
@@ -583,15 +574,3 @@ They should simply understand what happened.
 When Motion succeeds, the interface feels alive without ever feeling busy.
 
 That quiet clarity is the defining characteristic of the Mosaic Motion System.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-motion-hierarchy.md`

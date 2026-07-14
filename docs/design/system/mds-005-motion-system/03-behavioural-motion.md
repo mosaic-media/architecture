@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 03
 Title: Behavioural Motion
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Behavioural Motion
@@ -51,34 +51,30 @@ Motion should never be triggered directly by interaction.
 
 Incorrect.
 
-```text
-Tap
+```mermaid
+flowchart TD
 
-↓
+N1["Tap"]
+N2["Animation"]
 
-Animation
+N1 --> N2
 ```
 
 Correct.
 
-```text
-Tap
+```mermaid
+flowchart TD
 
-↓
+N1["Tap"]
+N2["Behaviour Changes"]
+N3["Composition Evolves"]
+N4["Motion Explains"]
+N5["Presentation"]
 
-Behaviour Changes
-
-↓
-
-Composition Evolves
-
-↓
-
-Motion Explains
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Motion should always describe behaviour.
@@ -91,28 +87,21 @@ Never input.
 
 The Motion System recognises several categories of behavioural change.
 
-```text
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["Context"]
+N3["Composition"]
+N4["Information"]
+N5["Material"]
+N6["Environment"]
 
-Context
-
-↓
-
-Composition
-
-↓
-
-Information
-
-↓
-
-Material
-
-↓
-
-Environment
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Each category produces different movement.
@@ -243,26 +232,26 @@ Every behavioural transition should preserve identity.
 
 Poor.
 
-```text
-Old Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Old Hero"]
+N2["Removed"]
+N3["New Hero"]
 
-Removed
-
-↓
-
-New Hero
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```text
-Hero Evolves
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Evolves"]
+N2["Understanding Continues"]
 
-Understanding Continues
+N1 --> N2
 ```
 
 Movement should communicate transformation.
@@ -299,30 +288,28 @@ Movement should always respect causality.
 
 Preferred.
 
-```text
-Focus Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Focus Changes"]
+N2["Hero Moves"]
+N3["Supporting Information Responds"]
+N4["Environment Settles"]
 
-Hero Moves
-
-↓
-
-Supporting Information Responds
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Everything Moves
+```mermaid
+flowchart TD
 
-↓
+N1["Everything Moves"]
+N2["User Works Out What Happened"]
 
-User Works Out What Happened
+N1 --> N2
 ```
 
 Understanding should precede interpretation.
@@ -336,6 +323,7 @@ Different behavioural events possess different conceptual weight.
 Examples.
 
 ```
+
 Pause Playback
 ```
 
@@ -344,6 +332,7 @@ Pause Playback
 Light Motion.
 
 ```
+
 Change Hero
 ```
 
@@ -352,6 +341,7 @@ Change Hero
 Medium Motion.
 
 ```
+
 Change Domain
 ```
 
@@ -369,20 +359,17 @@ Movement should never interrupt ongoing understanding.
 
 Example.
 
-```
-Reading
+```mermaid
+flowchart TD
 
-↓
+N1["Reading"]
+N2["Search"]
+N3["Close Search"]
+N4["Reading"]
 
-Search
-
-↓
-
-Close Search
-
-↓
-
-Reading
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Search Motion should preserve reading continuity.
@@ -429,20 +416,17 @@ Not interface events.
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Motion Resolver"]
+N3["Material Motion"]
+N4["Presentation"]
 
-Motion Resolver
-
-↓
-
-Material Motion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Components should never decide:
@@ -614,15 +598,3 @@ Users should never wonder:
 Movement should quietly answer those questions before they are consciously asked.
 
 That clarity is the defining objective of Behavioural Motion.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-material-motion.md`

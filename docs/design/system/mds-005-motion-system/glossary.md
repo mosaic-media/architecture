@@ -3,7 +3,7 @@ File: docs/design/system/mds-005-motion-system/glossary.md
 Document: MDS-005
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -114,24 +114,19 @@ The ordered system through which behavioural importance determines movement prio
 
 The hierarchy consists of:
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Primary"]
+N3["Supporting"]
+N4["Peripheral"]
+N5["Environmental"]
 
-Primary
-
-↓
-
-Supporting
-
-↓
-
-Peripheral
-
-↓
-
-Environmental
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Movement follows this hierarchy.
@@ -233,13 +228,13 @@ Not visual richness.
 
 | Specification | Primary Concepts |
 |---------------|------------------|
-| MDL-001 Vision | Companion, Immersion |
-| MDL-002 Principles | Behaviour, Calmness |
-| MDL-003 Mental Model | World, Focus |
-| MDL-004 Interaction Model | Behavioural Evolution |
-| MDL-005 Composition Model | Hierarchy |
-| MDS-003 Material System | Material Motion, Refraction |
-| MDS-004 Typography System | Editorial Continuity |
+| [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md) | Companion, Immersion |
+| [MDL-002 — Principles](../../language/mdl-002-principles/index.md) | Behaviour, Calmness |
+| [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World, Focus |
+| [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Behavioural Evolution |
+| [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Hierarchy |
+| [MDS-003 — Material System](../mds-003-material-system/index.md) | Material Motion, Refraction |
+| [MDS-004 — Typography System](../mds-004-typography-system/index.md) | Editorial Continuity |
 
 ---
 
@@ -254,15 +249,3 @@ Future contributors should:
 - avoid implementation-specific animation terminology within architectural documentation.
 
 Motion terminology should remain independent from rendering technology.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

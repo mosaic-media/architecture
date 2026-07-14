@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 06
 Title: Temporal Continuity
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Temporal Continuity
@@ -59,30 +59,28 @@ Temporal Continuity should create the same feeling throughout Mosaic.
 
 Every interaction should feel like:
 
-```
-Continuation
+```mermaid
+flowchart TD
 
-↓
+N1["Continuation"]
+N2["Evolution"]
+N3["Continuation"]
 
-Evolution
-
-↓
-
-Continuation
+N1 --> N2
+N2 --> N3
 ```
 
 Never:
 
-```
-Stop
+```mermaid
+flowchart TD
 
-↓
+N1["Stop"]
+N2["Replace"]
+N3["Restart"]
 
-Replace
-
-↓
-
-Restart
+N1 --> N2
+N2 --> N3
 ```
 
 ---
@@ -114,20 +112,17 @@ Time should always follow behaviour.
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Motion"]
+N3["Temporal Continuity"]
+N4["Understanding"]
 
-Motion
-
-↓
-
-Temporal Continuity
-
-↓
-
-Understanding
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Animation timing should never become the primary design decision.
@@ -142,36 +137,25 @@ Time simply communicates it.
 
 Every meaningful interaction should preserve:
 
-```text
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Composition"]
+N5["Materials"]
+N6["Typography"]
+N7["Motion"]
+N8["Understanding"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Composition
-
-↓
-
-Materials
-
-↓
-
-Typography
-
-↓
-
-Motion
-
-↓
-
-Understanding
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Breaking any link weakens the user's perception of continuity.
@@ -184,42 +168,34 @@ Changes should unfold progressively.
 
 Preferred.
 
-```text
-Old World
+```mermaid
+flowchart TD
 
-↓
+N1["Old World"]
+N2["Behaviour Changes"]
+N3["Materials Respond"]
+N4["Typography Adjusts"]
+N5["Environment Settles"]
+N6["New World"]
 
-Behaviour Changes
-
-↓
-
-Materials Respond
-
-↓
-
-Typography Adjusts
-
-↓
-
-Environment Settles
-
-↓
-
-New World
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Avoid.
 
-```text
-Old World
+```mermaid
+flowchart TD
 
-↓
+N1["Old World"]
+N2["Everything Replaced"]
+N3["New World"]
 
-Everything Replaced
-
-↓
-
-New World
+N1 --> N2
+N2 --> N3
 ```
 
 Users should perceive evolution.
@@ -234,12 +210,13 @@ Objects should remain recognisable while changing.
 
 Examples.
 
-```
-Current Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Current Episode"]
+N2["Next Episode"]
 
-Next Episode
+N1 --> N2
 ```
 
 The object evolves.
@@ -377,24 +354,19 @@ Complex interactions should feel like one transition.
 
 Example.
 
-```
-Select Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Select Episode"]
+N2["Hero Evolves"]
+N3["Timeline Updates"]
+N4["Atmosphere Settles"]
+N5["Playback Begins"]
 
-Hero Evolves
-
-↓
-
-Timeline Updates
-
-↓
-
-Atmosphere Settles
-
-↓
-
-Playback Begins
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Users should perceive:
@@ -411,16 +383,15 @@ Environmental light should continue evolving after physical movement has largely
 
 Conceptually.
 
-```text
-Material Moves
+```mermaid
+flowchart TD
 
-↓
+N1["Material Moves"]
+N2["Refraction Redistributes"]
+N3["Environment Settles"]
 
-Refraction Redistributes
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
 ```
 
 This slight temporal offset strengthens perceived physicality.
@@ -435,30 +406,28 @@ Never switch.
 
 Preferred.
 
-```text
-Old Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Old Atmosphere"]
+N2["Blend"]
+N3["New Atmosphere"]
 
-Blend
-
-↓
-
-New Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Old Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Old Atmosphere"]
+N2["Replace"]
+N3["New Atmosphere"]
 
-Replace
-
-↓
-
-New Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 Atmosphere should feel environmental.
@@ -683,15 +652,3 @@ Instead...
 Their World should quietly continue evolving around them.
 
 That uninterrupted perception of continuity is ultimately more important than any individual animation.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-motion-curves.md`

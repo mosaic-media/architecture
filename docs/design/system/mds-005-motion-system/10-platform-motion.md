@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 10
 Title: Platform Motion
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Platform Motion
@@ -73,30 +73,19 @@ Behavioural meaning should remain platform independent.
 
 Conceptually.
 
-```text
-Hero Transition
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Transition"]
+N2["Web<br/>Hero Transition"]
+N3["Flutter<br/>Hero Transition"]
+N4["SwiftUI<br/>Hero Transition"]
+N5["Compose"]
 
-Web
-
-Hero Transition
-
-↓
-
-Flutter
-
-Hero Transition
-
-↓
-
-SwiftUI
-
-Hero Transition
-
-↓
-
-Compose
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The implementation changes.
@@ -133,20 +122,17 @@ Every platform should consume the output of the Runtime Motion Resolver.
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Motion Resolver"]
+N3["Platform Motion"]
+N4["Rendering"]
 
-Motion Resolver
-
-↓
-
-Platform Motion
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Platform implementations should never reinterpret behavioural events.
@@ -542,15 +528,3 @@ The same World.
 The same calm continuity.
 
 That consistency is one of the defining objectives of the Mosaic Motion System.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`

@@ -3,7 +3,7 @@ File: docs/design/system/mds-005-motion-system/references.md
 Document: MDS-005
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -49,7 +49,7 @@ External references provide inspiration rather than specification.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
 
 Provides:
 
@@ -64,7 +64,7 @@ It should never compete for attention.
 
 ---
 
-## MDL-002 — Principles
+## [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
 
 Provides:
 
@@ -77,7 +77,7 @@ Motion is the direct implementation of these principles over time.
 
 ---
 
-## MDL-003 — Mental Model
+## [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
 
 Provides:
 
@@ -92,7 +92,7 @@ It should never imply unrelated change.
 
 ---
 
-## MDL-004 — Interaction Model
+## [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
 
 Provides:
 
@@ -103,11 +103,11 @@ Provides:
 
 The Motion System is the physical expression of the Interaction Model.
 
-Without MDL-004 there is no behavioural basis for movement.
+Without [MDL-004](../../language/mdl-004-interaction-model/index.md) there is no behavioural basis for movement.
 
 ---
 
-## MDL-005 — Composition Model
+## [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 Provides:
 
@@ -123,7 +123,7 @@ Movement reinforces understanding already established by Composition.
 
 ---
 
-## MDS-001 — Design Token Architecture
+## [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
 
 Provides:
 
@@ -131,11 +131,11 @@ Provides:
 - Resolution
 - Semantic hierarchy
 
-Runtime Motion Resolution extends the architectural resolution model established within MDS-001.
+Runtime Motion Resolution extends the architectural resolution model established within [MDS-001](../mds-001-design-token-architecture/index.md).
 
 ---
 
-## MDS-002 — Colour System
+## [MDS-002 — Colour System](../mds-002-colour-system/index.md)
 
 Provides:
 
@@ -149,7 +149,7 @@ Atmosphere should therefore never animate independently from behaviour.
 
 ---
 
-## MDS-003 — Material System
+## [MDS-003 — Material System](../mds-003-material-system/index.md)
 
 Provides:
 
@@ -163,7 +163,7 @@ Material Motion and Refraction Motion are direct continuations of the Material S
 
 ---
 
-## MDS-004 — Typography System
+## [MDS-004 — Typography System](../mds-004-typography-system/index.md)
 
 Provides:
 
@@ -181,9 +181,9 @@ Typography should remain readable throughout every behavioural transition.
 
 The following specifications directly depend upon MDS-005.
 
-- MDS-006 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 These specifications consume Motion.
 
@@ -263,20 +263,17 @@ Accessibility is treated as a first-class architectural concern.
 
 The Motion System intentionally assumes:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Accessibility"]
+N3["Motion"]
+N4["Presentation"]
 
-Accessibility
-
-↓
-
-Motion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This ordering ensures movement never becomes a prerequisite for understanding.
@@ -304,20 +301,17 @@ Motion therefore becomes a continuously evolving behavioural system rather than 
 
 The Motion System intentionally separates:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Runtime Resolution"]
+N3["Platform Motion"]
+N4["Presentation"]
 
-Runtime Resolution
-
-↓
-
-Platform Motion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Every client should therefore communicate identical behavioural understanding while remaining free to implement movement using:
@@ -352,24 +346,19 @@ Motion represents the physical body language of the Companion.
 
 Conceptually.
 
-```text
-Companion
+```mermaid
+flowchart TD
 
-↓
+N1["Companion"]
+N2["Behaviour"]
+N3["Motion"]
+N4["Understanding"]
+N5["User"]
 
-Behaviour
-
-↓
-
-Motion
-
-↓
-
-Understanding
-
-↓
-
-User
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Words express intent.
@@ -384,15 +373,15 @@ Together they create a Companion that feels calm, deliberate and predictable.
 
 Required reading before contributing to MDS-005.
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-001 Design Token Architecture
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-004 Typography System
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
 
 Together these specifications define the conceptual foundation of the Motion System.
 
@@ -402,9 +391,9 @@ Together these specifications define the conceptual foundation of the Motion Sys
 
 Future contributors may also wish to review:
 
-- MDS-006 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 These specifications describe how behavioural motion becomes runtime interaction throughout the Mosaic platform.
 
@@ -431,9 +420,9 @@ This concludes **MDS-005 — Motion System**.
 
 The next specification in the Mosaic Design System is:
 
-> **MDS-006 — Composition Engine**
+> **[MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)**
 
-Where MDS-005 defines **how the world moves**, MDS-006 defines **how the world is assembled at runtime**.
+Where MDS-005 defines **how the world moves**, [MDS-006](../mds-006-composition-engine/index.md) defines **how the world is assembled at runtime**.
 
 It formalises:
 
@@ -447,4 +436,4 @@ It formalises:
 - Multi-device rendering
 - Expression pipelines
 
-MDS-006 is expected to become the architectural heart of Mosaic, where every concept introduced by the MDL and earlier MDS specifications converges into one runtime system capable of constructing the user's World dynamically.
+[MDS-006](../mds-006-composition-engine/index.md) is expected to become the architectural heart of Mosaic, where every concept introduced by the MDL and earlier MDS specifications converges into one runtime system capable of constructing the user's World dynamically.

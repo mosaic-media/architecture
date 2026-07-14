@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 07
 Title: Motion Curves
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Motion Curves
@@ -77,26 +77,26 @@ Motion Curves should always be selected according to behavioural intent.
 
 Incorrect.
 
-```text
-Every Animation
+```mermaid
+flowchart TD
 
-↓
+N1["Every Animation"]
+N2["Same Curve"]
 
-Same Curve
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Motion Category"]
+N3["Motion Curve"]
 
-Motion Category
-
-↓
-
-Motion Curve
+N1 --> N2
+N2 --> N3
 ```
 
 The curve exists because behaviour differs.
@@ -109,24 +109,19 @@ Not because movement exists.
 
 The Motion System defines five conceptual curve families.
 
-```text
-Emergence
+```mermaid
+flowchart TD
 
-↓
+N1["Emergence"]
+N2["Transition"]
+N3["Settlement"]
+N4["Environment"]
+N5["Instant"]
 
-Transition
-
-↓
-
-Settlement
-
-↓
-
-Environment
-
-↓
-
-Instant
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each family communicates a different behavioural meaning.
@@ -296,16 +291,15 @@ Examples.
 
 Preferred.
 
-```text
-Typography
+```mermaid
+flowchart TD
 
-↓
+N1["Typography"]
+N2["Minimal Movement"]
+N3["Maximum Readability"]
 
-Minimal Movement
-
-↓
-
-Maximum Readability
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
@@ -326,16 +320,15 @@ Refraction should not use the same curve as geometry.
 
 Preferred.
 
-```text
-Material Moves
+```mermaid
+flowchart TD
 
-↓
+N1["Material Moves"]
+N2["Refraction Lags Slightly"]
+N3["Environment Settles"]
 
-Refraction Lags Slightly
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
 ```
 
 This subtle temporal offset strengthens perceived physical realism.
@@ -370,16 +363,15 @@ Reduced Motion should simplify curves.
 
 Preferred.
 
-```
-Transition
+```mermaid
+flowchart TD
 
-↓
+N1["Transition"]
+N2["Minimal"]
+N3["Immediate Settlement"]
 
-Minimal
-
-↓
-
-Immediate Settlement
+N1 --> N2
+N2 --> N3
 ```
 
 Understanding should remain.
@@ -594,15 +586,3 @@ Users should never notice the easing function.
 They should simply feel that the world moved exactly as they expected it would.
 
 That quiet predictability is the defining characteristic of Mosaic Motion.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-accessibility.md`

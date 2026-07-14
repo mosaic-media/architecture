@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -39,22 +39,24 @@ Instead ask:
 
 Good.
 
-```text
-Focus Changed
+```mermaid
+flowchart TD
 
-↓
+N1["Focus Changed"]
+N2["Motion"]
 
-Motion
+N1 --> N2
 ```
 
 Poor.
 
-```text
-Button Clicked
+```mermaid
+flowchart TD
 
-↓
+N1["Button Clicked"]
+N2["Animation"]
 
-Animation
+N1 --> N2
 ```
 
 Motion should always originate from behaviour.
@@ -71,30 +73,28 @@ or restart it?
 
 Preferred.
 
-```text
-Current State
+```mermaid
+flowchart TD
 
-↓
+N1["Current State"]
+N2["Evolution"]
+N3["Next State"]
 
-Evolution
-
-↓
-
-Next State
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Current State
+```mermaid
+flowchart TD
 
-↓
+N1["Current State"]
+N2["Replace"]
+N3["Next State"]
 
-Replace
-
-↓
-
-Next State
+N1 --> N2
+N2 --> N3
 ```
 
 Users should feel continuity.
@@ -107,24 +107,19 @@ Not replacement.
 
 Movement should follow the established hierarchy.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Primary"]
+N3["Supporting"]
+N4["Peripheral"]
+N5["Environment"]
 
-Primary
-
-↓
-
-Supporting
-
-↓
-
-Peripheral
-
-↓
-
-Environment
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 If every object moves equally...
@@ -139,30 +134,28 @@ Components should never animate independently from Materials.
 
 Preferred.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Material Motion"]
+N3["Presentation"]
 
-Material Motion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Animation"]
+N3["Material Responds Later"]
 
-Animation
-
-↓
-
-Material Responds Later
+N1 --> N2
+N2 --> N3
 ```
 
 The Material System owns physical behaviour.
@@ -220,26 +213,26 @@ Examples.
 
 Poor.
 
-```text
-Beautiful Animation
+```mermaid
+flowchart TD
 
-↓
+N1["Beautiful Animation"]
+N2["Motion Sickness"]
 
-Motion Sickness
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Minimal Motion"]
+N3["Same Understanding"]
 
-Minimal Motion
-
-↓
-
-Same Understanding
+N1 --> N2
+N2 --> N3
 ```
 
 Movement is optional.
@@ -362,22 +355,24 @@ Performance optimisation should preserve behavioural meaning.
 
 Preferred.
 
-```text
-Same Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Same Behaviour"]
+N2["Simpler Rendering"]
 
-Simpler Rendering
+N1 --> N2
 ```
 
 Avoid.
 
-```text
-Different Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Different Behaviour"]
+N2["Higher Performance"]
 
-Higher Performance
+N1 --> N2
 ```
 
 Optimise implementation.
@@ -475,15 +470,3 @@ When every contributor naturally thinks in behavioural evolution rather than ani
 Users will simply feel that Mosaic responds exactly as they expected.
 
 That effortless continuity is the defining characteristic of the Mosaic Motion System.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

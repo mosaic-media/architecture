@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 08
 Title: Motion Accessibility
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Motion Accessibility
@@ -59,22 +59,24 @@ Always.
 
 Poor.
 
-```text
-Beautiful Animation
+```mermaid
+flowchart TD
 
-↓
+N1["Beautiful Animation"]
+N2["User Discomfort"]
 
-User Discomfort
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Clear Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Clear Behaviour"]
+N2["Optional Motion"]
 
-Optional Motion
+N1 --> N2
 ```
 
 The purpose of Motion is communication.
@@ -166,30 +168,28 @@ Refraction Motion should reduce significantly.
 
 Preferred.
 
-```text
-Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Atmosphere"]
+N2["Stable Lighting"]
+N3["Subtle Material Update"]
 
-Stable Lighting
-
-↓
-
-Subtle Material Update
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid.
 
-```text
-Moving Refraction
+```mermaid
+flowchart TD
 
-↓
+N1["Moving Refraction"]
+N2["Animated Lighting"]
+N3["Environmental Drift"]
 
-Animated Lighting
-
-↓
-
-Environmental Drift
+N1 --> N2
+N2 --> N3
 ```
 
 The environment should remain calm.
@@ -208,16 +208,15 @@ Reduced Motion should simplify Overlay behaviour.
 
 Preferred.
 
-```text
-Overlay Appears
+```mermaid
+flowchart TD
 
-↓
+N1["Overlay Appears"]
+N2["Interaction"]
+N3["Overlay Disappears"]
 
-Interaction
-
-↓
-
-Overlay Disappears
+N1 --> N2
+N2 --> N3
 ```
 
 No unnecessary physical transitions should remain.
@@ -300,16 +299,15 @@ Atmosphere should simplify rather than disappear.
 
 Preferred.
 
-```text
-Reduced Motion
+```mermaid
+flowchart TD
 
-↓
+N1["Reduced Motion"]
+N2["Shorter Blend"]
+N3["Stable Environment"]
 
-Shorter Blend
-
-↓
-
-Stable Environment
+N1 --> N2
+N2 --> N3
 ```
 
 The interface should remain emotionally coherent while reducing environmental animation.
@@ -347,20 +345,17 @@ Future implementations may expose conceptual motion profiles.
 
 Examples.
 
-```text
-Full Motion
+```mermaid
+flowchart TD
 
-↓
+N1["Full Motion"]
+N2["Reduced Motion"]
+N3["Minimal Motion"]
+N4["Instant"]
 
-Reduced Motion
-
-↓
-
-Minimal Motion
-
-↓
-
-Instant
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Each profile preserves:
@@ -377,24 +372,19 @@ Only physical expression changes.
 
 The Runtime Motion Resolver should evaluate:
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Accessibility"]
+N3["Material Identity"]
+N4["Motion Profile"]
+N5["Presentation"]
 
-Accessibility
-
-↓
-
-Material Identity
-
-↓
-
-Motion Profile
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Accessibility should always be evaluated before motion curves.
@@ -567,15 +557,3 @@ regardless of how much movement they prefer.
 Movement should always remain optional.
 
 Understanding never should.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-runtime-motion-resolution.md`

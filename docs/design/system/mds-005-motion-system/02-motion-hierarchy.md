@@ -4,7 +4,7 @@ Document: MDS-005
 Chapter: 02
 Title: Motion Hierarchy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Motion Hierarchy
@@ -52,6 +52,7 @@ Motion simply expresses it.
 Imagine every element moving simultaneously.
 
 ```
+
 Hero
 
 Navigation
@@ -73,16 +74,15 @@ Everything competes.
 
 Instead.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Supporting Information"]
+N3["Peripheral Information"]
 
-Supporting Information
-
-↓
-
-Peripheral Information
+N1 --> N2
+N2 --> N3
 ```
 
 Movement naturally guides attention.
@@ -97,24 +97,19 @@ Motion Hierarchy always follows Behaviour.
 
 Conceptually.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Composition"]
+N3["Hierarchy"]
+N4["Motion"]
+N5["Presentation"]
 
-Composition
-
-↓
-
-Hierarchy
-
-↓
-
-Motion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Movement should never invent hierarchy.
@@ -127,24 +122,19 @@ It should reveal hierarchy that already exists.
 
 The Motion System defines five conceptual levels.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Primary"]
+N3["Supporting"]
+N4["Peripheral"]
+N5["Environmental"]
 
-Primary
-
-↓
-
-Supporting
-
-↓
-
-Peripheral
-
-↓
-
-Environmental
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each level communicates a different behavioural importance.
@@ -257,28 +247,21 @@ Users should simply feel that the environment evolved naturally.
 
 Motion should generally follow this sequence.
 
-```text
-Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Behaviour"]
+N2["Hero"]
+N3["Primary"]
+N4["Supporting"]
+N5["Peripheral"]
+N6["Environment Settles"]
 
-Hero
-
-↓
-
-Primary
-
-↓
-
-Supporting
-
-↓
-
-Peripheral
-
-↓
-
-Environment Settles
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The interface should feel as though understanding propagates naturally through the World.
@@ -385,30 +368,28 @@ Example.
 
 Instead of:
 
-```
-Hero Moves
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Moves"]
+N2["Timeline Moves"]
+N3["Environment Moves"]
 
-Timeline Moves
-
-↓
-
-Environment Moves
+N1 --> N2
+N2 --> N3
 ```
 
 Use.
 
-```
-Hero Appears
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Appears"]
+N2["Timeline Updates"]
+N3["Environment Quietly Changes"]
 
-Timeline Updates
-
-↓
-
-Environment Quietly Changes
+N1 --> N2
+N2 --> N3
 ```
 
 The amount of movement changes.
@@ -558,15 +539,3 @@ Users should instinctively perceive:
 without consciously analysing animation.
 
 When Motion Hierarchy succeeds, movement quietly guides attention exactly where understanding requires it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-behavioural-motion.md`
