@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/02-why-events.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Why Events?
@@ -121,7 +121,7 @@ Library
 
 ↓
 
-MediaImported
+media.imported
 
 ↓
 
@@ -159,11 +159,11 @@ Events describe something that **has already happened**.
 Examples include:
 
 ```
-MediaImported
+media.imported
 ```
 
 ```
-PlaybackStarted
+playback.started
 ```
 
 ```
@@ -225,7 +225,7 @@ No existing capability changes.
 Instead:
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -397,7 +397,7 @@ Library
 
 ↓
 
-MediaImported
+media.imported
 
 ↓
 
@@ -510,7 +510,7 @@ Every important state transition becomes visible.
 Example.
 
 ```
-PlaybackStarted
+playback.started
 
 ↓
 
@@ -542,7 +542,7 @@ Observability emerges naturally from the architecture.
 Complex workflows emerge from simple event chains.
 
 ```
-MediaImported
+media.imported
 
 ↓
 

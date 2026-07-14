@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/00-document-control.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Document Control
@@ -17,7 +17,7 @@ Version: 0.2
 | Title | Event-Driven Runtime |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.1 |
+| Version | 0.3 |
 | Owner | Lead Software Architect |
 | Classification | Internal Architecture Specification |
 
@@ -26,6 +26,8 @@ Version: 0.2
 # Purpose
 
 This document establishes the governance, authority and lifecycle of the Mosaic Event-Driven Runtime specification.
+
+Version 0.3 aligns implementation guidance with MIP-001 event ownership, namespaced events and public/private Module event contracts.
 
 MEG-002 defines the architectural standards governing how independently developed capabilities communicate and coordinate work within the Mosaic Runtime.
 

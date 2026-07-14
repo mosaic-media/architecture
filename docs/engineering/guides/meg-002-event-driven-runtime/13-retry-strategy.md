@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/13-retry-strategy.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Retry Strategy
@@ -72,7 +72,7 @@ Retrying later is entirely reasonable.
 Now consider:
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -524,7 +524,7 @@ Each subscriber owns its own retry lifecycle.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 

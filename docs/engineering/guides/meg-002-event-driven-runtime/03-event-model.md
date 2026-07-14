@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/03-event-model.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Event Model
@@ -42,6 +42,10 @@ The Runtime should preserve the event lifecycle described by MIP-001.
 
 It should provide routing, delivery, tracing, replay and diagnostics without owning business meaning.
 
+The Platform owns the Event Bus, Event Envelope, routing, subscriptions, delivery and reliability.
+
+It should not own Module domain event definitions.
+
 ---
 
 # Capability Responsibility
@@ -49,6 +53,24 @@ It should provide routing, delivery, tracing, replay and diagnostics without own
 Capabilities own the business facts they publish.
 
 They should use event names and payloads that reflect domain language rather than implementation details.
+
+Modules own their domain events, including payloads, documentation and versioning.
+
+The SDK owns the shared Event Envelope and Platform lifecycle events.
+
+The SDK should not grow every time a Module introduces or evolves a domain event.
+
+---
+
+# Public And Private Module Events
+
+Capabilities should distinguish public and private Module events.
+
+Public events are part of a Module's documented integration contract.
+
+Private events are implementation details.
+
+Subscribers should depend only on public Module events or Platform events.
 
 ---
 

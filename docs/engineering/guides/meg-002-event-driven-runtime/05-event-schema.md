@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/05-event-schema.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Event Schema

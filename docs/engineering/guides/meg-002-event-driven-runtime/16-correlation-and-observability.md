@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/16-correlation-and-observability.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Correlation and Observability
@@ -101,7 +101,7 @@ Correlation links related work together.
 Suppose a user imports media.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -175,7 +175,7 @@ What directly caused this event?
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -217,7 +217,7 @@ Import Library
 
 ↓
 
-MediaImported
+media.imported
 
 ├── MetadataFetched
 
@@ -511,7 +511,7 @@ Third-party modules participate exactly like Platform capabilities.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -557,7 +557,7 @@ Observability should already contain the answer.
 A single Correlation ID should naturally produce a timeline.
 
 ```
-MediaImported
+media.imported
 
 ↓
 

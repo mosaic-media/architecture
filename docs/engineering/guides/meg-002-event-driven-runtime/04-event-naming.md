@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/04-event-naming.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Event Naming
@@ -26,13 +26,25 @@ Event names should describe completed business facts in the language of the publ
 Preferred examples include:
 
 ```text
-MediaImported
-PlaybackStarted
-MetadataUpdated
-ModuleInstalled
+media.imported
+playback.started
+metadata.updated
+platform.module.installed
 ```
 
 Avoid names that describe handlers, transports, queues or implementation mechanics.
+
+Event names should be namespaced according to MIP-001.
+
+The namespace should identify the event owner.
+
+Examples.
+
+```text
+anime.episode.released
+jellyfin.library.scanned
+platform.started
+```
 
 ---
 
@@ -45,6 +57,8 @@ A new event name should be accepted only when it:
 - avoids transport details
 - remains meaningful to subscribers
 - has a clear publisher owner
+- uses a stable namespace
+- is declared as public or private in the Module manifest when module-owned
 
 ---
 

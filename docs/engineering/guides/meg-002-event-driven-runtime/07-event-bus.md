@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/07-event-bus.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Event Bus
@@ -51,6 +51,8 @@ The Event Bus understands only:
 - retries
 - acknowledgements
 - lifecycle
+- visibility metadata
+- version metadata
 
 This separation is fundamental to maintaining loose coupling.
 
@@ -73,6 +75,8 @@ The Event Bus owns the following responsibilities.
 The Event Bus intentionally does **not** own:
 
 - business validation
+- event payload semantics
+- Module event definitions
 - business workflows
 - business state
 - business decisions
@@ -145,7 +149,7 @@ Subscribes
 
 ↓
 
-MediaImported
+media.imported
 ```
 
 The Library capability remains unaware that Playback exists.
@@ -159,7 +163,7 @@ Adding another subscriber never requires modifying the publisher.
 The Event Bus routes events using:
 
 ```
-Event Type
+Event Name
 
 ↓
 
@@ -176,6 +180,12 @@ Capabilities express interest.
 
 The runtime performs routing.
 
+Routing should respect event visibility.
+
+Public Module events and Platform events may be subscribed to by other Modules.
+
+Private Module events should remain within the owning Module boundary.
+
 ---
 
 # Delivery Model
@@ -185,7 +195,7 @@ The Event Bus delivers events independently.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -339,7 +349,7 @@ Every capability participates equally.
 Suppose one subscriber fails.
 
 ```
-MediaImported
+media.imported
 
 ↓
 

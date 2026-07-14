@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/12-idempotency.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Idempotency
@@ -48,7 +48,7 @@ Correctness must never depend upon receiving an event exactly once.
 Consider:
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -489,7 +489,7 @@ PlaybackCompleted
 arrives before:
 
 ```
-PlaybackStarted
+playback.started
 ```
 
 Subscribers should validate current business state rather than assuming chronological delivery.

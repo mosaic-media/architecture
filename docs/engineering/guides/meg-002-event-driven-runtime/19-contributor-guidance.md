@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/19-contributor-guidance.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Contributor Guidance
@@ -101,11 +101,11 @@ Business events describe domain behaviour.
 Examples include:
 
 ```
-PlaybackStarted
+playback.started
 ```
 
 ```
-MediaImported
+media.imported
 ```
 
 Contributors should distinguish clearly between these two categories.

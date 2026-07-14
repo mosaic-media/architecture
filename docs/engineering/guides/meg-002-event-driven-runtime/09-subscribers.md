@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/09-subscribers.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Subscribers
@@ -78,7 +78,7 @@ Subscribes To
 
 ↓
 
-MediaImported
+media.imported
 ```
 
 The runtime records this relationship.
@@ -141,7 +141,7 @@ Subscribers should process events independently.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -173,7 +173,7 @@ Subscribers frequently become publishers.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -239,7 +239,7 @@ Receiving the same event multiple times must produce the same final state.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -267,7 +267,7 @@ Subscriber failure must remain isolated.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -348,7 +348,7 @@ Subscribers should avoid partially completed work wherever practical.
 Subscribers MUST NOT assume:
 
 ```
-PlaybackStarted
+playback.started
 
 ↓
 
@@ -434,7 +434,7 @@ The runtime should remain responsive even when individual capabilities perform e
 Subscribers naturally create event chains.
 
 ```
-MediaImported
+media.imported
 
 ↓
 

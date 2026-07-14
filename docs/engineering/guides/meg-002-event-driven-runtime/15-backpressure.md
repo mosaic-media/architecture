@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/15-backpressure.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Backpressure
@@ -75,7 +75,7 @@ Library Scan
 
 ↓
 
-50,000 MediaImported Events
+50,000 media.imported Events
 
 ↓
 

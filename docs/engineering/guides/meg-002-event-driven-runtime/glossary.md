@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/glossary.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Glossary
@@ -77,7 +77,7 @@ An immutable fact describing a completed business state transition.
 Examples include:
 
 ```
-MediaImported
+media.imported
 ```
 
 ```
@@ -198,6 +198,16 @@ The envelope belongs to the runtime.
 
 ---
 
+## Event Visibility
+
+The contract classification of a Module event.
+
+Public events are integration contracts.
+
+Private events are implementation details.
+
+---
+
 ## Event Payload
 
 The immutable business information carried by an event.
@@ -237,6 +247,22 @@ Not delivery chronology.
 The capability that published an event.
 
 Every event has exactly one producer.
+
+---
+
+## Private Event
+
+A Module-owned event that remains inside the Module's implementation boundary.
+
+Other Modules should not subscribe to private events.
+
+---
+
+## Public Event
+
+A Module-owned event that is part of the Module's documented integration contract.
+
+Other Modules may subscribe to public events through manifest-declared subscriptions.
 
 ---
 

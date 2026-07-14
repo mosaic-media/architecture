@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/14-event-ordering.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Event Ordering
@@ -50,7 +50,7 @@ When ordering is required, it should be modelled explicitly rather than assumed 
 Consider two events.
 
 ```
-PlaybackStarted
+playback.started
 
 ↓
 
@@ -68,7 +68,7 @@ PlaybackCompleted
 
 ↓
 
-PlaybackStarted
+playback.started
 ```
 
 Both events are valid.
@@ -142,7 +142,7 @@ Playback
 
 ↓
 
-PlaybackStarted
+playback.started
 
 ↓
 
@@ -213,7 +213,7 @@ Media
 
 ↓
 
-MediaImported
+media.imported
 
 ↓
 
@@ -271,7 +271,7 @@ Current Playback State?
 Rather than:
 
 ```
-Did PlaybackStarted arrive?
+Did playback.started arrive?
 ```
 
 Business state is authoritative.
@@ -351,7 +351,7 @@ Independent capabilities may legitimately publish events simultaneously.
 Example.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -365,7 +365,7 @@ ArtworkDownloaded
 and
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -451,7 +451,7 @@ PlaybackCompleted
 
 ↓
 
-PlaybackStarted Missing
+playback.started Missing
 ```
 
 Possible responses include:

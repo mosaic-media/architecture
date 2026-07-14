@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/08-publishers.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Publishers
@@ -143,7 +143,7 @@ Every event MUST have exactly one publisher.
 Example.
 
 ```
-PlaybackStarted
+playback.started
 
 ↓
 
@@ -171,7 +171,7 @@ Library
 
 ↓
 
-MediaImported
+media.imported
 ```
 
 ```
@@ -244,7 +244,7 @@ What should happen
 Good.
 
 ```
-MediaImported
+media.imported
 ```
 
 Poor.
@@ -329,7 +329,7 @@ Import Media
 
 ↓
 
-MediaImported
+media.imported
 
 ↓
 
@@ -373,7 +373,7 @@ Publish Search Event
 Better.
 
 ```
-MediaImported
+media.imported
 
 ↓
 
@@ -427,7 +427,7 @@ Example.
 Correct.
 
 ```
-PlaybackStarted
+playback.started
 
 ↓
 
@@ -441,7 +441,7 @@ PlaybackCompleted
 
 ↓
 
-PlaybackStarted
+playback.started
 ```
 
 The runtime does not infer chronology.

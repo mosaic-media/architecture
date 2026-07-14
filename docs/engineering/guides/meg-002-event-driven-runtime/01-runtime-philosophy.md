@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/01-runtime-philosophy.md
 Document: MEG-002
 Status: Draft
-Version: 0.2
+Version: 0.3
 -->
 
 # Runtime Philosophy
@@ -167,15 +167,15 @@ Not commands.
 Good:
 
 ```
-MediaImported
+media.imported
 ```
 
 ```
-PlaybackStarted
+playback.started
 ```
 
 ```
-MetadataUpdated
+metadata.updated
 ```
 
 Poor:
@@ -371,7 +371,7 @@ Runtime
 
 ↓
 
-MediaImported
+media.imported
 
 ↓
 
