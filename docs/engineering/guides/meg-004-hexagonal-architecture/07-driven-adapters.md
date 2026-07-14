@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/07-driven-adapters.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Driven Adapters
@@ -52,20 +52,17 @@ A Driven Adapter is an infrastructure implementation of a Driven Port.
 
 Conceptually.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Driven Port"]
+N3["Driven Adapter"]
+N4["Technology"]
 
-Driven Port
-
-↓
-
-Driven Adapter
-
-↓
-
-Technology
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain depends only upon the Port.
@@ -78,36 +75,32 @@ The Adapter depends upon the technology.
 
 Without Driven Adapters:
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["SQL"]
+N3["Database"]
 
-SQL
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
 ```
 
 Business behaviour becomes tightly coupled to persistence.
 
 Instead.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["PlaybackRepository"]
+N3["PostgreSQL Adapter"]
+N4["Database"]
 
-PlaybackRepository
-
-↓
-
-PostgreSQL Adapter
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only the Adapter understands SQL.
@@ -122,22 +115,24 @@ Every Driven Adapter implements one or more Driven Ports.
 
 Example.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataProvider"]
+N2["TMDB Adapter"]
 
-TMDB Adapter
+N1 --> N2
 ```
 
 Later.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataProvider"]
+N2["AniList Adapter"]
 
-AniList Adapter
+N1 --> N2
 ```
 
 The Domain remains unchanged.
@@ -171,12 +166,13 @@ Repository implementations are Driven Adapters.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["PostgreSQL Adapter"]
 
-PostgreSQL Adapter
+N1 --> N2
 ```
 
 Responsibilities include:
@@ -198,16 +194,15 @@ External services should always terminate at a Driven Adapter.
 
 Example.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataProvider"]
+N2["TMDB Adapter"]
+N3["TMDB API"]
 
-TMDB Adapter
-
-↓
-
-TMDB API
+N1 --> N2
+N2 --> N3
 ```
 
 The Adapter performs:
@@ -228,20 +223,17 @@ The Reactive Runtime is also infrastructure.
 
 Example.
 
-```
-Domain Event
+```mermaid
+flowchart TD
 
-↓
+N1["Domain Event"]
+N2["RuntimeEventPublisher"]
+N3["Runtime Adapter"]
+N4["Event Bus"]
 
-RuntimeEventPublisher
-
-↓
-
-Runtime Adapter
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain remains unaware of:
@@ -259,22 +251,24 @@ Those concepts belong entirely to the runtime.
 
 Driven Adapters translate:
 
-```
-Business Request
+```mermaid
+flowchart TD
 
-↓
+N1["Business Request"]
+N2["Infrastructure Request"]
 
-Infrastructure Request
+N1 --> N2
 ```
 
 and later:
 
-```
-Infrastructure Response
+```mermaid
+flowchart TD
 
-↓
+N1["Infrastructure Response"]
+N2["Business Result"]
 
-Business Result
+N1 --> N2
 ```
 
 Translation occurs entirely within the Adapter.
@@ -289,28 +283,31 @@ Driven Adapters frequently perform mapping.
 
 Examples include:
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Database Row"]
 
-Database Row
-```
-
-```
-Database Row
-
-↓
-
-Aggregate
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Database Row"]
+N2["Aggregate"]
+
+N1 --> N2
 ```
-TMDB Response
 
-↓
+```mermaid
+flowchart TD
 
-Metadata Value Object
+N1["TMDB Response"]
+N2["Metadata Value Object"]
+
+N1 --> N2
 ```
 
 Mapping should remain symmetrical wherever practical.
@@ -325,40 +322,39 @@ Infrastructure errors should never escape the Adapter.
 
 Poor.
 
-```
-SQL Error
+```mermaid
+flowchart TD
 
-↓
+N1["SQL Error"]
+N2["Domain"]
 
-Domain
+N1 --> N2
 ```
 
 Preferred.
 
-```
-SQL Error
+```mermaid
+flowchart TD
 
-↓
+N1["SQL Error"]
+N2["Adapter"]
+N3["MediaNotFound"]
 
-Adapter
-
-↓
-
-MediaNotFound
+N1 --> N2
+N2 --> N3
 ```
 
 Likewise.
 
-```
-HTTP Timeout
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Timeout"]
+N2["Adapter"]
+N3["MetadataUnavailable"]
 
-Adapter
-
-↓
-
-MetadataUnavailable
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain should reason about business failures.
@@ -373,12 +369,13 @@ Configuration belongs to infrastructure.
 
 Example.
 
-```
-TMDB API Key
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB API Key"]
+N2["Adapter"]
 
-Adapter
+N1 --> N2
 ```
 
 The Domain should never receive:
@@ -401,7 +398,7 @@ Examples include:
 - AniList
 - Blob Storage
 
-These retries differ from runtime event retries defined in MEG-002.
+These retries differ from runtime event retries defined in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 Infrastructure retries protect one operation.
 
@@ -435,24 +432,19 @@ Driven Adapters are constructed within the Composition Root.
 
 Example.
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["Create PostgreSQL"]
+N3["Create Repository Adapter"]
+N4["Inject Port"]
+N5["Domain"]
 
-Create PostgreSQL
-
-↓
-
-Create Repository Adapter
-
-↓
-
-Inject Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Domain should never instantiate its own Adapters.
@@ -483,22 +475,24 @@ Replacing infrastructure should require replacing only the Adapter.
 
 Example.
 
-```
-PostgreSQL
+```mermaid
+flowchart TD
 
-↓
+N1["PostgreSQL"]
+N2["CockroachDB"]
 
-CockroachDB
+N1 --> N2
 ```
 
 or
 
-```
-TMDB
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB"]
+N2["AniList"]
 
-AniList
+N1 --> N2
 ```
 
 The Port remains unchanged.
@@ -517,16 +511,19 @@ One Port may have multiple implementations simultaneously.
 
 Example.
 
-```
-ArtworkStore
+```mermaid
+flowchart TD
 
-├── Local Filesystem
+N1["ArtworkStore"]
+N2["Local Filesystem"]
+N3["Blob Storage"]
+N4["Memory"]
+N5["Test"]
 
-├── Blob Storage
-
-├── Memory
-
-└── Test
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 Selecting the implementation becomes a Composition Root decision.
@@ -541,16 +538,15 @@ Every integration with an external system SHOULD terminate inside a Driven Adapt
 
 Example.
 
-```
-Jellyfin
+```mermaid
+flowchart TD
 
-↓
+N1["Jellyfin"]
+N2["Jellyfin Adapter"]
+N3["LibraryRepository"]
 
-Jellyfin Adapter
-
-↓
-
-LibraryRepository
+N1 --> N2
+N2 --> N3
 ```
 
 The Adapter translates:
@@ -569,30 +565,37 @@ External models should never leak into the Domain.
 Examples of Driven Adapters include:
 
 ```
+
 PostgreSQL Playback Repository
 ```
 
 ```
+
 DuckDB Analytics Repository
 ```
 
 ```
+
 TMDB Metadata Provider
 ```
 
 ```
+
 AniList Metadata Provider
 ```
 
 ```
+
 Blob Artwork Store
 ```
 
 ```
+
 Filesystem Artwork Store
 ```
 
 ```
+
 Runtime Event Publisher
 ```
 
@@ -671,36 +674,25 @@ Driven Adapters fulfil the Domain's external requirements.
 
 Together they complete the Hexagonal Architecture.
 
-```
-External System
+```mermaid
+flowchart TD
 
-↓
+N1["External System"]
+N2["Driving Adapter"]
+N3["Driving Port"]
+N4["Application"]
+N5["Domain"]
+N6["Driven Port"]
+N7["Driven Adapter"]
+N8["Infrastructure"]
 
-Driving Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Application
-
-↓
-
-Domain
-
-↓
-
-Driven Port
-
-↓
-
-Driven Adapter
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Every dependency crossing the architectural boundary now passes through an explicit Port and Adapter.
@@ -726,23 +718,3 @@ from the Domain by translating business concepts into infrastructure operations 
 Within Mosaic, replacing an infrastructure technology should almost always mean replacing only a Driven Adapter.
 
 If changing a database requires changing an Aggregate, the architectural boundary has been violated.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`06-driving-adapters.md`
-
-**Next File**
-
-`08-dependency-direction.md`

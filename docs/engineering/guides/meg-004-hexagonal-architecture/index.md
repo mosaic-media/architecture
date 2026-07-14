@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/index.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MEG-004 — Hexagonal Architecture
@@ -40,47 +40,34 @@ The Domain adapts to nothing.
 
 # Relationship to MEG
 
-```
-MEG-001
+```mermaid
+flowchart TD
 
-↓
+N1["MEG-001"]
+N2["Engineering Standards"]
+N3["MEG-002"]
+N4["Reactive Runtime"]
+N5["MEG-003"]
+N6["Domain Model"]
+N7["MEG-004"]
+N8["Dependency Boundaries"]
+N9["Infrastructure"]
 
-Engineering Standards
-
-↓
-
-MEG-002
-
-↓
-
-Reactive Runtime
-
-↓
-
-MEG-003
-
-↓
-
-Domain Model
-
-↓
-
-MEG-004
-
-↓
-
-Dependency Boundaries
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
-MEG-001 defines **how software is written.**
+[MEG-001](../meg-001-go-engineering-standards/index.md) defines **how software is written.**
 
-MEG-002 defines **how software executes.**
+[MEG-002](../meg-002-event-driven-runtime/index.md) defines **how software executes.**
 
-MEG-003 defines **what the business is.**
+[MEG-003](../meg-003-domain-driven-design/index.md) defines **what the business is.**
 
 MEG-004 defines **how the business is protected from technology.**
 
@@ -159,24 +146,19 @@ Hexagonal Architecture (also known as Ports and Adapters) exists specifically to
 
 The Mosaic Architecture intentionally separates concerns into distinct conceptual layers.
 
-```
-Business Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Business Domain"]
+N2["Application"]
+N3["Ports"]
+N4["Adapters"]
+N5["External Systems"]
 
-Application
-
-↓
-
-Ports
-
-↓
-
-Adapters
-
-↓
-
-External Systems
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice:
@@ -208,6 +190,7 @@ without discussing any specific database, transport protocol or framework.
 # Repository Structure
 
 ```
+
 engineering/
 
 └── meg/
@@ -248,9 +231,9 @@ engineering/
 
         15-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -259,15 +242,15 @@ engineering/
 
 Required reading:
 
-- MEG-001 Go Engineering Standards
-- MEG-002 Reactive Runtime
-- MEG-003 Domain-Driven Design
+- [MEG-001 — Go Engineering Standards](../meg-001-go-engineering-standards/index.md)
+- [MEG-002 — Event-Driven Runtime](../meg-002-event-driven-runtime/index.md)
+- [MEG-003 — Domain-Driven Design](../meg-003-domain-driven-design/index.md)
 
 Future companion specifications:
 
-- MEG-005 Module Platform
-- MEG-006 Runtime Architecture
-- MEG-007 Storage Architecture
+- [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
+- [MEG-005 — Runtime Architecture](../meg-005-runtime-architecture/index.md)
+- [MEG-007 — Storage Architecture](../meg-007-storage-architecture/index.md)
 
 ---
 
@@ -285,19 +268,3 @@ The Hexagonal Architecture is intended to produce software that is:
 - Maintainable
 
 The architecture should ensure that changing infrastructure never requires changing the Domain Model.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Next File**
-
-`00-document-control.md`

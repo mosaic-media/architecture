@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/15-contributor-guidance.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -57,7 +57,7 @@ Before implementing a new feature ask:
 
 If implementation discussions begin before business modelling:
 
-Return to MEG-003.
+Return to [MEG-003](../meg-003-domain-driven-design/index.md).
 
 The Domain should always lead implementation.
 
@@ -121,26 +121,26 @@ Every import should reinforce the Hexagon.
 
 Allowed.
 
-```
-Adapter
+```mermaid
+flowchart TD
 
-↓
+N1["Adapter"]
+N2["Application"]
+N3["Domain"]
 
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Prohibited.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Infrastructure"]
 
-Infrastructure
+N1 --> N2
 ```
 
 The compiler should naturally reinforce the architecture.
@@ -242,33 +242,31 @@ Examples.
 
 Poor.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Publish Runtime Event"]
 
-Publish Runtime Event
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Raise Domain Event"]
+N3["Runtime Adapter"]
+N4["Runtime Event"]
 
-Raise Domain Event
-
-↓
-
-Runtime Adapter
-
-↓
-
-Runtime Event
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
-MEG-002 and MEG-004 should reinforce one another.
+[MEG-002](../meg-002-event-driven-runtime/index.md) and MEG-004 should reinforce one another.
 
 Never compete.
 
@@ -380,32 +378,23 @@ These questions are generally more valuable than debating implementation style.
 
 New contributors SHOULD study MEG-004 in the following order.
 
-```
-Hexagonal Philosophy
+```mermaid
+flowchart TD
 
-↓
+N1["Hexagonal Philosophy"]
+N2["Ports"]
+N3["Adapters"]
+N4["Dependency Direction"]
+N5["Composition Root"]
+N6["Application Services"]
+N7["Runtime Boundary"]
 
-Ports
-
-↓
-
-Adapters
-
-↓
-
-Dependency Direction
-
-↓
-
-Composition Root
-
-↓
-
-Application Services
-
-↓
-
-Runtime Boundary
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Understanding dependency direction first makes every later concept significantly easier to understand.
@@ -479,23 +468,3 @@ Every contributor influences whether the Domain remains:
 Within Mosaic, every change should strengthen the architectural boundary between the business and technology.
 
 Because once that boundary begins to erode, the cost of every future change begins to increase with it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`14-adrs.md`
-
-**Next File**
-
-`glossary.md`

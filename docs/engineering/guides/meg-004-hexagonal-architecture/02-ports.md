@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/02-ports.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Ports
@@ -65,18 +65,22 @@ A Port is an interface representing a business capability required by the Domain
 Examples include:
 
 ```
+
 MediaRepository
 ```
 
 ```
+
 MetadataProvider
 ```
 
 ```
+
 ArtworkStore
 ```
 
 ```
+
 Clock
 ```
 
@@ -94,41 +98,38 @@ Not:
 
 Without Ports:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PostgreSQL"]
+N3["SQL"]
+N4["Database"]
 
-PostgreSQL
-
-↓
-
-SQL
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain now understands infrastructure.
 
 Instead:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackRepository"]
+N3["PostgreSQL Adapter"]
 
-PlaybackRepository
-
-↓
-
-PostgreSQL Adapter
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain understands only:
 
 ```
+
 PlaybackRepository
 ```
 
@@ -140,30 +141,28 @@ Everything else becomes replaceable.
 
 One of the most important principles of Hexagonal Architecture is:
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Defines Interface"]
+N3["Infrastructure Implements"]
 
-Defines Interface
-
-↓
-
-Infrastructure Implements
+N1 --> N2
+N2 --> N3
 ```
 
 Not:
 
-```
-Infrastructure
+```mermaid
+flowchart TD
 
-↓
+N1["Infrastructure"]
+N2["Defines Interface"]
+N3["Domain Uses"]
 
-Defines Interface
-
-↓
-
-Domain Uses
+N1 --> N2
+N2 --> N3
 ```
 
 Ownership always belongs to the Domain.
@@ -213,28 +212,34 @@ Port names should reinforce the ubiquitous language.
 Good.
 
 ```
+
 CollectionRepository
 ```
 
 ```
+
 MetadataProvider
 ```
 
 ```
+
 RecommendationEngine
 ```
 
 Poor.
 
 ```
+
 DatabaseAccess
 ```
 
 ```
+
 StorageLayer
 ```
 
 ```
+
 PersistenceManager
 ```
 
@@ -330,12 +335,14 @@ Ports should never reference:
 Poor.
 
 ```
+
 SQLRepository
 ```
 
 Good.
 
 ```
+
 MediaRepository
 ```
 
@@ -350,6 +357,7 @@ Ports communicate intent.
 Example.
 
 ```
+
 MetadataProvider
 ```
 
@@ -375,14 +383,17 @@ Each Port SHOULD describe one responsibility.
 Examples.
 
 ```
+
 MetadataProvider
 ```
 
 ```
+
 ArtworkStore
 ```
 
 ```
+
 Clock
 ```
 
@@ -391,6 +402,7 @@ Avoid combining unrelated concepts.
 Poor.
 
 ```
+
 MediaInfrastructure
 ```
 
@@ -442,12 +454,14 @@ The next two chapters explore this distinction.
 A common mistake is confusing:
 
 ```
+
 Port
 ```
 
 with
 
 ```
+
 Adapter
 ```
 
@@ -469,12 +483,13 @@ Ports make testing straightforward.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["Fake Repository"]
 
-Fake Repository
+N1 --> N2
 ```
 
 The Domain remains unaware that no real database exists.
@@ -511,30 +526,37 @@ Ports should remain stable as technologies evolve.
 Examples of Ports within Mosaic include:
 
 ```
+
 LibraryRepository
 ```
 
 ```
+
 PlaybackRepository
 ```
 
 ```
+
 MetadataProvider
 ```
 
 ```
+
 ArtworkStore
 ```
 
 ```
+
 BlobStore
 ```
 
 ```
+
 IdentityGenerator
 ```
 
 ```
+
 Clock
 ```
 
@@ -551,10 +573,12 @@ The following practices are prohibited.
 ## Technology Ports
 
 ```
+
 PostgresRepository
 ```
 
 ```
+
 RedisProvider
 ```
 
@@ -563,6 +587,7 @@ RedisProvider
 ## Generic Ports
 
 ```
+
 Storage
 ```
 
@@ -616,20 +641,17 @@ Within Mosaic:
 
 Hexagonal Architecture revolves around one simple idea.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Port"]
+N3["Adapter"]
+N4["Technology"]
 
-Port
-
-↓
-
-Adapter
-
-↓
-
-Technology
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Ports define the contracts.
@@ -653,23 +675,3 @@ Instead of infrastructure telling the Domain how to behave:
 The Domain tells infrastructure what it requires.
 
 That inversion protects the business from technology and ensures the Domain remains the most stable part of the Mosaic platform.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`01-hexagonal-philosophy.md`
-
-**Next File**
-
-`03-driving-ports.md`

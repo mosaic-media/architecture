@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/01-hexagonal-philosophy.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Hexagonal Philosophy
@@ -61,24 +61,19 @@ Never the reverse.
 
 Traditional layered architectures frequently evolve into this.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Service"]
+N3["Repository"]
+N4["Database"]
+N5["Business Logic"]
 
-Service
-
-↓
-
-Repository
-
-↓
-
-Database
-
-↓
-
-Business Logic
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Over time the business becomes increasingly coupled to infrastructure.
@@ -103,6 +98,7 @@ This is precisely what Hexagonal Architecture seeks to prevent.
 Everything revolves around one idea.
 
 ```
+
 Dependencies Always Point Inward
 ```
 
@@ -126,16 +122,19 @@ This inversion of dependency direction is the defining characteristic of Ports a
 
 The architecture is traditionally represented as a hexagon.
 
-```
-             HTTP
+```mermaid
+flowchart TD
 
-               │
+N1["Domain"]
+N2["HTTP"]
+N3["Database"]
+N4["Runtime"]
+N5["Modules"]
 
-Database ── Domain ── Runtime
-
-               │
-
-         Modules
+N1 --- N2
+N1 --- N3
+N1 --- N4
+N1 --- N5
 ```
 
 The shape itself is symbolic.
@@ -200,22 +199,24 @@ The Domain should remain unaffected.
 
 One of the central principles of Mosaic is:
 
-```
-Business
+```mermaid
+flowchart TD
 
-↓
+N1["Business"]
+N2["Technology"]
 
-Technology
+N1 --> N2
 ```
 
 Not:
 
-```
-Technology
+```mermaid
+flowchart TD
 
-↓
+N1["Technology"]
+N2["Business"]
 
-Business
+N1 --> N2
 ```
 
 The platform exists because of:
@@ -237,42 +238,34 @@ Suppose PostgreSQL becomes unsuitable.
 
 Without Hexagonal Architecture.
 
-```
-Database Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Database Changes"]
+N2["Repositories"]
+N3["Services"]
+N4["Entities"]
+N5["Everything Changes"]
 
-Repositories
-
-↓
-
-Services
-
-↓
-
-Entities
-
-↓
-
-Everything Changes
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 With Hexagonal Architecture.
 
-```
-Database Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Database Changes"]
+N2["Postgres Adapter"]
+N3["New Adapter"]
+N4["Domain Unchanged"]
 
-Postgres Adapter
-
-↓
-
-New Adapter
-
-↓
-
-Domain Unchanged
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only infrastructure changes.
@@ -289,47 +282,46 @@ The Domain should not know the Reactive Runtime exists.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Publish Event"]
+N3["Event Bus"]
 
-Publish Event
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Raise Domain Event"]
 
-Raise Domain Event
+N1 --> N2
 ```
 
 Later.
 
-```
-Runtime Adapter
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Adapter"]
+N2["Runtime Event"]
+N3["Event Bus"]
 
-Runtime Event
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain records business facts.
 
 The Runtime communicates them.
 
-The separation established in MEG-002 remains intact.
+The separation established in [MEG-002](../meg-002-event-driven-runtime/index.md) remains intact.
 
 ---
 
@@ -355,28 +347,31 @@ Infrastructure changes frequently.
 
 Examples include:
 
-```
-TMDB API
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB API"]
+N2["New Version"]
 
-New Version
-```
-
-```
-Storage Engine
-
-↓
-
-Migration
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Storage Engine"]
+N2["Migration"]
+
+N1 --> N2
 ```
-Docker
 
-↓
+```mermaid
+flowchart TD
 
-New Runtime
+N1["Docker"]
+N2["New Runtime"]
+
+N1 --> N2
 ```
 
 These changes should affect adapters.
@@ -406,6 +401,7 @@ The second question should never influence the answer to the first.
 One subtle but important property of the Hexagon:
 
 ```
+
 HTTP
 
 =
@@ -443,33 +439,37 @@ History demonstrates that infrastructure changes.
 
 Examples.
 
-```
-REST
+```mermaid
+flowchart TD
 
-↓
+N1["REST"]
+N2["GraphQL"]
 
-GraphQL
-```
-
-```
-Docker
-
-↓
-
-Containerd
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Docker"]
+N2["Containerd"]
+
+N1 --> N2
 ```
-PostgreSQL
 
-↓
+```mermaid
+flowchart TD
 
-Something Else
+N1["PostgreSQL"]
+N2["Something Else"]
+
+N1 --> N2
 ```
 
 Business concepts such as:
 
 ```
+
 Library
 
 Playback
@@ -493,30 +493,28 @@ Infrastructure satisfies them.
 
 Never:
 
-```
-Database
+```mermaid
+flowchart TD
 
-↓
+N1["Database"]
+N2["Business"]
 
-Business
+N1 --> N2
 ```
 
 Instead.
 
-```
-Business
+```mermaid
+flowchart TD
 
-↓
+N1["Business"]
+N2["Port"]
+N3["Adapter"]
+N4["Database"]
 
-Port
-
-↓
-
-Adapter
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This inversion keeps the Domain in control.
@@ -535,7 +533,7 @@ It should represent genuine business interaction.
 
 Not hypothetical future flexibility.
 
-MEG-001's principles still apply.
+[MEG-001](../meg-001-go-engineering-standards/index.md)'s principles still apply.
 
 Concrete solutions remain preferable until abstraction becomes necessary.
 
@@ -561,7 +559,7 @@ These principles define the architectural identity of the platform.
 
 # Relationship to MEG
 
-MEG-003 established:
+[MEG-003](../meg-003-domain-driven-design/index.md) established:
 
 > **What the business is.**
 
@@ -590,23 +588,3 @@ Within Mosaic it exists for one reason:
 Everything else is expected to change.
 
 The Domain should not.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`00-document-control.md`
-
-**Next File**
-
-`02-ports.md`

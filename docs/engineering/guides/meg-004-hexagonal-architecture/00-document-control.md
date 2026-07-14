@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/00-document-control.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -17,8 +17,8 @@ Version: 0.2
 | Title | Hexagonal Architecture |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Software Architect |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 
 ---
@@ -56,37 +56,30 @@ Every capability developed within the Mosaic platform SHOULD comply with the dep
 
 MEG specifications intentionally build upon one another.
 
-```
-MDL
+```mermaid
+flowchart TD
 
-↓
+N1["MDL"]
+N2["MDS"]
+N3["MEG-001"]
+N4["MEG-002"]
+N5["MEG-003"]
+N6["MEG-004"]
 
-MDS
-
-↓
-
-MEG-001
-
-↓
-
-MEG-002
-
-↓
-
-MEG-003
-
-↓
-
-MEG-004
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Specifically:
 
 - **MDL** defines product philosophy.
 - **MDS** defines presentation.
-- **MEG-001** defines engineering standards.
-- **MEG-002** defines runtime behaviour.
-- **MEG-003** defines business modelling.
+- **[MEG-001](../meg-001-go-engineering-standards/index.md)** defines engineering standards.
+- **[MEG-002](../meg-002-event-driven-runtime/index.md)** defines runtime behaviour.
+- **[MEG-003](../meg-003-domain-driven-design/index.md)** defines business modelling.
 - **MEG-004** defines dependency boundaries.
 
 Future specifications build upon the architectural separation established here.
@@ -132,28 +125,21 @@ MEG specifications evolve alongside the platform.
 
 Each document progresses through the following lifecycle.
 
-```
-Draft
+```mermaid
+flowchart TD
 
-↓
+N1["Draft"]
+N2["Review"]
+N3["Accepted"]
+N4["Implemented"]
+N5["Maintained"]
+N6["Superseded (optional)"]
 
-Review
-
-↓
-
-Accepted
-
-↓
-
-Implemented
-
-↓
-
-Maintained
-
-↓
-
-Superseded (optional)
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Accepted specifications become part of the canonical Mosaic architecture.
@@ -239,23 +225,3 @@ It does **not** define:
 Those concerns belong to other MEG specifications.
 
 Keeping these concerns separate allows each architectural layer to evolve independently.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`README.md`
-
-**Next File**
-
-`01-hexagonal-philosophy.md`

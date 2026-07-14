@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/08-dependency-direction.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Dependency Direction
@@ -52,24 +52,19 @@ If an engineer is unsure where code belongs, the dependency direction should ans
 
 Every dependency points inward.
 
-```
-Infrastructure
+```mermaid
+flowchart TD
 
-↓
+N1["Infrastructure"]
+N2["Adapters"]
+N3["Ports"]
+N4["Application"]
+N5["Domain"]
 
-Adapters
-
-↓
-
-Ports
-
-↓
-
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The reverse direction is prohibited.
@@ -132,12 +127,14 @@ Ports belong to the Domain or the Application layer.
 Ports define:
 
 ```
+
 Business Contracts
 ```
 
 They never depend upon:
 
 ```
+
 Adapters
 ```
 
@@ -200,30 +197,28 @@ Nothing inside depends upon infrastructure.
 
 The following dependency graph is valid.
 
-```
-HTTP Adapter
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Adapter"]
+N2["Application"]
+N3["Domain"]
 
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Likewise.
 
-```
-PostgreSQL Adapter
+```mermaid
+flowchart TD
 
-↓
+N1["PostgreSQL Adapter"]
+N2["Repository Port"]
+N3["Domain"]
 
-Repository Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Every dependency points towards the centre.
@@ -234,60 +229,65 @@ Every dependency points towards the centre.
 
 The following dependency graph is prohibited.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["HTTP"]
 
-HTTP
+N1 --> N2
 ```
 
 Likewise.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["SQL"]
 
-SQL
+N1 --> N2
 ```
 
 Or.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Docker"]
 
-Docker
+N1 --> N2
 ```
 
 Business concepts must never depend upon implementation technologies.
 
 ---
 
-# Runtime Dependencies
+# Runtime Dependency Direction
 
 The Reactive Runtime is infrastructure.
 
 Therefore:
 
-```
-Runtime
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime"]
+N2["Domain"]
 
-Domain
+N1 --> N2
 ```
 
 is valid.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Runtime"]
 
-Runtime
+N1 --> N2
 ```
 
 is prohibited.
@@ -311,26 +311,26 @@ Storage technologies remain infrastructure.
 
 Correct.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackRepository"]
+N3["PostgreSQL"]
 
-PlaybackRepository
-
-↓
-
-PostgreSQL
+N1 --> N2
+N2 --> N3
 ```
 
 Incorrect.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PostgreSQL"]
 
-PostgreSQL
+N1 --> N2
 ```
 
 The Domain should never import:
@@ -349,20 +349,17 @@ Modules are infrastructure.
 
 They depend upon:
 
-```
-Module SDK
+```mermaid
+flowchart TD
 
-↓
+N1["Module SDK"]
+N2["Ports"]
+N3["Application"]
+N4["Domain"]
 
-Ports
-
-↓
-
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain should never know:
@@ -381,26 +378,26 @@ Dependency Inversion frequently causes confusion.
 
 Traditional architecture.
 
-```
-Business
+```mermaid
+flowchart TD
 
-↓
+N1["Business"]
+N2["Database"]
 
-Database
+N1 --> N2
 ```
 
 Hexagonal Architecture.
 
-```
-Business
+```mermaid
+flowchart TD
 
-↓
+N1["Business"]
+N2["Repository Port"]
+N3["Database Adapter"]
 
-Repository Port
-
-↑
-
-Database Adapter
+N1 --> N2
+N3 --> N2
 ```
 
 Notice:
@@ -422,12 +419,14 @@ Dependency direction is a compile-time concern.
 It is determined by:
 
 ```
+
 Imports
 ```
 
 Not:
 
 ```
+
 Function Calls
 ```
 
@@ -439,26 +438,23 @@ Only imports determine dependency direction.
 
 ---
 
-# Runtime Dependencies
+# Runtime Call Flow
 
 Runtime execution frequently flows outward.
 
 Example.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Domain"]
+N3["Repository"]
+N4["Database"]
 
-Domain
-
-↓
-
-Repository
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This is acceptable.
@@ -480,6 +476,7 @@ Package imports should naturally reflect architectural direction.
 Preferred.
 
 ```
+
 internal/
 
     domain/
@@ -493,26 +490,26 @@ internal/
 
 Dependencies.
 
-```
-Adapters
+```mermaid
+flowchart TD
 
-↓
+N1["Adapters"]
+N2["Application"]
+N3["Domain"]
 
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Never:
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Adapters"]
 
-Adapters
+N1 --> N2
 ```
 
 The package graph should visually reinforce the architecture.
@@ -525,16 +522,15 @@ Circular dependencies are prohibited.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Metadata"]
+N3["Playback"]
 
-Metadata
-
-↓
-
-Playback
+N1 --> N2
+N2 --> N3
 ```
 
 If two packages require one another:
@@ -563,20 +559,17 @@ meet the Domain.
 
 Example.
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["Construct Adapter"]
+N3["Inject Port"]
+N4["Application Starts"]
 
-Construct Adapter
-
-↓
-
-Inject Port
-
-↓
-
-Application Starts
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Every other part of the application should remain unaware of concrete implementations.
@@ -587,20 +580,17 @@ Every other part of the application should remain unaware of concrete implementa
 
 Dependency direction naturally enables testing.
 
-```
-Test
+```mermaid
+flowchart TD
 
-↓
+N1["Test"]
+N2["Fake Adapter"]
+N3["Port"]
+N4["Domain"]
 
-Fake Adapter
-
-↓
-
-Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain never knows.
@@ -633,24 +623,26 @@ The following practices are prohibited.
 
 ## Domain Imports Infrastructure
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["SQL"]
 
-SQL
+N1 --> N2
 ```
 
 ---
 
 ## Runtime Imports
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Event Bus"]
 
-Event Bus
+N1 --> N2
 ```
 
 ---
@@ -734,23 +726,3 @@ Everything else:
 is simply a consequence of consistently following that principle.
 
 Within Mosaic, preserving dependency direction is one of the primary mechanisms protecting the Domain from the inevitable evolution of technology.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`07-driven-adapters.md`
-
-**Next File**
-
-`09-composition-root.md`

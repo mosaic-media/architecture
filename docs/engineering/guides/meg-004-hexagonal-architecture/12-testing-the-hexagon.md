@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/12-testing-the-hexagon.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Testing the Hexagon
@@ -52,24 +52,19 @@ If the Domain requires infrastructure to execute, the boundary has failed.
 
 Every layer should be tested independently.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Application"]
+N3["Adapters"]
+N4["Integration"]
+N5["End-to-End"]
 
-Application
-
-↓
-
-Adapters
-
-↓
-
-Integration
-
-↓
-
-End-to-End
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer answers different questions.
@@ -123,16 +118,15 @@ Domain tests MUST NOT require:
 
 Example.
 
-```
-Playback Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Aggregate"]
+N2["Advance()"]
+N3["PlaybackCompleted Raised"]
 
-Advance()
-
-↓
-
-PlaybackCompleted Raised
+N1 --> N2
+N2 --> N3
 ```
 
 The business should execute entirely in memory.
@@ -187,28 +181,30 @@ Every Adapter implements a Port.
 
 Contract tests verify:
 
-```
-Port
+```mermaid
+flowchart TD
 
-↓
+N1["Port"]
+N2["Every Adapter"]
+N3["Same Behaviour"]
 
-Every Adapter
-
-↓
-
-Same Behaviour
+N1 --> N2
+N2 --> N3
 ```
 
 Example.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-├── TMDB Adapter ✓
+N1["MetadataProvider"]
+N2["TMDB Adapter ✓"]
+N3["AniList Adapter ✓"]
+N4["Fake Adapter ✓"]
 
-├── AniList Adapter ✓
-
-└── Fake Adapter ✓
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 Each implementation should satisfy the same behavioural contract.
@@ -265,28 +261,21 @@ End-to-end tests verify complete workflows.
 
 Example.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Application"]
+N3["Domain"]
+N4["Repository"]
+N5["Runtime"]
+N6["Response"]
 
-Application
-
-↓
-
-Domain
-
-↓
-
-Repository
-
-↓
-
-Runtime
-
-↓
-
-Response
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 These tests provide confidence that architectural boundaries collaborate correctly.
@@ -301,28 +290,31 @@ The preferred testing strategy is replacing infrastructure with fake Adapters.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["InMemoryRepository"]
 
-InMemoryRepository
-```
-
-```
-Clock
-
-↓
-
-FixedClock
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Clock"]
+N2["FixedClock"]
+
+N1 --> N2
 ```
-MetadataProvider
 
-↓
+```mermaid
+flowchart TD
 
-FakeMetadataProvider
+N1["MetadataProvider"]
+N2["FakeMetadataProvider"]
+
+N1 --> N2
 ```
 
 The Domain remains unaware.
@@ -337,20 +329,17 @@ Tests frequently construct a miniature Composition Root.
 
 Example.
 
-```
-Fake Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Fake Repository"]
+N2["Playback Service"]
+N3["Aggregate"]
+N4["Assertions"]
 
-Playback Service
-
-↓
-
-Aggregate
-
-↓
-
-Assertions
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This mirrors production assembly.
@@ -381,16 +370,15 @@ Adapters should be testable independently of business behaviour.
 
 Example.
 
-```
-TMDB Response
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB Response"]
+N2["Metadata Adapter"]
+N3["Metadata Value Object"]
 
-Metadata Adapter
-
-↓
-
-Metadata Value Object
+N1 --> N2
+N2 --> N3
 ```
 
 No Aggregate behaviour should be required.
@@ -404,18 +392,21 @@ Errors should be tested at the correct layer.
 Domain.
 
 ```
+
 Invalid Business Rule
 ```
 
 Adapter.
 
 ```
+
 HTTP Timeout
 ```
 
 Runtime.
 
 ```
+
 Retry Exhausted
 ```
 
@@ -429,12 +420,13 @@ Domain tests should verify that invariants cannot be violated.
 
 Example.
 
-```
-Progress > Duration
+```mermaid
+flowchart TD
 
-↓
+N1["Progress &gt; Duration"]
+N2["Rejected"]
 
-Rejected
+N1 --> N2
 ```
 
 Testing invalid business state is often more valuable than testing successful behaviour.
@@ -446,12 +438,14 @@ Testing invalid business state is often more valuable than testing successful be
 Domain tests verify:
 
 ```
+
 PlaybackCompleted Raised
 ```
 
 Runtime tests verify:
 
 ```
+
 PlaybackCompleted Delivered
 ```
 
@@ -484,6 +478,7 @@ Business test data should use business terminology.
 Good.
 
 ```
+
 Library
 
 Playback
@@ -494,6 +489,7 @@ Collection
 Poor.
 
 ```
+
 Row1
 
 ObjectA
@@ -599,23 +595,3 @@ Within Mosaic:
 When every layer can be tested in isolation, the architecture has successfully separated business from technology.
 
 That is the real promise of Hexagonal Architecture.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`11-runtime-boundary.md`
-
-**Next File**
-
-`13-modelling-guidelines.md`

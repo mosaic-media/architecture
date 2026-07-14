@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/13-modelling-guidelines.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Modelling Guidelines
@@ -78,20 +78,17 @@ One of the most common mistakes is designing Ports before understanding the Doma
 
 Instead:
 
-```
-Business Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Business Behaviour"]
+N2["Domain Model"]
+N3["Port"]
+N4["Adapter"]
 
-Domain Model
-
-↓
-
-Port
-
-↓
-
-Adapter
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Ports should emerge naturally from business requirements.
@@ -124,30 +121,28 @@ Suppose a new feature requires TMDB.
 
 Incorrect thought process.
 
-```
-TMDB API
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB API"]
+N2["How do I use it?"]
 
-How do I use it?
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata"]
+N2["What business capability do I need?"]
+N3["MetadataProvider"]
+N4["TMDB Adapter"]
 
-What business capability do I need?
-
-↓
-
-MetadataProvider
-
-↓
-
-TMDB Adapter
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The business requirement comes first.
@@ -156,7 +151,7 @@ The infrastructure follows.
 
 ---
 
-# Choosing A Port
+# Port Selection
 
 Before introducing a Port ask:
 
@@ -176,7 +171,7 @@ AWS recommends introducing ports where the business genuinely requires external 
 
 ---
 
-# Choosing An Adapter
+# Adapter Selection
 
 Every Adapter should answer:
 
@@ -185,18 +180,22 @@ Every Adapter should answer:
 Examples.
 
 ```
+
 PostgreSQL
 ```
 
 ```
+
 TMDB
 ```
 
 ```
+
 Filesystem
 ```
 
 ```
+
 HTTP
 ```
 
@@ -211,25 +210,27 @@ Adapters should remain cohesive.
 Good.
 
 ```
+
 TMDB Adapter
 ```
 
 Poor.
 
-```
-ExternalServicesAdapter
+```mermaid
+flowchart TD
 
-↓
+N1["ExternalServicesAdapter"]
+N2["TMDB"]
+N3["AniList"]
+N4["Trakt"]
+N5["Jellyfin"]
+N6["Docker"]
 
-TMDB
-
-AniList
-
-Trakt
-
-Jellyfin
-
-Docker
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 Technology boundaries should remain explicit.
@@ -259,24 +260,19 @@ The boundary has already been crossed.
 
 Application Services should follow the same structure.
 
-```
-Receive Request
+```mermaid
+flowchart TD
 
-↓
+N1["Receive Request"]
+N2["Load Aggregate"]
+N3["Invoke Behaviour"]
+N4["Persist Aggregate"]
+N5["Return Result"]
 
-Load Aggregate
-
-↓
-
-Invoke Behaviour
-
-↓
-
-Persist Aggregate
-
-↓
-
-Return Result
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 If additional business logic appears:
@@ -300,32 +296,33 @@ Every translation should occur at a boundary.
 
 Examples.
 
-```
-JSON
+```mermaid
+flowchart TD
 
-↓
+N1["JSON"]
+N2["Request DTO"]
+N3["Business Request"]
 
-Request DTO
-
-↓
-
-Business Request
-```
-
-```
-Aggregate
-
-↓
-
-Database Row
+N1 --> N2
+N2 --> N3
 ```
 
+```mermaid
+flowchart TD
+
+N1["Aggregate"]
+N2["Database Row"]
+
+N1 --> N2
 ```
-TMDB Response
 
-↓
+```mermaid
+flowchart TD
 
-Metadata
+N1["TMDB Response"]
+N2["Metadata"]
+
+N1 --> N2
 ```
 
 Translation should never occur inside the Domain.
@@ -369,28 +366,31 @@ Ask:
 
 Examples.
 
-```
-PostgreSQL
+```mermaid
+flowchart TD
 
-↓
+N1["PostgreSQL"]
+N2["CockroachDB"]
 
-CockroachDB
-```
-
-```
-TMDB
-
-↓
-
-AniList
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["TMDB"]
+N2["AniList"]
+
+N1 --> N2
 ```
-REST
 
-↓
+```mermaid
+flowchart TD
 
-GraphQL
+N1["REST"]
+N2["GraphQL"]
+
+N1 --> N2
 ```
 
 If the answer is "no":
@@ -442,6 +442,7 @@ Packages should reflect architectural ownership.
 Example.
 
 ```
+
 internal/
 
     domain/
@@ -549,7 +550,7 @@ The remaining documents describe:
 - terminology
 - references
 
-Together, MEG-001 through MEG-004 now define:
+Together, [MEG-001](../meg-001-go-engineering-standards/index.md) through MEG-004 now define:
 
 - how software is written
 - how it executes
@@ -581,23 +582,3 @@ When implemented consistently, changing technologies becomes routine.
 Changing the business remains deliberate.
 
 That is the architectural foundation upon which the rest of the Mosaic platform is built.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`12-testing-the-hexagon.md`
-
-**Next File**
-
-`14-adrs.md`

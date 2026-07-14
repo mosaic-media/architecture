@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/03-driving-ports.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Driving Ports
@@ -74,76 +74,74 @@ This separation allows the Domain to remain unaware of how requests arrive.
 
 Without Driving Ports:
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Playback"]
+N3["Business"]
 
-Playback
-
-↓
-
-Business
+N1 --> N2
+N2 --> N3
 ```
 
 Later.
 
-```
-CLI
+```mermaid
+flowchart TD
 
-↓
+N1["CLI"]
+N2["Different Business Logic"]
 
-Different Business Logic
+N1 --> N2
 ```
 
 Eventually.
 
-```
-Worker
+```mermaid
+flowchart TD
 
-↓
+N1["Worker"]
+N2["Another Implementation"]
 
-Another Implementation
+N1 --> N2
 ```
 
 Business behaviour becomes duplicated.
 
 Instead.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Playback Port"]
+N3["Domain"]
 
-Playback Port
-
-↓
-
-Domain
-```
-
-```
-CLI
-
-↓
-
-Playback Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
+```mermaid
+flowchart TD
+
+N1["CLI"]
+N2["Playback Port"]
+N3["Domain"]
+
+N1 --> N2
+N2 --> N3
 ```
-Worker
 
-↓
+```mermaid
+flowchart TD
 
-Playback Port
+N1["Worker"]
+N2["Playback Port"]
+N3["Domain"]
 
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Every entry point invokes exactly the same business behaviour.
@@ -180,24 +178,29 @@ Driving Ports should model business capabilities.
 Good.
 
 ```
+
 PlaybackService
 ```
 
 ```
+
 LibraryImporter
 ```
 
 ```
+
 CollectionManager
 ```
 
 Poor.
 
 ```
+
 HTTPPlaybackController
 ```
 
 ```
+
 RESTLibraryAPI
 ```
 
@@ -212,18 +215,22 @@ Every operation exposed by a Driving Port should correspond to a business use ca
 Examples.
 
 ```
+
 ImportMedia()
 ```
 
 ```
+
 ResumePlayback()
 ```
 
 ```
+
 CreateCollection()
 ```
 
 ```
+
 GenerateRecommendations()
 ```
 
@@ -315,12 +322,13 @@ Driving Ports frequently execute commands.
 
 Example.
 
-```
-Import Media
+```mermaid
+flowchart TD
 
-↓
+N1["Import Media"]
+N2["ImportMedia()"]
 
-ImportMedia()
+N1 --> N2
 ```
 
 A Driving Port represents the intention to perform business work.
@@ -385,18 +393,21 @@ One Driving Port may have many Adapters.
 
 Example.
 
-```
-Playback Port
+```mermaid
+flowchart TD
 
-├── HTTP Adapter
+N1["Playback Port"]
+N2["HTTP Adapter"]
+N3["CLI Adapter"]
+N4["Scheduler Adapter"]
+N5["Module Adapter"]
+N6["Test Adapter"]
 
-├── CLI Adapter
-
-├── Scheduler Adapter
-
-├── Module Adapter
-
-└── Test Adapter
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 The Domain remains unchanged.
@@ -413,20 +424,17 @@ Driving Ports should receive already valid transport models.
 
 Examples.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Parse JSON"]
+N3["Validate JSON"]
+N4["Driving Port"]
 
-Parse JSON
-
-↓
-
-Validate JSON
-
-↓
-
-Driving Port
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Business validation still occurs inside the Domain.
@@ -460,16 +468,15 @@ Driving Ports make business testing straightforward.
 
 Example.
 
-```
-Test
+```mermaid
+flowchart TD
 
-↓
+N1["Test"]
+N2["Driving Port"]
+N3["Domain"]
 
-Driving Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 No HTTP server.
@@ -490,20 +497,17 @@ Within Mosaic's Reactive Runtime, event subscribers frequently become Driving Ad
 
 Example.
 
-```
-PlaybackCompleted Event
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted Event"]
+N2["Subscriber Adapter"]
+N3["Driving Port"]
+N4["Recommendations Domain"]
 
-Subscriber Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Recommendations Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Notice:
@@ -512,7 +516,7 @@ The subscriber remains infrastructure.
 
 The Domain still receives business requests through the Driving Port.
 
-This cleanly integrates MEG-002 with Hexagonal Architecture.
+This cleanly integrates [MEG-002](../meg-002-event-driven-runtime/index.md) with Hexagonal Architecture.
 
 ---
 
@@ -521,22 +525,27 @@ This cleanly integrates MEG-002 with Hexagonal Architecture.
 Examples of Driving Ports include:
 
 ```
+
 PlaybackService
 ```
 
 ```
+
 LibraryImporter
 ```
 
 ```
+
 CollectionService
 ```
 
 ```
+
 MetadataManager
 ```
 
 ```
+
 RecommendationEngine
 ```
 
@@ -584,14 +593,17 @@ Ports importing:
 ## Generic Methods
 
 ```
+
 Execute()
 ```
 
 ```
+
 Handle()
 ```
 
 ```
+
 Process()
 ```
 
@@ -649,23 +661,3 @@ They remain completely independent of:
 - Transport
 
 By ensuring every external interaction passes through the same business contract, Mosaic guarantees that changing how users interact with the platform never requires changing the Domain itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`02-ports.md`
-
-**Next File**
-
-`04-driven-ports.md`

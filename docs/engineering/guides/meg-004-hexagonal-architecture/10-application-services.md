@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/10-application-services.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Application Services
@@ -68,18 +68,22 @@ An Application Service represents a business use case.
 Examples include:
 
 ```
+
 Import Media
 ```
 
 ```
+
 Resume Playback
 ```
 
 ```
+
 Create Collection
 ```
 
 ```
+
 Generate Recommendations
 ```
 
@@ -91,20 +95,17 @@ Each Application Service coordinates work required to fulfil one business object
 
 Application Services sit immediately outside the Domain.
 
-```
-Driving Adapter
+```mermaid
+flowchart TD
 
-↓
+N1["Driving Adapter"]
+N2["Driving Port"]
+N3["Application Service"]
+N4["Domain"]
 
-Driving Port
-
-↓
-
-Application Service
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 They form the bridge between:
@@ -142,24 +143,19 @@ Responsibilities remain intentionally narrow.
 
 A typical Application Service follows this sequence.
 
-```
-Receive Request
+```mermaid
+flowchart TD
 
-↓
+N1["Receive Request"]
+N2["Load Aggregate"]
+N3["Invoke Domain Behaviour"]
+N4["Persist Aggregate"]
+N5["Return Result"]
 
-Load Aggregate
-
-↓
-
-Invoke Domain Behaviour
-
-↓
-
-Persist Aggregate
-
-↓
-
-Return Result
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice:
@@ -174,35 +170,32 @@ It simply coordinates.
 
 Conceptually.
 
-```
-Resume Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Resume Playback"]
+N2["PlaybackRepository.Load()"]
+N3["Playback.Resume()"]
+N4["PlaybackRepository.Save()"]
+N5["Return"]
 
-PlaybackRepository.Load()
-
-↓
-
-Playback.Resume()
-
-↓
-
-PlaybackRepository.Save()
-
-↓
-
-Return
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The business decision:
 
 ```
+
 Can playback resume?
 ```
 
 belongs entirely to:
 
 ```
+
 Playback Aggregate
 ```
 
@@ -212,30 +205,28 @@ Playback Aggregate
 
 Poor.
 
-```
-Application Service
+```mermaid
+flowchart TD
 
-↓
+N1["Application Service"]
+N2["Validate Progress"]
+N3["Calculate Completion"]
+N4["Update Playback"]
 
-Validate Progress
-
-↓
-
-Calculate Completion
-
-↓
-
-Update Playback
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Application Service
+```mermaid
+flowchart TD
 
-↓
+N1["Application Service"]
+N2["Playback.Resume()"]
 
-Playback.Resume()
+N1 --> N2
 ```
 
 The Aggregate performs:
@@ -255,24 +246,19 @@ Application Services frequently define transaction boundaries.
 
 Conceptually.
 
-```
-Begin Transaction
+```mermaid
+flowchart TD
 
-↓
+N1["Begin Transaction"]
+N2["Load Aggregate"]
+N3["Business Behaviour"]
+N4["Persist"]
+N5["Commit"]
 
-Load Aggregate
-
-↓
-
-Business Behaviour
-
-↓
-
-Persist
-
-↓
-
-Commit
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Transaction management belongs here because it coordinates infrastructure.
@@ -287,20 +273,17 @@ Application Services frequently bridge the Domain and the Runtime.
 
 Example.
 
-```
-Playback.Resume()
+```mermaid
+flowchart TD
 
-↓
+N1["Playback.Resume()"]
+N2["Domain Event Raised"]
+N3["Persist Aggregate"]
+N4["Runtime Publishes Event"]
 
-Domain Event Raised
-
-↓
-
-Persist Aggregate
-
-↓
-
-Runtime Publishes Event
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Notice:
@@ -319,22 +302,24 @@ Application Services depend only upon Ports.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["PlaybackService"]
 
-PlaybackService
+N1 --> N2
 ```
 
 Never.
 
-```
-PostgreSQL
+```mermaid
+flowchart TD
 
-↓
+N1["PostgreSQL"]
+N2["PlaybackService"]
 
-PlaybackService
+N1 --> N2
 ```
 
 Concrete infrastructure remains invisible.
@@ -347,38 +332,32 @@ Application Services SHOULD remain stateless.
 
 Poor.
 
-```
-PlaybackService
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackService"]
+N2["Current User"]
+N3["Cached Playback"]
+N4["Session"]
 
-Current User
-
-↓
-
-Cached Playback
-
-↓
-
-Session
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-PlaybackService
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackService"]
+N2["Method Parameters"]
+N3["Domain Behaviour"]
+N4["Return"]
 
-Method Parameters
-
-↓
-
-Domain Behaviour
-
-↓
-
-Return
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 State belongs to the Domain.
@@ -524,18 +503,22 @@ Not thicker.
 Examples include:
 
 ```
+
 ImportMediaService
 ```
 
 ```
+
 PlaybackService
 ```
 
 ```
+
 CollectionService
 ```
 
 ```
+
 RecommendationService
 ```
 
@@ -629,7 +612,7 @@ Application Services now complete the centre of the Hexagon.
 
 The next chapter explains how the **Reactive Runtime** integrates with Hexagonal Architecture while preserving the Domain's independence.
 
-This is where MEG-002 and MEG-004 finally converge.
+This is where [MEG-002](../meg-002-event-driven-runtime/index.md) and MEG-004 finally converge.
 
 ---
 
@@ -654,23 +637,3 @@ The Domain:
 - evolves
 
 Keeping these responsibilities separate allows the Domain Model to remain expressive while the Application Layer remains remarkably simple.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`09-composition-root.md`
-
-**Next File**
-
-`11-runtime-boundary.md`

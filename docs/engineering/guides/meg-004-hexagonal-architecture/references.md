@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/references.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -134,7 +134,7 @@ Referenced for:
 - Repositories
 - Domain independence
 
-Although MEG-003 defines the Domain Model, Hexagonal Architecture exists largely to protect that model.
+Although [MEG-003](../meg-003-domain-driven-design/index.md) defines the Domain Model, Hexagonal Architecture exists largely to protect that model.
 
 ---
 
@@ -257,7 +257,7 @@ The implementation should remain idiomatic Go while preserving architectural pri
 
 # Reactive Runtime References
 
-MEG-004 intentionally integrates with MEG-002.
+MEG-004 intentionally integrates with [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 Relevant references include:
 
@@ -278,43 +278,43 @@ The following specifications complement MEG-004.
 
 ## Engineering
 
-- MEG-001 Go Engineering Standards
-- MEG-002 Reactive Runtime
-- MEG-003 Domain-Driven Design
+- [MEG-001 — Go Engineering Standards](../meg-001-go-engineering-standards/index.md)
+- [MEG-002 — Event-Driven Runtime](../meg-002-event-driven-runtime/index.md)
+- [MEG-003 — Domain-Driven Design](../meg-003-domain-driven-design/index.md)
 
 ---
 
 ## Planned Engineering Specifications
 
-- MEG-005 Module Platform
-- MEG-006 Runtime Architecture
-- MEG-007 Storage Architecture
-- MEG-008 Observability
-- MEG-009 Security
-- MEG-010 Performance Engineering
+- [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
+- [MEG-005 — Runtime Architecture](../meg-005-runtime-architecture/index.md)
+- [MEG-007 — Storage Architecture](../meg-007-storage-architecture/index.md)
+- [MEG-008 — Observability](../meg-008-observability/index.md)
+- [MEG-009 — Security Architecture](../meg-009-security-architecture/index.md)
+- [MEG-010 — Performance Engineering](../meg-010-performance-engineering/index.md)
 
 ---
 
 ## Mosaic Design Language
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-001 — Mosaic Design Language Vision](../../../design/language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../../design/language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../../design/language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../../design/language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../../design/language/mdl-005-composition-model/index.md)
 
 ---
 
 ## Mosaic Design Specifications
 
-- MDS-001 Design Token Architecture
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-004 Typography System
-- MDS-005 Motion System
-- MDS-006 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
+- [MDS-001 — Design Token Architecture](../../../design/system/mds-001-design-token-architecture/index.md)
+- [MDS-002 — Colour System](../../../design/system/mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../../../design/system/mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../../../design/system/mds-004-typography-system/index.md)
+- [MDS-005 — Motion System](../../../design/system/mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../../../design/system/mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../../../design/system/mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../../../design/system/mds-008-component-library/index.md)
 
 ---
 
@@ -380,23 +380,3 @@ Because in the long life of a software platform:
 > **The business is permanent.**
 
 Architecture exists to ensure the second survives the first.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`glossary.md`
-
-**Next File**
-
-**End of Specification**

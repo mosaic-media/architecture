@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/04-driven-ports.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Driven Ports
@@ -59,22 +59,27 @@ A Driven Port is an interface representing a capability required by the Domain.
 Examples include:
 
 ```
+
 LibraryRepository
 ```
 
 ```
+
 MetadataProvider
 ```
 
 ```
+
 ArtworkStore
 ```
 
 ```
+
 Clock
 ```
 
 ```
+
 IdentityGenerator
 ```
 
@@ -88,36 +93,32 @@ None describe technology.
 
 Without Driven Ports:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PostgreSQL"]
+N3["SQL"]
+N4["Persistence"]
 
-PostgreSQL
-
-↓
-
-SQL
-
-↓
-
-Persistence
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain now understands infrastructure.
 
 Instead.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackRepository"]
+N3["PostgreSQL Adapter"]
 
-PlaybackRepository
-
-↓
-
-PostgreSQL Adapter
+N1 --> N2
+N2 --> N3
 ```
 
 Only the Adapter knows PostgreSQL exists.
@@ -130,30 +131,28 @@ The Domain remains infrastructure independent.
 
 Driven Ports are the mechanism through which Dependency Inversion is achieved.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Interface"]
+N3["Infrastructure"]
 
-Interface
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
 ```
 
 Not:
 
-```
-Infrastructure
+```mermaid
+flowchart TD
 
-↓
+N1["Infrastructure"]
+N2["Interface"]
+N3["Domain"]
 
-Interface
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain owns every dependency it requires.
@@ -169,12 +168,14 @@ A Driven Port expresses a business requirement.
 Example.
 
 ```
+
 PlaybackRepository
 ```
 
 The Domain requires:
 
 ```
+
 Load Playback
 
 Save Playback
@@ -183,6 +184,7 @@ Save Playback
 It does **not** require:
 
 ```
+
 SQL
 
 Transactions
@@ -231,28 +233,34 @@ Driven Ports should reinforce the ubiquitous language.
 Good.
 
 ```
+
 ArtworkStore
 ```
 
 ```
+
 IdentityGenerator
 ```
 
 ```
+
 RecommendationRepository
 ```
 
 Poor.
 
 ```
+
 BlobClient
 ```
 
 ```
+
 DatabaseAccess
 ```
 
 ```
+
 RedisCache
 ```
 
@@ -266,16 +274,19 @@ One Driven Port may have many implementations.
 
 Example.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-├── TMDB Adapter
+N1["MetadataProvider"]
+N2["TMDB Adapter"]
+N3["AniList Adapter"]
+N4["Local Cache Adapter"]
+N5["Test Adapter"]
 
-├── AniList Adapter
-
-├── Local Cache Adapter
-
-└── Test Adapter
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 The Domain remains unchanged.
@@ -292,21 +303,21 @@ Repositories are among the most common Driven Ports.
 
 Example.
 
-```
-Playback Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Domain"]
+N2["PlaybackRepository"]
+N3["PostgreSQL"]
 
-PlaybackRepository
-
-↓
-
-PostgreSQL
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain depends upon:
 
 ```
+
 PlaybackRepository
 ```
 
@@ -322,26 +333,26 @@ External services should always appear behind Driven Ports.
 
 Example.
 
-```
-Metadata Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata Domain"]
+N2["MetadataProvider"]
+N3["TMDB"]
 
-MetadataProvider
-
-↓
-
-TMDB
+N1 --> N2
+N2 --> N3
 ```
 
 Later.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataProvider"]
+N2["AniList"]
 
-AniList
+N1 --> N2
 ```
 
 The Domain does not change.
@@ -364,17 +375,19 @@ inside the Domain.
 
 Preferred.
 
-```
-Clock
+```mermaid
+flowchart TD
 
-↓
+N1["Clock"]
+N2["Current Time"]
 
-Current Time
+N1 --> N2
 ```
 
 The Domain requests:
 
 ```
+
 Current Time
 ```
 
@@ -390,17 +403,19 @@ Identity generation should also occur through a Driven Port.
 
 Example.
 
-```
-IdentityGenerator
+```mermaid
+flowchart TD
 
-↓
+N1["IdentityGenerator"]
+N2["Generate LibraryID"]
 
-Generate LibraryID
+N1 --> N2
 ```
 
 The Domain requires:
 
 ```
+
 Unique Identity
 ```
 
@@ -422,12 +437,14 @@ Storage technologies should never appear within the Domain.
 Poor.
 
 ```
+
 Blob Storage
 ```
 
 Preferred.
 
 ```
+
 ArtworkStore
 ```
 
@@ -450,12 +467,14 @@ Driven Ports should remain narrowly focused.
 Good.
 
 ```
+
 ArtworkStore
 ```
 
 Poor.
 
 ```
+
 InfrastructureProvider
 ```
 
@@ -490,12 +509,14 @@ Driven Ports should communicate business failures.
 Poor.
 
 ```
+
 SQL Error
 ```
 
 Preferred.
 
 ```
+
 Media Not Found
 ```
 
@@ -503,7 +524,7 @@ The Adapter translates infrastructure failures.
 
 The Domain receives business concepts.
 
-This mirrors the repository guidance established in MEG-003.
+This mirrors the repository guidance established in [MEG-003](../meg-003-domain-driven-design/index.md).
 
 ---
 
@@ -513,28 +534,31 @@ Driven Ports make infrastructure easy to replace.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["InMemoryRepository"]
 
-InMemoryRepository
-```
-
-```
-Clock
-
-↓
-
-FixedClock
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Clock"]
+N2["FixedClock"]
+
+N1 --> N2
 ```
-MetadataProvider
 
-↓
+```mermaid
+flowchart TD
 
-FakeProvider
+N1["MetadataProvider"]
+N2["FakeProvider"]
+
+N1 --> N2
 ```
 
 The Domain can now be tested without external dependencies.
@@ -547,20 +571,17 @@ The Reactive Runtime itself may satisfy Driven Ports.
 
 Example.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["EventPublisher"]
+N3["Runtime Adapter"]
+N4["Event Bus"]
 
-EventPublisher
-
-↓
-
-Runtime Adapter
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Notice:
@@ -569,7 +590,7 @@ The Domain depends only upon the Port.
 
 The Runtime implements it.
 
-MEG-002 and MEG-004 therefore complement one another naturally.
+[MEG-002](../meg-002-event-driven-runtime/index.md) and MEG-004 therefore complement one another naturally.
 
 ---
 
@@ -579,23 +600,22 @@ Driven Ports frequently terminate at Anti-Corruption Layers.
 
 Example.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataProvider"]
+N2["TMDB Adapter"]
+N3["TMDB API"]
 
-TMDB Adapter
-
-↓
-
-TMDB API
+N1 --> N2
+N2 --> N3
 ```
 
 Translation occurs entirely inside the Adapter.
 
 The Domain never understands external terminology.
 
-This preserves the purity of the Domain Model established in MEG-003.
+This preserves the purity of the Domain Model established in [MEG-003](../meg-003-domain-driven-design/index.md).
 
 ---
 
@@ -604,30 +624,37 @@ This preserves the purity of the Domain Model established in MEG-003.
 Examples of Driven Ports include:
 
 ```
+
 LibraryRepository
 ```
 
 ```
+
 PlaybackRepository
 ```
 
 ```
+
 MetadataProvider
 ```
 
 ```
+
 ArtworkStore
 ```
 
 ```
+
 Clock
 ```
 
 ```
+
 IdentityGenerator
 ```
 
 ```
+
 BlobStore
 ```
 
@@ -644,10 +671,12 @@ The following practices are prohibited.
 ## Infrastructure Interfaces
 
 ```
+
 TMDBClient
 ```
 
 ```
+
 PostgresRepository
 ```
 
@@ -675,6 +704,7 @@ Using implementation terminology rather than business terminology.
 ## Generic Infrastructure Ports
 
 ```
+
 StorageProvider
 ```
 
@@ -737,23 +767,3 @@ The business model itself.
 Infrastructure remains free to evolve.
 
 The Domain remains free to ignore it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`03-driving-ports.md`
-
-**Next File**
-
-`05-adapters.md`

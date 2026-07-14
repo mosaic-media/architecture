@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/11-runtime-boundary.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Boundary
@@ -13,7 +13,7 @@ Version: 0.2
 
 # Purpose
 
-The Reactive Runtime introduced in MEG-002 is one of the most sophisticated parts of the Mosaic platform.
+The Reactive Runtime introduced in [MEG-002](../meg-002-event-driven-runtime/index.md) is one of the most sophisticated parts of the Mosaic platform.
 
 It manages:
 
@@ -50,20 +50,22 @@ This distinction is one of the most important architectural boundaries in the en
 
 Mosaic intentionally maintains two independent models.
 
+```mermaid
+flowchart TD
+
+N1["Business Model"]
+N2["Domain"]
+
+N1 --> N2
 ```
-Business Model
 
-↓
+```mermaid
+flowchart TD
 
-Domain
-```
+N1["Execution Model"]
+N2["Reactive Runtime"]
 
-```
-Execution Model
-
-↓
-
-Reactive Runtime
+N1 --> N2
 ```
 
 The Business Model describes:
@@ -92,24 +94,19 @@ Within Hexagonal Architecture, the Runtime is simply another external system.
 
 Conceptually.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Runtime"]
+N3["Database"]
+N4["Blob Storage"]
+N5["External APIs"]
 
-Runtime
-
-↓
-
-Database
-
-↓
-
-Blob Storage
-
-↓
-
-External APIs
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 All exist outside the Domain.
@@ -127,14 +124,17 @@ Business behaviour belongs exclusively to the Domain.
 Examples include:
 
 ```
+
 Playback Completed
 ```
 
 ```
+
 Collection Created
 ```
 
 ```
+
 Metadata Corrected
 ```
 
@@ -151,18 +151,22 @@ The Runtime owns operational concerns.
 Examples include:
 
 ```
+
 Retry Scheduled
 ```
 
 ```
+
 Worker Started
 ```
 
 ```
+
 Backpressure Applied
 ```
 
 ```
+
 Queue Drained
 ```
 
@@ -178,16 +182,15 @@ The Domain should never reference them.
 
 The Domain raises Domain Events.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 At this point:
@@ -208,24 +211,19 @@ Those responsibilities begin only after the Domain boundary.
 
 A Runtime Adapter bridges the two models.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Domain Event"]
+N3["Runtime Adapter"]
+N4["Runtime Event"]
+N5["Event Bus"]
 
-Domain Event
-
-↓
-
-Runtime Adapter
-
-↓
-
-Runtime Event
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice:
@@ -248,24 +246,19 @@ Runtime Subscribers are Driving Adapters.
 
 Example.
 
-```
-Runtime Event
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Event"]
+N2["Subscriber Adapter"]
+N3["Driving Port"]
+N4["Application Service"]
+N5["Domain"]
 
-Subscriber Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Application Service
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Domain remains unaware that:
@@ -294,24 +287,19 @@ inside an Aggregate.
 
 Preferred.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Request Behaviour"]
+N3["Runtime Scheduler"]
+N4["Driving Adapter"]
+N5["Domain"]
 
-Request Behaviour
-
-↓
-
-Runtime Scheduler
-
-↓
-
-Driving Adapter
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Runtime owns time.
@@ -326,28 +314,21 @@ Retries are Runtime concerns.
 
 Suppose metadata retrieval fails.
 
-```
-Metadata Provider
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata Provider"]
+N2["Failure"]
+N3["Runtime Retry"]
+N4["Later"]
+N5["Driving Adapter"]
+N6["Domain"]
 
-Failure
-
-↓
-
-Runtime Retry
-
-↓
-
-Later
-
-↓
-
-Driving Adapter
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The Domain simply executes business behaviour again.
@@ -366,20 +347,17 @@ They do not execute Aggregates directly.
 
 Conceptually.
 
-```
-Worker
+```mermaid
+flowchart TD
 
-↓
+N1["Worker"]
+N2["Driving Adapter"]
+N3["Application Service"]
+N4["Aggregate"]
 
-Driving Adapter
-
-↓
-
-Application Service
-
-↓
-
-Aggregate
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Worker knows:
@@ -403,12 +381,14 @@ Runtime cancellation should never leak into business behaviour.
 The Runtime decides:
 
 ```
+
 Stop Processing
 ```
 
 The Domain decides:
 
 ```
+
 How To Leave Business State Consistent
 ```
 
@@ -444,28 +424,21 @@ Modules participate through the Runtime boundary.
 
 Example.
 
-```
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Runtime Event"]
+N3["Driving Adapter"]
+N4["Driving Port"]
+N5["Application"]
+N6["Domain"]
 
-Runtime Event
-
-↓
-
-Driving Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The Domain cannot determine whether the caller is:
@@ -485,22 +458,24 @@ This greatly simplifies business modelling.
 
 Imagine replacing the current Runtime.
 
-```
-Event Bus A
+```mermaid
+flowchart TD
 
-↓
+N1["Event Bus A"]
+N2["Event Bus B"]
 
-Event Bus B
+N1 --> N2
 ```
 
 or
 
-```
-Worker Engine A
+```mermaid
+flowchart TD
 
-↓
+N1["Worker Engine A"]
+N2["Worker Engine B"]
 
-Worker Engine B
+N1 --> N2
 ```
 
 The Domain should remain unchanged.
@@ -522,40 +497,34 @@ A common mistake is allowing the Runtime to orchestrate business workflows.
 
 Poor.
 
-```
-Runtime
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime"]
+N2["If PlaybackCompleted"]
+N3["Generate Recommendations"]
+N4["Update Statistics"]
+N5["Refresh Metadata"]
 
-If PlaybackCompleted
-
-↓
-
-Generate Recommendations
-
-↓
-
-Update Statistics
-
-↓
-
-Refresh Metadata
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Runtime has now become part of the business.
 
 Instead.
 
-```
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["Runtime Delivers"]
+N3["Independent Subscribers"]
 
-Runtime Delivers
-
-↓
-
-Independent Subscribers
+N1 --> N2
+N2 --> N3
 ```
 
 Business behaviour remains inside the Domain.
@@ -580,16 +549,15 @@ runtime.Schedule(...)
 
 Preferred.
 
-```
-Domain Event
+```mermaid
+flowchart TD
 
-↓
+N1["Domain Event"]
+N2["Runtime Adapter"]
+N3["Runtime"]
 
-Runtime Adapter
-
-↓
-
-Runtime
+N1 --> N2
+N2 --> N3
 ```
 
 The Runtime remains replaceable because the Domain does not depend upon its APIs.
@@ -602,34 +570,30 @@ The Runtime boundary makes testing significantly easier.
 
 Domain tests.
 
-```
-Application Service
+```mermaid
+flowchart TD
 
-↓
+N1["Application Service"]
+N2["Aggregate"]
+N3["Assertions"]
 
-Aggregate
-
-↓
-
-Assertions
+N1 --> N2
+N2 --> N3
 ```
 
 Runtime tests.
 
-```
-Worker
+```mermaid
+flowchart TD
 
-↓
+N1["Worker"]
+N2["Runtime Adapter"]
+N3["Queues"]
+N4["Retries"]
 
-Runtime Adapter
-
-↓
-
-Queues
-
-↓
-
-Retries
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Each model can be verified independently.
@@ -700,30 +664,25 @@ Within Mosaic:
 
 This chapter completes the integration between:
 
-- **MEG-002 — Reactive Runtime**
-- **MEG-003 — Domain-Driven Design**
+- **[MEG-002](../meg-002-event-driven-runtime/index.md) — Reactive Runtime**
+- **[MEG-003 — Domain-Driven Design](../meg-003-domain-driven-design/index.md)**
 - **MEG-004 — Hexagonal Architecture**
 
 Together they establish one of the most important architectural principles within Mosaic:
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Ports"]
+N3["Adapters"]
+N4["Reactive Runtime"]
+N5["Infrastructure"]
 
-Ports
-
-↓
-
-Adapters
-
-↓
-
-Reactive Runtime
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer owns one responsibility.
@@ -751,23 +710,3 @@ The Domain does none of those things.
 It simply models the business.
 
 Maintaining this boundary ensures that the most valuable part of the platform, the business itself, remains protected from the inevitable evolution of the technologies that execute it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`10-application-services.md`
-
-**Next File**
-
-`12-testing-the-hexagon.md`

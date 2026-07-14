@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/06-driving-adapters.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Driving Adapters
@@ -58,24 +58,19 @@ A Driving Adapter is an infrastructure component that invokes a Driving Port.
 
 Conceptually:
 
-```
-External Actor
+```mermaid
+flowchart TD
 
-↓
+N1["External Actor"]
+N2["Driving Adapter"]
+N3["Driving Port"]
+N4["Application"]
+N5["Domain"]
 
-Driving Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Application
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Driving Adapter is responsible for translation.
@@ -91,22 +86,27 @@ Many different systems may invoke the same business capability.
 Examples include:
 
 ```
+
 HTTP
 ```
 
 ```
+
 CLI
 ```
 
 ```
+
 Scheduler
 ```
 
 ```
+
 Runtime Subscriber
 ```
 
 ```
+
 Module
 ```
 
@@ -120,36 +120,32 @@ No transport receives special treatment.
 
 Without Driving Adapters:
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Domain"]
+N3["Business Logic"]
 
-Domain
-
-↓
-
-Business Logic
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain now understands HTTP.
 
 Instead:
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["HTTP Adapter"]
+N3["Driving Port"]
+N4["Domain"]
 
-HTTP Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only the Adapter understands HTTP.
@@ -164,18 +160,21 @@ Multiple Driving Adapters may invoke the same Driving Port.
 
 Example.
 
-```
-PlaybackService
+```mermaid
+flowchart TD
 
-├── HTTP Adapter
+N1["PlaybackService"]
+N2["HTTP Adapter"]
+N3["CLI Adapter"]
+N4["Scheduler Adapter"]
+N5["Runtime Adapter"]
+N6["Test Adapter"]
 
-├── CLI Adapter
-
-├── Scheduler Adapter
-
-├── Runtime Adapter
-
-└── Test Adapter
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 The business implementation remains identical.
@@ -190,38 +189,32 @@ Driving Adapters translate external representations into business requests.
 
 Example.
 
-```
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["JSON"]
+N3["Request DTO"]
+N4["ImportMediaRequest"]
+N5["Driving Port"]
 
-JSON
-
-↓
-
-Request DTO
-
-↓
-
-ImportMediaRequest
-
-↓
-
-Driving Port
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Or:
 
-```
-CLI Arguments
+```mermaid
+flowchart TD
 
-↓
+N1["CLI Arguments"]
+N2["Business Request"]
+N3["Driving Port"]
 
-Business Request
-
-↓
-
-Driving Port
+N1 --> N2
+N2 --> N3
 ```
 
 Translation ends at the Port boundary.
@@ -249,12 +242,14 @@ Example.
 Transport validation.
 
 ```
+
 Required JSON Field Missing
 ```
 
 Business validation.
 
 ```
+
 Collection Already Exists
 ```
 
@@ -270,36 +265,35 @@ Authentication belongs to the Driving Adapter layer.
 
 Example.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Authenticate User"]
+N3["Driving Port"]
 
-Authenticate User
-
-↓
-
-Driving Port
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain should receive:
 
 ```
+
 Authenticated User
 ```
 
 Not:
 
-```
-JWT
+```mermaid
+flowchart TD
 
-↓
+N1["JWT"]
+N2["Bearer Token"]
+N3["OAuth Header"]
 
-Bearer Token
-
-↓
-
-OAuth Header
+N1 --> N2
+N2 --> N3
 ```
 
 Security mechanisms remain infrastructure concerns.
@@ -316,16 +310,15 @@ Authorisation decisions should generally occur before entering the Domain.
 
 Example.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Permission Check"]
+N3["Driving Port"]
 
-Permission Check
-
-↓
-
-Driving Port
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain assumes:
@@ -342,30 +335,28 @@ Driving Adapters translate Domain errors into transport errors.
 
 Example.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["MediaNotFound"]
+N3["HTTP Adapter"]
+N4["404"]
 
-MediaNotFound
-
-↓
-
-HTTP Adapter
-
-↓
-
-404
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Or:
 
-```
-CLI Adapter
+```mermaid
+flowchart TD
 
-↓
+N1["CLI Adapter"]
+N2["Exit Code"]
 
-Exit Code
+N1 --> N2
 ```
 
 The Domain should never return:
@@ -384,27 +375,24 @@ Within the Reactive Runtime, subscribers become Driving Adapters.
 
 Example.
 
-```
-Runtime Event
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Event"]
+N2["Subscriber Adapter"]
+N3["RecommendationService"]
+N4["Domain"]
 
-Subscriber Adapter
-
-↓
-
-RecommendationService
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain remains unaware that an Event Bus exists.
 
 Subscribers simply translate runtime events into business requests.
 
-This is one of the key integration points between MEG-002 and MEG-004.
+This is one of the key integration points between [MEG-002](../meg-002-event-driven-runtime/index.md) and MEG-004.
 
 ---
 
@@ -414,20 +402,17 @@ Scheduled tasks also become Driving Adapters.
 
 Example.
 
-```
-Scheduler
+```mermaid
+flowchart TD
 
-↓
+N1["Scheduler"]
+N2["RefreshMetadata()"]
+N3["Driving Port"]
+N4["Domain"]
 
-RefreshMetadata()
-
-↓
-
-Driving Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain should never understand:
@@ -446,20 +431,17 @@ Modules invoke the Domain through Driving Adapters.
 
 Example.
 
-```
-Module SDK
+```mermaid
+flowchart TD
 
-↓
+N1["Module SDK"]
+N2["Module Adapter"]
+N3["Driving Port"]
+N4["Domain"]
 
-Module Adapter
-
-↓
-
-Driving Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain remains unaware whether the caller is:
@@ -479,16 +461,15 @@ Tests become Driving Adapters.
 
 Example.
 
-```
-Test
+```mermaid
+flowchart TD
 
-↓
+N1["Test"]
+N2["Driving Port"]
+N3["Domain"]
 
-Driving Port
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 No HTTP.
@@ -547,30 +528,37 @@ Not the Adapter itself.
 Examples of Driving Adapters include:
 
 ```
+
 REST API
 ```
 
 ```
+
 GraphQL API
 ```
 
 ```
+
 CLI
 ```
 
 ```
+
 Worker Subscriber
 ```
 
 ```
+
 Scheduler
 ```
 
 ```
+
 Module Runtime
 ```
 
 ```
+
 Integration Tests
 ```
 
@@ -672,23 +660,3 @@ Whether requests originate from:
 the Domain always receives the same business request through the same Driving Port.
 
 That consistency allows Mosaic to support many interaction models without ever allowing transport concerns to leak into the business itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`05-adapters.md`
-
-**Next File**
-
-`07-driven-adapters.md`

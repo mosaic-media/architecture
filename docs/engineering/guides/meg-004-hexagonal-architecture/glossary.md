@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/glossary.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -88,6 +88,7 @@ are assembled into a running application.
 Typically:
 
 ```
+
 cmd/server/main.go
 ```
 
@@ -357,23 +358,3 @@ Definitions should remain consistent across:
 - Contributor Guidance
 
 Whenever architectural terminology evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`15-contributor-guidance.md`
-
-**Next File**
-
-`references.md`

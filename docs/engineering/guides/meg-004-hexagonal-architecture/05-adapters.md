@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/05-adapters.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Adapters
@@ -61,42 +61,44 @@ An Adapter implements a Port.
 
 Conceptually.
 
-```
-Port
+```mermaid
+flowchart TD
 
-↓
+N1["Port"]
+N2["Adapter"]
+N3["Technology"]
 
-Adapter
-
-↓
-
-Technology
+N1 --> N2
+N2 --> N3
 ```
 
 Examples include:
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["PostgreSQL Adapter"]
 
-PostgreSQL Adapter
-```
-
-```
-MetadataProvider
-
-↓
-
-TMDB Adapter
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["MetadataProvider"]
+N2["TMDB Adapter"]
+
+N1 --> N2
 ```
-ArtworkStore
 
-↓
+```mermaid
+flowchart TD
 
-Blob Storage Adapter
+N1["ArtworkStore"]
+N2["Blob Storage Adapter"]
+
+N1 --> N2
 ```
 
 The Adapter satisfies the Port.
@@ -109,40 +111,34 @@ The Domain remains unchanged.
 
 Without Adapters:
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["PostgreSQL"]
+N3["SQL"]
+N4["Storage"]
 
-PostgreSQL
-
-↓
-
-SQL
-
-↓
-
-Storage
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Business behaviour becomes coupled to infrastructure.
 
 Instead:
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["PlaybackRepository"]
+N3["PostgreSQL Adapter"]
+N4["Database"]
 
-PlaybackRepository
-
-↓
-
-PostgreSQL Adapter
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only the Adapter understands SQL.
@@ -157,42 +153,34 @@ An Adapter performs translation.
 
 Example.
 
-```
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["JSON"]
+N3["Request DTO"]
+N4["Business Request"]
+N5["Driving Port"]
 
-JSON
-
-↓
-
-Request DTO
-
-↓
-
-Business Request
-
-↓
-
-Driving Port
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Or:
 
-```
-Business Request
+```mermaid
+flowchart TD
 
-↓
+N1["Business Request"]
+N2["Repository Port"]
+N3["SQL"]
+N4["Database"]
 
-Repository Port
-
-↓
-
-SQL
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Notice:
@@ -231,40 +219,39 @@ Adapters should convert infrastructure models into Domain concepts.
 
 Poor.
 
-```
-SQL Row
+```mermaid
+flowchart TD
 
-↓
+N1["SQL Row"]
+N2["Domain"]
 
-Domain
+N1 --> N2
 ```
 
 Better.
 
-```
-SQL Row
+```mermaid
+flowchart TD
 
-↓
+N1["SQL Row"]
+N2["Adapter"]
+N3["Aggregate"]
 
-Adapter
-
-↓
-
-Aggregate
+N1 --> N2
+N2 --> N3
 ```
 
 Likewise.
 
-```
-HTTP JSON
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP JSON"]
+N2["Adapter"]
+N3["Business Request"]
 
-Adapter
-
-↓
-
-Business Request
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain should never parse JSON.
@@ -278,23 +265,25 @@ Each Adapter SHOULD represent one integration.
 Good.
 
 ```
+
 TMDB Adapter
 ```
 
 Poor.
 
-```
-MetadataAdapter
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataAdapter"]
+N2["TMDB"]
+N3["AniList"]
+N4["IMDb"]
+N5["Local Files"]
 
-TMDB
-
-AniList
-
-IMDb
-
-Local Files
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 Multiple technologies should generally produce multiple Adapters implementing the same Port.
@@ -309,21 +298,25 @@ One Port may have many Adapters.
 
 Example.
 
-```
-MetadataProvider
+```mermaid
+flowchart TD
 
-├── TMDB Adapter
+N1["MetadataProvider"]
+N2["TMDB Adapter"]
+N3["AniList Adapter"]
+N4["Cached Adapter"]
+N5["Test Adapter"]
 
-├── AniList Adapter
-
-├── Cached Adapter
-
-└── Test Adapter
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 The Domain depends only upon:
 
 ```
+
 MetadataProvider
 ```
 
@@ -339,23 +332,26 @@ Adapters should be considered disposable.
 
 Suppose:
 
-```
-TMDB
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB"]
+N2["Deprecated"]
 
-Deprecated
+N1 --> N2
 ```
 
 The replacement should require:
 
 ```
+
 New Adapter
 ```
 
 Not:
 
 ```
+
 Domain Rewrite
 ```
 
@@ -394,26 +390,26 @@ Adapters translate infrastructure failures into business concepts.
 
 Poor.
 
-```
-SQL Error
+```mermaid
+flowchart TD
 
-↓
+N1["SQL Error"]
+N2["Domain"]
 
-Domain
+N1 --> N2
 ```
 
 Preferred.
 
-```
-SQL Error
+```mermaid
+flowchart TD
 
-↓
+N1["SQL Error"]
+N2["Adapter"]
+N3["Media Not Found"]
 
-Adapter
-
-↓
-
-Media Not Found
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain should never understand database exceptions.
@@ -426,28 +422,31 @@ Adapters frequently perform mapping.
 
 Examples include:
 
-```
-JSON
+```mermaid
+flowchart TD
 
-↓
+N1["JSON"]
+N2["Domain Request"]
 
-Domain Request
-```
-
-```
-Database Row
-
-↓
-
-Aggregate
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Database Row"]
+N2["Aggregate"]
+
+N1 --> N2
 ```
-TMDB Response
 
-↓
+```mermaid
+flowchart TD
 
-Metadata Value Object
+N1["TMDB Response"]
+N2["Metadata Value Object"]
+
+N1 --> N2
 ```
 
 Mapping belongs entirely to infrastructure.
@@ -462,27 +461,24 @@ The Reactive Runtime integrates through Adapters.
 
 Example.
 
-```
-Domain Event
+```mermaid
+flowchart TD
 
-↓
+N1["Domain Event"]
+N2["Runtime Adapter"]
+N3["Runtime Event"]
+N4["Event Bus"]
 
-Runtime Adapter
-
-↓
-
-Runtime Event
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain remains unaware that an Event Bus even exists.
 
 The Adapter performs the translation.
 
-This preserves the separation established in MEG-002.
+This preserves the separation established in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 ---
 
@@ -492,16 +488,15 @@ Every external API SHOULD terminate at an Adapter.
 
 Example.
 
-```
-AniList
+```mermaid
+flowchart TD
 
-↓
+N1["AniList"]
+N2["AniList Adapter"]
+N3["MetadataProvider"]
 
-AniList Adapter
-
-↓
-
-MetadataProvider
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain should never import:
@@ -537,20 +532,17 @@ Adapters are assembled within the Composition Root.
 
 Example.
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["Postgres Adapter"]
+N3["PlaybackRepository"]
+N4["Playback Domain"]
 
-Postgres Adapter
-
-↓
-
-PlaybackRepository
-
-↓
-
-Playback Domain
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain never constructs its own Adapters.
@@ -565,28 +557,31 @@ Adapters change frequently.
 
 Examples include:
 
-```
-REST
+```mermaid
+flowchart TD
 
-↓
+N1["REST"]
+N2["GraphQL"]
 
-GraphQL
-```
-
-```
-PostgreSQL
-
-↓
-
-CockroachDB
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["PostgreSQL"]
+N2["CockroachDB"]
+
+N1 --> N2
 ```
-Blob Storage
 
-↓
+```mermaid
+flowchart TD
 
-S3
+N1["Blob Storage"]
+N2["S3"]
+
+N1 --> N2
 ```
 
 The Adapter changes.
@@ -604,30 +599,37 @@ This asymmetry is intentional.
 Examples of Adapters include:
 
 ```
+
 HTTP Playback Adapter
 ```
 
 ```
+
 CLI Import Adapter
 ```
 
 ```
+
 PostgreSQL Playback Repository
 ```
 
 ```
+
 DuckDB Analytics Repository
 ```
 
 ```
+
 TMDB Metadata Adapter
 ```
 
 ```
+
 Jellyfin Compatibility Adapter
 ```
 
 ```
+
 Stremio Integration Adapter
 ```
 
@@ -719,23 +721,3 @@ They isolate technology from the business by converting external representations
 Within Mosaic, every infrastructure concern exists behind an Adapter.
 
 That simple rule allows databases, APIs, runtimes and transport protocols to evolve continuously while the Domain remains stable, expressive and entirely focused on the business.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`04-driven-ports.md`
-
-**Next File**
-
-`06-driving-adapters.md`

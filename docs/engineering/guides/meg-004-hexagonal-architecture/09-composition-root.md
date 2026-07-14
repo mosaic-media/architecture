@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/09-composition-root.md
 Document: MEG-004
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Composition Root
@@ -63,14 +63,17 @@ A Composition Root is the application's entry point.
 Typical examples include:
 
 ```
+
 cmd/server/main.go
 ```
 
 ```
+
 cmd/worker/main.go
 ```
 
 ```
+
 cmd/migrate/main.go
 ```
 
@@ -86,20 +89,17 @@ Nothing else constructs them.
 
 Without a Composition Root:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Creates Repository"]
+N3["Creates Database"]
+N4["Creates Logger"]
 
-Creates Repository
-
-↓
-
-Creates Database
-
-↓
-
-Creates Logger
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Construction becomes distributed.
@@ -110,28 +110,21 @@ Testing becomes difficult.
 
 Instead:
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["Create Logger"]
+N3["Create Database"]
+N4["Create Repository"]
+N5["Create Service"]
+N6["Start Application"]
 
-Create Logger
-
-↓
-
-Create Database
-
-↓
-
-Create Repository
-
-↓
-
-Create Service
-
-↓
-
-Start Application
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Construction is obvious.
@@ -167,28 +160,21 @@ Once construction completes, its work is finished.
 
 The Composition Root assembles dependencies from the outside in.
 
-```
-Configuration
+```mermaid
+flowchart TD
 
-↓
+N1["Configuration"]
+N2["Infrastructure"]
+N3["Driven Adapters"]
+N4["Application"]
+N5["Driving Adapters"]
+N6["Application Starts"]
 
-Infrastructure
-
-↓
-
-Driven Adapters
-
-↓
-
-Application
-
-↓
-
-Driving Adapters
-
-↓
-
-Application Starts
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Notice:
@@ -254,24 +240,19 @@ Infrastructure should be constructed first.
 
 Example.
 
-```
-Configuration
+```mermaid
+flowchart TD
 
-↓
+N1["Configuration"]
+N2["Logger"]
+N3["Database"]
+N4["Blob Storage"]
+N5["HTTP Client"]
 
-Logger
-
-↓
-
-Database
-
-↓
-
-Blob Storage
-
-↓
-
-HTTP Client
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 These components become dependencies for Adapters.
@@ -286,20 +267,17 @@ Adapters are constructed after infrastructure.
 
 Example.
 
-```
-Database
+```mermaid
+flowchart TD
 
-↓
+N1["Database"]
+N2["Playback Repository"]
+N3["Metadata Repository"]
+N4["Collection Repository"]
 
-Playback Repository
-
-↓
-
-Metadata Repository
-
-↓
-
-Collection Repository
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Each Adapter implements a Port.
@@ -314,12 +292,13 @@ Application Services receive Ports.
 
 Example.
 
-```
-Playback Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Repository"]
+N2["Playback Service"]
 
-Playback Service
+N1 --> N2
 ```
 
 Notice:
@@ -336,28 +315,31 @@ Driving Adapters are constructed last.
 
 Example.
 
-```
-Playback Service
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Service"]
+N2["HTTP Handler"]
 
-HTTP Handler
-```
-
-```
-Playback Service
-
-↓
-
-CLI Command
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Playback Service"]
+N2["CLI Command"]
+
+N1 --> N2
 ```
-Playback Service
 
-↓
+```mermaid
+flowchart TD
 
-Runtime Subscriber
+N1["Playback Service"]
+N2["Runtime Subscriber"]
+
+N1 --> N2
 ```
 
 Every entry point receives the same business capability.
@@ -368,26 +350,26 @@ Every entry point receives the same business capability.
 
 The Reactive Runtime is assembled exactly the same way.
 
-```
-Event Publisher
+```mermaid
+flowchart TD
 
-↓
+N1["Event Publisher"]
+N2["Runtime Adapter"]
+N3["Playback Service"]
 
-Runtime Adapter
-
-↓
-
-Playback Service
+N1 --> N2
+N2 --> N3
 ```
 
 or
 
-```
-Runtime Subscriber
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Subscriber"]
+N2["Recommendation Service"]
 
-Recommendation Service
+N1 --> N2
 ```
 
 The Runtime remains infrastructure.
@@ -410,16 +392,15 @@ inside the Domain.
 
 Preferred.
 
-```
-Configuration
+```mermaid
+flowchart TD
 
-↓
+N1["Configuration"]
+N2["Composition Root"]
+N3["Inject Dependencies"]
 
-Composition Root
-
-↓
-
-Inject Dependencies
+N1 --> N2
+N2 --> N3
 ```
 
 Business behaviour should never read environment variables directly.
@@ -435,18 +416,21 @@ Example.
 Development.
 
 ```
+
 Filesystem Artwork Store
 ```
 
 Production.
 
 ```
+
 Blob Artwork Store
 ```
 
 Testing.
 
 ```
+
 InMemory Artwork Store
 ```
 
@@ -462,16 +446,15 @@ Tests frequently create their own miniature Composition Roots.
 
 Example.
 
-```
-Fake Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Fake Repository"]
+N2["Playback Service"]
+N3["Test"]
 
-Playback Service
-
-↓
-
-Test
+N1 --> N2
+N2 --> N3
 ```
 
 Notice:
@@ -490,22 +473,24 @@ Each executable should have one Composition Root.
 
 Poor.
 
-```
-Service
+```mermaid
+flowchart TD
 
-↓
+N1["Service"]
+N2["Creates Dependencies"]
 
-Creates Dependencies
+N1 --> N2
 ```
 
 Good.
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["Everything Constructed"]
 
-Everything Constructed
+N1 --> N2
 ```
 
 Distributed construction eventually becomes a Service Locator.
@@ -542,32 +527,23 @@ Reading `main.go` should feel predictable.
 
 Typical flow.
 
-```
-Load Config
+```mermaid
+flowchart TD
 
-↓
+N1["Load Config"]
+N2["Create Infrastructure"]
+N3["Create Adapters"]
+N4["Create Services"]
+N5["Register Routes"]
+N6["Start Runtime"]
+N7["Wait For Shutdown"]
 
-Create Infrastructure
-
-↓
-
-Create Adapters
-
-↓
-
-Create Services
-
-↓
-
-Register Routes
-
-↓
-
-Start Runtime
-
-↓
-
-Wait For Shutdown
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 No surprises.
@@ -591,6 +567,7 @@ Creating dependencies throughout the application.
 ## Service Locator
 
 ```
+
 container.Resolve(...)
 ```
 
@@ -667,23 +644,3 @@ Within Mosaic, the answer should always be visible, explicit and unsurprising.
 Once construction completes, the Composition Root steps aside.
 
 The rest of the application simply performs business behaviour.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`08-dependency-direction.md`
-
-**Next File**
-
-`10-application-services.md`
