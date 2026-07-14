@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 05
 Title: Information
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Information
@@ -59,6 +59,7 @@ Traditional UI systems frequently begin with interface.
 Examples include:
 
 ```
+
 Timeline Widget
 
 Recommendation Card
@@ -81,6 +82,7 @@ Instead it asks:
 Examples.
 
 ```
+
 Episode Release
 
 Progress
@@ -120,12 +122,13 @@ Information rarely does.
 
 Example.
 
-```
-Episode Release
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Release"]
+N2["Tomorrow"]
 
-Tomorrow
+N1 --> N2
 ```
 
 Today this information may appear as:
@@ -270,6 +273,7 @@ Progress.
 Television.
 
 ```
+
 Episode 12
 
 68%
@@ -278,6 +282,7 @@ Episode 12
 Books.
 
 ```
+
 Chapter 9
 
 68%
@@ -286,6 +291,7 @@ Chapter 9
 Music.
 
 ```
+
 Album
 
 68%
@@ -307,12 +313,13 @@ Anime module.
 
 Provides:
 
-```
-Episode Release
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Release"]
+N2["Tomorrow"]
 
-Tomorrow
+N1 --> N2
 ```
 
 The module does **not** decide how that information appears.
@@ -325,16 +332,15 @@ Book module.
 
 Provides:
 
-```
-Reading Progress
+```mermaid
+flowchart TD
 
-↓
+N1["Reading Progress"]
+N2["Chapter 12"]
+N3["68%"]
 
-Chapter 12
-
-↓
-
-68%
+N1 --> N2
+N2 --> N3
 ```
 
 Again...
@@ -351,16 +357,15 @@ Movie metadata.
 
 Provides:
 
-```
-Actor
+```mermaid
+flowchart TD
 
-↓
+N1["Actor"]
+N2["Appears In"]
+N3["Interstellar"]
 
-Appears In
-
-↓
-
-Interstellar
+N1 --> N2
+N2 --> N3
 ```
 
 Relationship.
@@ -376,6 +381,7 @@ The following violate the Information model.
 ## Returning Interface
 
 ```
+
 Timeline Widget
 ```
 
@@ -386,6 +392,7 @@ Wrong.
 ## Returning HTML
 
 ```
+
 <div>
 
 ...
@@ -397,16 +404,15 @@ Wrong.
 
 ## Returning Layout
 
-```
-Left Panel
+```mermaid
+flowchart TD
 
-↓
+N1["Left Panel"]
+N2["Metadata"]
+N3["Card"]
 
-Metadata
-
-↓
-
-Card
+N1 --> N2
+N2 --> N3
 ```
 
 Wrong.
@@ -423,16 +429,15 @@ Information rarely exists alone.
 
 Example.
 
-```
-Episode 15
+```mermaid
+flowchart TD
 
-↓
+N1["Episode 15"]
+N2["Tomorrow"]
+N3["Frieren"]
 
-Tomorrow
-
-↓
-
-Frieren
+N1 --> N2
+N2 --> N3
 ```
 
 These concepts become useful because they relate to one another.
@@ -496,15 +501,3 @@ before deciding:
 > **How it should be shown.**
 
 Every future Mosaic experience should therefore begin with Information rather than presentation.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-relationships.md`

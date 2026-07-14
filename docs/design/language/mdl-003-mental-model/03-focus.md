@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 03
 Title: Focus
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Focus
@@ -86,26 +86,25 @@ Every World contains many possibilities.
 
 Only one should normally be considered the primary Focus.
 
-```
-World
+```mermaid
+flowchart TD
 
-├── Anime
+N1["World"]
+N2["Anime"]
+N3["Books"]
+N4["Music"]
+N5["Movies"]
+N6["Television"]
+N7["Current Focus"]
+N8["Frieren"]
 
-├── Books
-
-├── Music
-
-├── Movies
-
-└── Television
-
-↓
-
-Current Focus
-
-↓
-
-Frieren
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N7 --> N8
 ```
 
 The interface should communicate this clearly.
@@ -120,28 +119,21 @@ Focus changes naturally.
 
 Examples include:
 
-```
-Morning
+```mermaid
+flowchart TD
 
-↓
+N1["Morning"]
+N2["Podcast"]
+N3["Afternoon"]
+N4["Book"]
+N5["Evening"]
+N6["Television"]
 
-Podcast
-
-↓
-
-Afternoon
-
-↓
-
-Book
-
-↓
-
-Evening
-
-↓
-
-Television
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The World remains stable.
@@ -161,6 +153,7 @@ Example.
 A user briefly opens:
 
 ```
+
 Breaking Bad
 ```
 
@@ -169,6 +162,7 @@ to check the cast.
 Their current entertainment journey may still be:
 
 ```
+
 Frieren
 ```
 
@@ -204,20 +198,17 @@ Users should rarely be surprised by what Mosaic considers important.
 
 Once Focus is established, hierarchy naturally follows.
 
-```
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["Supporting Information"]
+N3["Related Information"]
+N4["Background Information"]
 
-Supporting Information
-
-↓
-
-Related Information
-
-↓
-
-Background Information
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This ordering allows every composition to answer the user's most immediate questions first.
@@ -235,6 +226,7 @@ Importance emerges from Focus.
 Current Focus
 
 ```
+
 Frieren
 ```
 
@@ -255,6 +247,7 @@ The composition naturally organises around the current Focus.
 Current Focus
 
 ```
+
 Project Hail Mary
 ```
 
@@ -330,32 +323,29 @@ Focus and Context are closely related.
 
 They are not identical.
 
-```
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["What currently matters."]
+N3["Context"]
+N4["Why it currently matters."]
 
-What currently matters.
-
-Context
-
-↓
-
-Why it currently matters.
+N1 --> N2
+N1 --> N3
+N2 --> N4
+N3 --> N4
 ```
 
 Example.
 
-```
-Focus
+```mermaid
+flowchart TD
 
-Frieren
+N1["Focus<br/>Frieren"]
+N2["Context<br/>Watching Episode 14"]
 
-↓
-
-Context
-
-Watching Episode 14
+N1 --> N2
 ```
 
 Without Focus there is no subject.
@@ -412,15 +402,3 @@ The World remains constant.
 Focus changes.
 
 Everything else adapts naturally around it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-context.md`

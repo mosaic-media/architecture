@@ -2,7 +2,7 @@
 File: docs/design/language/mdl-003-mental-model/index.md
 Document: MDL-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MDL-003 — Mental Model
@@ -13,9 +13,9 @@ Version: 0.2
 
 # Purpose
 
-MDL-001 established **why** Mosaic exists.
+[MDL-001](../mdl-001-vision/index.md) established **why** Mosaic exists.
 
-MDL-002 established **how** design decisions are made.
+[MDL-002](../mdl-002-principles/index.md) established **how** design decisions are made.
 
 MDL-003 defines **how Mosaic thinks**.
 
@@ -29,32 +29,23 @@ It explains what exists inside the world of Mosaic independently of how those co
 
 # Relationship to Previous Specifications
 
-```
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Principles"]
+N3["Mental Model"]
+N4["Interaction Model"]
+N5["Composition Model"]
+N6["Design System"]
+N7["Implementation"]
 
-Principles
-
-↓
-
-Mental Model
-
-↓
-
-Interaction Model
-
-↓
-
-Composition Model
-
-↓
-
-Design System
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Everything below MDL-003 assumes the concepts defined here.
@@ -122,36 +113,25 @@ Everything within Mosaic should reinforce this understanding.
 
 The conceptual hierarchy introduced by MDL-003 is expected to become the foundation for future specifications.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Composition"]
+N7["Expressions"]
+N8["Presentation"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Composition
-
-↓
-
-Expressions
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Each layer answers a different question.
@@ -177,6 +157,7 @@ without discussing implementation technologies.
 # Repository Structure
 
 ```
+
 design/
 
 └── mdl/
@@ -213,9 +194,9 @@ design/
 
         13-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -224,28 +205,12 @@ design/
 
 Required reading:
 
-- MDL-001 Vision
-- MDL-002 Principles
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
 
 Downstream specifications:
 
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-003 Composition Engine
-- MDS-011 Module Design Specification
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Design Systems Architect
-
-**Next File**
-
-`00-document-control.md`
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- MDS-011 Module Design Specification *(planned; not yet published)*

@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 10
 Title: User Model vs System Model
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # User Model vs System Model
@@ -31,16 +31,15 @@ This chapter formally separates these two models within Mosaic.
 
 Every Mosaic implementation contains:
 
-```
-System Model
+```mermaid
+flowchart TD
 
-↓
+N1["System Model"]
+N2["Mental Translation"]
+N3["User Model"]
 
-Mental Translation
-
-↓
-
-User Model
+N1 --> N2
+N2 --> N3
 ```
 
 The System Model belongs to engineering.
@@ -103,28 +102,21 @@ Mosaic performs that translation for them.
 
 Consider the following engineering implementation.
 
-```
-SQLite
+```mermaid
+flowchart TD
 
-↓
+N1["SQLite"]
+N2["DuckDB"]
+N3["Metadata Providers"]
+N4["Relationship Graph"]
+N5["Composition Engine"]
+N6["Renderer"]
 
-DuckDB
-
-↓
-
-Metadata Providers
-
-↓
-
-Relationship Graph
-
-↓
-
-Composition Engine
-
-↓
-
-Renderer
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 This architecture may be elegant.
@@ -133,16 +125,15 @@ It is also meaningless to the majority of users.
 
 The equivalent User Model is:
 
-```
-My World
+```mermaid
+flowchart TD
 
-↓
+N1["My World"]
+N2["What I&#x27;m Enjoying"]
+N3["What Helps Me Continue"]
 
-What I'm Enjoying
-
-↓
-
-What Helps Me Continue
+N1 --> N2
+N2 --> N3
 ```
 
 The second model is dramatically simpler.
@@ -182,6 +173,7 @@ Implementation details occasionally leak into user experience.
 Examples include:
 
 ```
+
 Refresh Metadata
 
 Clear Cache
@@ -206,12 +198,14 @@ Example.
 Instead of:
 
 ```
+
 Metadata Refresh Failed
 ```
 
 Prefer:
 
 ```
+
 We couldn't update information for this series.
 
 Your existing information is still available.
@@ -243,16 +237,15 @@ Family members sharing a server should not immediately encounter engineering ter
 
 Administrators should be able to move from:
 
-```
-Simple
+```mermaid
+flowchart TD
 
-↓
+N1["Simple"]
+N2["Advanced"]
+N3["Diagnostic"]
 
-Advanced
-
-↓
-
-Diagnostic
+N1 --> N2
+N2 --> N3
 ```
 
 rather than beginning with raw implementation.
@@ -289,12 +282,14 @@ Failures should be translated through the User Model whenever practical.
 System Model.
 
 ```
+
 AniList API Timeout
 ```
 
 User Model.
 
 ```
+
 Episode information couldn't be updated.
 
 We'll try again automatically.
@@ -333,6 +328,7 @@ This separation is one of the primary long-term objectives of MDL.
 ## Implementation Terminology
 
 ```
+
 DuckDB
 
 SQLite
@@ -352,20 +348,17 @@ appearing throughout the user experience.
 
 Modules introducing competing terminology.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Collection"]
+N3["Shelf"]
+N4["Archive"]
 
-Collection
-
-↓
-
-Shelf
-
-↓
-
-Archive
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 for the same concept.
@@ -380,30 +373,28 @@ Users navigating implementation rather than entertainment.
 
 Example.
 
-```
-Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata"]
+N2["Providers"]
+N3["Mappings"]
 
-Providers
-
-↓
-
-Mappings
+N1 --> N2
+N2 --> N3
 ```
 
 instead of
 
-```
-Series
+```mermaid
+flowchart TD
 
-↓
+N1["Series"]
+N2["Characters"]
+N3["Related Works"]
 
-Characters
-
-↓
-
-Related Works
+N1 --> N2
+N2 --> N3
 ```
 
 The implementation has become visible.
@@ -464,15 +455,3 @@ or
 > **Does it leak the System Model?**
 
 Only the first outcome aligns with the Mosaic Design Language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`

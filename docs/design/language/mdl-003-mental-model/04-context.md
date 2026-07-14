@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 04
 Title: Context
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Context
@@ -89,23 +89,24 @@ Therefore the Context has changed.
 
 Focus and Context are intentionally separate concepts.
 
-```
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["The subject."]
+N3["Context"]
+N4["The circumstances."]
 
-The subject.
-
-Context
-
-↓
-
-The circumstances.
+N1 --> N2
+N1 --> N3
+N2 --> N4
+N3 --> N4
 ```
 
 Example.
 
 ```
+
 Focus
 
 Frieren
@@ -134,6 +135,7 @@ Context should never permanently redefine the user's World.
 Example.
 
 ```
+
 Current Context
 
 Searching
@@ -146,12 +148,14 @@ Once the search is complete, the previous Context should naturally return.
 Likewise:
 
 ```
+
 Browsing Settings
 ```
 
 does not replace:
 
 ```
+
 Watching Frieren
 ```
 
@@ -167,24 +171,19 @@ Context may exist at several levels simultaneously.
 
 Example.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Anime"]
+N3["Frieren"]
+N4["Episode 14"]
+N5["Watching"]
 
-Anime
-
-↓
-
-Frieren
-
-↓
-
-Episode 14
-
-↓
-
-Watching
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer adds understanding.
@@ -210,6 +209,7 @@ Example.
 Watching:
 
 ```
+
 Episode 14
 ```
 
@@ -243,12 +243,14 @@ Example.
 History:
 
 ```
+
 Finished Episode 13
 ```
 
 Context:
 
 ```
+
 Watching Episode 14
 ```
 
@@ -285,6 +287,7 @@ Context always comes first.
 Current Context
 
 ```
+
 Watching Episode
 ```
 
@@ -305,6 +308,7 @@ Everything supports the current activity.
 Current Context
 
 ```
+
 Reading
 ```
 
@@ -326,6 +330,7 @@ They quietly disappear.
 Current Context
 
 ```
+
 Browsing Franchise
 ```
 
@@ -376,20 +381,17 @@ Context does not directly create interface.
 
 Instead it influences composition.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Composition"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Composition
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The same information may appear very differently depending upon Context.
@@ -408,12 +410,13 @@ Example.
 
 Anime Module
 
-```
-Episode 15
+```mermaid
+flowchart TD
 
-↓
+N1["Episode 15"]
+N2["Tomorrow"]
 
-Tomorrow
+N1 --> N2
 ```
 
 The platform determines whether that information is:
@@ -479,15 +482,3 @@ It allows the same World and the same Focus to produce many different experience
 Without Context, Mosaic cannot become a companion.
 
 It can only become another catalogue.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-information.md`

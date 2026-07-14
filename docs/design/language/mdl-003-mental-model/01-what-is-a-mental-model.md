@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 01
 Title: What Is A Mental Model?
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # What Is A Mental Model?
@@ -120,24 +120,19 @@ The purpose of design is to translate one into the other.
 
 Imagine a media application whose navigation is organised around:
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Series"]
+N3["Season"]
+N4["Episode"]
+N5["Playback"]
 
-Series
-
-↓
-
-Season
-
-↓
-
-Episode
-
-↓
-
-Playback
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Internally this may accurately describe the database.
@@ -152,16 +147,15 @@ The user is forced to understand software architecture rather than entertainment
 
 Mosaic instead proposes:
 
-```
-My World
+```mermaid
+flowchart TD
 
-↓
+N1["My World"]
+N2["My Current Focus"]
+N3["What Helps Me Right Now"]
 
-My Current Focus
-
-↓
-
-What Helps Me Right Now
+N1 --> N2
+N2 --> N3
 ```
 
 This is significantly closer to how people naturally describe entertainment.
@@ -254,30 +248,28 @@ The conceptual model of Mosaic is intentionally human rather than technical.
 
 The user does not experience:
 
-```
-Database
+```mermaid
+flowchart TD
 
-↓
+N1["Database"]
+N2["API"]
+N3["Renderer"]
 
-API
-
-↓
-
-Renderer
+N1 --> N2
+N2 --> N3
 ```
 
 They experience:
 
-```
-My World
+```mermaid
+flowchart TD
 
-↓
+N1["My World"]
+N2["What I&#x27;m Enjoying"]
+N3["What Helps Me Continue"]
 
-What I'm Enjoying
-
-↓
-
-What Helps Me Continue
+N1 --> N2
+N2 --> N3
 ```
 
 Everything implemented by Mosaic should reinforce this understanding.
@@ -307,36 +299,25 @@ The remaining chapters progressively define the concepts that make up the Mosaic
 
 Beginning with:
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Composition"]
+N7["Expressions"]
+N8["Presentation"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Composition
-
-↓
-
-Expressions
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Every later chapter builds upon the previous one.
@@ -358,15 +339,3 @@ It describes:
 without describing how any of them are implemented.
 
 Every interface, API and future module should reinforce this same conceptual understanding.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-the-world.md`

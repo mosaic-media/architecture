@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 08
 Title: Expressions
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Expressions
@@ -58,28 +58,28 @@ Traditional UI systems tightly couple information with interface.
 
 For example:
 
-```
-Progress
+```mermaid
+flowchart TD
 
-↓
+N1["Progress"]
+N2["Progress Bar"]
 
-Progress Bar
+N1 --> N2
 ```
 
 This coupling makes future evolution difficult.
 
 Instead, Mosaic separates the concepts.
 
-```
-Progress
+```mermaid
+flowchart TD
 
-↓
+N1["Progress"]
+N2["Expression"]
+N3["Presentation"]
 
-Expression
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 The platform first determines **what** it wishes to communicate.
@@ -96,12 +96,13 @@ Information never decides how it should appear.
 
 Example.
 
-```
-Episode Release
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Release"]
+N2["Tomorrow"]
 
-Tomorrow
+N1 --> N2
 ```
 
 The information remains constant.
@@ -128,36 +129,42 @@ Example.
 Current Context:
 
 ```
+
 Watching Episode
 ```
 
 Episode Release may become:
 
 ```
+
 Timeline
 ```
 
 Current Context:
 
 ```
+
 Browsing Calendar
 ```
 
 The same information may become:
 
 ```
+
 Calendar Entry
 ```
 
 Current Context:
 
 ```
+
 Series Overview
 ```
 
 The same information may become:
 
 ```
+
 Hero Subtitle
 ```
 
@@ -225,6 +232,7 @@ Future MDS specifications may implement an Expression using many different compo
 Example.
 
 ```
+
 Timeline Expression
 ```
 
@@ -256,17 +264,19 @@ Only presentation differs.
 
 Information:
 
-```
-Reading Progress
+```mermaid
+flowchart TD
 
-↓
+N1["Reading Progress"]
+N2["68%"]
 
-68%
+N1 --> N2
 ```
 
 Expression:
 
 ```
+
 Progress
 ```
 
@@ -286,17 +296,19 @@ Compact Progress Tile
 
 Information:
 
-```
-Next Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Next Episode"]
+N2["Tomorrow"]
 
-Tomorrow
+N1 --> N2
 ```
 
 Expression:
 
 ```
+
 Timeline
 ```
 
@@ -322,12 +334,13 @@ Not the module.
 
 ## Information Returning Components
 
-```
-Episode Release
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Release"]
+N2["Timeline Widget"]
 
-Timeline Widget
+N1 --> N2
 ```
 
 Incorrect.
@@ -338,12 +351,13 @@ The information has become coupled to presentation.
 
 ## Modules Choosing Expressions
 
-```
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Hero"]
 
-Hero
+N1 --> N2
 ```
 
 Incorrect.
@@ -357,6 +371,7 @@ The Composition Engine determines Expression.
 ## Components Becoming Concepts
 
 ```
+
 Progress Bar
 ```
 
@@ -374,24 +389,19 @@ The Progress Bar is merely one implementation.
 
 The selection of an Expression depends upon several inputs.
 
-```
-Information
+```mermaid
+flowchart TD
 
-↓
+N1["Information"]
+N2["Relationships"]
+N3["Current Context"]
+N4["Composition"]
+N5["Expression"]
 
-Relationships
-
-↓
-
-Current Context
-
-↓
-
-Composition
-
-↓
-
-Expression
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The process intentionally delays presentation decisions until sufficient understanding exists.
@@ -406,46 +416,48 @@ They are not.
 
 Instead:
 
-```
-Expression
+```mermaid
+flowchart TD
 
-↓
+N1["Expression"]
+N2["Rendered"]
+N3["Tile"]
 
-Rendered
-
-↓
-
-Tile
+N1 --> N2
+N2 --> N3
 ```
 
 Example.
 
-```
-Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline"]
+N2["Timeline Tile"]
 
-Timeline Tile
-```
-
-or
-
-```
-Timeline
-
-↓
-
-Hero Detail
+N1 --> N2
 ```
 
 or
 
+```mermaid
+flowchart TD
+
+N1["Timeline"]
+N2["Hero Detail"]
+
+N1 --> N2
 ```
-Timeline
 
-↓
+or
 
-Notification
+```mermaid
+flowchart TD
+
+N1["Timeline"]
+N2["Notification"]
+
+N1 --> N2
 ```
 
 The Expression remains identical.
@@ -521,15 +533,3 @@ They deliberately sit between Composition and Presentation.
 This separation allows Mosaic to evolve visually without redefining the conceptual model established by MDL.
 
 Expressions therefore represent the final conceptual layer before interface begins.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-presentation.md`

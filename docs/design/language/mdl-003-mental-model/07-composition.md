@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 07
 Title: Composition
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Composition
@@ -55,36 +55,25 @@ Without composition every piece of information competes equally.
 
 Example.
 
-```
-Continue Watching
+```mermaid
+flowchart TD
 
-↓
+N1["Continue Watching"]
+N2["Upcoming Episode"]
+N3["Author"]
+N4["Runtime"]
+N5["Genres"]
+N6["Cast"]
+N7["Reviews"]
+N8["Studio"]
 
-Upcoming Episode
-
-↓
-
-Author
-
-↓
-
-Runtime
-
-↓
-
-Genres
-
-↓
-
-Cast
-
-↓
-
-Reviews
-
-↓
-
-Studio
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Everything is technically useful.
@@ -170,24 +159,19 @@ Not interface.
 
 Its inputs include:
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 These inputs describe understanding.
@@ -235,29 +219,25 @@ Every experience should possess one dominant composition.
 
 Example.
 
-```
-Watching
+```mermaid
+flowchart TD
 
-↓
+N1["Watching"]
+N2["Playback"]
+N3["Progress"]
+N4["Next Episode"]
+N5["Related Information"]
 
-Playback
-
-↓
-
-Progress
-
-↓
-
-Next Episode
-
-↓
-
-Related Information
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Not:
 
 ```
+
 Playback
 
 Recommendations
@@ -289,24 +269,19 @@ Instead it should evolve.
 
 Example.
 
-```
-Episode Complete
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Complete"]
+N2["Progress Updates"]
+N3["Next Episode Gains Priority"]
+N4["Timeline Expands"]
+N5["Playback Controls Reduce"]
 
-Progress Updates
-
-↓
-
-Next Episode Gains Priority
-
-↓
-
-Timeline Expands
-
-↓
-
-Playback Controls Reduce
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Nothing has appeared arbitrarily.
@@ -337,30 +312,28 @@ Composition determines information density.
 
 Some situations naturally require:
 
-```
-Sparse
+```mermaid
+flowchart TD
 
-↓
+N1["Sparse"]
+N2["High Focus"]
+N3["Large Hierarchy"]
 
-High Focus
-
-↓
-
-Large Hierarchy
+N1 --> N2
+N2 --> N3
 ```
 
 Others require:
 
-```
-Dense
+```mermaid
+flowchart TD
 
-↓
+N1["Dense"]
+N2["Exploration"]
+N3["Rich Relationships"]
 
-Exploration
-
-↓
-
-Rich Relationships
+N1 --> N2
+N2 --> N3
 ```
 
 Neither is inherently correct.
@@ -394,38 +367,32 @@ Not implementation.
 
 Good grouping.
 
-```
-Current Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Current Episode"]
+N2["Progress"]
+N3["Next Episode"]
 
-Progress
-
-↓
-
-Next Episode
+N1 --> N2
+N2 --> N3
 ```
 
 Poor grouping.
 
-```
-Progress
+```mermaid
+flowchart TD
 
-↓
+N1["Progress"]
+N2["Module"]
+N3["Cast"]
+N4["Settings"]
+N5["Recommendations"]
 
-Module
-
-↓
-
-Cast
-
-↓
-
-Settings
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Related concepts should remain visually close because they are conceptually close.
@@ -441,6 +408,7 @@ Priority is contextual.
 Example.
 
 ```
+
 Runtime
 ```
 
@@ -468,20 +436,17 @@ Users should never be overwhelmed simply because more information exists.
 
 Example.
 
-```
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["Essential Information"]
+N3["Supporting Information"]
+N4["Exploration"]
 
-Essential Information
-
-↓
-
-Supporting Information
-
-↓
-
-Exploration
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Information should appear when it becomes useful.
@@ -514,24 +479,19 @@ Only presentation changes.
 
 ## Watching
 
-```
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["Playback"]
+N3["Progress"]
+N4["Next Episode"]
+N5["Related Works"]
 
-Playback
-
-↓
-
-Progress
-
-↓
-
-Next Episode
-
-↓
-
-Related Works
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Simple.
@@ -544,24 +504,19 @@ Predictable.
 
 ## Reading
 
-```
-Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Focus"]
+N2["Current Chapter"]
+N3["Reading Progress"]
+N4["Bookmarks"]
+N5["Author"]
 
-Current Chapter
-
-↓
-
-Reading Progress
-
-↓
-
-Bookmarks
-
-↓
-
-Author
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Again...
@@ -632,15 +587,3 @@ Everything after Composition concerns how that decision is communicated.
 Everything before Composition concerns why that decision exists.
 
 Composition is therefore the bridge between knowledge and interface.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-expressions.md`

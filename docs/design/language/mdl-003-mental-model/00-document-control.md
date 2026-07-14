@@ -3,7 +3,7 @@ File: docs/design/language/mdl-003-mental-model/00-document-control.md
 Document: MDL-003
 Title: Mental Model
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -18,9 +18,9 @@ Version: 0.2
 | Title | Mosaic Design Language — Mental Model |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Design Systems Architect |
-| Parent Specifications | MDL-001 Vision, MDL-002 Principles |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
+| Parent Specifications | [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md), [MDL-002 — Principles](../mdl-002-principles/index.md) |
 | Repository | `/design/mdl/MDL-003 Mental Model/` |
 
 ---
@@ -29,7 +29,7 @@ Version: 0.2
 
 MDL-003 establishes the conceptual architecture of Mosaic.
 
-Where MDL-001 explains **why** Mosaic exists and MDL-002 explains **how** design decisions should be made, MDL-003 defines **how the platform understands the world**.
+Where [MDL-001](../mdl-001-vision/index.md) explains **why** Mosaic exists and [MDL-002](../mdl-002-principles/index.md) explains **how** design decisions should be made, MDL-003 defines **how the platform understands the world**.
 
 This distinction is critical.
 
@@ -179,8 +179,8 @@ Changing the Mental Model should therefore be considered a major architectural e
 
 Before continuing, contributors should already understand:
 
-- MDL-001 Vision
-- MDL-002 Principles
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
 
 MDL-003 intentionally assumes familiarity with those documents.
 
@@ -209,24 +209,3 @@ When contributors begin independently using terms such as:
 without conscious effort...
 
 the Mental Model has become part of the culture of the project.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Dependencies**
-
-- MDL-001 Vision
-- MDL-002 Principles
-
-**Supersedes**
-
-None.
-
-**Next File**
-
-`01-what-is-a-mental-model.md`

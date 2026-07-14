@@ -3,7 +3,7 @@ File: docs/design/language/mdl-003-mental-model/references.md
 Document: MDL-003
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -46,7 +46,7 @@ The Mosaic Design Language always remains the authoritative source.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
 
 Defines:
 
@@ -59,7 +59,7 @@ MDL-003 should always be interpreted as an implementation-independent module of 
 
 ---
 
-## MDL-002 — Principles
+## [MDL-002 — Principles](../mdl-002-principles/index.md)
 
 Defines:
 
@@ -68,7 +68,7 @@ Defines:
 - Governance
 - Design authority
 
-Every concept introduced by MDL-003 should reinforce one or more MDL-002 principles.
+Every concept introduced by MDL-003 should reinforce one or more [MDL-002](../mdl-002-principles/index.md) principles.
 
 ---
 
@@ -76,8 +76,8 @@ Every concept introduced by MDL-003 should reinforce one or more MDL-002 princip
 
 The following specifications build directly upon the Mental Model.
 
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
 
 These specifications intentionally assume the concepts introduced by MDL-003.
 
@@ -89,11 +89,11 @@ They should extend them rather than redefine them.
 
 The following MDS specifications are expected to implement the Mental Model.
 
-- MDS-001 Design Token Architecture
-- MDS-003 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
-- MDS-011 Module Design Specification
+- [MDS-001 — Design Token Architecture](../../system/mds-001-design-token-architecture/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../../system/mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../../system/mds-008-component-library/index.md)
+- MDS-011 Module Design Specification *(planned; not yet published)*
 
 The Mental Model defines:
 
@@ -273,8 +273,8 @@ This evolution represents one of the defining characteristics of the Mosaic Desi
 
 The following specifications should be considered required reading before contributing to MDL-003.
 
-- MDL-001 Vision
-- MDL-002 Principles
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
 
 Future specifications should reference MDL-003 rather than redefining its concepts.
 
@@ -284,9 +284,9 @@ Future specifications should reference MDL-003 rather than redefining its concep
 
 Future contributors may also wish to review:
 
-- MDS-003 Composition Engine
-- MDS-007 Tile Framework
-- MDS-011 Module Design Specification
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../../system/mds-007-tile-framework/index.md)
+- MDS-011 Module Design Specification *(planned; not yet published)*
 
 These documents provide implementation guidance for the conceptual architecture established here.
 
@@ -313,9 +313,9 @@ This concludes **MDL-003 — Mental Model**.
 
 The next specification in the Mosaic Design Language is:
 
-> **MDL-004 — Interaction Model**
+> **[MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)**
 
-Where MDL-003 defines **how Mosaic understands the world**, MDL-004 defines **how that world behaves over time**.
+Where MDL-003 defines **how Mosaic understands the world**, [MDL-004](../mdl-004-interaction-model/index.md) defines **how that world behaves over time**.
 
 It formalises concepts including:
 
@@ -326,4 +326,4 @@ It formalises concepts including:
 - movement
 - temporal interaction
 
-MDL-004 transforms understanding into behaviour.
+[MDL-004](../mdl-004-interaction-model/index.md) transforms understanding into behaviour.

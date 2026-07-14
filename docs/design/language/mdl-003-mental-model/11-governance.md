@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 11
 Title: Mental Model Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Mental Model Governance
@@ -137,30 +137,28 @@ The preferred evolution of the Mental Model is refinement rather than expansion.
 
 Prefer:
 
-```
-Existing Concept
+```mermaid
+flowchart TD
 
-↓
+N1["Existing Concept"]
+N2["Refinement"]
 
-Refinement
+N1 --> N2
 ```
 
 instead of:
 
-```
-Existing Concept
+```mermaid
+flowchart TD
 
-↓
+N1["Existing Concept"]
+N2["New Concept"]
+N3["Exception"]
+N4["Special Case"]
 
-New Concept
-
-↓
-
-Exception
-
-↓
-
-Special Case
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Every additional concept permanently increases contributor cognitive load.
@@ -203,26 +201,28 @@ Examples.
 
 Good:
 
-```
-Book Module
+```mermaid
+flowchart TD
 
-↓
+N1["Book Module"]
+N2["Adds"]
+N3["Reading Progress"]
 
-Adds
-
-Reading Progress
+N1 --> N2
+N1 --> N3
 ```
 
 Poor:
 
-```
-Book Module
+```mermaid
+flowchart TD
 
-↓
+N1["Book Module"]
+N2["Introduces"]
+N3["Reading Workspace"]
 
-Introduces
-
-Reading Workspace
+N1 --> N2
+N1 --> N3
 ```
 
 The second example introduces a competing conceptual model.
@@ -324,15 +324,3 @@ Protecting that shared understanding is the primary objective of governance.
 | ADR-035 | New concepts require formal conceptual review before entering MDL. |
 | ADR-036 | Engineering implementation should adapt to the Mental Model rather than redefining it. |
 | ADR-037 | Modules extend existing concepts rather than introducing competing conceptual models. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

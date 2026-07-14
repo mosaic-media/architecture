@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 06
 Title: Relationships
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Relationships
@@ -73,36 +73,32 @@ Mosaic's responsibility is to reveal them naturally.
 
 Traditional applications encourage navigation.
 
-```
-Movie
+```mermaid
+flowchart TD
 
-↓
+N1["Movie"]
+N2["Actor Page"]
+N3["Filmography"]
+N4["Another Movie"]
 
-Actor Page
-
-↓
-
-Filmography
-
-↓
-
-Another Movie
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Every step requires navigation.
 
 Mosaic instead understands the relationship directly.
 
-```
-Movie
+```mermaid
+flowchart TD
 
-↓
+N1["Movie"]
+N2["Actor"]
+N3["Related Works"]
 
-Actor
-
-↓
-
-Related Works
+N1 --> N2
+N2 --> N3
 ```
 
 The interface simply reveals that relationship.
@@ -199,28 +195,28 @@ Relationships describe worlds.
 
 Consider:
 
-```
-Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Frieren"]
+N2["Fantasy"]
 
-Fantasy
+N1 --> N2
 ```
 
 Metadata.
 
 Now consider:
 
-```
-Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Frieren"]
+N2["Adapted From"]
+N3["Manga"]
 
-Adapted From
-
-↓
-
-Manga
+N1 --> N2
+N2 --> N3
 ```
 
 Relationship.
@@ -243,36 +239,37 @@ Others are incidental.
 
 Example.
 
-```
-Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Frieren"]
+N2["Episode 15"]
 
-Episode 15
+N1 --> N2
 ```
 
 Strong.
 
-```
-Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Frieren"]
+N2["Composer"]
 
-Composer
+N1 --> N2
 ```
 
 Medium.
 
-```
-Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Frieren"]
+N2["Won Award"]
+N3["2023"]
 
-Won Award
-
-↓
-
-2023
+N1 --> N2
+N2 --> N3
 ```
 
 Weak.
@@ -289,30 +286,28 @@ Relationships intentionally possess direction.
 
 Example.
 
-```
-Book
+```mermaid
+flowchart TD
 
-↓
+N1["Book"]
+N2["Adapted Into"]
+N3["Film"]
 
-Adapted Into
-
-↓
-
-Film
+N1 --> N2
+N2 --> N3
 ```
 
 is not necessarily identical to
 
-```
-Film
+```mermaid
+flowchart TD
 
-↓
+N1["Film"]
+N2["Based On"]
+N3["Book"]
 
-Based On
-
-↓
-
-Book
+N1 --> N2
+N2 --> N3
 ```
 
 Both describe the same connection.
@@ -364,6 +359,7 @@ Because understanding increases.
 Current Focus
 
 ```
+
 Dune
 ```
 
@@ -384,6 +380,7 @@ The interface naturally supports exploration.
 Current Focus
 
 ```
+
 Hans Zimmer
 ```
 
@@ -405,6 +402,7 @@ The relationships already exist.
 Current Focus
 
 ```
+
 Breaking Bad
 ```
 
@@ -428,6 +426,7 @@ The following behaviours weaken the relationship model.
 ## Flat Lists
 
 ```
+
 Movie
 
 Movie
@@ -443,12 +442,13 @@ Nothing explains why these belong together.
 
 ## Artificial Relationships
 
-```
-Trending
+```mermaid
+flowchart TD
 
-↓
+N1["Trending"]
+N2["Because Popular"]
 
-Because Popular
+N1 --> N2
 ```
 
 Popularity is not a meaningful relationship.
@@ -471,20 +471,17 @@ Relationships do not directly determine interface.
 
 They influence composition.
 
-```
-Information
+```mermaid
+flowchart TD
 
-↓
+N1["Information"]
+N2["Relationships"]
+N3["Importance"]
+N4["Composition"]
 
-Relationships
-
-↓
-
-Importance
-
-↓
-
-Composition
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This distinction is critical.
@@ -509,32 +506,35 @@ Example.
 
 Anime Module.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Next Episode"]
 
-Next Episode
+N1 --> N2
 ```
 
 Book Module.
 
-```
-Book
+```mermaid
+flowchart TD
 
-↓
+N1["Book"]
+N2["Audiobook"]
 
-Audiobook
+N1 --> N2
 ```
 
 Music Module.
 
-```
-Artist
+```mermaid
+flowchart TD
 
-↓
+N1["Artist"]
+N2["Concert"]
 
-Concert
+N1 --> N2
 ```
 
 The platform remains responsible for deciding:
@@ -556,16 +556,15 @@ Long-term, Mosaic should increasingly understand entertainment as a graph rather
 
 Traditional hierarchy.
 
-```
-Series
+```mermaid
+flowchart TD
 
-↓
+N1["Series"]
+N2["Season"]
+N3["Episode"]
 
-Season
-
-↓
-
-Episode
+N1 --> N2
+N2 --> N3
 ```
 
 Relationship graph.
@@ -615,15 +614,3 @@ With relationships...
 Mosaic understands entertainment.
 
 This distinction is one of the defining characteristics of the Mosaic Mental Model.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-composition.md`

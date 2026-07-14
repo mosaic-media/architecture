@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 09
 Title: Presentation
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Presentation
@@ -94,46 +94,49 @@ Example.
 Expression:
 
 ```
+
 Timeline
 ```
 
 Desktop.
 
-```
-Timeline Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline Tile"]
+N2["Five upcoming episodes"]
+N3["Artwork"]
 
-Five upcoming episodes
-
-↓
-
-Artwork
+N1 --> N2
+N2 --> N3
 ```
 
 Television.
 
-```
-Timeline Shelf
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline Shelf"]
+N2["Two upcoming episodes"]
 
-Two upcoming episodes
+N1 --> N2
 ```
 
 Mobile.
 
-```
-Compact Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Compact Timeline"]
+N2["Single upcoming episode"]
 
-Single upcoming episode
+N1 --> N2
 ```
 
 Voice Assistant.
 
 ```
+
 "The next episode airs tomorrow."
 ```
 
@@ -200,24 +203,19 @@ The Tile is merely one presentation mechanism.
 
 Conceptually:
 
-```
-Information
+```mermaid
+flowchart TD
 
-↓
+N1["Information"]
+N2["Relationships"]
+N3["Composition"]
+N4["Expression"]
+N5["Tile"]
 
-Relationships
-
-↓
-
-Composition
-
-↓
-
-Expression
-
-↓
-
-Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Tile exists because it is an effective way to communicate information across:
@@ -262,7 +260,7 @@ It does not own behaviour.
 
 Behaviour is defined by:
 
-MDL-004
+[MDL-004](../mdl-004-interaction-model/index.md)
 
 Presentation merely communicates that behaviour through:
 
@@ -326,12 +324,13 @@ The user should experience the same understanding regardless of presentation dif
 
 Example.
 
-```
-Red
+```mermaid
+flowchart TD
 
-↓
+N1["Red"]
+N2["Important"]
 
-Important
+N1 --> N2
 ```
 
 Meaning should never depend solely upon colour.
@@ -345,6 +344,7 @@ Meaning should already exist before presentation.
 Treating:
 
 ```
+
 Timeline Tile
 ```
 
@@ -444,15 +444,3 @@ Presentation may evolve continuously.
 The Mental Model should remain stable.
 
 This separation allows Mosaic to remain recognisably Mosaic regardless of future platforms or technologies.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-user-vs-system-model.md`

@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -29,38 +29,32 @@ One of the easiest mistakes contributors can make is beginning implementation to
 
 Avoid thinking:
 
-```
-I need a card.
+```mermaid
+flowchart TD
 
-↓
+N1["I need a card."]
+N2["I need a widget."]
+N3["I need a GraphQL type."]
 
-I need a widget.
-
-↓
-
-I need a GraphQL type.
+N1 --> N2
+N2 --> N3
 ```
 
 Instead think:
 
-```
-What does the user need to understand?
+```mermaid
+flowchart TD
 
-↓
+N1["What does the user need to understand?"]
+N2["What information exists?"]
+N3["How is it related?"]
+N4["What deserves attention?"]
+N5["How should it be expressed?"]
 
-What information exists?
-
-↓
-
-How is it related?
-
-↓
-
-What deserves attention?
-
-↓
-
-How should it be expressed?
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Implementation naturally follows.
@@ -71,40 +65,27 @@ Implementation naturally follows.
 
 Contributors should approach every feature using the same conceptual pipeline.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Composition"]
+N7["Expressions"]
+N8["Presentation"]
+N9["Implementation"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Composition
-
-↓
-
-Expressions
-
-↓
-
-Presentation
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
 Skipping layers almost always produces poorer experiences.
@@ -167,36 +148,42 @@ Not interface.
 Poor.
 
 ```
+
 Timeline Widget
 ```
 
 Better.
 
 ```
+
 Episode Release
 ```
 
 Poor.
 
 ```
+
 Recommendation Card
 ```
 
 Better.
 
 ```
+
 Relationship
 ```
 
 Poor.
 
 ```
+
 Progress Bar
 ```
 
 Better.
 
 ```
+
 Progress
 ```
 
@@ -234,24 +221,19 @@ Instead determine the required Expression.
 
 Example.
 
-```
-Information
+```mermaid
+flowchart TD
 
-↓
+N1["Information"]
+N2["Relationship"]
+N3["Composition"]
+N4["Timeline Expression"]
+N5["Timeline Tile"]
 
-Relationship
-
-↓
-
-Composition
-
-↓
-
-Timeline Expression
-
-↓
-
-Timeline Tile
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The component becomes an implementation detail.
@@ -293,6 +275,7 @@ Examples.
 Anime Module.
 
 ```
+
 Episode Release
 
 Characters
@@ -305,6 +288,7 @@ Soundtrack
 Book Module.
 
 ```
+
 Reading Progress
 
 Author
@@ -419,15 +403,3 @@ Every feature should leave the Mental Model simpler...
 If contributors consistently think using the concepts introduced by MDL-003, implementation across every client, module and platform will naturally begin to feel like one coherent product.
 
 That is the ultimate purpose of the Mental Model.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

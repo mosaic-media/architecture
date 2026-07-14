@@ -4,7 +4,7 @@ Document: MDL-003
 Chapter: 02
 Title: The World
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # The World
@@ -114,18 +114,21 @@ The World does not reset when users change media.
 Watching:
 
 ```
+
 Frieren
 ```
 
 Reading:
 
 ```
+
 The Hobbit
 ```
 
 Listening:
 
 ```
+
 Hans Zimmer
 ```
 
@@ -192,18 +195,21 @@ A World contains one or more Domains.
 
 Examples include:
 
-```
-World
+```mermaid
+flowchart TD
 
-├── Anime
+N1["World"]
+N2["Anime"]
+N3["Television"]
+N4["Books"]
+N5["Movies"]
+N6["Music"]
 
-├── Television
-
-├── Books
-
-├── Movies
-
-├── Music
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 Domains organise entertainment.
@@ -387,15 +393,3 @@ Everything else exists inside it.
 Users should never feel they are moving between applications.
 
 They should feel they are exploring different parts of the same World.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-focus.md`

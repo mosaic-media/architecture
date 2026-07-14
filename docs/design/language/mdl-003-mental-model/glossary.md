@@ -3,7 +3,7 @@ File: docs/design/language/mdl-003-mental-model/glossary.md
 Document: MDL-003
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -203,36 +203,25 @@ It is the conceptual environment experienced by the user.
 
 The Mental Model is intentionally hierarchical.
 
-```text
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Composition"]
+N7["Expressions"]
+N8["Presentation"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Composition
-
-↓
-
-Expressions
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Every concept builds upon the one before it.
@@ -249,15 +238,3 @@ Future contributors should:
 - favour user language over engineering language.
 
 Concepts should only be renamed through formal design review.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`
