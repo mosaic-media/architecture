@@ -9,17 +9,18 @@ Follow the existing documentation structure and keep `README.md` up to date when
 Use the established layout:
 
 ```text
-design/
-  mdl/  Mosaic Design Language
-  mds/  Mosaic Design System
-engineering/
-  meg/  Mosaic Engineering Guidelines
+docs/
+  design/
+    language/  Mosaic Design Language
+    system/    Mosaic Design System
+  engineering/
+    guides/    Mosaic Engineering Guidelines
 ```
 
 Specifications are folder-based and split into chapter files. Match the existing pattern:
 
 ```text
-README.md
+index.md
 00-document-control.md
 01-...
 02-...
@@ -30,12 +31,13 @@ references.md
 
 ## Working Expectations
 
-- Keep MDL content under `design/mdl`.
-- Keep MDS content under `design/mds`.
-- Keep MEG content under `engineering/meg`.
+- Keep MDL content under `docs/design/language`.
+- Keep MDS content under `docs/design/system`.
+- Keep MEG content under `docs/engineering/guides`.
 - Preserve existing naming conventions, metadata blocks, and chapter ordering.
 - Keep ADRs and decision notes near the specification they affect.
 - Validate Mermaid syntax after editing Mermaid diagrams.
+- Update `.pages` navigation files when adding or removing specification folders.
 - If committing, commit each major specification folder independently.
 
 ## README Requirement

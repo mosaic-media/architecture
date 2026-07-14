@@ -9,17 +9,18 @@ Agents working in this repo should preserve the existing documentation structure
 Use the current taxonomy unless the user explicitly asks to change it:
 
 ```text
-design/
-  mdl/  Mosaic Design Language specifications
-  mds/  Mosaic Design System specifications
-engineering/
-  meg/  Mosaic Engineering Guidelines specifications
+docs/
+  design/
+    language/  Mosaic Design Language specifications
+    system/    Mosaic Design System specifications
+  engineering/
+    guides/    Mosaic Engineering Guidelines specifications
 ```
 
 Each specification belongs in its own folder and should be split into focused Markdown chapters:
 
 ```text
-README.md
+index.md
 00-document-control.md
 01-...
 02-...
@@ -31,11 +32,13 @@ references.md
 ## Documentation Rules
 
 - Follow the existing `MDL-*`, `MDS-*`, and `MEG-*` folder naming conventions.
+- Use URL-safe lowercase folder slugs in the MkDocs tree, such as `meg-005-runtime-architecture`.
 - Keep one major specification folder per commit when committing documentation imports or large additions.
 - Preserve metadata comments at the top of generated or split files when present.
 - Put decision records close to the specification they govern, usually in `*-adrs.md`.
 - Update affected chapters when a decision changes the meaning of an existing specification.
 - Validate Mermaid blocks before considering documentation work complete.
+- Update `.pages` navigation files when adding or removing specification folders.
 
 ## README Maintenance
 
@@ -45,7 +48,7 @@ The README should remain a current orientation guide for:
 
 - what this repo is for
 - how the documentation is organised
-- where MDL and MDS material lives
+- where MDL, MDS, and MEG material lives
 - how decisions and references should be maintained
 
 Do not let the README drift behind the repository structure.

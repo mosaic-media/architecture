@@ -5,3 +5,9 @@ arrange:
   - meg-002-event-driven-runtime
   - meg-003-domain-driven-design
   - meg-004-hexagonal-architecture
+  - meg-005-runtime-architecture
+  - meg-006-extension-platform
+  - meg-007-storage-architecture
+  - meg-008-observability
+  - meg-009-security-architecture
+  - meg-010-performance-engineering
