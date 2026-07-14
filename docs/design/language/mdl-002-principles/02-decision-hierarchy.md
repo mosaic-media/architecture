@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 02
 Title: Decision Hierarchy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Decision Hierarchy
@@ -252,7 +252,7 @@ It therefore possesses the lowest architectural authority.
 
 ---
 
-# Reading The Hierarchy
+# Hierarchy Interpretation
 
 Every design discussion should begin at the highest relevant layer.
 
@@ -264,49 +264,41 @@ Question:
 
 Wrong discussion:
 
-```
-Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline"]
+N2["CSS"]
+N3["Spacing"]
 
-CSS
-
-↓
-
-Spacing
+N1 --> N2
+N2 --> N3
 ```
 
 Correct discussion:
 
-```
-Current Context
+```mermaid
+flowchart TD
 
-↓
+N1["Current Context"]
+N2["Composition"]
+N3["Hierarchy"]
+N4["Timeline"]
+N5["Component"]
+N6["Spacing"]
 
-Composition
-
-↓
-
-Hierarchy
-
-↓
-
-Timeline
-
-↓
-
-Component
-
-↓
-
-Spacing
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The implementation should emerge naturally from the higher-level reasoning.
 
 ---
 
-# Resolving Conflicts
+# Conflict Resolution
 
 Whenever two valid proposals exist, contributors should compare them against progressively higher layers.
 
@@ -322,16 +314,15 @@ Slightly fewer features but significantly reduces friction.
 
 Decision process.
 
-```
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Reduce Friction"]
+N3["Proposal B"]
 
-Reduce Friction
-
-↓
-
-Proposal B
+N1 --> N2
+N2 --> N3
 ```
 
 Proposal B wins.
@@ -346,36 +337,25 @@ Because the Vision possesses higher authority than feature quantity.
 
 When implementation decisions cannot be resolved locally, escalation should proceed upwards.
 
-```
-Implementation
+```mermaid
+flowchart TD
 
-↓
+N1["Implementation"]
+N2["Component"]
+N3["Pattern"]
+N4["Composition"]
+N5["Interaction"]
+N6["Mental Model"]
+N7["Principles"]
+N8["Vision"]
 
-Component
-
-↓
-
-Pattern
-
-↓
-
-Composition
-
-↓
-
-Interaction
-
-↓
-
-Mental Model
-
-↓
-
-Principles
-
-↓
-
-Vision
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 The first layer capable of resolving the disagreement should make the decision.
@@ -434,15 +414,3 @@ This hierarchy intentionally reflects the expectation that philosophy changes si
 | ADR-002 | Higher-order decisions always take precedence over lower-order implementation concerns. |
 | ADR-003 | Components implement philosophy rather than define it. |
 | ADR-004 | Engineering implementation possesses the lowest architectural authority within MDL. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-principle-01-context-before-prediction.md`

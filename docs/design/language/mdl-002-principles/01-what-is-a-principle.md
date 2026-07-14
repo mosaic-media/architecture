@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 01
 Title: What Is A Principle?
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # What Is A Principle?
@@ -224,30 +224,25 @@ Vision should evolve only when absolutely necessary.
 
 ---
 
-# Applying A Principle
+# Principle Application
 
 When faced with two valid solutions, contributors should ask:
 
-```
-Which option most strongly reinforces the principle?
+```mermaid
+flowchart TD
 
-↓
+N1["Which option most strongly reinforces the principle?"]
+N2["Why?"]
+N3["Can that reasoning be explained to another contributor?"]
+N4["Would that reasoning still make sense in five years?"]
+N5["If yes"]
+N6["Proceed."]
 
-Why?
-
-↓
-
-Can that reasoning be explained to another contributor?
-
-↓
-
-Would that reasoning still make sense in five years?
-
-↓
-
-If yes
-
-Proceed.
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N4 --> N6
 ```
 
 The purpose of principles is not simply to justify decisions.
@@ -294,7 +289,7 @@ Applied --> Validated
 Validated --> LivingPrinciple["Living Principle"]
 ```
 
-Principles should only be retired when evidence demonstrates that they no longer support the vision established by MDL-001.
+Principles should only be retired when evidence demonstrates that they no longer support the vision established by [MDL-001](../mdl-001-vision/index.md).
 
 ---
 
@@ -307,15 +302,3 @@ Each chapter should be interpreted using the framework established here.
 Future contributors are encouraged to challenge implementations.
 
 They should challenge principles only with significant evidence and formal design review.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-decision-hierarchy.md`

@@ -5,7 +5,7 @@ Chapter: 07
 Principle: 05
 Title: Every Feature Earns Its Place
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle 05 — Every Feature Earns Its Place
@@ -364,10 +364,10 @@ Its role is to ensure that innovation strengthens the product rather than gradua
 
 # Related Specifications
 
-- MDL-001 Vision
-- MDL-005 Composition Model
-- MDS-003 Composition Engine
-- MDS-011 Module Design Specification
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- MDS-011 Module Design Specification *(planned; not yet published)*
 
 ---
 
@@ -378,15 +378,3 @@ Its role is to ensure that innovation strengthens the product rather than gradua
 | ADR-017 | Every feature must justify its cognitive cost. |
 | ADR-018 | Existing systems should be extended before new systems are introduced. |
 | ADR-019 | Features benefiting specialised audiences should preferentially become modules rather than platform functionality. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-principle-06-the-platform-enables.md`

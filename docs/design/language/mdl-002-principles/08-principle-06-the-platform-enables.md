@@ -5,7 +5,7 @@ Chapter: 08
 Principle: 06
 Title: The Platform Enables
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle 06 — The Platform Enables
@@ -201,6 +201,7 @@ Future MDS specifications are expected to formalise this separation through the 
 Anime module contributes:
 
 ```
+
 Episode Release
 
 Tomorrow
@@ -209,6 +210,7 @@ Tomorrow
 Book module contributes:
 
 ```
+
 Chapter Progress
 
 12 / 18
@@ -250,46 +252,36 @@ Not larger systems.
 
 Good platform evolution looks like:
 
-```
-Platform Foundation
+```mermaid
+flowchart TD
 
-↓
+N1["Platform Foundation"]
+N2["Module Point"]
+N3["Community Capability"]
 
-Module Point
-
-↓
-
-Community Capability
+N1 --> N2
+N2 --> N3
 ```
 
 Poor platform evolution looks like:
 
-```
-Feature
+```mermaid
+flowchart TD
 
-↓
+N1["Feature"]
+N2["Feature"]
+N3["Feature"]
+N4["Feature"]
+N5["Settings"]
+N6["Configuration"]
+N7["Complexity"]
 
-Feature
-
-↓
-
-Feature
-
-↓
-
-Feature
-
-↓
-
-Settings
-
-↓
-
-Configuration
-
-↓
-
-Complexity
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 The objective is sustainable growth.
@@ -355,10 +347,10 @@ Not by endlessly expanding the Platform foundation.
 
 # Related Specifications
 
-- MDL-001 Vision
-- MDL-005 Composition Model
-- MDS-003 Composition Engine
-- MDS-011 Module Design Specification
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- MDS-011 Module Design Specification *(planned; not yet published)*
 
 ---
 
@@ -369,15 +361,3 @@ Not by endlessly expanding the Platform foundation.
 | ADR-020 | The Platform foundation owns behaviour, consistency and presentation. |
 | ADR-021 | Modules own specialised capability rather than interface. |
 | ADR-022 | Platform growth should occur through module boundaries before Platform expansion. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-principle-07-be-a-companion.md`

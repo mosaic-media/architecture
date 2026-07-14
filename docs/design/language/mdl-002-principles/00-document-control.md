@@ -3,7 +3,7 @@ File: docs/design/language/mdl-002-principles/00-document-control.md
 Document: MDL-002
 Title: Design Principles
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -18,16 +18,16 @@ Version: 0.2
 | Title | Mosaic Design Language — Principles |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Design Systems Architect |
-| Parent Specification | MDL-001 Vision |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
+| Parent Specification | [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md) |
 | Repository | `/design/mdl/MDL-002 Principles/` |
 
 ---
 
 # Purpose
 
-MDL-002 transforms the philosophy established by **MDL-001 Vision** into practical decision-making rules.
+MDL-002 transforms the philosophy established by **[MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)** into practical decision-making rules.
 
 Vision explains **why** Mosaic exists.
 
@@ -180,23 +180,3 @@ MDL-002 succeeds when:
 - future specifications become easier to write
 
 The greatest success of a principle is that contributors eventually stop consciously referring to it because it has become part of how they naturally think about Mosaic.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Dependencies**
-
-- MDL-001 Vision
-
-**Supersedes**
-
-None.
-
-**Next File**
-
-`01-what-is-a-principle.md`

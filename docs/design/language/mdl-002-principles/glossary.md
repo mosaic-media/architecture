@@ -3,7 +3,7 @@ File: docs/design/language/mdl-002-principles/glossary.md
 Document: MDL-002
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -14,7 +14,7 @@ Version: 0.2
 
 This glossary defines terminology introduced by **MDL-002 Principles**.
 
-Definitions contained within this document supplement the Platform foundation glossary established in **MDL-001 Vision**.
+Definitions contained within this document supplement the Platform foundation glossary established in **[MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)**.
 
 Where duplicate terms exist, the definition contained within the most specialised specification should take precedence for that specification only.
 
@@ -103,32 +103,23 @@ The ordered structure used to resolve design questions.
 
 Within MDL:
 
-```
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Beliefs"]
+N3["Principles"]
+N4["Mental Model"]
+N5["Interaction"]
+N6["Composition"]
+N7["Implementation"]
 
-Beliefs
-
-↓
-
-Principles
-
-↓
-
-Mental Model
-
-↓
-
-Interaction
-
-↓
-
-Composition
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Higher levels always possess greater authority.
@@ -311,10 +302,10 @@ Traceability is considered a quality attribute of the Mosaic Design Language.
 
 | Specification | Primary Concepts |
 |---------------|------------------|
-| MDL-001 Vision | Vision, Beliefs, Companion |
-| MDL-003 Mental Model | World, Focus, Context |
-| MDL-004 Interaction Model | Behaviour, Movement |
-| MDL-005 Composition Model | Composition, Hierarchy |
+| [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md) | Vision, Beliefs, Companion |
+| [MDL-003 — Mental Model](../mdl-003-mental-model/index.md) | World, Focus, Context |
+| [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md) | Behaviour, Movement |
+| [MDL-005 — Composition Model](../mdl-005-composition-model/index.md) | Composition, Hierarchy |
 | MDS Specifications | Systems, Components, Tokens |
 
 ---
@@ -336,15 +327,3 @@ Renaming a foundational concept should require:
 - Specification update
 
 This ensures contributors continue sharing a common language over the lifetime of the project.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

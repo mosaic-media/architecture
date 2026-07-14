@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 11
 Title: Principle Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle Governance
@@ -84,7 +84,7 @@ This intentional stability allows implementation to evolve while preserving the 
 
 ---
 
-# Modifying A Principle
+# Principle Modification
 
 A principle should never change because:
 
@@ -135,6 +135,7 @@ Design reviews should reference principle identifiers rather than personal prefe
 Example:
 
 ```
+
 Supports
 
 P-03
@@ -196,7 +197,7 @@ Whenever drift is identified, contributors should first examine whether the rele
 
 ---
 
-# Measuring Principle Health
+# Principle Health Measurement
 
 A principle should periodically be evaluated against the following questions.
 
@@ -232,7 +233,7 @@ A principle failing several of these questions should enter formal review.
 
 ---
 
-# Deprecating Principles
+# Principle Deprecation
 
 Principles should rarely be removed.
 
@@ -291,15 +292,3 @@ A design language succeeds not because it never changes...
 | ADR-031 | Exceptions should trigger investigation before they trigger modification. |
 | ADR-032 | Principle changes require evidence rather than opinion. |
 | ADR-033 | Historical principle evolution must remain traceable. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

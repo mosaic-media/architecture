@@ -5,7 +5,7 @@ Chapter: 03
 Principle: 01
 Title: Context Before Prediction
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle 01 — Context Before Prediction
@@ -125,6 +125,7 @@ Context intentionally excludes:
 Current Context
 
 ```
+
 Watching
 
 Frieren
@@ -148,6 +149,7 @@ Every suggestion strengthens the current experience.
 Current Context
 
 ```
+
 Reading
 
 The Lord of the Rings
@@ -170,6 +172,7 @@ Again, every suggestion belongs naturally within the current world.
 Current Context
 
 ```
+
 Watching
 
 Frieren
@@ -235,18 +238,21 @@ Good examples:
 Anime module
 
 ```
+
 Episode airs tomorrow.
 ```
 
 Book module
 
 ```
+
 Chapter progress updated.
 ```
 
 Music module
 
 ```
+
 Live concert announced nearby.
 ```
 
@@ -308,10 +314,10 @@ By respecting the user's current world, Mosaic behaves less like an algorithm an
 
 # Related Specifications
 
-- MDL-001 Vision
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
 
 ---
 
@@ -322,15 +328,3 @@ By respecting the user's current world, Mosaic behaves less like an algorithm an
 | ADR-005 | Context is the primary design input for all user experiences. |
 | ADR-006 | Current activity is considered more valuable than inferred future behaviour. |
 | ADR-007 | Recommendation systems must strengthen current context before introducing new contexts. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-principle-02-enhancement-before-persuasion.md`

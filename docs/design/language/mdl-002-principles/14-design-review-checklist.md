@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 14
 Title: Design Review Checklist
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Design Review Checklist
@@ -67,7 +67,7 @@ Every rejected proposal should reference the relevant MDL principle or ADR.
 
 ### A1
 
-Does the proposal strengthen the Vision defined by MDL-001?
+Does the proposal strengthen the Vision defined by [MDL-001](../mdl-001-vision/index.md)?
 
 - [ ] Yes
 - [ ] No
@@ -417,6 +417,7 @@ The proposal should normally be rejected if it:
 Every proposal should explicitly reference:
 
 ```
+
 Relevant Principles
 
 Relevant ADRs
@@ -463,15 +464,3 @@ Implementation Notes:
 
 Comments:
 ```
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

@@ -5,7 +5,7 @@ Chapter: 05
 Principle: 03
 Title: Content Leads
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle 03 — Content Leads
@@ -256,17 +256,19 @@ Not decorative interface.
 
 Good module contribution:
 
-```
-Episode Release
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Release"]
+N2["Tomorrow"]
 
-Tomorrow
+N1 --> N2
 ```
 
 Poor module contribution:
 
 ```
+
 Custom animated dashboard
 ```
 
@@ -330,9 +332,9 @@ The interface should become increasingly invisible as the entertainment becomes 
 
 # Related Specifications
 
-- MDL-001 Vision
-- MDL-005 Composition Model
-- MDS-002 Material System
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-003 — Material System](../../system/mds-003-material-system/index.md)
 
 ---
 
@@ -343,15 +345,3 @@ The interface should become increasingly invisible as the entertainment becomes 
 | ADR-011 | Entertainment is the primary visual hierarchy. |
 | ADR-012 | Interface chrome exists only to support content. |
 | ADR-013 | Artwork is the primary source of emotion within Mosaic. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-principle-04-movement-preserves-understanding.md`

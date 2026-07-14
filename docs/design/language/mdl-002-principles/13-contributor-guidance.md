@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -114,25 +114,23 @@ Contributors should favour extending systems over creating isolated features.
 
 Prefer:
 
-```
-Progress System
+```mermaid
+flowchart TD
 
-↓
+N1["Progress System"]
+N2["Audiobook Progress"]
+N3["Book Progress"]
+N4["Episode Progress"]
 
-Audiobook Progress
-
-↓
-
-Book Progress
-
-↓
-
-Episode Progress
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Instead of:
 
 ```
+
 Book Progress Widget
 
 Movie Progress Widget
@@ -165,6 +163,7 @@ Examples.
 Instead of introducing:
 
 ```
+
 Media Card
 ```
 
@@ -173,6 +172,7 @@ Can the existing Tile evolve?
 Instead of introducing:
 
 ```
+
 Recommendation Panel
 ```
 
@@ -205,30 +205,28 @@ Not interface.
 
 Good contribution:
 
-```
-Information
+```mermaid
+flowchart TD
 
-↓
+N1["Information"]
+N2["Relationships"]
+N3["Capability"]
 
-Relationships
-
-↓
-
-Capability
+N1 --> N2
+N2 --> N3
 ```
 
 Poor contribution:
 
-```
-Custom HTML
+```mermaid
+flowchart TD
 
-↓
+N1["Custom HTML"]
+N2["Custom CSS"]
+N3["Custom Layout"]
 
-Custom CSS
-
-↓
-
-Custom Layout
+N1 --> N2
+N2 --> N3
 ```
 
 The module should enrich Mosaic.
@@ -280,6 +278,7 @@ Every substantial contribution should identify:
 Example.
 
 ```
+
 Supports
 
 P-01 Context Before Prediction
@@ -329,15 +328,3 @@ If only one sentence from this chapter is remembered, it should be this:
 > **Build systems that quietly help people enjoy entertainment, not interfaces that ask people to admire software.**
 
 Everything else within MDL exists to support that goal.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`14-design-review-checklist.md`

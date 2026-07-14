@@ -5,7 +5,7 @@ Chapter: 04
 Principle: 02
 Title: Enhancement Before Persuasion
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle 02 — Enhancement Before Persuasion
@@ -117,6 +117,7 @@ It fundamentally changes product behaviour.
 Current Activity
 
 ```
+
 Watching
 
 Attack on Titan
@@ -140,6 +141,7 @@ Every item strengthens the current experience.
 Current Activity
 
 ```
+
 Reading
 
 Dune
@@ -162,6 +164,7 @@ Again, nothing attempts to replace the current activity.
 Current Activity
 
 ```
+
 Watching
 
 Attack on Titan
@@ -241,18 +244,21 @@ Examples.
 Anime module
 
 ```
+
 Next episode
 ```
 
 Book module
 
 ```
+
 Chapter progress
 ```
 
 Music module
 
 ```
+
 Live performance nearby
 ```
 
@@ -328,10 +334,10 @@ Not:
 
 # Related Specifications
 
-- MDL-001 Vision
-- MDL-003 Mental Model
-- MDL-005 Composition Model
-- MDS-003 Composition Engine
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
 
 ---
 
@@ -342,15 +348,3 @@ Not:
 | ADR-008 | Mosaic Platform enhances rather than persuades. |
 | ADR-009 | Recommendation systems are subordinate to current context. |
 | ADR-010 | The platform should deepen user intent rather than replace it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-principle-03-content-leads.md`

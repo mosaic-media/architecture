@@ -3,7 +3,7 @@ File: docs/design/language/mdl-002-principles/references.md
 Document: MDL-002
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -43,7 +43,7 @@ The Mosaic Design Language itself always remains the primary source of truth.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
 
 Defines:
 
@@ -52,7 +52,7 @@ Defines:
 - Design philosophy
 - Governance
 
-MDL-002 should always be interpreted as a practical module of MDL-001 rather than an independent specification.
+MDL-002 should always be interpreted as a practical module of [MDL-001](../mdl-001-vision/index.md) rather than an independent specification.
 
 ---
 
@@ -60,9 +60,9 @@ MDL-002 should always be interpreted as a practical module of MDL-001 rather tha
 
 The following specifications build directly upon MDL-002.
 
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
 
 These specifications should reference principles rather than redefine them.
 
@@ -72,11 +72,11 @@ These specifications should reference principles rather than redefine them.
 
 The following engineering specifications are expected to implement MDL-002.
 
-- MDS-001 Design Token Architecture
-- MDS-002 Material System
-- MDS-003 Composition Engine
-- MDS-004 Motion System
-- MDS-005 Component Library
+- [MDS-001 — Design Token Architecture](../../system/mds-001-design-token-architecture/index.md)
+- [MDS-003 — Material System](../../system/mds-003-material-system/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- [MDS-005 — Motion System](../../system/mds-005-motion-system/index.md)
+- [MDS-008 — Component Library](../../system/mds-008-component-library/index.md)
 
 MDL explains **why**.
 
@@ -323,8 +323,8 @@ This concludes **MDL-002 — Principles**.
 
 The next specification in the Mosaic Design Language is:
 
-> **MDL-003 — Mental Model**
+> **[MDL-003 — Mental Model](../mdl-003-mental-model/index.md)**
 
-Where MDL-001 explains **why** Mosaic exists and MDL-002 explains **how** decisions are made, MDL-003 defines **how Mosaic thinks**.
+Where [MDL-001](../mdl-001-vision/index.md) explains **why** Mosaic exists and MDL-002 explains **how** decisions are made, [MDL-003](../mdl-003-mental-model/index.md) defines **how Mosaic thinks**.
 
 It introduces the conceptual model that both users and contributors should internalise before considering implementation details.

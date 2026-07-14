@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 10
 Title: When Principles Conflict
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # When Principles Conflict
@@ -72,7 +72,7 @@ If satisfying a lower-level principle weakens a higher-level one, the higher-lev
 
 Every disagreement should begin by asking:
 
-> Which option more closely fulfils the vision established in MDL-001?
+> Which option more closely fulfils the vision established in [MDL-001](../mdl-001-vision/index.md)?
 
 If one proposal clearly removes more friction or preserves immersion more effectively, the discussion is complete.
 
@@ -309,15 +309,3 @@ The proposal that most strongly reinforces the Mosaic vision should always preva
 | ADR-027 | Principle conflicts are resolved using a defined hierarchy rather than subjective preference. |
 | ADR-028 | Vision always possesses higher authority than implementation. |
 | ADR-029 | User context is prioritised over discoverability when principles conflict. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`

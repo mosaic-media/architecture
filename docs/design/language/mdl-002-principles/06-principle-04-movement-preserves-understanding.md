@@ -5,7 +5,7 @@ Chapter: 06
 Principle: 04
 Title: Movement Preserves Understanding
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Principle 04 — Movement Preserves Understanding
@@ -77,16 +77,15 @@ Movement should never exist simply to:
 
 Every user action creates an expectation.
 
-```
-Action
+```mermaid
+flowchart TD
 
-↓
+N1["Action"]
+N2["Expectation"]
+N3["Response"]
 
-Expectation
-
-↓
-
-Response
+N1 --> N2
+N2 --> N3
 ```
 
 Motion is responsible for connecting the action to the response.
@@ -135,20 +134,17 @@ Users should be capable of mentally following interface elements as they change.
 
 For example:
 
-```
-Movie
+```mermaid
+flowchart TD
 
-↓
+N1["Movie"]
+N2["Selected"]
+N3["Hero"]
+N4["Playback"]
 
-Selected
-
-↓
-
-Hero
-
-↓
-
-Playback
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The movie should appear to evolve into playback.
@@ -167,38 +163,32 @@ Examples.
 
 Good:
 
-```
-User selects item
+```mermaid
+flowchart TD
 
-↓
+N1["User selects item"]
+N2["Item expands"]
+N3["Related information appears"]
 
-Item expands
-
-↓
-
-Related information appears
+N1 --> N2
+N2 --> N3
 ```
 
 Poor:
 
-```
-User selects item
+```mermaid
+flowchart TD
 
-↓
+N1["User selects item"]
+N2["Entire interface animates"]
+N3["Unrelated elements move"]
+N4["Background changes"]
+N5["Sidebar pulses"]
 
-Entire interface animates
-
-↓
-
-Unrelated elements move
-
-↓
-
-Background changes
-
-↓
-
-Sidebar pulses
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Only the first sequence strengthens understanding.
@@ -303,7 +293,7 @@ The composition owns movement.
 
 Components participate.
 
-This distinction will be formalised further within **MDL-004 Interaction Model** and **MDL-005 Composition Model**.
+This distinction will be formalised further within **[MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)** and **[MDL-005 — Composition Model](../mdl-005-composition-model/index.md)**.
 
 ---
 
@@ -313,12 +303,13 @@ Movement should adapt according to conceptual distance.
 
 Small conceptual change:
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Next Episode"]
 
-Next Episode
+N1 --> N2
 ```
 
 Small movement.
@@ -327,12 +318,13 @@ Small movement.
 
 Medium conceptual change:
 
-```
-Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Frieren"]
+N2["Fire Force"]
 
-Fire Force
+N1 --> N2
 ```
 
 Moderate recomposition.
@@ -341,12 +333,13 @@ Moderate recomposition.
 
 Large conceptual change:
 
-```
-Anime
+```mermaid
+flowchart TD
 
-↓
+N1["Anime"]
+N2["Books"]
 
-Books
+N1 --> N2
 ```
 
 Larger recomposition.
@@ -435,10 +428,10 @@ Everything else is decoration.
 
 # Related Specifications
 
-- MDL-001 Vision
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
-- MDS-005 Motion System
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../mdl-005-composition-model/index.md)
+- [MDS-005 — Motion System](../../system/mds-005-motion-system/index.md)
 
 ---
 
@@ -449,15 +442,3 @@ Everything else is decoration.
 | ADR-014 | Motion exists to communicate state change rather than decorate the interface. |
 | ADR-015 | Conceptual distance determines movement intensity. |
 | ADR-016 | Components participate in composition movement rather than owning independent animation. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-principle-05-every-feature-earns-its-place.md`

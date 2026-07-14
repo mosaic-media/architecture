@@ -4,7 +4,7 @@ Document: MDL-002
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Architectural Decision Records
@@ -29,7 +29,7 @@ ADRs are intentionally lightweight records capturing context, decision and conse
 
 # Decision Format
 
-Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
+Decision format, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
@@ -344,7 +344,7 @@ No ADR should be interpreted in isolation.
 
 ---
 
-# Superseding ADRs
+# ADR Supersession
 
 Future ADRs should **supersede** earlier decisions rather than replacing them.
 
@@ -358,15 +358,3 @@ Every superseded ADR should include:
 - migration impact
 
 Maintaining decision history preserves architectural knowledge and avoids repeatedly revisiting settled questions.  [GitHub](https://github.com/architecture-decision-record/architecture-decision-record)
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`13-contributor-guidance.md`

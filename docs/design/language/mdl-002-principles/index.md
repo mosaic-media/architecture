@@ -2,7 +2,7 @@
 File: docs/design/language/mdl-002-principles/index.md
 Document: MDL-002
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MDL-002 — Principles
@@ -13,7 +13,7 @@ Version: 0.2
 
 ## Purpose
 
-MDL-001 defines **why** Mosaic exists.
+[MDL-001](../mdl-001-vision/index.md) defines **why** Mosaic exists.
 
 MDL-002 defines **how decisions are made**.
 
@@ -25,43 +25,32 @@ Whenever contributors disagree about a design decision, these principles should 
 
 ---
 
-## Relationship to MDL-001
+## Relationship to [MDL-001](../mdl-001-vision/index.md)
 
 The hierarchy of the Mosaic Design Language is intentional.
 
-```
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Beliefs"]
+N3["Principles"]
+N4["Mental Model"]
+N5["Interaction Model"]
+N6["Composition Model"]
+N7["Design System"]
+N8["Implementation"]
 
-Beliefs
-
-↓
-
-Principles
-
-↓
-
-Mental Model
-
-↓
-
-Interaction Model
-
-↓
-
-Composition Model
-
-↓
-
-Design System
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
-Every principle defined within this specification should be directly traceable back to the philosophy established by **MDL-001 Vision**.
+Every principle defined within this specification should be directly traceable back to the philosophy established by **[MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)**.
 
 Principles do not exist independently.
 
@@ -114,8 +103,8 @@ This specification contains:
 - 13 ADRs
 - 14 Contributor Guidance
 - 15 Review Checklist
-- Glossary
 - References
+- Glossary
 
 ---
 
@@ -162,24 +151,19 @@ The objective is consistency.
 
 # Dependencies
 
-```
-MDL-001 Vision
+```mermaid
+flowchart TD
 
-↓
+N1["MDL-001 Vision"]
+N2["MDL-002 Principles"]
+N3["MDL-003 Mental Model"]
+N4["MDL-004 Interaction Model"]
+N5["MDL-005 Composition Model"]
 
-MDL-002 Principles
-
-↓
-
-MDL-003 Mental Model
-
-↓
-
-MDL-004 Interaction Model
-
-↓
-
-MDL-005 Composition Model
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 MDL-002 is required reading before implementing any future MDL or MDS specification.
@@ -189,6 +173,7 @@ MDL-002 is required reading before implementing any future MDL or MDS specificat
 # Repository Structure
 
 ```
+
 design/
 
 └── mdl/
@@ -229,23 +214,7 @@ design/
 
         15-design-review-checklist.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Design Systems Architect
-
-**Next File**
-
-`00-document-control.md`
