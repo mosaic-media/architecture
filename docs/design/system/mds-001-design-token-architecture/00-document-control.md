@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/00-document-control.m
 Document: MDS-001
 Title: Design Token Architecture
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -18,9 +18,9 @@ Version: 0.2
 | Title | Mosaic Design System — Design Token Architecture |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Design Systems Architect |
-| Parent Specifications | MDL-001 → MDL-005 |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
+| Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md) |
 | Repository | `/design/mds/MDS-001 Design Token Architecture/` |
 
 ---
@@ -98,6 +98,7 @@ Most design systems expose implementation directly.
 Examples include:
 
 ```
+
 Blue500
 
 8px
@@ -113,16 +114,15 @@ They communicate almost nothing about meaning.
 
 Mosaic intentionally separates:
 
-```
-Meaning
+```mermaid
+flowchart TD
 
-↓
+N1["Meaning"]
+N2["Intent"]
+N3["Implementation"]
 
-Intent
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
 ```
 
 Tokens therefore communicate:
@@ -139,11 +139,11 @@ rather than merely:
 
 Before reading this specification contributors should understand:
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 MDS intentionally assumes that all conceptual work has already been completed.
 
@@ -205,27 +205,3 @@ MDS-001 succeeds when:
 A successful Design Token Architecture should become almost invisible.
 
 Contributors should think in semantic intent rather than implementation values.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Dependencies**
-
-- MDL-001
-- MDL-002
-- MDL-003
-- MDL-004
-- MDL-005
-
-**Supersedes**
-
-None.
-
-**Next File**
-
-`01-what-is-a-design-token.md`

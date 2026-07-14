@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 04
 Title: Semantic Tokens
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Semantic Tokens
@@ -80,12 +80,13 @@ Action.Primary
 
 The implementation becomes:
 
-```
-Action.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Action.Primary"]
+N2["Primitive.Colour.Cyan.500"]
 
-Primitive.Colour.Cyan.500
+N1 --> N2
 ```
 
 The reason survives.
@@ -101,6 +102,7 @@ A Semantic Token represents a deliberate design decision.
 Examples include:
 
 ```
+
 Text.Primary
 
 Surface.Canvas
@@ -126,32 +128,35 @@ rather than implementation.
 
 The Mosaic Design System currently defines the following semantic categories.
 
-```
-Semantic
+```mermaid
+flowchart TD
 
-├── Brand
+N1["Semantic"]
+N2["Brand"]
+N3["Surface"]
+N4["Text"]
+N5["Border"]
+N6["Icon"]
+N7["Action"]
+N8["Status"]
+N9["Material"]
+N10["Atmosphere"]
+N11["Elevation"]
+N12["Motion"]
+N13["Focus"]
 
-├── Surface
-
-├── Text
-
-├── Border
-
-├── Icon
-
-├── Action
-
-├── Status
-
-├── Material
-
-├── Atmosphere
-
-├── Elevation
-
-├── Motion
-
-└── Focus
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
+N1 --> N10
+N1 --> N11
+N1 --> N12
+N1 --> N13
 ```
 
 Future categories should remain intentionally limited.
@@ -171,6 +176,7 @@ Communicate Mosaic identity.
 Examples.
 
 ```
+
 Brand.Primary
 
 Brand.Secondary
@@ -199,6 +205,7 @@ Describe compositional surfaces.
 Examples.
 
 ```
+
 Surface.Canvas
 
 Surface.Primary
@@ -225,6 +232,7 @@ Communicate reading hierarchy.
 Examples.
 
 ```
+
 Text.Primary
 
 Text.Secondary
@@ -251,6 +259,7 @@ Communicate separation.
 Examples.
 
 ```
+
 Border.Subtle
 
 Border.Strong
@@ -273,6 +282,7 @@ Communicate user intent.
 Examples.
 
 ```
+
 Action.Primary
 
 Action.Secondary
@@ -299,6 +309,7 @@ Communicate state.
 Examples.
 
 ```
+
 Status.Success
 
 Status.Warning
@@ -323,6 +334,7 @@ Describe the conceptual role of physical materials.
 Examples.
 
 ```
+
 Material.Canvas
 
 Material.Acrylic
@@ -351,6 +363,7 @@ Communicate artwork-derived environmental intent.
 Examples.
 
 ```
+
 Atmosphere.Primary
 
 Atmosphere.Secondary
@@ -373,6 +386,7 @@ Communicate emphasis.
 Examples.
 
 ```
+
 Focus.Primary
 
 Focus.Secondary
@@ -395,6 +409,7 @@ rather than presentation directly.
 Incorrect.
 
 ```
+
 Button.Primary
 
 Card.Background
@@ -405,6 +420,7 @@ Sidebar.Border
 Correct.
 
 ```
+
 Action.Primary
 
 Surface.Primary
@@ -422,12 +438,13 @@ Semantic Tokens should never know components exist.
 
 Example.
 
-```
-Semantic.Surface.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic.Surface.Primary"]
+N2["Primitive.Colour.Slate.900"]
 
-Primitive.Colour.Slate.900
+N1 --> N2
 ```
 
 Future themes may resolve the same Semantic Token differently.
@@ -443,17 +460,19 @@ Semantic Tokens intentionally remain independent from runtime.
 Incorrect.
 
 ```
+
 Surface.CurrentArtwork
 ```
 
 Correct.
 
-```
-Surface.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Hero"]
+N2["Runtime.Atmosphere.Primary"]
 
-Runtime.Atmosphere.Primary
+N1 --> N2
 ```
 
 Runtime adapts implementation.
@@ -466,21 +485,21 @@ Semantic meaning remains stable.
 
 Semantic Tokens should follow the same hierarchy.
 
-```
-Category
+```mermaid
+flowchart TD
 
-↓
+N1["Category"]
+N2["Role"]
+N3["Variant"]
 
-Role
-
-↓
-
-Variant
+N1 --> N2
+N2 --> N3
 ```
 
 Examples.
 
 ```
+
 Text.Primary
 
 Surface.Canvas
@@ -515,28 +534,31 @@ Such changes should therefore be rare.
 
 # Good Examples
 
-```
-Surface.Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Canvas"]
+N2["Primitive.Colour.Slate.950"]
 
-Primitive.Colour.Slate.950
-```
-
-```
-Action.Primary
-
-↓
-
-Primitive.Colour.Cyan.500
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Action.Primary"]
+N2["Primitive.Colour.Cyan.500"]
+
+N1 --> N2
 ```
-Text.Secondary
 
-↓
+```mermaid
+flowchart TD
 
-Primitive.Colour.Slate.400
+N1["Text.Secondary"]
+N2["Primitive.Colour.Slate.400"]
+
+N1 --> N2
 ```
 
 Meaning remains completely independent from implementation.
@@ -548,6 +570,7 @@ Meaning remains completely independent from implementation.
 ## Component Semantics
 
 ```
+
 Button.Blue
 ```
 
@@ -558,6 +581,7 @@ Meaning depends upon implementation.
 ## Colour Semantics
 
 ```
+
 Blue.Primary
 ```
 
@@ -568,6 +592,7 @@ Meaning depends upon colour.
 ## Platform Semantics
 
 ```
+
 CSS.Primary
 ```
 
@@ -578,6 +603,7 @@ Architecture becomes implementation dependent.
 ## Runtime Semantics
 
 ```
+
 Artwork.Background
 ```
 
@@ -643,15 +669,3 @@ This separation allows Mosaic to:
 - remain implementation independent
 
 Every future MDS specification should consume Semantic Tokens rather than physical values whenever practical.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-composition-tokens.md`

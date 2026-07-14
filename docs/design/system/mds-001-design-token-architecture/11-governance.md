@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 11
 Title: Token Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Token Governance
@@ -229,6 +229,7 @@ Duplicate semantic meaning is one of the greatest threats to long-term maintaina
 Poor.
 
 ```
+
 Surface.Primary
 
 Primary.Surface
@@ -243,6 +244,7 @@ One meaning.
 Preferred.
 
 ```
+
 Surface.Primary
 ```
 
@@ -363,15 +365,3 @@ They simply trust it.
 | ADR-081 | Semantic stability has higher priority than implementation stability. |
 | ADR-082 | Reuse is preferred over introducing new tokens. |
 | ADR-083 | Token drift is considered architectural debt. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

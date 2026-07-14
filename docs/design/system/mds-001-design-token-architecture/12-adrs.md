@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Architectural Decision Records
@@ -33,7 +33,7 @@ Future contributors should consult these ADRs before proposing structural change
 
 # Decision Format
 
-Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
+Decision format, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
@@ -354,15 +354,3 @@ Applications should never consume raw implementation values.
 Instead they consume stable architectural meaning.
 
 This separation allows the Design System to evolve continuously while preserving one coherent design language across every client, module and future platform.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`13-contributor-guidance.md`

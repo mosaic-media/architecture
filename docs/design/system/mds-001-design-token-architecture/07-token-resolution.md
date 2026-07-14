@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 07
 Title: Token Resolution
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Token Resolution
@@ -48,6 +48,7 @@ The Design Language remains unchanged throughout.
 Consider the following component.
 
 ```
+
 Hero Tile
 ```
 
@@ -66,12 +67,13 @@ The component becomes responsible for far too many decisions.
 
 Instead.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Surface.Hero"]
 
-Surface.Hero
+N1 --> N2
 ```
 
 Everything else becomes the responsibility of the Design System.
@@ -82,28 +84,21 @@ Everything else becomes the responsibility of the Design System.
 
 Token Resolution always flows in one direction.
 
-```text
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Semantic"]
+N3["Composition"]
+N4["Runtime"]
+N5["Platform"]
+N6["Rendering"]
 
-Semantic
-
-↓
-
-Composition
-
-↓
-
-Runtime
-
-↓
-
-Platform
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Tokens should never resolve backwards.
@@ -162,24 +157,19 @@ Resolution should always produce identical outputs.
 
 Example.
 
-```
-Surface.Hero
+```mermaid
+flowchart TD
 
-+
+N1["Surface.Hero"]
+N2["Current Artwork"]
+N3["Dark Theme"]
+N4["Desktop"]
+N5["Resolved Surface"]
 
-Current Artwork
-
-+
-
-Dark Theme
-
-+
-
-Desktop
-
-↓
-
-Resolved Surface
+N1 --> N5
+N2 --> N5
+N3 --> N5
+N4 --> N5
 ```
 
 The same request should always produce the same result.
@@ -198,46 +188,23 @@ Deterministic behaviour is essential for:
 
 The Runtime Resolver should evaluate inputs in a consistent order.
 
-```text
-1.
+```mermaid
+flowchart TD
 
-Primitive Values
+N1["1.<br/>Primitive Values"]
+N2["2.<br/>Semantic Meaning"]
+N3["3.<br/>Composition Role"]
+N4["4.<br/>Runtime Inputs"]
+N5["5.<br/>Accessibility"]
+N6["6.<br/>Platform"]
+N7["7.<br/>Resolved Value"]
 
-↓
-
-2.
-
-Semantic Meaning
-
-↓
-
-3.
-
-Composition Role
-
-↓
-
-4.
-
-Runtime Inputs
-
-↓
-
-5.
-
-Accessibility
-
-↓
-
-6.
-
-Platform
-
-↓
-
-7.
-
-Resolved Value
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Earlier stages establish meaning.
@@ -257,6 +224,7 @@ One of the most important architectural guarantees of Mosaic is:
 Example.
 
 ```
+
 Surface.Hero
 ```
 
@@ -281,6 +249,7 @@ Artwork-derived Acrylic.
 The semantic meaning remains:
 
 ```
+
 Surface.Hero
 ```
 
@@ -296,22 +265,24 @@ The Runtime Resolver should understand current context.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Surface.Hero"]
 
-Surface.Hero
+N1 --> N2
 ```
 
 may resolve differently from:
 
-```
-Browsing
+```mermaid
+flowchart TD
 
-↓
+N1["Browsing"]
+N2["Surface.Hero"]
 
-Surface.Hero
+N1 --> N2
 ```
 
 because runtime atmosphere changes.
@@ -329,6 +300,7 @@ Multiple runtime influences may exist simultaneously.
 Example.
 
 ```
+
 Artwork
 
 Accessibility
@@ -342,28 +314,21 @@ The Runtime Resolver should evaluate them using a defined priority.
 
 Recommended conceptual priority.
 
-```
-Accessibility
+```mermaid
+flowchart TD
 
-↓
+N1["Accessibility"]
+N2["User Preferences"]
+N3["Composition"]
+N4["Artwork"]
+N5["Device"]
+N6["Platform Defaults"]
 
-User Preferences
-
-↓
-
-Composition
-
-↓
-
-Artwork
-
-↓
-
-Device
-
-↓
-
-Platform Defaults
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Accessibility should always take precedence over aesthetics.
@@ -376,26 +341,26 @@ Every token must possess a valid fallback.
 
 Poor.
 
-```
-Artwork Missing
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Missing"]
+N2["Failure"]
 
-Failure
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Artwork Missing
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Missing"]
+N2["Brand Tokens"]
+N3["Resolved Value"]
 
-Brand Tokens
-
-↓
-
-Resolved Value
+N1 --> N2
+N2 --> N3
 ```
 
 Components should never receive unresolved tokens.
@@ -410,12 +375,13 @@ Resolution should occur only when required.
 
 Example.
 
-```
-Unused Token
+```mermaid
+flowchart TD
 
-↓
+N1["Unused Token"]
+N2["Not Resolved"]
 
-Not Resolved
+N1 --> N2
 ```
 
 The platform should avoid resolving values that will never be rendered.
@@ -430,20 +396,17 @@ Runtime resolution is expected to be cacheable.
 
 Example.
 
-```
-Current Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Current Artwork"]
+N2["Atmosphere"]
+N3["Resolved Surface"]
+N4["Cache"]
 
-Atmosphere
-
-↓
-
-Resolved Surface
-
-↓
-
-Cache
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 As long as the runtime inputs remain unchanged, the resolved value should remain stable.
@@ -468,6 +431,7 @@ Components should never know:
 Components consume:
 
 ```
+
 Resolved Tokens
 ```
 
@@ -479,40 +443,37 @@ This dramatically simplifies component implementation.
 
 # Good Examples
 
-```
-Surface.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Hero"]
+N2["Runtime.Atmosphere"]
+N3["Resolved Acrylic Surface"]
 
-Runtime.Atmosphere
-
-↓
-
-Resolved Acrylic Surface
-```
-
-```
-Text.Primary
-
-↓
-
-Accessibility
-
-↓
-
-Higher Contrast
+N1 --> N2
+N2 --> N3
 ```
 
+```mermaid
+flowchart TD
+
+N1["Text.Primary"]
+N2["Accessibility"]
+N3["Higher Contrast"]
+
+N1 --> N2
+N2 --> N3
 ```
-Spacing.Section
 
-↓
+```mermaid
+flowchart TD
 
-Television
+N1["Spacing.Section"]
+N2["Television"]
+N3["Expanded Physical Spacing"]
 
-↓
-
-Expanded Physical Spacing
+N1 --> N2
+N2 --> N3
 ```
 
 Every example preserves semantic meaning.
@@ -525,16 +486,15 @@ Only implementation changes.
 
 ## Component Resolution
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Determine Theme"]
+N3["Determine Colours"]
 
-Determine Theme
-
-↓
-
-Determine Colours
+N1 --> N2
+N2 --> N3
 ```
 
 Resolution responsibility has leaked.
@@ -543,12 +503,13 @@ Resolution responsibility has leaked.
 
 ## Platform Resolution
 
-```
-Flutter
+```mermaid
+flowchart TD
 
-↓
+N1["Flutter"]
+N2["Invent Semantic Meaning"]
 
-Invent Semantic Meaning
+N1 --> N2
 ```
 
 Meaning belongs above implementation.
@@ -557,12 +518,13 @@ Meaning belongs above implementation.
 
 ## Runtime Mutation
 
-```
-Runtime
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime"]
+N2["Change Token Identity"]
 
-Change Token Identity
+N1 --> N2
 ```
 
 Runtime should only resolve.
@@ -625,15 +587,3 @@ Its responsibility is to ensure that every component receives the correct implem
 The Design System owns complexity.
 
 Components consume clarity.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-token-inheritance.md`

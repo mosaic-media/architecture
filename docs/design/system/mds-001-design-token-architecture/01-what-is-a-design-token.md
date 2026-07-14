@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 01
 Title: What Is A Design Token?
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # What Is A Design Token?
@@ -70,12 +70,13 @@ Nothing communicates:
 
 Instead.
 
-```
-Surface.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Primary"]
+N2["Primitive Value"]
 
-Primitive Value
+N1 --> N2
 ```
 
 The meaning survives.
@@ -99,20 +100,17 @@ Those are implementation artefacts.
 
 The token exists before implementation.
 
-```
-Token
+```mermaid
+flowchart TD
 
-↓
+N1["Token"]
+N2["Platform Theme"]
+N3["Runtime"]
+N4["Rendering"]
 
-Platform Theme
-
-↓
-
-Runtime
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This distinction allows Mosaic to remain implementation independent.
@@ -130,18 +128,21 @@ Examples.
 Poor.
 
 ```
+
 Blue500
 ```
 
 Better.
 
 ```
+
 Brand.Primary
 ```
 
 Better.
 
 ```
+
 Surface.Hero.Background
 ```
 
@@ -159,20 +160,17 @@ Intent changes far less frequently.
 
 Example.
 
-```
-Brand.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Brand.Primary"]
+N2["Indigo"]
+N3["Teal"]
+N4["Cyan"]
 
-Indigo
-
-↓
-
-Teal
-
-↓
-
-Cyan
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The token remains.
@@ -187,24 +185,19 @@ Applications consuming semantic tokens therefore require no modification.
 
 Tokens intentionally exist within layers.
 
-```
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Semantic"]
+N3["Composition"]
+N4["Component"]
+N5["Runtime"]
 
-Semantic
-
-↓
-
-Composition
-
-↓
-
-Component
-
-↓
-
-Runtime
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer adds meaning.
@@ -242,24 +235,19 @@ A Design Token should never depend upon:
 
 Instead.
 
-```
-Surface.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Primary"]
+N2["CSS Variable"]
+N3["Flutter Theme"]
+N4["SwiftUI Environment"]
+N5["Compose Theme"]
 
-CSS Variable
-
-↓
-
-Flutter Theme
-
-↓
-
-SwiftUI Environment
-
-↓
-
-Compose Theme
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The token remains identical.
@@ -305,12 +293,13 @@ while preserving the same semantic token hierarchy.
 
 Example.
 
-```
-Atmosphere.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Atmosphere.Primary"]
+N2["Generated From Artwork"]
 
-Generated From Artwork
+N1 --> N2
 ```
 
 The consuming component remains unaware of the generation process.
@@ -324,6 +313,7 @@ One of the most common mistakes contributors make is treating components as toke
 Example.
 
 ```
+
 Button.Primary
 ```
 
@@ -331,12 +321,13 @@ This is generally **too specific**.
 
 Instead.
 
-```
-Action.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Action.Primary"]
+N2["Consumed By Button"]
 
-Consumed By Button
+N1 --> N2
 ```
 
 The token communicates intent.
@@ -352,6 +343,7 @@ This separation significantly improves reuse.
 ## Example 01
 
 ```
+
 Text.Primary
 ```
 
@@ -364,6 +356,7 @@ Not implementation.
 ## Example 02
 
 ```
+
 Surface.Hero
 ```
 
@@ -376,6 +369,7 @@ Not colour.
 ## Example 03
 
 ```
+
 Spacing.Section
 ```
 
@@ -390,6 +384,7 @@ Not pixel values.
 ## Colour Tokens As Semantic Tokens
 
 ```
+
 Blue500
 ```
 
@@ -400,6 +395,7 @@ Meaning depends entirely upon colour.
 ## Platform Tokens
 
 ```
+
 CSS.Primary
 ```
 
@@ -410,6 +406,7 @@ Technology has leaked into architecture.
 ## Component Tokens
 
 ```
+
 CardBlueBackground
 ```
 
@@ -422,6 +419,7 @@ Reuse becomes difficult.
 ## Magic Values
 
 ```
+
 16
 
 24
@@ -487,15 +485,3 @@ Every future Mosaic client should therefore think in tokens...
 ...not components.
 
 Understanding should always precede implementation.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-token-hierarchy.md`

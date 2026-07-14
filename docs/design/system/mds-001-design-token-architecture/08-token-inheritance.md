@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 08
 Title: Token Inheritance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Token Inheritance
@@ -47,48 +47,38 @@ Without inheritance, every component becomes responsible for resolving its own a
 
 Example.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Colour"]
+N3["Spacing"]
+N4["Radius"]
+N5["Blur"]
+N6["Elevation"]
 
-Colour
-
-↓
-
-Spacing
-
-↓
-
-Radius
-
-↓
-
-Blur
-
-↓
-
-Elevation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Every component repeats identical decisions.
 
 Instead.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Composition.Hero"]
+N3["Surface.Hero"]
+N4["Primitive Values"]
 
-Composition.Hero
-
-↓
-
-Surface.Hero
-
-↓
-
-Primitive Values
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Responsibility becomes centralised.
@@ -101,28 +91,21 @@ Consistency naturally follows.
 
 Inheritance always follows the same architectural direction.
 
-```text
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Semantic"]
+N3["Composition"]
+N4["Component"]
+N5["Runtime"]
+N6["Platform"]
 
-Semantic
-
-↓
-
-Composition
-
-↓
-
-Component
-
-↓
-
-Runtime
-
-↓
-
-Platform
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 No layer should inherit directly from a lower layer.
@@ -140,6 +123,7 @@ They represent the physical foundation of the Design System.
 Example.
 
 ```
+
 Primitive.Space.16
 ```
 
@@ -155,12 +139,13 @@ Semantic Tokens inherit physical implementation.
 
 Example.
 
-```
-Surface.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Primary"]
+N2["Primitive.Colour.Slate.950"]
 
-Primitive.Colour.Slate.950
+N1 --> N2
 ```
 
 The Semantic Token gains:
@@ -179,20 +164,17 @@ Composition Tokens inherit semantic meaning.
 
 Example.
 
-```
-Composition.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Composition.Hero"]
+N2["Surface.Hero"]
+N3["Text.Primary"]
+N4["Elevation.Primary"]
 
-Surface.Hero
-
-↓
-
-Text.Primary
-
-↓
-
-Elevation.Primary
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Composition therefore combines multiple semantic concepts into one compositional role.
@@ -209,20 +191,17 @@ Components inherit compositional responsibilities.
 
 Example.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Composition.Hero"]
+N3["Semantic.Surface.Hero"]
+N4["Primitive Values"]
 
-Composition.Hero
-
-↓
-
-Semantic.Surface.Hero
-
-↓
-
-Primitive Values
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The component consumes design intent.
@@ -237,20 +216,17 @@ Runtime Tokens inherit the complete conceptual chain.
 
 Example.
 
-```
-Runtime.Atmosphere.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime.Atmosphere.Primary"]
+N2["Composition.Hero"]
+N3["Surface.Hero"]
+N4["Primitive Colour"]
 
-Composition.Hero
-
-↓
-
-Surface.Hero
-
-↓
-
-Primitive Colour
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Runtime then resolves implementation according to:
@@ -287,24 +263,19 @@ A token may inherit from multiple parent tokens.
 
 Example.
 
-```
-Composition.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Composition.Hero"]
+N2["Surface.Hero"]
+N3["Text.Primary"]
+N4["Elevation.Primary"]
+N5["Spacing.Section"]
 
-Surface.Hero
-
-↓
-
-Text.Primary
-
-↓
-
-Elevation.Primary
-
-↓
-
-Spacing.Section
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The resulting role communicates:
@@ -326,22 +297,24 @@ Inheritance should support controlled overrides.
 
 Permitted.
 
-```
-Runtime
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime"]
+N2["Accessibility Override"]
 
-Accessibility Override
+N1 --> N2
 ```
 
 Not permitted.
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Primitive Override"]
 
-Primitive Override
+N1 --> N2
 ```
 
 Bypassing semantic layers weakens the architecture.
@@ -375,28 +348,26 @@ Themes should never redefine semantic meaning.
 
 Instead.
 
+```mermaid
+flowchart TD
+
+N1["Surface.Primary"]
+N2["Dark Theme"]
+N3["Slate 950"]
+
+N1 --> N2
+N2 --> N3
 ```
-Surface.Primary
 
-↓
+```mermaid
+flowchart TD
 
-Dark Theme
+N1["Surface.Primary"]
+N2["Light Theme"]
+N3["Slate 50"]
 
-↓
-
-Slate 950
-```
-
-```
-Surface.Primary
-
-↓
-
-Light Theme
-
-↓
-
-Slate 50
+N1 --> N2
+N2 --> N3
 ```
 
 The consuming component remains identical.
@@ -426,48 +397,41 @@ This guarantees ecosystem consistency.
 
 # Good Examples
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Action.Primary"]
+N3["Primitive Colour"]
 
-Action.Primary
-
-↓
-
-Primitive Colour
-```
-
-```
-Hero Tile
-
-↓
-
-Composition.Hero
-
-↓
-
-Surface.Hero
-
-↓
-
-Primitive Values
+N1 --> N2
+N2 --> N3
 ```
 
+```mermaid
+flowchart TD
+
+N1["Hero Tile"]
+N2["Composition.Hero"]
+N3["Surface.Hero"]
+N4["Primitive Values"]
+
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
-Timeline
 
-↓
+```mermaid
+flowchart TD
 
-Composition.Supporting
+N1["Timeline"]
+N2["Composition.Supporting"]
+N3["Surface.Secondary"]
+N4["Primitive Values"]
 
-↓
-
-Surface.Secondary
-
-↓
-
-Primitive Values
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Meaning accumulates.
@@ -480,12 +444,13 @@ Implementation remains centralised.
 
 ## Primitive Consumption
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Primitive"]
 
-Primitive
+N1 --> N2
 ```
 
 Semantic meaning has been bypassed.
@@ -494,16 +459,15 @@ Semantic meaning has been bypassed.
 
 ## Circular Inheritance
 
-```
-Semantic
+```mermaid
+flowchart TD
 
-↓
+N1["Semantic"]
+N2["Component"]
+N3["Semantic"]
 
-Component
-
-↓
-
-Semantic
+N1 --> N2
+N2 --> N3
 ```
 
 Inheritance should always remain directional.
@@ -597,15 +561,3 @@ Token Inheritance allows Mosaic to express one coherent Design System across:
 Every layer inherits meaning from the layer above it while adding exactly one new responsibility.
 
 This deliberate separation is what allows the Design System to evolve without losing conceptual integrity.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-token-versioning.md`

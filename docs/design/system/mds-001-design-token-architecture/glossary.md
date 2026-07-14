@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/glossary.md
 Document: MDS-001
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -178,28 +178,21 @@ Tokens communicate intent before values.
 
 The ordered architectural structure of the Design Token Architecture.
 
-```
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Semantic"]
+N3["Composition"]
+N4["Component"]
+N5["Runtime"]
+N6["Presentation"]
 
-Semantic
-
-↓
-
-Composition
-
-↓
-
-Component
-
-↓
-
-Runtime
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Each layer contributes one responsibility.
@@ -246,13 +239,13 @@ Token Debt should be reduced continuously.
 
 | Specification | Primary Concepts |
 |---------------|------------------|
-| MDL-001 Vision | Product Philosophy |
-| MDL-002 Principles | Design Intent |
-| MDL-003 Mental Model | World, Information |
-| MDL-004 Interaction Model | Behaviour |
-| MDL-005 Composition Model | Hierarchy, Composition |
-| MDS-002 Material System | Semantic Consumption |
-| MDS-006 Composition Engine | Runtime Resolution |
+| [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md) | Product Philosophy |
+| [MDL-002 — Principles](../../language/mdl-002-principles/index.md) | Design Intent |
+| [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World, Information |
+| [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Behaviour |
+| [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Hierarchy, Composition |
+| [MDS-003 — Material System](../mds-003-material-system/index.md) | Semantic Consumption |
+| [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) | Runtime Resolution |
 
 ---
 
@@ -266,15 +259,3 @@ Future contributors should:
 - avoid platform-specific terminology within architectural specifications
 
 The Design Token Architecture should remain understandable independently from any implementation technology.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

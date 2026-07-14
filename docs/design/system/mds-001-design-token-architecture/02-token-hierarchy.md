@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 02
 Title: Token Hierarchy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Token Hierarchy
@@ -34,28 +34,21 @@ It should never replace it.
 
 The Mosaic Design System intentionally separates tokens into six conceptual layers.
 
-```text
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Semantic"]
+N3["Composition"]
+N4["Component"]
+N5["Runtime"]
+N6["Presentation"]
 
-Semantic
-
-↓
-
-Composition
-
-↓
-
-Component
-
-↓
-
-Runtime
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Each layer exists for one reason only.
@@ -68,12 +61,13 @@ No layer should perform the responsibilities of another.
 
 Most token systems contain only two layers.
 
-```
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Semantic"]
 
-Semantic
+N1 --> N2
 ```
 
 This works well for relatively static interfaces.
@@ -126,6 +120,7 @@ Primitive Tokens intentionally possess **no semantic meaning**.
 Example.
 
 ```
+
 Primitive.Colour.Indigo.500
 ```
 
@@ -153,6 +148,7 @@ Semantic Tokens answer:
 Examples include:
 
 ```
+
 Surface.Primary
 
 Text.Secondary
@@ -185,6 +181,7 @@ Composition Tokens answer:
 Examples include:
 
 ```
+
 Hero
 
 Anchor
@@ -223,6 +220,7 @@ Component Tokens answer:
 Examples include:
 
 ```
+
 Button.Primary
 
 Tile.Hero
@@ -256,6 +254,7 @@ Runtime Tokens answer:
 Examples include:
 
 ```
+
 Atmosphere.Primary
 
 Current.Domain
@@ -347,28 +346,28 @@ Every layer may consume tokens from layers above it.
 
 Example.
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Semantic"]
+N3["Primitive"]
 
-Semantic
-
-↓
-
-Primitive
+N1 --> N2
+N2 --> N3
 ```
 
 It may **not** bypass layers unnecessarily.
 
 Poor.
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Primitive"]
 
-Primitive
+N1 --> N2
 ```
 
 Meaning has been skipped.
@@ -381,52 +380,33 @@ This weakens maintainability.
 
 A Hero Tile.
 
-```text
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Colour.Indigo.600"]
+N3["Semantic"]
+N4["Surface.Primary"]
+N5["Composition"]
+N6["Hero"]
+N7["Component"]
+N8["Tile.Hero"]
+N9["Runtime"]
+N10["Atmosphere.Primary"]
+N11["Presentation"]
+N12["CSS Variable"]
 
-Colour.Indigo.600
-
-↓
-
-Semantic
-
-↓
-
-Surface.Primary
-
-↓
-
-Composition
-
-↓
-
-Hero
-
-↓
-
-Component
-
-↓
-
-Tile.Hero
-
-↓
-
-Runtime
-
-↓
-
-Atmosphere.Primary
-
-↓
-
-Presentation
-
-↓
-
-CSS Variable
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
+N10 --> N11
+N11 --> N12
 ```
 
 Every layer contributes exactly one responsibility.
@@ -488,6 +468,7 @@ Architecture becomes platform dependent.
 Treating:
 
 ```
+
 Hero
 ```
 
@@ -519,11 +500,11 @@ Future specifications define every layer in greater detail.
 
 Examples include:
 
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-004 Typography
-- MDS-006 Composition Engine
-- MDS-008 Component Library
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 Each specification should extend one or more layers without redefining the hierarchy itself.
 
@@ -542,15 +523,3 @@ It ensures that:
 - contributors think in intent rather than values
 
 Every future token introduced into Mosaic should have a clear home within this hierarchy.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-primitive-tokens.md`

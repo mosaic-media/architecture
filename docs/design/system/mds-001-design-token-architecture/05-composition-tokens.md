@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 05
 Title: Composition Tokens
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Composition Tokens
@@ -29,7 +29,7 @@ It is continuously reorganised by the Composition Model.
 
 Composition Tokens provide the implementation bridge between:
 
-- MDL-005 Composition Model
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 and
 
@@ -57,23 +57,26 @@ They intentionally avoid answering:
 
 Imagine two pieces of information.
 
-```
-Continue Watching
+```mermaid
+flowchart TD
 
-↓
+N1["Continue Watching"]
+N2["Next Episode"]
 
-Next Episode
+N1 --> N2
 ```
 
 Both may consume:
 
 ```
+
 Surface.Primary
 ```
 
 Both may consume:
 
 ```
+
 Text.Primary
 ```
 
@@ -89,16 +92,15 @@ Composition Tokens can.
 
 Composition Tokens intentionally exist before Components.
 
-```
-Composition
+```mermaid
+flowchart TD
 
-↓
+N1["Composition"]
+N2["Component"]
+N3["Presentation"]
 
-Component
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
 ```
 
 This allows:
@@ -116,28 +118,31 @@ to share identical compositional behaviour while using completely different comp
 
 The current Composition Token taxonomy consists of:
 
-```
-Composition
+```mermaid
+flowchart TD
 
-├── Hero
+N1["Composition"]
+N2["Hero"]
+N3["Anchor"]
+N4["Primary"]
+N5["Supporting"]
+N6["Contextual"]
+N7["Peripheral"]
+N8["Overlay"]
+N9["Navigation"]
+N10["Modal"]
+N11["Background"]
 
-├── Anchor
-
-├── Primary
-
-├── Supporting
-
-├── Contextual
-
-├── Peripheral
-
-├── Overlay
-
-├── Navigation
-
-├── Modal
-
-└── Background
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
+N1 --> N10
+N1 --> N11
 ```
 
 These categories are conceptual.
@@ -155,6 +160,7 @@ Communicate the primary concept within the current Composition.
 Example.
 
 ```
+
 Composition.Hero
 ```
 
@@ -184,6 +190,7 @@ Preserve orientation.
 Example.
 
 ```
+
 Composition.Anchor
 ```
 
@@ -321,22 +328,24 @@ Unlike Semantic Tokens, Composition Tokens intentionally change.
 
 Example.
 
-```
-Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline"]
+N2["Supporting"]
 
-Supporting
+N1 --> N2
 ```
 
 After playback completes.
 
-```
-Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline"]
+N2["Primary"]
 
-Primary
+N1 --> N2
 ```
 
 Nothing about the Timeline changed.
@@ -351,16 +360,15 @@ Composition Tokens therefore describe **behavioural intent** rather than permane
 
 Example.
 
-```
-Composition.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Composition.Hero"]
+N2["Semantic.Surface.Hero"]
+N3["Primitive Values"]
 
-Semantic.Surface.Hero
-
-↓
-
-Primitive Values
+N1 --> N2
+N2 --> N3
 ```
 
 Composition Tokens should never reference Primitive Tokens directly.
@@ -375,12 +383,13 @@ Composition Tokens are expected to participate heavily in runtime adaptation.
 
 Example.
 
-```
-Composition.Supporting
+```mermaid
+flowchart TD
 
-↓
+N1["Composition.Supporting"]
+N2["Composition.Primary"]
 
-Composition.Primary
+N1 --> N2
 ```
 
 This promotion occurs because:
@@ -403,22 +412,24 @@ Not infer them.
 
 Poor.
 
-```
-Timeline
+```mermaid
+flowchart TD
 
-↓
+N1["Timeline"]
+N2["If Important..."]
 
-If Important...
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Composition.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Composition.Primary"]
+N2["Timeline"]
 
-Timeline
+N1 --> N2
 ```
 
 The Composition Engine owns compositional reasoning.
@@ -439,18 +450,21 @@ Composition Tokens intentionally remain independent from:
 Desktop.
 
 ```
+
 Composition.Hero
 ```
 
 Television.
 
 ```
+
 Composition.Hero
 ```
 
 Voice.
 
 ```
+
 Composition.Hero
 ```
 
@@ -462,40 +476,37 @@ Presentation changes.
 
 # Good Examples
 
-```
-Composition.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Composition.Hero"]
+N2["Surface.Hero"]
+N3["Tile.Hero"]
 
-Surface.Hero
-
-↓
-
-Tile.Hero
-```
-
-```
-Composition.Supporting
-
-↓
-
-Surface.Secondary
-
-↓
-
-Timeline
+N1 --> N2
+N2 --> N3
 ```
 
+```mermaid
+flowchart TD
+
+N1["Composition.Supporting"]
+N2["Surface.Secondary"]
+N3["Timeline"]
+
+N1 --> N2
+N2 --> N3
 ```
-Composition.Peripheral
 
-↓
+```mermaid
+flowchart TD
 
-Surface.Canvas
+N1["Composition.Peripheral"]
+N2["Surface.Canvas"]
+N3["Collection Shelf"]
 
-↓
-
-Collection Shelf
+N1 --> N2
+N2 --> N3
 ```
 
 Each layer contributes one responsibility.
@@ -507,6 +518,7 @@ Each layer contributes one responsibility.
 ## Component Composition
 
 ```
+
 Timeline.Primary
 ```
 
@@ -519,6 +531,7 @@ Incorrect.
 ## Colour Composition
 
 ```
+
 BlueHero
 ```
 
@@ -529,6 +542,7 @@ Presentation has leaked into composition.
 ## Device Composition
 
 ```
+
 MobileHero
 ```
 
@@ -597,15 +611,3 @@ This separation enables:
 - future evolution
 
 Every future runtime implementation should treat Composition Tokens as behavioural intent rather than visual styling.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-runtime-tokens.md`

@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 10
 Title: Module Tokens
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Module Tokens
@@ -92,28 +92,31 @@ Modules may contribute:
 
 Examples include:
 
-```
-Manga
+```mermaid
+flowchart TD
 
-↓
+N1["Manga"]
+N2["Reading Progress"]
 
-Reading Progress
-```
-
-```
-Audiobooks
-
-↓
-
-Listening Position
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Audiobooks"]
+N2["Listening Position"]
+
+N1 --> N2
 ```
-Calendar
 
-↓
+```mermaid
+flowchart TD
 
-Upcoming Release
+N1["Calendar"]
+N2["Upcoming Release"]
+
+N1 --> N2
 ```
 
 These concepts become part of the existing Composition rather than creating independent visual systems.
@@ -128,42 +131,34 @@ Not interface.
 
 Poor.
 
-```
-Anime Module
+```mermaid
+flowchart TD
 
-↓
+N1["Anime Module"]
+N2["Custom Hero"]
+N3["Custom Timeline"]
+N4["Custom Colours"]
 
-Custom Hero
-
-↓
-
-Custom Timeline
-
-↓
-
-Custom Colours
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Anime Module
+```mermaid
+flowchart TD
 
-↓
+N1["Anime Module"]
+N2["Episode Release"]
+N3["Studio"]
+N4["Voice Actor"]
+N5["Relationship"]
 
-Episode Release
-
-↓
-
-Studio
-
-↓
-
-Voice Actor
-
-↓
-
-Relationship
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The platform determines how these concepts become interface.
@@ -176,38 +171,32 @@ Every module should define its own namespace.
 
 Example.
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Anime"]
+N3["Episode"]
+N4["Release"]
 
-Anime
-
-↓
-
-Episode
-
-↓
-
-Release
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 or
 
-```text
-Module
+```mermaid
+flowchart TD
 
-↓
+N1["Module"]
+N2["Books"]
+N3["Chapter"]
+N4["Progress"]
 
-Books
-
-↓
-
-Chapter
-
-↓
-
-Progress
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Namespaces prevent collisions while remaining readable.
@@ -220,20 +209,23 @@ Modules should contribute tokens only within clearly defined categories.
 
 Examples include:
 
-```text
-Module
+```mermaid
+flowchart TD
 
-├── Domain
+N1["Module"]
+N2["Domain"]
+N3["Capability"]
+N4["Information"]
+N5["Relationship"]
+N6["Expression Hint"]
+N7["Metadata"]
 
-├── Capability
-
-├── Information
-
-├── Relationship
-
-├── Expression Hint
-
-└── Metadata
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
 ```
 
 These categories intentionally avoid:
@@ -253,12 +245,13 @@ A module may suggest how information is naturally expressed.
 
 Example.
 
-```
-Episode Countdown
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Countdown"]
+N2["Timeline"]
 
-Timeline
+N1 --> N2
 ```
 
 This is an **Expression Hint**.
@@ -277,28 +270,21 @@ Modules participate in Runtime resolution indirectly.
 
 Example.
 
-```
-Anime Module
+```mermaid
+flowchart TD
 
-↓
+N1["Anime Module"]
+N2["Episode Release"]
+N3["Runtime Context"]
+N4["Composition"]
+N5["Timeline"]
+N6["Presentation"]
 
-Episode Release
-
-↓
-
-Runtime Context
-
-↓
-
-Composition
-
-↓
-
-Timeline
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The module never resolves Runtime Tokens.
@@ -314,6 +300,7 @@ Modules should consume the same Semantic Tokens as the Platform foundation.
 Examples.
 
 ```
+
 Text.Primary
 
 Surface.Secondary
@@ -414,6 +401,7 @@ Not:
 Contributes:
 
 ```
+
 Episode Release
 
 Studio
@@ -426,6 +414,7 @@ Relationship
 Consumes:
 
 ```
+
 Surface.Primary
 
 Text.Primary
@@ -440,6 +429,7 @@ Composition.Supporting
 Contributes:
 
 ```
+
 Reading Progress
 
 Series Order
@@ -450,6 +440,7 @@ Bookmarks
 Consumes:
 
 ```
+
 Composition.Hero
 
 Text.Secondary
@@ -464,6 +455,7 @@ Action.Primary
 Contributes:
 
 ```
+
 Current Track
 
 Album
@@ -474,6 +466,7 @@ Concert
 Consumes:
 
 ```
+
 Surface.Hero
 
 Composition.Primary
@@ -490,6 +483,7 @@ The visual language remains unified.
 ## Brand Tokens
 
 ```
+
 Anime.Primary.Purple
 ```
 
@@ -613,15 +607,3 @@ The platform contributes:
 - presentation
 
 This separation ensures that every module naturally becomes part of one unified Mosaic experience.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`

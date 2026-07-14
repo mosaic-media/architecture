@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 03
 Title: Primitive Tokens
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Primitive Tokens
@@ -70,6 +70,7 @@ Examples.
 Good.
 
 ```
+
 Primitive.Colour.Indigo.500
 
 Primitive.Space.16
@@ -82,6 +83,7 @@ Primitive.Blur.24
 Poor.
 
 ```
+
 PrimaryButtonBlue
 
 HeroSpacing
@@ -104,6 +106,7 @@ One of the most important architectural rules within Mosaic is:
 Example.
 
 ```
+
 Primitive.Colour.Blue.500
 ```
 
@@ -126,28 +129,31 @@ The Primitive layer is intentionally small.
 
 Current categories include:
 
-```
-Primitive
+```mermaid
+flowchart TD
 
-├── Colour
+N1["Primitive"]
+N2["Colour"]
+N3["Space"]
+N4["Radius"]
+N5["Typography"]
+N6["Elevation"]
+N7["Blur"]
+N8["Opacity"]
+N9["Duration"]
+N10["Easing"]
+N11["ZIndex"]
 
-├── Space
-
-├── Radius
-
-├── Typography
-
-├── Elevation
-
-├── Blur
-
-├── Opacity
-
-├── Duration
-
-├── Easing
-
-└── ZIndex
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
+N1 --> N10
+N1 --> N11
 ```
 
 Future categories should be introduced sparingly.
@@ -165,6 +171,7 @@ Represent raw colour values.
 Examples.
 
 ```
+
 Primitive.Colour.Cyan.500
 
 Primitive.Colour.Slate.900
@@ -187,6 +194,7 @@ Represent physical spacing units.
 Examples.
 
 ```
+
 Primitive.Space.2
 
 Primitive.Space.4
@@ -213,6 +221,7 @@ Represent physical corner radii.
 Examples.
 
 ```
+
 Primitive.Radius.4
 
 Primitive.Radius.8
@@ -235,6 +244,7 @@ Represent measurable typography values.
 Examples.
 
 ```
+
 Primitive.Font.Size.14
 
 Primitive.Font.Weight.600
@@ -257,6 +267,7 @@ Represent physical depth.
 Examples.
 
 ```
+
 Primitive.Elevation.0
 
 Primitive.Elevation.1
@@ -283,6 +294,7 @@ Represent physical blur intensity.
 Examples.
 
 ```
+
 Primitive.Blur.8
 
 Primitive.Blur.16
@@ -305,6 +317,7 @@ Represent transparency.
 Examples.
 
 ```
+
 Primitive.Opacity.100
 
 Primitive.Opacity.80
@@ -325,6 +338,7 @@ Primitive Motion consists of measurable values only.
 Examples.
 
 ```
+
 Primitive.Duration.100
 
 Primitive.Duration.200
@@ -333,6 +347,7 @@ Primitive.Duration.300
 ```
 
 ```
+
 Primitive.Easing.Standard
 
 Primitive.Easing.Decelerate
@@ -346,38 +361,32 @@ Motion intent belongs to later specifications.
 
 Primitive Tokens should follow the same naming convention.
 
-```
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Category"]
+N3["Family"]
+N4["Variant"]
 
-Category
-
-↓
-
-Family
-
-↓
-
-Variant
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Example.
 
-```
-Primitive
+```mermaid
+flowchart TD
 
-↓
+N1["Primitive"]
+N2["Colour"]
+N3["Cyan"]
+N4["500"]
 
-Colour
-
-↓
-
-Cyan
-
-↓
-
-500
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Naming should communicate structure.
@@ -406,26 +415,26 @@ Applications should avoid consuming Primitive Tokens directly.
 
 Poor.
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Primitive.Colour.Cyan.500"]
 
-Primitive.Colour.Cyan.500
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Semantic.Action.Primary"]
+N3["Primitive.Colour.Cyan.500"]
 
-Semantic.Action.Primary
-
-↓
-
-Primitive.Colour.Cyan.500
+N1 --> N2
+N2 --> N3
 ```
 
 Meaning remains preserved.
@@ -457,6 +466,7 @@ Implementation belongs to later layers.
 ## Semantic Primitive
 
 ```
+
 Primitive.Primary
 ```
 
@@ -467,6 +477,7 @@ Meaning has leaked into the Primitive layer.
 ## Component Primitive
 
 ```
+
 Primitive.Button.Blue
 ```
 
@@ -477,6 +488,7 @@ Component responsibility has leaked downwards.
 ## Runtime Primitive
 
 ```
+
 Primitive.CurrentArtwork
 ```
 
@@ -487,6 +499,7 @@ Runtime behaviour belongs elsewhere.
 ## Platform Primitive
 
 ```
+
 Primitive.CSS.Blue
 ```
 
@@ -550,15 +563,3 @@ Everything meaningful within Mosaic emerges by progressively layering:
 on top of these primitive foundations.
 
 That separation is what allows the Design System to evolve without losing conceptual integrity.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-semantic-tokens.md`

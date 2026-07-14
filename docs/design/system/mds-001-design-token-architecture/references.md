@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/references.md
 Document: MDS-001
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -39,7 +39,7 @@ External references provide context rather than authority.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
 
 Provides:
 
@@ -52,7 +52,7 @@ Every token should ultimately reinforce the experience defined by the Vision.
 
 ---
 
-## MDL-002 — Principles
+## [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
 
 Provides:
 
@@ -64,7 +64,7 @@ Semantic Tokens should communicate these principles through implementation.
 
 ---
 
-## MDL-003 — Mental Model
+## [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
 
 Provides:
 
@@ -78,7 +78,7 @@ Runtime Tokens are intentionally designed to adapt these concepts rather than re
 
 ---
 
-## MDL-004 — Interaction Model
+## [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
 
 Provides:
 
@@ -91,7 +91,7 @@ Runtime Tokens should reinforce behavioural consistency rather than introduce al
 
 ---
 
-## MDL-005 — Composition Model
+## [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 Provides:
 
@@ -109,13 +109,13 @@ Composition Tokens are the implementation of these conceptual ideas.
 
 The following specifications depend directly upon MDS-001.
 
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-004 Typography
-- MDS-005 Motion System
-- MDS-006 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 These specifications should consume the architecture defined here rather than redefining it.
 
@@ -156,20 +156,17 @@ The Design Token Architecture therefore treats runtime adaptation as a first-cla
 
 MDS intentionally separates:
 
-```
-Meaning
+```mermaid
+flowchart TD
 
-↓
+N1["Meaning"]
+N2["Runtime"]
+N3["Platform"]
+N4["Rendering"]
 
-Runtime
-
-↓
-
-Platform
-
-↓
-
-Rendering
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This separation allows identical Design Tokens to generate implementations for:
@@ -258,11 +255,11 @@ Implementation details belong to future specifications.
 
 Required reading before contributing to MDS-001.
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md)
 
 These documents collectively define the conceptual foundation upon which the Design Token Architecture is built.
 
@@ -272,10 +269,10 @@ These documents collectively define the conceptual foundation upon which the Des
 
 Future contributors may also wish to review:
 
-- MDS-002 Colour System
-- MDS-003 Material System
-- MDS-006 Composition Engine
-- MDS-008 Component Library
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
+- [MDS-003 — Material System](../mds-003-material-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)
 
 These specifications implement the token architecture defined within MDS-001.
 
@@ -302,9 +299,9 @@ This concludes **MDS-001 — Design Token Architecture**.
 
 The next specification in the Mosaic Design System is:
 
-> **MDS-002 — Colour System**
+> **[MDS-002 — Colour System](../mds-002-colour-system/index.md)**
 
-Where MDS-001 defines **how design intent becomes machine-readable**, MDS-002 defines **how colour communicates meaning**.
+Where MDS-001 defines **how design intent becomes machine-readable**, [MDS-002](../mds-002-colour-system/index.md) defines **how colour communicates meaning**.
 
 It formalises:
 

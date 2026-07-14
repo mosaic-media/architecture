@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -44,12 +44,14 @@ Not:
 Good.
 
 ```
+
 Surface.Hero
 ```
 
 Poor.
 
 ```
+
 #112233
 ```
 
@@ -65,30 +67,28 @@ Always consume the highest architectural layer available.
 
 Preferred.
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Composition Token"]
+N3["Semantic Token"]
+N4["Primitive Token"]
 
-Composition Token
-
-↓
-
-Semantic Token
-
-↓
-
-Primitive Token
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```
-Component
+```mermaid
+flowchart TD
 
-↓
+N1["Component"]
+N2["Primitive Token"]
 
-Primitive Token
+N1 --> N2
 ```
 
 Skipping layers weakens maintainability.
@@ -117,22 +117,24 @@ They should not decide.
 
 Good.
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Action.Primary"]
 
-Action.Primary
+N1 --> N2
 ```
 
 Poor.
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Blue500"]
 
-Blue500
+N1 --> N2
 ```
 
 The Design System owns appearance.
@@ -152,6 +154,7 @@ Components should never ask:
 Instead they consume:
 
 ```
+
 Resolved Tokens
 ```
 
@@ -165,30 +168,28 @@ When implementing UI, contributors should normally begin with Composition Tokens
 
 Example.
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Composition.Hero"]
 
-Composition.Hero
+N1 --> N2
 ```
 
 rather than:
 
-```
-Hero Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Tile"]
+N2["Surface.Primary"]
+N3["Text.Primary"]
+N4["Elevation.High"]
 
-Surface.Primary
-
-↓
-
-Text.Primary
-
-↓
-
-Elevation.High
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Composition Token already communicates those responsibilities.
@@ -229,17 +230,19 @@ Themes should never introduce new semantic meaning.
 
 Good.
 
-```
-Surface.Primary
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Primary"]
+N2["Different Primitive Values"]
 
-Different Primitive Values
+N1 --> N2
 ```
 
 Poor.
 
 ```
+
 DarkSurfacePrimary
 
 LightSurfacePrimary
@@ -377,15 +380,3 @@ If contributors find themselves repeatedly making visual decisions inside applic
 > **Should this decision become a Design Token instead?**
 
 When that instinct becomes natural, the Design System has succeeded.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

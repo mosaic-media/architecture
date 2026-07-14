@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 09
 Title: Token Versioning
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Token Versioning
@@ -78,6 +78,7 @@ The Mosaic Design System follows one fundamental rule.
 For example.
 
 ```
+
 Surface.Hero
 ```
 
@@ -85,16 +86,15 @@ should continue representing the Hero surface for many years.
 
 Its implementation may change from:
 
-```
-Slate
+```mermaid
+flowchart TD
 
-↓
+N1["Slate"]
+N2["Acrylic"]
+N3["Adaptive Material"]
 
-Acrylic
-
-↓
-
-Adaptive Material
+N1 --> N2
+N2 --> N3
 ```
 
 Applications consuming the token remain unchanged.
@@ -108,12 +108,14 @@ Semantic Tokens are considered part of the public design API.
 Changing:
 
 ```
+
 Surface.Primary
 ```
 
 is significantly more expensive than changing:
 
 ```
+
 Primitive.Colour.Slate.950
 ```
 
@@ -136,12 +138,14 @@ Meaning remains stable.
 The Design Token Architecture follows semantic versioning.
 
 ```
+
 Major.Minor.Patch
 ```
 
 Example.
 
 ```
+
 1.0.0
 ```
 
@@ -207,20 +211,17 @@ Tokens should rarely be removed.
 
 Instead they should enter a deprecation lifecycle.
 
-```
-Current
+```mermaid
+flowchart TD
 
-↓
+N1["Current"]
+N2["Deprecated"]
+N3["Superseded"]
+N4["Removed"]
 
-Deprecated
-
-↓
-
-Superseded
-
-↓
-
-Removed
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Deprecation should provide sufficient migration time for:
@@ -258,16 +259,15 @@ Temporary aliases may exist during migration.
 
 Example.
 
-```
-Surface.Featured
+```mermaid
+flowchart TD
 
-↓
+N1["Surface.Featured"]
+N2["Alias"]
+N3["Surface.Hero"]
 
-Alias
-
-↓
-
-Surface.Hero
+N1 --> N2
+N2 --> N3
 ```
 
 Aliases should remain temporary.
@@ -283,18 +283,21 @@ Runtime evolution should remain backwards compatible whenever practical.
 Example.
 
 ```
+
 Runtime.Atmosphere.Primary
 ```
 
 may internally evolve from:
 
 ```
+
 Static Colour
 ```
 
 to
 
 ```
+
 Artwork-derived Acrylic
 ```
 
@@ -336,34 +339,30 @@ Every layer owns a different aspect of stability.
 
 Preferred migration.
 
-```
-Old Token
+```mermaid
+flowchart TD
 
-↓
+N1["Old Token"]
+N2["Alias"]
+N3["New Token"]
+N4["Deprecation Warning"]
+N5["Removal"]
 
-Alias
-
-↓
-
-New Token
-
-↓
-
-Deprecation Warning
-
-↓
-
-Removal
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Avoid.
 
-```
-Old Token
+```mermaid
+flowchart TD
 
-↓
+N1["Old Token"]
+N2["Deleted"]
 
-Deleted
+N1 --> N2
 ```
 
 Breaking changes should always be intentional.
@@ -476,15 +475,3 @@ Presentation will evolve.
 The meaning communicated by tokens should remain recognisable for many years.
 
 That long-term semantic stability is what enables Mosaic to evolve confidently without fragmenting its design language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-module-tokens.md`
