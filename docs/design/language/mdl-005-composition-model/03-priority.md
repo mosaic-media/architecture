@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 03
 Title: Priority
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Priority
@@ -56,6 +56,7 @@ A World contains significantly more Information than can be communicated simulta
 Example.
 
 ```
+
 Current Episode
 
 Cast
@@ -100,36 +101,25 @@ Priority allows Mosaic to determine:
 
 Priority should always be determined before hierarchy.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Priority"]
+N7["Hierarchy"]
+N8["Composition"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Priority
-
-↓
-
-Hierarchy
-
-↓
-
-Composition
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Hierarchy communicates Priority.
@@ -147,6 +137,7 @@ It is a property of the current experience.
 Example.
 
 ```
+
 Runtime
 ```
 
@@ -161,6 +152,7 @@ Low Priority.
 Likewise.
 
 ```
+
 Next Episode
 ```
 
@@ -251,38 +243,28 @@ Priority should always be evaluated relative to the current World.
 
 Example.
 
-```
-Watching
+```mermaid
+flowchart TD
 
-↓
+N1["Watching"]
+N2["Playback<br/>Critical"]
+N3["Reviews<br/>Medium"]
 
-Playback
-
-Critical
-
-↓
-
-Reviews
-
-Medium
+N1 --> N2
+N2 --> N3
 ```
 
 Later.
 
-```
-Browsing Reviews
+```mermaid
+flowchart TD
 
-↓
+N1["Browsing Reviews"]
+N2["Reviews<br/>High"]
+N3["Playback<br/>Low"]
 
-Reviews
-
-High
-
-↓
-
-Playback
-
-Low
+N1 --> N2
+N2 --> N3
 ```
 
 Nothing changed except the user's intent.
@@ -297,40 +279,43 @@ Time influences Priority.
 
 Example.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Releases"]
+N3["Tomorrow"]
 
-Releases
-
-Tomorrow
+N1 --> N2
+N1 --> N3
 ```
 
 Priority:
 
 Medium.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Available"]
+N3["Now"]
 
-Available
-
-Now
+N1 --> N2
+N1 --> N3
 ```
 
 Priority:
 
 High.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Watched"]
 
-Watched
+N1 --> N2
 ```
 
 Priority:
@@ -349,22 +334,24 @@ It should never be determined purely by presentation.
 
 Poor.
 
-```
-Large Tile
+```mermaid
+flowchart TD
 
-↓
+N1["Large Tile"]
+N2["Must Be Important"]
 
-Must Be Important
+N1 --> N2
 ```
 
 Correct.
 
-```
-Important
+```mermaid
+flowchart TD
 
-↓
+N1["Important"]
+N2["Receives Larger Expression"]
 
-Receives Larger Expression
+N1 --> N2
 ```
 
 Presentation reflects Priority.
@@ -433,90 +420,53 @@ Not unrelated information.
 
 ## Watching
 
-```
-Critical
+```mermaid
+flowchart TD
 
-Playback
+N1["Critical<br/>Playback"]
+N2["High<br/>Progress"]
+N3["High<br/>Next Episode"]
+N4["Medium<br/>Characters"]
+N5["Low<br/>Collections"]
 
-↓
-
-High
-
-Progress
-
-↓
-
-High
-
-Next Episode
-
-↓
-
-Medium
-
-Characters
-
-↓
-
-Low
-
-Collections
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 ---
 
 ## Reading
 
-```
-Critical
+```mermaid
+flowchart TD
 
-Current Chapter
+N1["Critical<br/>Current Chapter"]
+N2["High<br/>Bookmarks"]
+N3["Medium<br/>Author"]
+N4["Low<br/>Reading Statistics"]
 
-↓
-
-High
-
-Bookmarks
-
-↓
-
-Medium
-
-Author
-
-↓
-
-Low
-
-Reading Statistics
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 ---
 
 ## Exploring
 
-```
-Critical
+```mermaid
+flowchart TD
 
-Current Focus
+N1["Critical<br/>Current Focus"]
+N2["High<br/>Relationships"]
+N3["Medium<br/>Metadata"]
+N4["Low<br/>Administration"]
 
-↓
-
-High
-
-Relationships
-
-↓
-
-Medium
-
-Metadata
-
-↓
-
-Low
-
-Administration
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Priority adapts naturally to intent.
@@ -607,15 +557,3 @@ Composition organises it.
 Presentation expresses it.
 
 This separation allows Mosaic to remain adaptive while preserving a stable conceptual model.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-hero.md`

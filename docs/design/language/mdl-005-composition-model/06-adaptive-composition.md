@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 06
 Title: Adaptive Composition
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Adaptive Composition
@@ -56,28 +56,28 @@ Adaptation should never feel random.
 
 Traditional interfaces often behave like templates.
 
-```
-Desktop Layout
+```mermaid
+flowchart TD
 
-↓
+N1["Desktop Layout"]
+N2["Tablet Layout"]
+N3["Phone Layout"]
 
-Tablet Layout
-
-↓
-
-Phone Layout
+N1 --> N2
+N2 --> N3
 ```
 
 Every device receives a different layout.
 
 Mosaic intentionally adopts a different approach.
 
-```
-One Composition
+```mermaid
+flowchart TD
 
-↓
+N1["One Composition"]
+N2["Many Presentations"]
 
-Many Presentations
+N1 --> N2
 ```
 
 The Composition remains conceptually identical.
@@ -108,32 +108,23 @@ Meaning therefore precedes geometry.
 
 Adaptive Composition evaluates the following conceptual inputs.
 
-```text
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Priority"]
+N5["Relationships"]
+N6["Available Space"]
+N7["Composition"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Priority
-
-↓
-
-Relationships
-
-↓
-
-Available Space
-
-↓
-
-Composition
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Notice that available space appears almost at the end.
@@ -257,16 +248,15 @@ Example.
 
 Timeline.
 
-```
-10 Episodes
+```mermaid
+flowchart TD
 
-↓
+N1["10 Episodes"]
+N2["3 Episodes"]
+N3["1 Episode"]
 
-3 Episodes
-
-↓
-
-1 Episode
+N1 --> N2
+N2 --> N3
 ```
 
 The concept survives.
@@ -283,16 +273,15 @@ Example.
 
 Progress.
 
-```
-Percentage
+```mermaid
+flowchart TD
 
-↓
+N1["Percentage"]
+N2["Percentage + Chapter"]
+N3["Percentage + Chapter + Remaining Time"]
 
-Percentage + Chapter
-
-↓
-
-Percentage + Chapter + Remaining Time
+N1 --> N2
+N2 --> N3
 ```
 
 The same concept simply becomes richer.
@@ -331,24 +320,19 @@ This should always be preferred over immediate overload.
 
 When adaptation becomes necessary, concepts should compress in the following order.
 
-```
-Low Priority
+```mermaid
+flowchart TD
 
-↓
+N1["Low Priority"]
+N2["Medium Priority"]
+N3["Supporting Information"]
+N4["High Priority"]
+N5["Critical Information"]
 
-Medium Priority
-
-↓
-
-Supporting Information
-
-↓
-
-High Priority
-
-↓
-
-Critical Information
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Critical understanding should remain visible for as long as possible.
@@ -359,20 +343,17 @@ Critical understanding should remain visible for as long as possible.
 
 As additional space becomes available:
 
-```
-Critical
+```mermaid
+flowchart TD
 
-↓
+N1["Critical"]
+N2["Supporting"]
+N3["Contextual"]
+N4["Peripheral"]
 
-Supporting
-
-↓
-
-Contextual
-
-↓
-
-Peripheral
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The user's understanding should deepen naturally.
@@ -385,17 +366,19 @@ Not broaden randomly.
 
 Adaptive Composition intentionally separates:
 
-```
-Composition
+```mermaid
+flowchart TD
 
-↓
+N1["Composition"]
+N2["Presentation"]
 
-Presentation
+N1 --> N2
 ```
 
 Desktop.
 
 ```
+
 Large Hero
 
 Expanded Timeline
@@ -406,6 +389,7 @@ Rich Relationships
 Mobile.
 
 ```
+
 Compact Hero
 
 Condensed Timeline
@@ -416,6 +400,7 @@ Progressive Relationships
 Television.
 
 ```
+
 Immersive Hero
 
 Minimal Navigation
@@ -562,15 +547,3 @@ Users should recognise their World immediately regardless of:
 - accessibility preferences
 
 Adaptive Composition therefore represents one of the defining architectural capabilities of Mosaic.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-density.md`

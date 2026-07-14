@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 08
 Title: Breathing Space
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Breathing Space
@@ -70,6 +70,7 @@ Sometimes the fastest way to communicate something is to communicate **less**.
 One of the most common misconceptions is:
 
 ```
+
 Whitespace
 
 =
@@ -82,6 +83,7 @@ Within Mosaic this is incorrect.
 Instead:
 
 ```
+
 Breathing Space
 
 =
@@ -106,20 +108,22 @@ Breathing Space should respond to behaviour.
 
 Examples.
 
+```mermaid
+flowchart TD
+
+N1["Watching"]
+N2["More Space"]
+
+N1 --> N2
 ```
-Watching
 
-↓
+```mermaid
+flowchart TD
 
-More Space
-```
+N1["Exploring"]
+N2["Less Space"]
 
-```
-Exploring
-
-↓
-
-Less Space
+N1 --> N2
 ```
 
 The platform should never apply identical spacing simply because identical layouts exist.
@@ -136,32 +140,23 @@ Good compositions possess rhythm.
 
 Example.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Space"]
+N3["Supporting Information"]
+N4["Space"]
+N5["Context"]
+N6["Space"]
+N7["Peripheral Information"]
 
-Space
-
-↓
-
-Supporting Information
-
-↓
-
-Space
-
-↓
-
-Context
-
-↓
-
-Space
-
-↓
-
-Peripheral Information
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 The user naturally understands where one conceptual group ends and another begins.
@@ -178,21 +173,21 @@ Not merely objects.
 
 Good.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Space"]
+N3["Relationships"]
 
-Space
-
-↓
-
-Relationships
+N1 --> N2
+N2 --> N3
 ```
 
 Poor.
 
 ```
+
 Playback
 
 Character
@@ -241,12 +236,14 @@ Breathing Space naturally changes with Density.
 Sparse Composition.
 
 ```
+
 Large conceptual separation.
 ```
 
 Rich Composition.
 
 ```
+
 Reduced conceptual separation.
 ```
 
@@ -299,12 +296,14 @@ Breathing Space should preserve conceptual rhythm rather than physical measureme
 Desktop.
 
 ```
+
 Large physical spacing.
 ```
 
 Phone.
 
 ```
+
 Smaller physical spacing.
 
 Equivalent conceptual rhythm.
@@ -313,6 +312,7 @@ Equivalent conceptual rhythm.
 Television.
 
 ```
+
 Large physical spacing.
 
 Greater viewing distance.
@@ -328,16 +328,15 @@ The understanding remains consistent.
 
 ## Playback
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Progress"]
+N3["Timeline"]
 
-Progress
-
-↓
-
-Timeline
+N1 --> N2
+N2 --> N3
 ```
 
 Each concept clearly separated.
@@ -348,16 +347,15 @@ Nothing competes unnecessarily.
 
 ## Reading
 
-```
-Current Chapter
+```mermaid
+flowchart TD
 
-↓
+N1["Current Chapter"]
+N2["Bookmarks"]
+N3["Author"]
 
-Bookmarks
-
-↓
-
-Author
+N1 --> N2
+N2 --> N3
 ```
 
 The Composition breathes.
@@ -368,16 +366,15 @@ Users naturally understand where attention should move next.
 
 ## Administration
 
-```
-Navigation
+```mermaid
+flowchart TD
 
-↓
+N1["Navigation"]
+N2["Configuration"]
+N3["Diagnostics"]
 
-Configuration
-
-↓
-
-Diagnostics
+N1 --> N2
+N2 --> N3
 ```
 
 Rich information.
@@ -480,15 +477,3 @@ Not a missed opportunity.
 Good Compositions communicate just enough.
 
 Breathing Space ensures users have room to understand what matters.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-composition-solving.md`

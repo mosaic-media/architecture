@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 02
 Title: Hierarchy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Hierarchy
@@ -78,6 +78,7 @@ Hierarchy is fundamentally semantic.
 The following two interfaces may contain identical information.
 
 ```
+
 Interface A
 
 Movie
@@ -93,24 +94,21 @@ Genre
 Reviews
 ```
 
-```
-Interface B
+```mermaid
+flowchart TD
 
-Movie
+N1["Interface B"]
+N2["Movie"]
+N3["Progress"]
+N4["Next Episode"]
+N5["Related Works"]
+N6["Everything Else"]
 
-Progress
-
-↓
-
-Next Episode
-
-↓
-
-Related Works
-
-↓
-
-Everything Else
+N1 --> N4
+N2 --> N4
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The second communicates understanding.
@@ -125,32 +123,23 @@ Hierarchy transforms information into experience.
 
 Hierarchy should emerge naturally from the Mental Model.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Hierarchy"]
+N7["Composition"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Hierarchy
-
-↓
-
-Composition
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Notice that hierarchy does not begin with interface.
@@ -242,6 +231,7 @@ Every Composition should possess exactly one dominant hierarchy.
 Poor.
 
 ```
+
 Trending
 
 Continue Watching
@@ -261,24 +251,19 @@ Nothing leads.
 
 Preferred.
 
-```
-Continue Watching
+```mermaid
+flowchart TD
 
-↓
+N1["Continue Watching"]
+N2["Next Episode"]
+N3["Timeline"]
+N4["Relationships"]
+N5["Collections"]
 
-Next Episode
-
-↓
-
-Timeline
-
-↓
-
-Relationships
-
-↓
-
-Collections
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The user's attention naturally flows through the Composition.
@@ -293,44 +278,41 @@ Example.
 
 Before playback.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Synopsis"]
+N3["Runtime"]
 
-Synopsis
-
-↓
-
-Runtime
+N1 --> N2
+N2 --> N3
 ```
 
 During playback.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Progress"]
+N3["Remaining Time"]
 
-Progress
-
-↓
-
-Remaining Time
+N1 --> N2
+N2 --> N3
 ```
 
 After playback.
 
-```
-Next Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Next Episode"]
+N2["Progress"]
+N3["Related Works"]
 
-Progress
-
-↓
-
-Related Works
+N1 --> N2
+N2 --> N3
 ```
 
 The information remains largely identical.
@@ -346,6 +328,7 @@ Importance is always relative.
 Example.
 
 ```
+
 Runtime
 ```
 
@@ -360,6 +343,7 @@ Almost irrelevant.
 Likewise.
 
 ```
+
 Cast
 ```
 
@@ -381,44 +365,41 @@ Hierarchy should remain conceptually consistent across every entertainment domai
 
 Television.
 
-```
-Current Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Current Episode"]
+N2["Progress"]
+N3["Next Episode"]
 
-Progress
-
-↓
-
-Next Episode
+N1 --> N2
+N2 --> N3
 ```
 
 Books.
 
-```
-Current Chapter
+```mermaid
+flowchart TD
 
-↓
+N1["Current Chapter"]
+N2["Progress"]
+N3["Next Chapter"]
 
-Progress
-
-↓
-
-Next Chapter
+N1 --> N2
+N2 --> N3
 ```
 
 Music.
 
-```
-Current Track
+```mermaid
+flowchart TD
 
-↓
+N1["Current Track"]
+N2["Playback"]
+N3["Queue"]
 
-Playback
-
-↓
-
-Queue
+N1 --> N2
+N2 --> N3
 ```
 
 Different information.
@@ -435,20 +416,17 @@ Hierarchy should change before presentation changes.
 
 Example.
 
-```
-Episode Released
+```mermaid
+flowchart TD
 
-↓
+N1["Episode Released"]
+N2["Priority Increases"]
+N3["Hierarchy Changes"]
+N4["Presentation Updates"]
 
-Priority Increases
-
-↓
-
-Hierarchy Changes
-
-↓
-
-Presentation Updates
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The behavioural decision precedes the interface.
@@ -461,84 +439,51 @@ Future Composition Engines should preserve this ordering.
 
 ## Watching
 
-```
-Primary
+```mermaid
+flowchart TD
 
-Playback
+N1["Primary<br/>Playback"]
+N2["Supporting<br/>Progress"]
+N3["Contextual<br/>Characters"]
+N4["Peripheral<br/>Collections"]
 
-↓
-
-Supporting
-
-Progress
-
-↓
-
-Contextual
-
-Characters
-
-↓
-
-Peripheral
-
-Collections
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 ---
 
 ## Reading
 
-```
-Primary
+```mermaid
+flowchart TD
 
-Current Chapter
+N1["Primary<br/>Current Chapter"]
+N2["Supporting<br/>Bookmarks"]
+N3["Contextual<br/>Author"]
+N4["Peripheral<br/>Library"]
 
-↓
-
-Supporting
-
-Bookmarks
-
-↓
-
-Contextual
-
-Author
-
-↓
-
-Peripheral
-
-Library
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 ---
 
 ## Exploring
 
-```
-Primary
+```mermaid
+flowchart TD
 
-Current Focus
+N1["Primary<br/>Current Focus"]
+N2["Supporting<br/>Relationships"]
+N3["Contextual<br/>Metadata"]
+N4["Peripheral<br/>History"]
 
-↓
-
-Supporting
-
-Relationships
-
-↓
-
-Contextual
-
-Metadata
-
-↓
-
-Peripheral
-
-History
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The behavioural pattern remains identical.
@@ -635,15 +580,3 @@ without consciously interpreting the interface.
 Hierarchy should emerge from the user's World.
 
 Never from arbitrary interface structure.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-priority.md`

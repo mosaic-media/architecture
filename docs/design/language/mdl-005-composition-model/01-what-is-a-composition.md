@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 01
 Title: What Is A Composition?
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # What Is A Composition?
@@ -61,34 +61,30 @@ It changes everything.
 
 Traditional thinking:
 
-```
-Layout
+```mermaid
+flowchart TD
 
-↓
+N1["Layout"]
+N2["Place Widgets"]
+N3["Display Data"]
 
-Place Widgets
-
-↓
-
-Display Data
+N1 --> N2
+N2 --> N3
 ```
 
 Mosaic thinking:
 
-```
-Understanding
+```mermaid
+flowchart TD
 
-↓
+N1["Understanding"]
+N2["Determine Importance"]
+N3["Create Composition"]
+N4["Render Interface"]
 
-Determine Importance
-
-↓
-
-Create Composition
-
-↓
-
-Render Interface
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The layout becomes the consequence of understanding.
@@ -182,20 +178,17 @@ User begins playback.
 
 Behaviour:
 
-```
-Playback becomes primary.
+```mermaid
+flowchart TD
 
-↓
+N1["Playback becomes primary."]
+N2["Timeline reduces."]
+N3["Progress increases."]
+N4["Related media becomes secondary."]
 
-Timeline reduces.
-
-↓
-
-Progress increases.
-
-↓
-
-Related media becomes secondary.
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Composition has changed.
@@ -267,6 +260,7 @@ Every experience should possess one dominant Composition.
 Poor.
 
 ```
+
 Hero
 
 Trending
@@ -290,20 +284,17 @@ Nothing leads.
 
 Preferred.
 
-```
-Current Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Current Focus"]
+N2["Continue"]
+N3["Relevant Information"]
+N4["Related Exploration"]
 
-Continue
-
-↓
-
-Relevant Information
-
-↓
-
-Related Exploration
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 One clear story.
@@ -343,6 +334,7 @@ They do not define it.
 Example.
 
 ```
+
 Hero
 ```
 
@@ -505,15 +497,3 @@ It is not implementation.
 A successful Composition allows users to instinctively understand their current World before consciously interpreting the interface.
 
 Everything else within MDL-005 builds upon this definition.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-hierarchy.md`

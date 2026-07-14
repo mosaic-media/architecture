@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 05
 Title: Anchors
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Anchors
@@ -79,6 +79,7 @@ Anchors should be understood conceptually rather than geometrically.
 Poor definition.
 
 ```
+
 Navigation
 
 Always Left
@@ -87,6 +88,7 @@ Always Left
 Better definition.
 
 ```
+
 Navigation
 
 Always Stable
@@ -195,18 +197,18 @@ Everything else remains adaptive.
 
 Conceptually.
 
-```
-Anchors
+```mermaid
+flowchart TD
 
-↓
+N1["Anchors"]
+N2["Stable"]
+N3["Adaptive Regions"]
+N4["Flexible"]
 
-Stable
-
-Adaptive Regions
-
-↓
-
-Flexible
+N1 --> N2
+N1 --> N3
+N2 --> N4
+N3 --> N4
 ```
 
 The adaptive parts of the Composition evolve around the Anchors.
@@ -223,12 +225,13 @@ Example.
 
 Watching.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Stable"]
 
-Stable
+N1 --> N2
 ```
 
 Browsing metadata.
@@ -252,6 +255,7 @@ Anchors should preserve behavioural identity rather than position.
 Desktop.
 
 ```
+
 Navigation
 
 Left
@@ -260,6 +264,7 @@ Left
 Mobile.
 
 ```
+
 Navigation
 
 Bottom
@@ -268,6 +273,7 @@ Bottom
 Television.
 
 ```
+
 Navigation
 
 Overlay
@@ -366,12 +372,13 @@ Stability and adaptation coexist.
 
 Changing from:
 
-```
-Anime
+```mermaid
+flowchart TD
 
-↓
+N1["Anime"]
+N2["Books"]
 
-Books
+N1 --> N2
 ```
 
 The Navigation Anchor remains recognisable.
@@ -473,15 +480,3 @@ The more adaptive the platform becomes...
 The more valuable Anchors become.
 
 They are the quiet constants that allow everything else to evolve naturally.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-adaptive-composition.md`

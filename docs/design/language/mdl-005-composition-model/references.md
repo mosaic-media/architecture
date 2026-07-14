@@ -3,7 +3,7 @@ File: docs/design/language/mdl-005-composition-model/references.md
 Document: MDL-005
 Title: References
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -39,7 +39,7 @@ The Mosaic Design Language always remains the authoritative source.
 
 # Internal References
 
-## MDL-001 — Vision
+## [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
 
 Provides:
 
@@ -48,11 +48,11 @@ Provides:
 - Companion philosophy
 - Long-term product objectives
 
-Every Composition should reinforce the experience described within MDL-001.
+Every Composition should reinforce the experience described within [MDL-001](../mdl-001-vision/index.md).
 
 ---
 
-## MDL-002 — Principles
+## [MDL-002 — Principles](../mdl-002-principles/index.md)
 
 Provides:
 
@@ -65,7 +65,7 @@ The Composition Model should be viewed as the practical application of these pri
 
 ---
 
-## MDL-003 — Mental Model
+## [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
 
 Provides:
 
@@ -82,7 +82,7 @@ It does not redefine them.
 
 ---
 
-## MDL-004 — Interaction Model
+## [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
 
 Provides:
 
@@ -100,12 +100,12 @@ MDL-005 determines how these behavioural changes become understandable compositi
 
 The following specifications directly depend upon MDL-005.
 
-- MDS-001 Design Token Architecture
-- MDS-002 Material System
-- MDS-003 Composition Engine
-- MDS-004 Runtime Atmosphere
-- MDS-007 Tile Framework
-- MDS-008 Component Library
+- [MDS-001 — Design Token Architecture](../../system/mds-001-design-token-architecture/index.md)
+- [MDS-003 — Material System](../../system/mds-003-material-system/index.md)
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- [MDS-002 — Colour System](../../system/mds-002-colour-system/index.md)
+- [MDS-007 — Tile Framework](../../system/mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../../system/mds-008-component-library/index.md)
 
 These specifications should implement the Composition Model rather than reinterpret it.
 
@@ -250,10 +250,10 @@ The Composition Model intentionally remains implementation independent while pro
 
 Required reading before contributing to MDL-005.
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
+- [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md)
+- [MDL-002 — Principles](../mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md)
 
 ---
 
@@ -261,10 +261,10 @@ Required reading before contributing to MDL-005.
 
 Future contributors may also wish to review:
 
-- MDS-003 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
-- MDS-005 Motion System
+- [MDS-006 — Composition Engine](../../system/mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../../system/mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../../system/mds-008-component-library/index.md)
+- [MDS-005 — Motion System](../../system/mds-005-motion-system/index.md)
 
 These documents describe how the conceptual Composition Model becomes runtime behaviour.
 
@@ -293,7 +293,7 @@ With the completion of MDL-005, the conceptual layer of the Mosaic Design Langua
 
 The next specification begins the transition from philosophy into implementation:
 
-> **MDS-001 — Design Token Architecture**
+> **[MDS-001 — Design Token Architecture](../../system/mds-001-design-token-architecture/index.md)**
 
 From this point onwards the documentation shifts from answering:
 

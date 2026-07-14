@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Architectural Decision Records
@@ -34,7 +34,7 @@ Its decisions should therefore remain traceable throughout the lifetime of the p
 
 # Decision Format
 
-Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
+Decision format, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
@@ -395,15 +395,3 @@ Mosaic arranges understanding.
 Every future implementation should preserve this distinction.
 
 Doing so allows the platform to evolve visually while remaining conceptually stable for years to come.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`13-contributor-guidance.md`

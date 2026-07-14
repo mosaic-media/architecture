@@ -3,7 +3,7 @@ File: docs/design/language/mdl-005-composition-model/glossary.md
 Document: MDL-005
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -282,10 +282,10 @@ Understanding is considered the primary success metric of the Composition Model.
 
 | Specification | Primary Concepts |
 |---------------|------------------|
-| MDL-001 Vision | Companion, Immersion |
-| MDL-002 Principles | Context, Content, Behaviour |
-| MDL-003 Mental Model | World, Focus, Information |
-| MDL-004 Interaction Model | Behaviour, Continuity, Evolution |
+| [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md) | Companion, Immersion |
+| [MDL-002 — Principles](../mdl-002-principles/index.md) | Context, Content, Behaviour |
+| [MDL-003 — Mental Model](../mdl-003-mental-model/index.md) | World, Focus, Information |
+| [MDL-004 — Interaction Model](../mdl-004-interaction-model/index.md) | Behaviour, Continuity, Evolution |
 | MDS Composition Engine | Runtime Composition |
 | MDS Tile Framework | Expressions, Presentation |
 
@@ -301,15 +301,3 @@ Contributors should:
 - describe expressions before components
 
 Composition terminology should remain independent from implementation.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

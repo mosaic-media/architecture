@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 09
 Title: Composition Solving
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Composition Solving
@@ -47,30 +47,28 @@ Traditional interfaces frequently rely upon manually authored layouts.
 
 Examples.
 
-```
-Home
+```mermaid
+flowchart TD
 
-↓
+N1["Home"]
+N2["Fixed Sections"]
+N3["Render"]
 
-Fixed Sections
-
-↓
-
-Render
+N1 --> N2
+N2 --> N3
 ```
 
 or
 
-```
-Screen
+```mermaid
+flowchart TD
 
-↓
+N1["Screen"]
+N2["Grid"]
+N3["Populate Widgets"]
 
-Grid
-
-↓
-
-Populate Widgets
+N1 --> N2
+N2 --> N3
 ```
 
 These systems assume every user requires the same organisation.
@@ -117,32 +115,23 @@ Presentation is solved afterwards.
 
 The Composition Solver receives conceptual inputs.
 
-```text
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
+N6["Priority"]
+N7["Available Capabilities"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Priority
-
-↓
-
-Available Capabilities
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Notice that layout information is intentionally absent.
@@ -173,58 +162,27 @@ The solver never creates interface directly.
 
 Every Composition should be solved using the same conceptual sequence.
 
-```text
-1.
+```mermaid
+flowchart TD
 
-Current World
+N1["1.<br/>Current World"]
+N2["2.<br/>Current Focus"]
+N3["3.<br/>Current Context"]
+N4["4.<br/>Relevant Information"]
+N5["5.<br/>Relationships"]
+N6["6.<br/>Priority"]
+N7["7.<br/>Composition"]
+N8["8.<br/>Expressions"]
+N9["9.<br/>Presentation"]
 
-↓
-
-2.
-
-Current Focus
-
-↓
-
-3.
-
-Current Context
-
-↓
-
-4.
-
-Relevant Information
-
-↓
-
-5.
-
-Relationships
-
-↓
-
-6.
-
-Priority
-
-↓
-
-7.
-
-Composition
-
-↓
-
-8.
-
-Expressions
-
-↓
-
-9.
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
 Skipping stages weakens understanding.
@@ -240,12 +198,14 @@ It should only organise understanding that already exists.
 Poor.
 
 ```
+
 Maybe this is important.
 ```
 
 Preferred.
 
 ```
+
 Current Context indicates this is important.
 ```
 
@@ -263,20 +223,17 @@ The Composition Solver should always produce the same conceptual output.
 
 Example.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Frieren"]
+N3["Watching"]
+N4["Episode 15"]
 
-Frieren
-
-↓
-
-Watching
-
-↓
-
-Episode 15
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Every client should produce the same Composition.
@@ -295,22 +252,15 @@ Priority should be determined before solving Composition.
 
 Example.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-High
+N1["Episode<br/>High"]
+N2["Timeline<br/>Medium"]
+N3["Reviews<br/>Low"]
 
-↓
-
-Timeline
-
-Medium
-
-↓
-
-Reviews
-
-Low
+N1 --> N2
+N2 --> N3
 ```
 
 The solver should never determine Priority.
@@ -327,34 +277,30 @@ Relationships significantly influence Composition.
 
 Example.
 
-```
-Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Episode"]
+N2["Manga"]
+N3["Author"]
+N4["Next Episode"]
 
-Manga
-
-↓
-
-Author
-
-↓
-
-Next Episode
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 These relationships naturally suggest:
 
-```
-Continue
+```mermaid
+flowchart TD
 
-↓
+N1["Continue"]
+N2["Timeline"]
+N3["Related Works"]
 
-Timeline
-
-↓
-
-Related Works
+N1 --> N2
+N2 --> N3
 ```
 
 The solver should therefore prefer meaningful relationships over arbitrary ordering.
@@ -370,35 +316,34 @@ Example.
 Intent.
 
 ```
+
 Continue Watching
 ```
 
 Preferred Composition.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Progress"]
+N3["Next Episode"]
 
-Progress
-
-↓
-
-Next Episode
+N1 --> N2
+N2 --> N3
 ```
 
 Not.
 
-```
-Trending
+```mermaid
+flowchart TD
 
-↓
+N1["Trending"]
+N2["Collections"]
+N3["Statistics"]
 
-Collections
-
-↓
-
-Statistics
+N1 --> N2
+N2 --> N3
 ```
 
 Intent always possesses higher authority than inventory.
@@ -411,32 +356,35 @@ The Composition Solver should remain device independent.
 
 Desktop.
 
-```
-Composition
+```mermaid
+flowchart TD
 
-↓
+N1["Composition"]
+N2["Desktop Presentation"]
 
-Desktop Presentation
+N1 --> N2
 ```
 
 Phone.
 
-```
-Composition
+```mermaid
+flowchart TD
 
-↓
+N1["Composition"]
+N2["Phone Presentation"]
 
-Phone Presentation
+N1 --> N2
 ```
 
 Television.
 
-```
-Composition
+```mermaid
+flowchart TD
 
-↓
+N1["Composition"]
+N2["TV Presentation"]
 
-TV Presentation
+N1 --> N2
 ```
 
 The solved understanding remains identical.
@@ -491,46 +439,36 @@ The solver has failed if users ask:
 
 Inputs.
 
-```
-Current Episode
+```mermaid
+flowchart TD
 
-↓
+N1["Current Episode"]
+N2["Progress"]
+N3["Next Episode"]
+N4["Cast"]
+N5["Reviews"]
 
-Progress
-
-↓
-
-Next Episode
-
-↓
-
-Cast
-
-↓
-
-Reviews
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Solved Composition.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Progress"]
+N3["Timeline"]
+N4["Relationships"]
+N5["Metadata"]
 
-Progress
-
-↓
-
-Timeline
-
-↓
-
-Relationships
-
-↓
-
-Metadata
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Understanding emerges naturally.
@@ -541,46 +479,36 @@ Understanding emerges naturally.
 
 Inputs.
 
-```
-Current Chapter
+```mermaid
+flowchart TD
 
-↓
+N1["Current Chapter"]
+N2["Bookmarks"]
+N3["Series"]
+N4["Author"]
+N5["Statistics"]
 
-Bookmarks
-
-↓
-
-Series
-
-↓
-
-Author
-
-↓
-
-Statistics
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Solved Composition.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Reading Progress"]
+N3["Bookmarks"]
+N4["Series"]
+N5["Statistics"]
 
-Reading Progress
-
-↓
-
-Bookmarks
-
-↓
-
-Series
-
-↓
-
-Statistics
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Again...
@@ -685,15 +613,3 @@ Mosaic first solves understanding.
 Everything else becomes a consequence of that decision.
 
 Users should therefore experience interfaces that feel naturally organised around their current World rather than manually designed around arbitrary layouts.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-device-independence.md`

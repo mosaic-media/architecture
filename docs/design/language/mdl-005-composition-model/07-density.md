@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 07
 Title: Density
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Density
@@ -90,34 +90,34 @@ Density should emerge from the user's current activity.
 
 Poor.
 
-```
-Desktop
+```mermaid
+flowchart TD
 
-↓
+N1["Desktop"]
+N2["Dense"]
+N3["Phone"]
+N4["Sparse"]
 
-Dense
-
-Phone
-
-↓
-
-Sparse
+N1 --> N2
+N1 --> N3
+N2 --> N4
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Watching
+```mermaid
+flowchart TD
 
-↓
+N1["Watching"]
+N2["Sparse"]
+N3["Exploring"]
+N4["Dense"]
 
-Sparse
-
-Exploring
-
-↓
-
-Dense
+N1 --> N2
+N1 --> N3
+N2 --> N4
+N3 --> N4
 ```
 
 The behavioural state determines density.
@@ -199,6 +199,7 @@ The same information may contribute to different density levels depending upon C
 Example.
 
 ```
+
 Reviews
 ```
 
@@ -222,28 +223,21 @@ Density should naturally increase and decrease over time.
 
 Example.
 
-```
-Playback Begins
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Begins"]
+N2["Sparse"]
+N3["Playback Ends"]
+N4["Moderate"]
+N5["Exploration Begins"]
+N6["Rich"]
 
-Sparse
-
-↓
-
-Playback Ends
-
-↓
-
-Moderate
-
-↓
-
-Exploration Begins
-
-↓
-
-Rich
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The user should never consciously notice this transition.
@@ -267,6 +261,7 @@ Large display.
 Current activity.
 
 ```
+
 Watching
 ```
 
@@ -285,6 +280,7 @@ Limited display.
 Current activity.
 
 ```
+
 Exploring
 ```
 
@@ -304,20 +300,17 @@ Expression adapts.
 
 Density should always respect Priority.
 
-```
-Critical
+```mermaid
+flowchart TD
 
-↓
+N1["Critical"]
+N2["High"]
+N3["Medium"]
+N4["Low"]
 
-High
-
-↓
-
-Medium
-
-↓
-
-Low
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Increasing density should reveal progressively lower-priority information.
@@ -354,42 +347,46 @@ Every entertainment domain should support the same density model.
 
 Television.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Sparse"]
 
-Sparse
+N1 --> N2
 ```
 
 Books.
 
-```
-Reading
+```mermaid
+flowchart TD
 
-↓
+N1["Reading"]
+N2["Sparse"]
 
-Sparse
+N1 --> N2
 ```
 
 Anime.
 
-```
-Franchise Exploration
+```mermaid
+flowchart TD
 
-↓
+N1["Franchise Exploration"]
+N2["Rich"]
 
-Rich
+N1 --> N2
 ```
 
 Music.
 
-```
-Artist Discovery
+```mermaid
+flowchart TD
 
-↓
+N1["Artist Discovery"]
+N2["Rich"]
 
-Rich
+N1 --> N2
 ```
 
 Different media.
@@ -402,20 +399,17 @@ Identical behavioural expectations.
 
 ## Playback
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Playback"]
+N3["Progress"]
+N4["Timeline"]
 
-Playback
-
-↓
-
-Progress
-
-↓
-
-Timeline
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Nothing more.
@@ -426,28 +420,21 @@ The Composition remains intentionally quiet.
 
 ## Series Overview
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Continue"]
+N3["Timeline"]
+N4["Relationships"]
+N5["Cast"]
+N6["Reviews"]
 
-Continue
-
-↓
-
-Timeline
-
-↓
-
-Relationships
-
-↓
-
-Cast
-
-↓
-
-Reviews
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The Composition communicates significantly more understanding.
@@ -458,20 +445,17 @@ Yet hierarchy remains clear.
 
 ## Administration
 
-```
-Navigation
+```mermaid
+flowchart TD
 
-↓
+N1["Navigation"]
+N2["Current Task"]
+N3["Configuration"]
+N4["Diagnostics"]
 
-Current Task
-
-↓
-
-Configuration
-
-↓
-
-Diagnostics
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Rich information.
@@ -572,15 +556,3 @@ Rich compositions optimise exploration.
 The correct density is always determined by the user's current World.
 
 Never by the available pixels.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-breathing-space.md`

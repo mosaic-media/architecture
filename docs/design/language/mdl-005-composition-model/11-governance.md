@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 11
 Title: Composition Model Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Composition Model Governance
@@ -188,30 +188,28 @@ The Composition Model should evolve through refinement.
 
 Preferred.
 
-```
-Existing Hierarchy
+```mermaid
+flowchart TD
 
-↓
+N1["Existing Hierarchy"]
+N2["Improved Hierarchy"]
 
-Improved Hierarchy
+N1 --> N2
 ```
 
 Avoid.
 
-```
-Existing Hierarchy
+```mermaid
+flowchart TD
 
-↓
+N1["Existing Hierarchy"]
+N2["Alternative Hierarchy"]
+N3["Special Case"]
+N4["Exception"]
 
-Alternative Hierarchy
-
-↓
-
-Special Case
-
-↓
-
-Exception
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The platform should possess one compositional language.
@@ -287,15 +285,3 @@ Users should experience understanding rather than organisation.
 | ADR-068 | Hierarchy and priority are platform responsibilities rather than presentation concerns. |
 | ADR-069 | Composition should evolve through refinement rather than replacement. |
 | ADR-070 | Modules contribute understanding rather than compositional behaviour. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`

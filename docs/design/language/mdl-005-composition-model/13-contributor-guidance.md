@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -50,44 +50,29 @@ Everything else is implementation.
 
 When designing a new experience, contributors should follow the same conceptual sequence.
 
-```
-User Intent
+```mermaid
+flowchart TD
 
-↓
+N1["User Intent"]
+N2["World"]
+N3["Focus"]
+N4["Context"]
+N5["Information"]
+N6["Relationships"]
+N7["Priority"]
+N8["Composition"]
+N9["Expressions"]
+N10["Presentation"]
 
-World
-
-↓
-
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
-
-↓
-
-Priority
-
-↓
-
-Composition
-
-↓
-
-Expressions
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
 ```
 
 If implementation begins before this sequence has been completed, the resulting experience will usually become implementation-driven rather than user-driven.
@@ -98,30 +83,28 @@ If implementation begins before this sequence has been completed, the resulting 
 
 Avoid thinking:
 
-```
-Home Page
+```mermaid
+flowchart TD
 
-↓
+N1["Home Page"]
+N2["Details Page"]
+N3["Settings Page"]
 
-Details Page
-
-↓
-
-Settings Page
+N1 --> N2
+N2 --> N3
 ```
 
 Instead think:
 
-```
-Current World
+```mermaid
+flowchart TD
 
-↓
+N1["Current World"]
+N2["Current Focus"]
+N3["Current Understanding"]
 
-Current Focus
-
-↓
-
-Current Understanding
+N1 --> N2
+N2 --> N3
 ```
 
 The interface should emerge naturally from those concepts.
@@ -158,18 +141,22 @@ A Composition should communicate one primary idea.
 Examples.
 
 ```
+
 Continue Watching
 ```
 
 ```
+
 Continue Reading
 ```
 
 ```
+
 Discover This Franchise
 ```
 
 ```
+
 Manage Your Library
 ```
 
@@ -220,20 +207,17 @@ Contributors should never manually decide that something is visually important.
 
 Instead determine:
 
-```
-Priority
+```mermaid
+flowchart TD
 
-↓
+N1["Priority"]
+N2["Hierarchy"]
+N3["Composition"]
+N4["Presentation"]
 
-Hierarchy
-
-↓
-
-Composition
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Visual emphasis should emerge naturally from conceptual importance.
@@ -245,12 +229,14 @@ Visual emphasis should emerge naturally from conceptual importance.
 Do not think:
 
 ```
+
 Timeline Tile
 ```
 
 Think:
 
 ```
+
 Timeline Expression
 ```
 
@@ -397,15 +383,3 @@ When every contributor begins asking that question instinctively, Mosaic will ce
 It will begin feeling like one coherent world.
 
 That is the ultimate objective of the Composition Model.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

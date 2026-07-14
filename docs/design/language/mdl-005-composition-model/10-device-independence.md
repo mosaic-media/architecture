@@ -4,7 +4,7 @@ Document: MDL-005
 Chapter: 10
 Title: Device Independence
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Device Independence
@@ -75,24 +75,19 @@ They should simply feel that:
 
 Every client should communicate the same underlying World.
 
-```
-World
+```mermaid
+flowchart TD
 
-↓
+N1["World"]
+N2["Focus"]
+N3["Context"]
+N4["Information"]
+N5["Relationships"]
 
-Focus
-
-↓
-
-Context
-
-↓
-
-Information
-
-↓
-
-Relationships
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 These concepts never change because the device changed.
@@ -105,29 +100,25 @@ Only their presentation changes.
 
 The following layers may adapt according to device capabilities.
 
-```
-Expressions
+```mermaid
+flowchart TD
 
-↓
+N1["Expressions"]
+N2["Presentation"]
+N3["Components"]
+N4["Layout"]
+N5["Materials"]
 
-Presentation
-
-↓
-
-Components
-
-↓
-
-Layout
-
-↓
-
-Materials
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The following layers should remain stable.
 
 ```
+
 World
 
 Focus
@@ -210,30 +201,28 @@ The user's World remains identical.
 
 A common implementation mistake is:
 
-```
-Phone
+```mermaid
+flowchart TD
 
-↓
+N1["Phone"]
+N2["Design Experience"]
 
-Design Experience
+N1 --> N2
 ```
 
 Instead:
 
-```
-User World
+```mermaid
+flowchart TD
 
-↓
+N1["User World"]
+N2["Composition"]
+N3["Expression"]
+N4["Phone"]
 
-Composition
-
-↓
-
-Expression
-
-↓
-
-Phone
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The behavioural model should never be determined by hardware.
@@ -251,24 +240,28 @@ Examples.
 Television.
 
 ```
+
 Large Poster
 ```
 
 Desktop.
 
 ```
+
 Expanded Hero
 ```
 
 Phone.
 
 ```
+
 Compact Hero
 ```
 
 Voice.
 
 ```
+
 "Continue watching Frieren?"
 ```
 
@@ -285,18 +278,21 @@ Navigation should preserve behavioural identity.
 Desktop.
 
 ```
+
 Sidebar
 ```
 
 Mobile.
 
 ```
+
 Bottom Navigation
 ```
 
 Television.
 
 ```
+
 Overlay
 ```
 
@@ -317,17 +313,19 @@ Rich Composition.
 Desktop.
 
 ```
+
 Many Expressions
 ```
 
 Phone.
 
-```
-Fewer simultaneous Expressions
+```mermaid
+flowchart TD
 
-↓
+N1["Fewer simultaneous Expressions"]
+N2["Progressive Disclosure"]
 
-Progressive Disclosure
+N1 --> N2
 ```
 
 The Composition remains rich.
@@ -365,20 +363,17 @@ A user beginning an experience on one device should naturally continue on anothe
 
 Example.
 
-```
-Television
+```mermaid
+flowchart TD
 
-↓
+N1["Television"]
+N2["Playback"]
+N3["Phone"]
+N4["Continue Watching"]
 
-Playback
-
-↓
-
-Phone
-
-↓
-
-Continue Watching
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The platform should restore:
@@ -512,15 +507,3 @@ regardless of whether they are using:
 The platform adapts.
 
 The World remains constant.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`
