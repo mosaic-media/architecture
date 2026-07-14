@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-005-runtime-architecture/06-execution-engine.md
 Document: MEG-005
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Execution Engine

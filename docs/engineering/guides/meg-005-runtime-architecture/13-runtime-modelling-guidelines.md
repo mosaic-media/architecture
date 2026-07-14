@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-005-runtime-architecture/13-runtime-modelling-guidelines.md
 Document: MEG-005
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Modelling Guidelines
@@ -554,6 +554,7 @@ This chapter completes the practical Runtime Architecture guidance of MEG-005.
 
 The remaining documents describe:
 
+- supervisor authority
 - architectural reasoning (ADRs)
 - contributor expectations
 - terminology
@@ -595,4 +596,4 @@ Lead Software Architect
 
 **Next File**
 
-`14-adrs.md`
+`14-supervisor-model.md`

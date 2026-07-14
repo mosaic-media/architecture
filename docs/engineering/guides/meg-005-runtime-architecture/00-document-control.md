@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md
 Document: MEG-005
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -17,7 +17,7 @@ Version: 0.2
 | Title | Runtime Architecture |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.1 |
+| Version | 0.4 |
 | Owner | Lead Software Architect |
 | Classification | Internal Architecture Specification |
 
@@ -39,6 +39,8 @@ Not:
 
 > **How does the Runtime behave?**
 
+Version 0.4 records the Supervisor Build Pipeline as an isolated runtime composition and activation flow.
+
 ---
 
 # Authority
@@ -52,6 +54,7 @@ This specification applies to:
 - Capability Registry
 - Execution Engine
 - Scheduler
+- Supervisor
 - Worker Manager
 - Resource Management
 - Runtime Bootstrap

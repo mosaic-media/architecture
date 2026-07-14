@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-005-runtime-architecture/16-references.md
+File: docs/engineering/guides/meg-005-runtime-architecture/17-references.md
 Document: MEG-005
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # References
@@ -358,8 +358,8 @@ Lead Software Architect
 
 **Previous File**
 
-`glossary.md`
+`16-contributor-guidance.md`
 
 **Next File**
 
-**End of Specification**
+`glossary.md`

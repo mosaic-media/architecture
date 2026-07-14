@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-005-runtime-architecture/index.md
 Document: MEG-005
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MEG-005 — Runtime Architecture
@@ -117,6 +117,7 @@ This specification defines:
 - Worker manager
 - Scheduler architecture
 - Resource ownership
+- Supervisor model
 - Capability discovery
 - Startup architecture
 - Shutdown architecture
@@ -272,13 +273,15 @@ engineering/
 
         13-runtime-modelling-guidelines.md
 
-        14-adrs.md
+        14-supervisor-model.md
 
-        15-contributor-guidance.md
+        15-adrs.md
+
+        16-contributor-guidance.md
+
+        17-references.md
 
         glossary.md
-
-        references.md
 ```
 
 ---
