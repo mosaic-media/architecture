@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/05-context-maps.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Context Maps
@@ -73,24 +73,19 @@ Not implementation.
 
 Without explicit relationships:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Metadata"]
+N3["Library"]
+N4["Recommendations"]
+N5["Users"]
 
-Metadata
-
-↓
-
-Library
-
-↓
-
-Recommendations
-
-↓
-
-Users
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Dependencies slowly become:
@@ -111,16 +106,15 @@ Context Maps prevent this.
 
 Every relationship should answer:
 
-```
-Who owns the model?
+```mermaid
+flowchart TD
 
-↓
+N1["Who owns the model?"]
+N2["Who consumes the model?"]
+N3["How is information exchanged?"]
 
-Who consumes the model?
-
-↓
-
-How is information exchanged?
+N1 --> N2
+N2 --> N3
 ```
 
 Ownership should always remain obvious.
@@ -133,22 +127,25 @@ Consumers should never redefine another context's business concepts.
 
 At a high level, the Mosaic platform resembles:
 
-```
-                    Library
-                       │
-           ┌───────────┼───────────┐
-           │           │           │
-           ▼           ▼           ▼
-      Metadata    Playback    Collections
-           │           │
-           │           ▼
-           │     Watch History
-           │           │
-           ▼           ▼
-     Recommendations  Analytics
-           │
-           ▼
-      Modules
+```mermaid
+flowchart TD
+
+N1["Library"]
+N2["Metadata"]
+N3["Playback"]
+N4["Collections"]
+N5["Watch History"]
+N6["Recommendations"]
+N7["Analytics"]
+N8["Modules"]
+
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N2 --> N6
+N3 --> N5
+N5 --> N7
+N6 --> N8
 ```
 
 This diagram represents business relationships.
@@ -163,16 +160,15 @@ Knowledge should always flow in one direction.
 
 Example.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["MediaImported"]
+N3["Metadata"]
 
-MediaImported
-
-↓
-
-Metadata
+N1 --> N2
+N2 --> N3
 ```
 
 Metadata learns:
@@ -210,16 +206,15 @@ Understanding them allows engineers to choose the most appropriate collaboration
 
 The preferred relationship within Mosaic.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Domain Events"]
+N3["Recommendations"]
 
-Domain Events
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
 ```
 
 Playback publishes a stable business language.
@@ -228,7 +223,7 @@ Recommendations consume it.
 
 Neither context understands the other's internal implementation.
 
-Published Language naturally complements the event-driven runtime established in MEG-002.
+Published Language naturally complements the event-driven runtime established in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 ---
 
@@ -238,16 +233,15 @@ Some contexts expose stable public interfaces.
 
 Example.
 
-```
-Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata"]
+N2["Metadata API"]
+N3["Modules"]
 
-Metadata API
-
-↓
-
-Modules
+N1 --> N2
+N2 --> N3
 ```
 
 Modules interact through published contracts.
@@ -264,16 +258,15 @@ External systems frequently use different models.
 
 Example.
 
-```
-TMDB
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB"]
+N2["Anti-Corruption Layer"]
+N3["Metadata Context"]
 
-Anti-Corruption Layer
-
-↓
-
-Metadata Context
+N1 --> N2
+N2 --> N3
 ```
 
 The translation layer prevents external terminology from leaking into the Mosaic domain.
@@ -299,12 +292,13 @@ Sometimes the cost of translation outweighs the benefit.
 
 Example.
 
-```
-OpenTelemetry
+```mermaid
+flowchart TD
 
-↓
+N1["OpenTelemetry"]
+N2["Observability Context"]
 
-Observability Context
+N1 --> N2
 ```
 
 Rather than inventing new terminology, Mosaic simply adopts the external standard.
@@ -321,16 +315,15 @@ One context depends upon another.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackCompleted"]
+N3["Recommendations"]
 
-PlaybackCompleted
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
 ```
 
 Playback supplies business facts.
@@ -351,12 +344,13 @@ Occasionally two contexts evolve together.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart LR
 
-↔
+N1["Playback"]
+N2["Watch History"]
 
-Watch History
+N1 <--> N2
 ```
 
 Both contexts share significant business knowledge.
@@ -375,16 +369,15 @@ Shared Kernels SHOULD generally be avoided.
 
 A Shared Kernel creates:
 
-```
-Context A
+```mermaid
+flowchart TD
 
-↓
+N1["Context A"]
+N2["Shared Model"]
+N3["Context B"]
 
-Shared Model
-
-↓
-
-Context B
+N1 --> N2
+N2 --> N3
 ```
 
 Both contexts now evolve together.
@@ -407,16 +400,15 @@ Translation occurs at boundaries.
 
 Example.
 
-```
-Jellyfin
+```mermaid
+flowchart TD
 
-↓
+N1["Jellyfin"]
+N2["Jellyfin Adapter"]
+N3["Library Context"]
 
-Jellyfin Adapter
-
-↓
-
-Library Context
+N1 --> N2
+N2 --> N3
 ```
 
 Library never understands:
@@ -437,24 +429,19 @@ Events naturally define Context Maps.
 
 Example.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["MediaImported"]
+N3["Metadata"]
+N4["MetadataFetched"]
+N5["Recommendations"]
 
-MediaImported
-
-↓
-
-Metadata
-
-↓
-
-MetadataFetched
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each event communicates:
@@ -473,16 +460,15 @@ Modules participate as independent contexts.
 
 Example.
 
-```
-Primary Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Primary Metadata"]
+N2["MetadataFetched"]
+N3["Anime Module"]
 
-MetadataFetched
-
-↓
-
-Anime Module
+N1 --> N2
+N2 --> N3
 ```
 
 The module consumes published language.
@@ -497,32 +483,30 @@ This allows modules to remain isolated while participating fully within the plat
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Metadata"]
+N3["Playback"]
 
-Metadata
-
-↓
-
-Playback
+N1 --> N2
+N2 --> N3
 ```
 
 Bidirectional dependencies rapidly increase complexity.
 
 Instead.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackCompleted"]
+N3["Metadata"]
 
-PlaybackCompleted
-
-↓
-
-Metadata
+N1 --> N2
+N2 --> N3
 ```
 
 The dependency direction remains clear.
@@ -553,34 +537,30 @@ Context relationships evolve.
 
 Initially.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Metadata"]
 
-Metadata
+N1 --> N2
 ```
 
 Later.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Metadata"]
+N3["Recommendations"]
+N4["Collections"]
+N5["Statistics"]
 
-Metadata
-
-↓
-
-Recommendations
-
-↓
-
-Collections
-
-↓
-
-Statistics
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Growth should occur through new relationships.
@@ -608,16 +588,15 @@ The following practices are prohibited.
 
 ## Shared Domain Models
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Shared Media Object"]
+N3["Metadata"]
 
-Shared Media Object
-
-↓
-
-Metadata
+N1 --> N2
+N2 --> N3
 ```
 
 Contexts should own their own models.
@@ -632,16 +611,15 @@ Multiple contexts directly modifying the same business tables.
 
 ## Circular Relationships
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Metadata"]
+N3["Playback"]
 
-Metadata
-
-↓
-
-Playback
+N1 --> N2
+N2 --> N3
 ```
 
 ---
@@ -650,12 +628,13 @@ Playback
 
 Allowing:
 
-```
-TMDB
+```mermaid
+flowchart TD
 
-↓
+N1["TMDB"]
+N2["Metadata Context"]
 
-Metadata Context
+N1 --> N2
 ```
 
 without translation.
@@ -714,23 +693,3 @@ Within Mosaic, they also reinforce one of the platform's most important architec
 > **Capabilities collaborate without becoming coupled.**
 
 When every relationship is explicit, the platform can continue growing without sacrificing architectural clarity.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`04-bounded-contexts.md`
-
-**Next File**
-
-`06-entities.md`

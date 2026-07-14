@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/09-aggregate-roots.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Aggregate Roots
@@ -54,25 +54,23 @@ The Aggregate Root is the public entry point into an Aggregate.
 
 Example.
 
-```
-Playback Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Aggregate"]
+N2["PlaybackSession"]
+N3["WatchProgress"]
+N4["ResumePosition"]
 
-PlaybackSession
-
-↓
-
-WatchProgress
-
-↓
-
-ResumePosition
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only:
 
 ```
+
 PlaybackSession
 ```
 
@@ -93,34 +91,30 @@ Every Aggregate MUST contain exactly one Aggregate Root.
 
 Poor.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Media"]
+N3["Collection"]
+N4["Both Public"]
 
-Media
-
-↓
-
-Collection
-
-↓
-
-Both Public
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Better.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Library Aggregate Root"]
+N3["Internal Entities"]
 
-Library Aggregate Root
-
-↓
-
-Internal Entities
+N1 --> N2
+N2 --> N3
 ```
 
 Multiple Aggregate Roots create ambiguous ownership.
@@ -137,30 +131,28 @@ Every modification to an Aggregate MUST occur through its Aggregate Root.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["WatchProgress"]
+N3["Update Directly"]
 
-WatchProgress
-
-↓
-
-Update Directly
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Advance()"]
+N3["WatchProgress Updated"]
 
-Advance()
-
-↓
-
-WatchProgress Updated
+N1 --> N2
+N2 --> N3
 ```
 
 Internal objects should never become publicly mutable.
@@ -172,12 +164,14 @@ Internal objects should never become publicly mutable.
 The Aggregate Root defines the boundary between:
 
 ```
+
 External World
 ```
 
 and
 
 ```
+
 Internal Business Rules
 ```
 
@@ -193,12 +187,13 @@ The Aggregate Root owns business authority.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Add Media"]
 
-Add Media
+N1 --> N2
 ```
 
 The Collection decides:
@@ -220,34 +215,30 @@ Aggregate Roots exist primarily to protect invariants.
 
 Example.
 
-```
-Playback Session
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Session"]
+N2["Progress = 95%"]
+N3["Advance()"]
+N4["Completed = false"]
 
-Progress = 95%
-
-↓
-
-Advance()
-
-↓
-
-Completed = false
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Later.
 
-```
-Progress = 100%
+```mermaid
+flowchart TD
 
-↓
+N1["Progress = 100%"]
+N2["Advance()"]
+N3["Completed = true"]
 
-Advance()
-
-↓
-
-Completed = true
+N1 --> N2
+N2 --> N3
 ```
 
 The Aggregate Root guarantees these business rules always remain true.
@@ -262,14 +253,17 @@ Entities inside an Aggregate are implementation details.
 
 Example.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-├── ResumePosition
+N1["PlaybackSession"]
+N2["ResumePosition"]
+N3["WatchProgress"]
+N4["PlaybackStatistics"]
 
-├── WatchProgress
-
-└── PlaybackStatistics
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 External components should never hold references to these internal objects.
@@ -277,6 +271,7 @@ External components should never hold references to these internal objects.
 They interact only through:
 
 ```
+
 PlaybackSession
 ```
 
@@ -288,30 +283,28 @@ Other Aggregates SHOULD reference only the Aggregate Root.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["MediaID"]
 
-MediaID
+N1 --> N2
 ```
 
 Not.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["MediaArtwork"]
+N3["MediaMetadata"]
+N4["PlaybackState"]
 
-MediaArtwork
-
-↓
-
-MediaMetadata
-
-↓
-
-PlaybackState
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Cross-Aggregate references should always use identity.
@@ -354,30 +347,32 @@ Aggregate Roots should become richer over time.
 
 Initially.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Resume()"]
 
-Resume()
+N1 --> N2
 ```
 
 Later.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Resume()"]
+N3["Pause()"]
+N4["Seek()"]
+N5["Complete()"]
+N6["Restart()"]
 
-Resume()
-
-Pause()
-
-Seek()
-
-Complete()
-
-Restart()
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 As business understanding grows, behaviour should naturally accumulate.
@@ -392,17 +387,19 @@ Repositories persist Aggregate Roots.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["Save(PlaybackSession)"]
 
-Save(PlaybackSession)
+N1 --> N2
 ```
 
 Not.
 
 ```
+
 PlaybackProgressRepository
 ```
 
@@ -416,20 +413,17 @@ The Aggregate Root represents the transactional boundary.
 
 Every transaction should begin with the Aggregate Root.
 
-```
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["Load Aggregate Root"]
+N3["Business Behaviour"]
+N4["Save Aggregate Root"]
 
-Load Aggregate Root
-
-↓
-
-Business Behaviour
-
-↓
-
-Save Aggregate Root
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Internal Entities participate naturally.
@@ -444,16 +438,15 @@ Aggregate Roots are the canonical source of Domain Events.
 
 Example.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 The Domain Event is emitted because the Aggregate Root knows:
@@ -478,20 +471,17 @@ collection.AddMedia(mediaID)
 
 Internally.
 
-```
-Already Exists?
+```mermaid
+flowchart TD
 
-↓
+N1["Already Exists?"]
+N2["Maximum Size?"]
+N3["User Owns Collection?"]
+N4["Add"]
 
-Maximum Size?
-
-↓
-
-User Owns Collection?
-
-↓
-
-Add
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Validation belongs inside the Aggregate.
@@ -506,30 +496,28 @@ Aggregate Roots should remain cohesive.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Authentication"]
+N3["Metadata"]
+N4["Recommendations"]
 
-Authentication
-
-↓
-
-Metadata
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Good.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Playback Behaviour"]
 
-Playback Behaviour
+N1 --> N2
 ```
 
 The Aggregate Root should own one business concept.
@@ -567,6 +555,7 @@ The identity of the Aggregate is the identity of its Root.
 Example.
 
 ```
+
 PlaybackSessionID
 ```
 
@@ -598,6 +587,7 @@ If any answer is "no", reconsider the Aggregate boundary.
 Examples of Aggregate Roots include:
 
 ```
+
 Library
 ```
 
@@ -610,6 +600,7 @@ Responsible for:
 ---
 
 ```
+
 PlaybackSession
 ```
 
@@ -623,6 +614,7 @@ Responsible for:
 ---
 
 ```
+
 Collection
 ```
 
@@ -726,23 +718,3 @@ Within Mosaic, every Aggregate Root exists for one reason:
 > **To ensure the business can never place the Aggregate into an invalid state.**
 
 Everything else inside the Aggregate exists to support that responsibility.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`08-aggregates.md`
-
-**Next File**
-
-`10-domain-services.md`

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/11-domain-events.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Domain Events
@@ -29,7 +29,7 @@ They exist independently of:
 - workers
 - subscribers
 
-This document defines how Domain Events are modelled within the Mosaic Domain Model and how they relate to the Reactive Runtime defined in MEG-002.
+This document defines how Domain Events are modelled within the Mosaic Domain Model and how they relate to the Reactive Runtime defined in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 ---
 
@@ -62,18 +62,22 @@ A Domain Event represents an important business fact.
 Examples include:
 
 ```
+
 PlaybackCompleted
 ```
 
 ```
+
 MediaImported
 ```
 
 ```
+
 CollectionCreated
 ```
 
 ```
+
 MetadataCorrected
 ```
 
@@ -96,12 +100,14 @@ They should make sense even if:
 Example.
 
 ```
+
 PlaybackCompleted
 ```
 
 is meaningful.
 
 ```
+
 KafkaMessagePublished
 ```
 
@@ -115,24 +121,19 @@ Technology should never leak into the domain.
 
 The lifecycle is intentionally separated.
 
-```
-Business Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Business Behaviour"]
+N2["Aggregate State Changes"]
+N3["Domain Event"]
+N4["Runtime Event"]
+N5["Subscribers"]
 
-Aggregate State Changes
-
-↓
-
-Domain Event
-
-↓
-
-Runtime Event
-
-↓
-
-Subscribers
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice:
@@ -149,16 +150,15 @@ Domain Events originate from Aggregates.
 
 Example.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 The Aggregate owns:
@@ -179,21 +179,21 @@ Domain Events should follow completed behaviour.
 
 Correct.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Add Media"]
+N3["MediaAddedToCollection"]
 
-Add Media
-
-↓
-
-MediaAddedToCollection
+N1 --> N2
+N2 --> N3
 ```
 
 Incorrect.
 
 ```
+
 AddMediaRequested
 ```
 
@@ -210,12 +210,14 @@ Every Domain Event should represent exactly one business transition.
 Good.
 
 ```
+
 PlaybackPaused
 ```
 
 Poor.
 
 ```
+
 PlaybackPausedAndRecommendationUpdated
 ```
 
@@ -233,17 +235,19 @@ Once raised, a Domain Event MUST NOT change.
 
 Example.
 
-```
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["Immutable"]
 
-Immutable
+N1 --> N2
 ```
 
 If business understanding changes later:
 
 ```
+
 PlaybackCorrected
 ```
 
@@ -261,17 +265,19 @@ Only the Aggregate owning the business state should raise the Domain Event.
 
 Example.
 
-```
-Library Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Library Aggregate"]
+N2["MediaImported"]
 
-MediaImported
+N1 --> N2
 ```
 
 Metadata should never raise:
 
 ```
+
 MediaImported
 ```
 
@@ -286,6 +292,7 @@ Always.
 One of the most important distinctions within Mosaic is:
 
 ```
+
 Domain Event
 
 ≠
@@ -307,24 +314,19 @@ They serve different architectural purposes.
 
 Conceptually.
 
-```
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["Domain Event"]
+N3["Runtime Adapter"]
+N4["Runtime Event"]
+N5["Event Bus"]
 
-Domain Event
-
-↓
-
-Runtime Adapter
-
-↓
-
-Runtime Event
-
-↓
-
-Event Bus
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The runtime adapter transforms domain concepts into transport concepts.
@@ -341,18 +343,19 @@ Domain Events should contain only information describing the business fact.
 
 Example.
 
-```
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["Playback ID"]
+N3["Media ID"]
+N4["User ID"]
+N5["Completed At"]
 
-Playback ID
-
-Media ID
-
-User ID
-
-Completed At
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 Avoid:
@@ -387,14 +390,17 @@ Everything afterwards belongs to the runtime.
 The domain should not model:
 
 ```
+
 WebhookSent
 ```
 
 ```
+
 KafkaPublished
 ```
 
 ```
+
 APIMessageSent
 ```
 
@@ -405,6 +411,7 @@ Not business.
 Instead.
 
 ```
+
 PlaybackCompleted
 ```
 
@@ -418,20 +425,17 @@ Domain Events follow business chronology.
 
 Example.
 
-```
-PlaybackStarted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackStarted"]
+N2["PlaybackPaused"]
+N3["PlaybackResumed"]
+N4["PlaybackCompleted"]
 
-PlaybackPaused
-
-↓
-
-PlaybackResumed
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The domain defines this sequence.
@@ -448,24 +452,19 @@ Aggregates SHOULD collect Domain Events during business execution.
 
 Conceptually.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Complete()"]
+N3["Raise Domain Event"]
+N4["Commit"]
+N5["Runtime Publishes"]
 
-Complete()
-
-↓
-
-Raise Domain Event
-
-↓
-
-Commit
-
-↓
-
-Runtime Publishes
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Events should not leave the Aggregate until business consistency has been established.
@@ -480,16 +479,15 @@ Domain Events should only be published externally after successful persistence.
 
 Example.
 
-```
-Aggregate Updated
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate Updated"]
+N2["Commit Successful"]
+N3["Publish Runtime Event"]
 
-Commit Successful
-
-↓
-
-Publish Runtime Event
+N1 --> N2
+N2 --> N3
 ```
 
 If persistence fails:
@@ -506,12 +504,13 @@ Domain Events make business behaviour easy to test.
 
 Example.
 
-```
-Playback Complete
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Complete"]
+N2["PlaybackCompleted Raised"]
 
-PlaybackCompleted Raised
+N1 --> N2
 ```
 
 Tests should verify:
@@ -531,21 +530,21 @@ Domain Events evolve with business understanding.
 Initially.
 
 ```
+
 PlaybackCompleted
 ```
 
 Later.
 
-```
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["CompletionSource"]
+N3["CompletionReason"]
 
-CompletionSource
-
-↓
-
-CompletionReason
+N1 --> N2
+N2 --> N3
 ```
 
 The business language evolves.
@@ -561,34 +560,42 @@ The event should never become more technical.
 Examples of Domain Events include:
 
 ```
+
 MediaImported
 ```
 
 ```
+
 PlaybackStarted
 ```
 
 ```
+
 PlaybackPaused
 ```
 
 ```
+
 PlaybackCompleted
 ```
 
 ```
+
 CollectionCreated
 ```
 
 ```
+
 CollectionRenamed
 ```
 
 ```
+
 MetadataCorrected
 ```
 
 ```
+
 RecommendationGenerated
 ```
 
@@ -603,10 +610,12 @@ The following practices are prohibited.
 ## Infrastructure Events
 
 ```
+
 KafkaPublished
 ```
 
 ```
+
 WebhookDelivered
 ```
 
@@ -615,10 +624,12 @@ WebhookDelivered
 ## Commands
 
 ```
+
 RefreshMetadata
 ```
 
 ```
+
 GenerateArtwork
 ```
 
@@ -676,28 +687,23 @@ Within Mosaic:
 
 # Relationship to MEG
 
-MEG-002 introduced Runtime Events.
+[MEG-002](../meg-002-event-driven-runtime/index.md) introduced Runtime Events.
 
 This chapter deliberately introduces an additional layer.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Domain Event"]
+N3["Runtime Translation"]
+N4["Runtime Event"]
+N5["Reactive Runtime"]
 
-Domain Event
-
-↓
-
-Runtime Translation
-
-↓
-
-Runtime Event
-
-↓
-
-Reactive Runtime
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 This separation is one of the most important architectural decisions within Mosaic.
@@ -731,23 +737,3 @@ They are simply immutable records that:
 Everything else, including retries, workers, event buses and subscribers, exists solely to communicate those business facts throughout the platform.
 
 That distinction keeps the Mosaic Domain Model remarkably clean while allowing the Reactive Runtime to remain highly sophisticated.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`10-domain-services.md`
-
-**Next File**
-
-`12-repositories.md`

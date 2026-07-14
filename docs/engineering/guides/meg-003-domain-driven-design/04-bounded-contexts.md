@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/04-bounded-contexts.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Bounded Contexts
@@ -18,6 +18,7 @@ As software grows, different areas of the business naturally develop different m
 The word:
 
 ```
+
 Library
 ```
 
@@ -73,32 +74,23 @@ The boundary therefore protects the integrity of the model.
 
 Imagine modelling the entire Mosaic platform as one domain.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Playback"]
+N3["Metadata"]
+N4["Users"]
+N5["Collections"]
+N6["Recommendations"]
+N7["Modules"]
 
-Playback
-
-↓
-
-Metadata
-
-↓
-
-Users
-
-↓
-
-Collections
-
-↓
-
-Recommendations
-
-↓
-
-Modules
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Eventually:
@@ -109,28 +101,26 @@ Eventually:
 
 Instead:
 
+```mermaid
+flowchart TD
+
+N1["Playback"]
+N2["Bounded Context"]
+N3["Playback Model"]
+
+N1 --> N2
+N2 --> N3
 ```
-Playback
 
-↓
+```mermaid
+flowchart TD
 
-Bounded Context
+N1["Metadata"]
+N2["Bounded Context"]
+N3["Metadata Model"]
 
-↓
-
-Playback Model
-```
-
-```
-Metadata
-
-↓
-
-Bounded Context
-
-↓
-
-Metadata Model
+N1 --> N2
+N2 --> N3
 ```
 
 Each model evolves independently.
@@ -142,6 +132,7 @@ Each model evolves independently.
 Consider the word:
 
 ```
+
 Library
 ```
 
@@ -169,18 +160,19 @@ Every Bounded Context owns exactly one canonical domain model.
 
 Example.
 
-```
-Playback Context
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Context"]
+N2["Playback"]
+N3["Session"]
+N4["Progress"]
+N5["Resume Point"]
 
-Playback
-
-Session
-
-Progress
-
-Resume Point
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 Those concepts belong exclusively to Playback.
@@ -195,20 +187,22 @@ Every Bounded Context has exactly one owner.
 
 Examples.
 
+```mermaid
+flowchart TD
+
+N1["Playback Context"]
+N2["Playback Capability"]
+
+N1 --> N2
 ```
-Playback Context
 
-↓
+```mermaid
+flowchart TD
 
-Playback Capability
-```
+N1["Metadata Context"]
+N2["Metadata Capability"]
 
-```
-Metadata Context
-
-↓
-
-Metadata Capability
+N1 --> N2
 ```
 
 Ownership answers:
@@ -229,6 +223,7 @@ Contexts should evolve independently.
 Suppose:
 
 ```
+
 Metadata
 ```
 
@@ -288,26 +283,26 @@ They do **not** therefore share a model.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Directly Updates Metadata Tables"]
 
-Directly Updates Metadata Tables
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackCompleted"]
+N3["Metadata Reacts"]
 
-PlaybackCompleted
-
-↓
-
-Metadata Reacts
+N1 --> N2
+N2 --> N3
 ```
 
 Database topology should never define architectural boundaries.
@@ -320,16 +315,15 @@ Sometimes concepts must cross boundaries.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["PlaybackCompleted"]
+N3["Recommendations"]
 
-PlaybackCompleted
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
 ```
 
 Recommendations should interpret the event using its own model.
@@ -346,32 +340,33 @@ Each context should be capable of evolving independently.
 
 Examples.
 
-```
-Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata"]
+N2["New Provider"]
 
-New Provider
+N1 --> N2
 ```
 
 Should not require:
 
 ```
+
 Playback Changes
 ```
 
 Likewise:
 
-```
-Recommendations
+```mermaid
+flowchart TD
 
-↓
+N1["Recommendations"]
+N2["Machine Learning"]
+N3["Playback Unchanged"]
 
-Machine Learning
-
-↓
-
-Playback Unchanged
+N1 --> N2
+N2 --> N3
 ```
 
 Autonomy enables long-term evolution.
@@ -384,25 +379,29 @@ Contexts should remain cohesive.
 
 Poor.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Everything"]
 
-Everything
+N1 --> N2
 ```
 
 Better.
 
 ```
+
 Playback
 ```
 
 ```
+
 Metadata
 ```
 
 ```
+
 Library
 ```
 
@@ -425,12 +424,14 @@ Example.
 Playback.
 
 ```
+
 Resume Point
 ```
 
 Metadata should not define:
 
 ```
+
 Resume Point
 ```
 
@@ -446,20 +447,17 @@ Events are the preferred mechanism for communicating between contexts.
 
 Example.
 
-```
-Playback Context
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Context"]
+N2["PlaybackCompleted"]
+N3["Recommendations Context"]
+N4["RecommendationUpdated"]
 
-PlaybackCompleted
-
-↓
-
-Recommendations Context
-
-↓
-
-RecommendationUpdated
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Neither context understands the other's internal model.
@@ -474,20 +472,22 @@ Modules should align with one primary Bounded Context.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["TMDB Module"]
+N2["Metadata Context"]
+
+N1 --> N2
 ```
-TMDB Module
 
-↓
+```mermaid
+flowchart TD
 
-Metadata Context
-```
+N1["Infuse Module"]
+N2["Playback Context"]
 
-```
-Infuse Module
-
-↓
-
-Playback Context
+N1 --> N2
 ```
 
 Modules should not simultaneously own multiple unrelated business models.
@@ -544,36 +544,25 @@ When these symptoms appear, revisit the business model before changing the imple
 
 # Example Mosaic Context Map
 
-```
-Library Context
+```mermaid
+flowchart TD
 
-↓
+N1["Library Context"]
+N2["MediaImported"]
+N3["Metadata Context"]
+N4["MetadataFetched"]
+N5["Playback Context"]
+N6["PlaybackStarted"]
+N7["Recommendations Context"]
+N8["RecommendationsUpdated"]
 
-MediaImported
-
-↓
-
-Metadata Context
-
-↓
-
-MetadataFetched
-
-↓
-
-Playback Context
-
-↓
-
-PlaybackStarted
-
-↓
-
-Recommendations Context
-
-↓
-
-RecommendationsUpdated
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Notice:
@@ -631,23 +620,3 @@ Within Mosaic, every capability grows safely because every domain model has a cl
 Without boundaries, there is only one large model.
 
 With boundaries, there is a platform.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`03-subdomains.md`
-
-**Next File**
-
-`05-context-maps.md`

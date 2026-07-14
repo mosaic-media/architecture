@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/03-subdomains.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Subdomains
@@ -56,6 +56,7 @@ A subdomain is an identifiable area of business responsibility within the overal
 The Mosaic domain is:
 
 ```
+
 Media Management
 ```
 
@@ -64,6 +65,7 @@ Within that domain exist many subdomains.
 Examples include:
 
 ```
+
 Playback
 
 Metadata
@@ -89,12 +91,13 @@ Each subdomain owns one coherent business capability.
 
 Without subdomains:
 
-```
-Media Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Media Platform"]
+N2["One Huge Model"]
 
-One Huge Model
+N1 --> N2
 ```
 
 Everything becomes interconnected.
@@ -105,20 +108,21 @@ Coupling increases.
 
 Instead:
 
-```
-Media Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Media Platform"]
+N2["Playback"]
+N3["Metadata"]
+N4["Library"]
+N5["Users"]
+N6["Modules"]
 
-Playback
-
-Metadata
-
-Library
-
-Users
-
-Modules
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 Complexity becomes naturally partitioned.
@@ -166,6 +170,7 @@ These capabilities should rarely be delegated to external systems.
 The following are currently considered Core Domains.
 
 ```
+
 Library
 ```
 
@@ -179,6 +184,7 @@ Responsible for:
 ---
 
 ```
+
 Playback
 ```
 
@@ -192,6 +198,7 @@ Responsible for:
 ---
 
 ```
+
 Metadata
 ```
 
@@ -219,18 +226,22 @@ They simply do not define Mosaic's unique value.
 Examples include:
 
 ```
+
 Authentication
 ```
 
 ```
+
 Notifications
 ```
 
 ```
+
 Search
 ```
 
 ```
+
 Import
 ```
 
@@ -253,22 +264,27 @@ Generic Domains solve common technical problems.
 Examples include:
 
 ```
+
 Logging
 ```
 
 ```
+
 Metrics
 ```
 
 ```
+
 Configuration
 ```
 
 ```
+
 Blob Storage
 ```
 
 ```
+
 Scheduling
 ```
 
@@ -288,16 +304,15 @@ Engineering effort should remain focused upon the Core Domain instead.
 
 Engineering effort should roughly follow this priority.
 
-```
-Core Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Core Domain"]
+N2["Supporting Domain"]
+N3["Generic Domain"]
 
-Supporting Domain
-
-↓
-
-Generic Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Core Domains deserve custom solutions.
@@ -314,20 +329,22 @@ Every subdomain MUST have a clearly defined owner.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Playback"]
+N2["Playback Team"]
+
+N1 --> N2
 ```
-Playback
 
-↓
+```mermaid
+flowchart TD
 
-Playback Team
-```
+N1["Metadata"]
+N2["Metadata Team"]
 
-```
-Metadata
-
-↓
-
-Metadata Team
+N1 --> N2
 ```
 
 Ownership answers:
@@ -348,12 +365,14 @@ Subdomains should evolve independently.
 Suppose:
 
 ```
+
 Recommendations
 ```
 
 changes dramatically.
 
 ```
+
 Playback
 ```
 
@@ -373,17 +392,19 @@ Every capability should align with exactly one primary subdomain.
 
 Example.
 
-```
-Metadata Module
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata Module"]
+N2["Metadata Domain"]
 
-Metadata Domain
+N1 --> N2
 ```
 
 Not:
 
 ```
+
 Metadata
 
 +
@@ -405,20 +426,22 @@ Subdomains own their own events.
 
 Examples.
 
+```mermaid
+flowchart TD
+
+N1["Playback"]
+N2["PlaybackStarted"]
+
+N1 --> N2
 ```
-Playback
 
-↓
+```mermaid
+flowchart TD
 
-PlaybackStarted
-```
+N1["Metadata"]
+N2["MetadataFetched"]
 
-```
-Metadata
-
-↓
-
-MetadataFetched
+N1 --> N2
 ```
 
 Other subdomains may subscribe.
@@ -435,26 +458,26 @@ Every subdomain owns its own business state.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Modify Metadata Tables"]
 
-Modify Metadata Tables
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Publish Event"]
+N3["Metadata Updates Itself"]
 
-Publish Event
-
-↓
-
-Metadata Updates Itself
+N1 --> N2
+N2 --> N3
 ```
 
 State ownership follows domain ownership.
@@ -469,12 +492,13 @@ Not replace them.
 
 Example.
 
-```
-Recommendation Module
+```mermaid
+flowchart TD
 
-↓
+N1["Recommendation Module"]
+N2["Recommendation Domain"]
 
-Recommendation Domain
+N1 --> N2
 ```
 
 Modules integrate naturally because the domain boundaries already exist.
@@ -521,25 +545,23 @@ Example.
 Initially.
 
 ```
+
 Metadata
 ```
 
 Later.
 
-```
-Metadata
+```mermaid
+flowchart TD
 
-↓
+N1["Metadata"]
+N2["Providers"]
+N3["Artwork"]
+N4["Translation"]
 
-Providers
-
-↓
-
-Artwork
-
-↓
-
-Translation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Understanding naturally increases.
@@ -554,26 +576,29 @@ Growing understanding generally produces more precise boundaries.
 
 # Example Mosaic Domain Map
 
-```
-Media Platform
+```mermaid
+flowchart TD
 
-├── Library
-│
-├── Playback
-│
-├── Metadata
-│
-├── Collections
-│
-├── Users
-│
-├── Authentication
-│
-├── Search
-│
-├── Recommendations
-│
-└── Modules
+N1["Media Platform"]
+N2["Library"]
+N3["Playback"]
+N4["Metadata"]
+N5["Collections"]
+N6["Users"]
+N7["Authentication"]
+N8["Search"]
+N9["Recommendations"]
+N10["Modules"]
+
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
+N1 --> N10
 ```
 
 This is **not** the implementation architecture.
@@ -632,23 +657,3 @@ They allow Mosaic to:
 The platform becomes easier to evolve because every capability has a clearly defined place within the business.
 
 Architecture becomes a reflection of the business itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`02-ubiquitous-language.md`
-
-**Next File**
-
-`04-bounded-contexts.md`

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/02-ubiquitous-language.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Ubiquitous Language
@@ -69,18 +69,21 @@ Imagine three engineers discussing the same concept.
 Engineer A says:
 
 ```
+
 Library
 ```
 
 Engineer B says:
 
 ```
+
 Collection
 ```
 
 Engineer C says:
 
 ```
+
 Catalogue
 ```
 
@@ -103,20 +106,24 @@ Every business concept should have exactly one canonical name.
 Example.
 
 ```
+
 Library
 ```
 
 Never:
 
 ```
+
 Catalogue
 ```
 
 ```
+
 Media Collection
 ```
 
 ```
+
 Content Repository
 ```
 
@@ -137,6 +144,7 @@ One word should never describe multiple concepts.
 Poor.
 
 ```
+
 Collection
 ```
 
@@ -149,14 +157,17 @@ Meaning:
 Instead:
 
 ```
+
 Collection
 ```
 
 ```
+
 Table
 ```
 
 ```
+
 Garbage Collection
 ```
 
@@ -175,12 +186,14 @@ Example.
 Users understand:
 
 ```
+
 Continue Watching
 ```
 
 They do not naturally understand:
 
 ```
+
 Playback Resume Projection
 ```
 
@@ -225,6 +238,7 @@ Suppose someone asks:
 Engineers should immediately recognise:
 
 ```
+
 Continue Watching
 ```
 
@@ -248,24 +262,29 @@ Avoid introducing technical terminology into the domain.
 Poor.
 
 ```
+
 Projection
 ```
 
 ```
+
 DTO
 ```
 
 ```
+
 Entity Model
 ```
 
 ```
+
 Persistence Object
 ```
 
 Preferred.
 
 ```
+
 Playback
 
 Library
@@ -290,6 +309,7 @@ One important idea in Domain-Driven Design is that words may legitimately have d
 Example.
 
 ```
+
 Collection
 ```
 
@@ -320,6 +340,7 @@ Example.
 ## Playback
 
 ```
+
 Play
 
 Pause
@@ -336,6 +357,7 @@ Complete
 ## Library
 
 ```
+
 Import
 
 Scan
@@ -352,6 +374,7 @@ Source
 ## Metadata
 
 ```
+
 Artwork
 
 Synopsis
@@ -374,20 +397,24 @@ Event names should naturally reinforce the language.
 Example.
 
 ```
+
 PlaybackStarted
 ```
 
 ```
+
 PlaybackPaused
 ```
 
 ```
+
 PlaybackCompleted
 ```
 
 Notice that every event reinforces:
 
 ```
+
 Playback
 ```
 
@@ -402,12 +429,14 @@ Public APIs should expose business terminology.
 Example.
 
 ```
+
 /libraries
 ```
 
 Not:
 
 ```
+
 /catalogues
 ```
 
@@ -442,12 +471,14 @@ Language evolves.
 Suppose the business decides:
 
 ```
+
 Watch History
 ```
 
 is better expressed as:
 
 ```
+
 Viewing History
 ```
 
@@ -468,24 +499,28 @@ Business concepts SHOULD rarely be abbreviated.
 Poor.
 
 ```
+
 Recs
 ```
 
 Preferred.
 
 ```
+
 Recommendations
 ```
 
 Poor.
 
 ```
+
 Lib
 ```
 
 Preferred.
 
 ```
+
 Library
 ```
 
@@ -498,28 +533,34 @@ Clarity outweighs brevity.
 Avoid names such as:
 
 ```
+
 MediaDTO
 ```
 
 ```
+
 PlaybackEntity
 ```
 
 ```
+
 LibraryRecord
 ```
 
 The domain should simply contain:
 
 ```
+
 Media
 ```
 
 ```
+
 Playback
 ```
 
 ```
+
 Library
 ```
 
@@ -563,44 +604,54 @@ Language refinement should therefore be viewed as continuous architectural impro
 Good.
 
 ```
+
 Library
 ```
 
 ```
+
 Collection
 ```
 
 ```
+
 Continue Watching
 ```
 
 ```
+
 Playback
 ```
 
 ```
+
 Watch Progress
 ```
 
 ```
+
 Metadata
 ```
 
 Poor.
 
 ```
+
 PlaybackManager
 ```
 
 ```
+
 ContentDTO
 ```
 
 ```
+
 LibraryServiceImpl
 ```
 
 ```
+
 GenericProcessor
 ```
 
@@ -660,23 +711,3 @@ When every engineer, architect, product owner and contributor uses the same lang
 Good architecture begins with good conversations.
 
 Good conversations begin with a shared language.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`01-domain-philosophy.md`
-
-**Next File**
-
-`03-subdomains.md`

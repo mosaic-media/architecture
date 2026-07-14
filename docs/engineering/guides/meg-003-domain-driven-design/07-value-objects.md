@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/07-value-objects.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Value Objects
@@ -57,22 +57,27 @@ A Value Object is a business concept whose identity is irrelevant.
 Examples include:
 
 ```
+
 Duration
 ```
 
 ```
+
 Resolution
 ```
 
 ```
+
 Aspect Ratio
 ```
 
 ```
+
 Language
 ```
 
 ```
+
 Watch Position
 ```
 
@@ -90,22 +95,24 @@ Value Objects are equal when all of their values are equal.
 
 Example.
 
-```
-Duration
+```mermaid
+flowchart TD
 
-↓
+N1["Duration"]
+N2["01:30:00"]
 
-01:30:00
+N1 --> N2
 ```
 
 equals
 
-```
-Duration
+```mermaid
+flowchart TD
 
-↓
+N1["Duration"]
+N2["01:30:00"]
 
-01:30:00
+N1 --> N2
 ```
 
 There is no business distinction between them.
@@ -121,14 +128,17 @@ Value Objects MUST NOT possess business identity.
 Poor.
 
 ```
+
 ResolutionID
 ```
 
 ```
+
 LanguageID
 ```
 
 ```
+
 DurationID
 ```
 
@@ -144,28 +154,28 @@ Value Objects SHOULD be immutable.
 
 Changing:
 
-```
-Duration
+```mermaid
+flowchart TD
 
-↓
+N1["Duration"]
+N2["90 Minutes"]
+N3["95 Minutes"]
 
-90 Minutes
-
-↓
-
-95 Minutes
+N1 --> N2
+N2 --> N3
 ```
 
 does not modify the existing Value Object.
 
 Instead:
 
-```
-Old Value Object
+```mermaid
+flowchart TD
 
-↓
+N1["Old Value Object"]
+N2["New Value Object"]
 
-New Value Object
+N1 --> N2
 ```
 
 Immutability greatly simplifies reasoning, testing and concurrent execution.
@@ -203,24 +213,28 @@ Avoid reducing Value Objects to passive data containers.
 Prefer:
 
 ```
+
 Watch Position
 ```
 
 rather than:
 
 ```
+
 int64
 ```
 
 Prefer:
 
 ```
+
 Media Duration
 ```
 
 rather than:
 
 ```
+
 time.Duration
 ```
 
@@ -309,20 +323,17 @@ Value Objects belong to the Entity or Aggregate that owns them.
 
 Example.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Duration"]
+N3["Resolution"]
+N4["Language"]
 
-Duration
-
-↓
-
-Resolution
-
-↓
-
-Language
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Value Objects have no independent lifecycle.
@@ -340,6 +351,7 @@ Value Objects should never have independent repositories.
 Poor.
 
 ```
+
 ResolutionRepository
 ```
 
@@ -354,6 +366,7 @@ Value Objects should be reused whenever the same business concept appears.
 Example.
 
 ```
+
 Duration
 ```
 
@@ -374,20 +387,17 @@ Value Objects may contain other Value Objects.
 
 Example.
 
-```
-Video Format
+```mermaid
+flowchart TD
 
-↓
+N1["Video Format"]
+N2["Resolution"]
+N3["Frame Rate"]
+N4["Aspect Ratio"]
 
-Resolution
-
-↓
-
-Frame Rate
-
-↓
-
-Aspect Ratio
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This produces richer, more expressive models without introducing identity.
@@ -400,14 +410,21 @@ Entities should compose Value Objects.
 
 Example.
 
-```
-Media
+```mermaid
+flowchart TD
 
-├── MediaID
-├── Duration
-├── Resolution
-├── Language
-└── Artwork
+N1["Media"]
+N2["MediaID"]
+N3["Duration"]
+N4["Resolution"]
+N5["Language"]
+N6["Artwork"]
+
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 Notice:
@@ -426,20 +443,17 @@ Because Value Objects are immutable, they may safely be shared.
 
 Example.
 
-```
-English Language
+```mermaid
+flowchart TD
 
-↓
+N1["English Language"]
+N2["Media A"]
+N3["Media B"]
+N4["Media C"]
 
-Media A
-
-↓
-
-Media B
-
-↓
-
-Media C
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Sharing immutable values introduces no coupling.
@@ -453,14 +467,17 @@ Immutability greatly simplifies concurrent systems.
 Avoid modelling business concepts using:
 
 ```
+
 string
 ```
 
 ```
+
 int
 ```
 
 ```
+
 bool
 ```
 
@@ -491,28 +508,34 @@ Value Objects should reinforce the ubiquitous language.
 Good.
 
 ```
+
 WatchProgress
 ```
 
 ```
+
 PlaybackPosition
 ```
 
 ```
+
 ArtworkType
 ```
 
 Poor.
 
 ```
+
 ProgressDTO
 ```
 
 ```
+
 PositionValue
 ```
 
 ```
+
 ImageInfo
 ```
 
@@ -528,32 +551,34 @@ Value Objects often become richer over time.
 
 Initially.
 
-```
-Resolution
+```mermaid
+flowchart TD
 
-↓
+N1["Resolution"]
+N2["Width"]
+N3["Height"]
 
-Width
-
-Height
+N1 --> N2
+N1 --> N3
 ```
 
 Later.
 
-```
-Resolution
+```mermaid
+flowchart TD
 
-↓
+N1["Resolution"]
+N2["Width"]
+N3["Height"]
+N4["Aspect Ratio"]
+N5["Orientation"]
+N6["HDR Support"]
 
-Width
-
-Height
-
-Aspect Ratio
-
-Orientation
-
-HDR Support
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 Business understanding evolves.
@@ -567,18 +592,22 @@ Value Objects should evolve alongside it.
 The following are usually **not** Value Objects.
 
 ```
+
 Media
 ```
 
 ```
+
 User
 ```
 
 ```
+
 Collection
 ```
 
 ```
+
 Playback Session
 ```
 
@@ -593,34 +622,42 @@ They are therefore Entities.
 Examples of Value Objects within Mosaic include:
 
 ```
+
 Duration
 ```
 
 ```
+
 Resolution
 ```
 
 ```
+
 AspectRatio
 ```
 
 ```
+
 Language
 ```
 
 ```
+
 PlaybackPosition
 ```
 
 ```
+
 MediaRating
 ```
 
 ```
+
 ArtworkType
 ```
 
 ```
+
 FileHash
 ```
 
@@ -721,23 +758,3 @@ By representing business concepts through immutable values rather than primitive
 - naturally thread-safe
 
 Most importantly, the software begins speaking the language of the business rather than the language of the implementation.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`06-entities.md`
-
-**Next File**
-
-`08-aggregates.md`

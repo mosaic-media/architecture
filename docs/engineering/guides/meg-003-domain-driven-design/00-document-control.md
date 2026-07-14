@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/00-document-control.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -17,8 +17,8 @@ Version: 0.2
 | Title | Domain-Driven Design |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Software Architect |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 
 ---
@@ -56,32 +56,27 @@ Every business capability introduced into Mosaic SHOULD align with the modelling
 
 MEG specifications intentionally build upon one another.
 
-```
-MDL
+```mermaid
+flowchart TD
 
-↓
+N1["MDL"]
+N2["MDS"]
+N3["MEG-001"]
+N4["MEG-002"]
+N5["MEG-003"]
 
-MDS
-
-↓
-
-MEG-001
-
-↓
-
-MEG-002
-
-↓
-
-MEG-003
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Specifically:
 
 - **MDL** defines product philosophy.
 - **MDS** defines presentation.
-- **MEG-001** defines engineering practices.
-- **MEG-002** defines runtime behaviour.
+- **[MEG-001](../meg-001-go-engineering-standards/index.md)** defines engineering practices.
+- **[MEG-002](../meg-002-event-driven-runtime/index.md)** defines runtime behaviour.
 - **MEG-003** defines business modelling.
 
 Future specifications use the domain model established here as the foundation for architectural boundaries.
@@ -127,28 +122,21 @@ MEG specifications evolve alongside the platform.
 
 Each document progresses through the following lifecycle.
 
-```
-Draft
+```mermaid
+flowchart TD
 
-↓
+N1["Draft"]
+N2["Review"]
+N3["Accepted"]
+N4["Implemented"]
+N5["Maintained"]
+N6["Superseded (optional)"]
 
-Review
-
-↓
-
-Accepted
-
-↓
-
-Implemented
-
-↓
-
-Maintained
-
-↓
-
-Superseded (optional)
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Accepted specifications become part of the canonical Mosaic architecture.
@@ -230,23 +218,3 @@ It does **not** define:
 Those concerns belong to other MEG specifications.
 
 Separating business modelling from technical implementation allows each to evolve independently.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`README.md`
-
-**Next File**
-
-`01-domain-philosophy.md`

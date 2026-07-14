@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/15-modelling-guidelines.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Modelling Guidelines
@@ -107,14 +107,17 @@ Every new concept belongs to one Bounded Context.
 Examples.
 
 ```
+
 Playback
 ```
 
 ```
+
 Metadata
 ```
 
 ```
+
 Library
 ```
 
@@ -169,14 +172,17 @@ Ask:
 Examples.
 
 ```
+
 Media
 ```
 
 ```
+
 Collection
 ```
 
 ```
+
 Playback Session
 ```
 
@@ -195,14 +201,17 @@ Ask:
 Examples.
 
 ```
+
 Duration
 ```
 
 ```
+
 Language
 ```
 
 ```
+
 Resolution
 ```
 
@@ -224,28 +233,30 @@ Not:
 
 Poor.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Fields"]
 
-Fields
+N1 --> N2
 ```
 
 Better.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Rename()"]
+N3["Archive()"]
+N4["Move()"]
+N5["Restore()"]
 
-Rename()
-
-Archive()
-
-Move()
-
-Restore()
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 Business behaviour should dominate the model.
@@ -278,16 +289,15 @@ Raise a Domain Event.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 Do not ask:
@@ -339,24 +349,28 @@ They do not define it.
 Prefer:
 
 ```
+
 Playback
 ```
 
 over:
 
 ```
+
 Media Platform
 ```
 
 Prefer:
 
 ```
+
 RecommendationEngine
 ```
 
 over:
 
 ```
+
 BusinessManager
 ```
 
@@ -392,34 +406,30 @@ Not failure.
 
 Poor.
 
-```
-DTO
+```mermaid
+flowchart TD
 
-↓
+N1["DTO"]
+N2["Entity"]
+N3["Controller"]
+N4["Repository"]
 
-Entity
-
-↓
-
-Controller
-
-↓
-
-Repository
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Better.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 The second model communicates the business.
@@ -436,21 +446,21 @@ Do not model hypothetical future concepts.
 
 Poor.
 
-```
-Universal Media Item
+```mermaid
+flowchart TD
 
-↓
+N1["Universal Media Item"]
+N2["Supports Everything"]
+N3["Maybe Useful Later"]
 
-Supports Everything
-
-↓
-
-Maybe Useful Later
+N1 --> N2
+N2 --> N3
 ```
 
 Instead.
 
 ```
+
 Movie
 
 Series
@@ -472,14 +482,17 @@ Draw.
 
 Example.
 
-```
-Playback Session
+```mermaid
+flowchart TD
 
-├── Progress
+N1["Playback Session"]
+N2["Progress"]
+N3["Duration"]
+N4["Resume Position"]
 
-├── Duration
-
-└── Resume Position
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 Simple diagrams frequently reveal:
@@ -578,9 +591,9 @@ The remaining documents describe:
 - terminology
 - references
 
-The next engineering specification, **MEG-004 – Hexagonal Architecture**, will describe how these Domain Models interact with infrastructure without compromising their integrity.
+The next engineering specification, **[MEG-004](../meg-004-hexagonal-architecture/index.md) – Hexagonal Architecture**, will describe how these Domain Models interact with infrastructure without compromising their integrity.
 
-Together, MEG-003 and MEG-004 define both:
+Together, MEG-003 and [MEG-004](../meg-004-hexagonal-architecture/index.md) define both:
 
 - **what** the business model is, and
 - **how** it remains protected from technical concerns.
@@ -602,23 +615,3 @@ If the answer is yes, the model is probably improving.
 If the answer is no, the implementation is almost certainly modelling technology rather than the business.
 
 That distinction is the difference between software that merely works and software that continues to evolve gracefully for years.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`14-domain-invariants.md`
-
-**Next File**
-
-`16-adrs.md`

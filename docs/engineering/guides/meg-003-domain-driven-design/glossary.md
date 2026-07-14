@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/glossary.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -127,6 +127,7 @@ The area of knowledge the software exists to model.
 Within Mosaic:
 
 ```
+
 Media Management
 ```
 
@@ -372,23 +373,3 @@ Definitions should remain consistent across:
 - Contributor Documentation
 
 Whenever the ubiquitous language evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`17-contributor-guidance.md`
-
-**Next File**
-
-`references.md`

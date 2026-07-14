@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/10-domain-services.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Domain Services
@@ -75,24 +75,19 @@ Not by state.
 
 Consider:
 
-```
-Recommendation Engine
+```mermaid
+flowchart TD
 
-↓
+N1["Recommendation Engine"]
+N2["Playback History"]
+N3["Library"]
+N4["Metadata"]
+N5["User Preferences"]
 
-Playback History
-
-↓
-
-Library
-
-↓
-
-Metadata
-
-↓
-
-User Preferences
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Which Aggregate owns recommendation generation?
@@ -100,18 +95,21 @@ Which Aggregate owns recommendation generation?
 Not:
 
 ```
+
 Playback
 ```
 
 Not:
 
 ```
+
 Library
 ```
 
 Not:
 
 ```
+
 Metadata
 ```
 
@@ -151,38 +149,32 @@ Domain Services SHOULD be stateless.
 
 Poor.
 
-```
-RecommendationService
+```mermaid
+flowchart TD
 
-↓
+N1["RecommendationService"]
+N2["CurrentUser"]
+N3["CurrentSession"]
+N4["Cache"]
 
-CurrentUser
-
-↓
-
-CurrentSession
-
-↓
-
-Cache
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Better.
 
-```
-RecommendationService
+```mermaid
+flowchart TD
 
-↓
+N1["RecommendationService"]
+N2["Input"]
+N3["Business Calculation"]
+N4["Result"]
 
-Input
-
-↓
-
-Business Calculation
-
-↓
-
-Result
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 State belongs to Aggregates.
@@ -199,25 +191,23 @@ One of the most common misunderstandings in DDD is confusing Domain Services wit
 
 Application Service.
 
-```
-Load Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Load Aggregate"]
+N2["Call Domain"]
+N3["Save Aggregate"]
+N4["Publish Events"]
 
-Call Domain
-
-↓
-
-Save Aggregate
-
-↓
-
-Publish Events
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Domain Service.
 
 ```
+
 Business Behaviour
 ```
 
@@ -234,14 +224,17 @@ This distinction is fundamental.
 Poor.
 
 ```
+
 MediaUtils
 ```
 
 ```
+
 LibraryHelper
 ```
 
 ```
+
 RecommendationUtil
 ```
 
@@ -252,14 +245,17 @@ Not business behaviour.
 Instead:
 
 ```
+
 RecommendationEngine
 ```
 
 ```
+
 DuplicateResolver
 ```
 
 ```
+
 MetadataMatcher
 ```
 
@@ -275,24 +271,26 @@ Not because of shared data.
 
 Poor.
 
-```
-MetadataService
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataService"]
+N2["Stores Metadata"]
 
-Stores Metadata
+N1 --> N2
 ```
 
 That responsibility belongs to the Metadata Aggregate.
 
 Better.
 
-```
-MetadataResolver
+```mermaid
+flowchart TD
 
-↓
+N1["MetadataResolver"]
+N2["Chooses Best Metadata Source"]
 
-Chooses Best Metadata Source
+N1 --> N2
 ```
 
 The behaviour belongs naturally to the domain.
@@ -306,28 +304,34 @@ Domain Services should reinforce the ubiquitous language.
 Good.
 
 ```
+
 DuplicateResolver
 ```
 
 ```
+
 RecommendationEngine
 ```
 
 ```
+
 MetadataMatcher
 ```
 
 Poor.
 
 ```
+
 BusinessProcessor
 ```
 
 ```
+
 DomainManager
 ```
 
 ```
+
 Coordinator
 ```
 
@@ -343,20 +347,17 @@ Domain Services frequently coordinate behaviour across multiple Aggregates.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Library"]
+N3["RecommendationEngine"]
+N4["Recommendations"]
 
-Library
-
-↓
-
-RecommendationEngine
-
-↓
-
-Recommendations
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Notice:
@@ -391,16 +392,15 @@ Occasionally a Domain Service requires additional information.
 
 Example.
 
-```
-DuplicateResolver
+```mermaid
+flowchart TD
 
-↓
+N1["DuplicateResolver"]
+N2["Repository"]
+N3["Candidate Media"]
 
-Repository
-
-↓
-
-Candidate Media
+N1 --> N2
+N2 --> N3
 ```
 
 This is acceptable when:
@@ -422,20 +422,17 @@ A Domain Service may cause Domain Events indirectly.
 
 Example.
 
-```
-RecommendationEngine
+```mermaid
+flowchart TD
 
-↓
+N1["RecommendationEngine"]
+N2["Recommendation Created"]
+N3["Recommendation Aggregate"]
+N4["RecommendationGenerated"]
 
-Recommendation Created
-
-↓
-
-Recommendation Aggregate
-
-↓
-
-RecommendationGenerated
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Domain Service performs business reasoning.
@@ -451,6 +448,7 @@ Business facts should originate from Aggregates whenever practical.
 Appropriate Domain Services include:
 
 ```
+
 MetadataMatcher
 ```
 
@@ -459,6 +457,7 @@ Determines the most appropriate metadata source.
 ---
 
 ```
+
 DuplicateResolver
 ```
 
@@ -467,6 +466,7 @@ Determines whether imported media already exists.
 ---
 
 ```
+
 RecommendationEngine
 ```
 
@@ -475,6 +475,7 @@ Calculates recommended media based on multiple business concepts.
 ---
 
 ```
+
 CollectionOrderingPolicy
 ```
 
@@ -491,18 +492,22 @@ Not infrastructure.
 The following are **not** Domain Services.
 
 ```
+
 HTTPService
 ```
 
 ```
+
 EmailSender
 ```
 
 ```
+
 DatabaseManager
 ```
 
 ```
+
 EventPublisher
 ```
 
@@ -511,6 +516,7 @@ These belong to infrastructure.
 Likewise.
 
 ```
+
 UserApplicationService
 ```
 
@@ -524,25 +530,29 @@ It does not model business behaviour.
 
 Poor.
 
-```
-MediaDomainService
+```mermaid
+flowchart TD
 
-↓
+N1["MediaDomainService"]
+N2["Everything"]
 
-Everything
+N1 --> N2
 ```
 
 Instead.
 
 ```
+
 MetadataMatcher
 ```
 
 ```
+
 DuplicateResolver
 ```
 
 ```
+
 RecommendationEngine
 ```
 
@@ -576,22 +586,24 @@ Domain Services often emerge naturally.
 
 Initially.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Recommendation Logic"]
 
-Recommendation Logic
+N1 --> N2
 ```
 
 Later.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["RecommendationEngine"]
 
-RecommendationEngine
+N1 --> N2
 ```
 
 As business understanding improves, behaviour that spans multiple Aggregates naturally becomes its own concept.
@@ -609,10 +621,12 @@ The following practices are prohibited.
 ## Generic Services
 
 ```
+
 BusinessService
 ```
 
 ```
+
 DomainManager
 ```
 
@@ -698,23 +712,3 @@ Used sparingly, they strengthen the domain model.
 Used excessively, they usually indicate the domain model itself requires improvement.
 
 Within Mosaic, Domain Services should therefore remain focused, expressive and unmistakably business-oriented.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`09-aggregate-roots.md`
-
-**Next File**
-
-`11-domain-events.md`

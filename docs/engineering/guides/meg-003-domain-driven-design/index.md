@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/index.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MEG-003 — Domain-Driven Design
@@ -47,45 +47,32 @@ It adopts DDD because it aligns naturally with:
 
 # Relationship to MEG
 
-```
-MEG-001
+```mermaid
+flowchart TD
 
-↓
+N1["MEG-001"]
+N2["Engineering Standards"]
+N3["MEG-002"]
+N4["Reactive Runtime"]
+N5["MEG-003"]
+N6["Business Modelling"]
+N7["MEG-004"]
+N8["Hexagonal Architecture"]
+N9["Implementation"]
 
-Engineering Standards
-
-↓
-
-MEG-002
-
-↓
-
-Reactive Runtime
-
-↓
-
-MEG-003
-
-↓
-
-Business Modelling
-
-↓
-
-MEG-004
-
-↓
-
-Hexagonal Architecture
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
-MEG-001 explains **how software is written.**
+[MEG-001](../meg-001-go-engineering-standards/index.md) explains **how software is written.**
 
-MEG-002 explains **how software executes.**
+[MEG-002](../meg-002-event-driven-runtime/index.md) explains **how software executes.**
 
 MEG-003 explains **how the business itself is modelled.**
 
@@ -166,32 +153,23 @@ This is one of the central goals of Domain-Driven Design: creating a shared doma
 
 The Mosaic platform intentionally separates domain modelling into conceptual layers.
 
-```
-Business Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Business Domain"]
+N2["Subdomains"]
+N3["Bounded Contexts"]
+N4["Aggregates"]
+N5["Entities"]
+N6["Value Objects"]
+N7["Implementation"]
 
-Subdomains
-
-↓
-
-Bounded Contexts
-
-↓
-
-Aggregates
-
-↓
-
-Entities
-
-↓
-
-Value Objects
-
-↓
-
-Implementation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Each layer owns exactly one responsibility.
@@ -219,6 +197,7 @@ without discussing runtime implementation or transport infrastructure.
 # Repository Structure
 
 ```
+
 engineering/
 
 └── meg/
@@ -263,9 +242,9 @@ engineering/
 
         17-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -274,16 +253,16 @@ engineering/
 
 Required reading:
 
-- MEG-001 Go Engineering Standards
-- MEG-002 Event-Driven Runtime
-- MDL-002 Principles
-- MDL-003 Mental Model
+- [MEG-001 — Go Engineering Standards](../meg-001-go-engineering-standards/index.md)
+- [MEG-002 — Event-Driven Runtime](../meg-002-event-driven-runtime/index.md)
+- [MDL-002 — Principles](../../../design/language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../../design/language/mdl-003-mental-model/index.md)
 
 Future companion specifications:
 
-- MEG-004 Hexagonal Architecture
-- MEG-005 Module Platform
-- MEG-006 Runtime Architecture
+- [MEG-004 — Hexagonal Architecture](../meg-004-hexagonal-architecture/index.md)
+- [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
+- [MEG-005 — Runtime Architecture](../meg-005-runtime-architecture/index.md)
 
 ---
 
@@ -303,19 +282,3 @@ The Domain Model is intended to produce software that is:
 The model should become deeper as understanding improves.
 
 It should never become more technical.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Next File**
-
-`00-document-control.md`

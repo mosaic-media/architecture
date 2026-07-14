@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/13-factories.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Factories
@@ -115,25 +115,23 @@ They should not perform business operations.
 Good.
 
 ```
+
 Create Library
 ```
 
 Poor.
 
-```
-Create Library
+```mermaid
+flowchart TD
 
-↓
+N1["Create Library"]
+N2["Import Media"]
+N3["Generate Artwork"]
+N4["Publish Events"]
 
-Import Media
-
-↓
-
-Generate Artwork
-
-↓
-
-Publish Events
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Creation and behaviour should remain separate.
@@ -172,24 +170,19 @@ Factories are most valuable when creating Aggregates.
 
 Example.
 
-```
-Library Factory
+```mermaid
+flowchart TD
 
-↓
+N1["Library Factory"]
+N2["Library"]
+N3["Default Collection"]
+N4["Configuration"]
+N5["Policies"]
 
-Library
-
-↓
-
-Default Collection
-
-↓
-
-Configuration
-
-↓
-
-Policies
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The caller receives a complete Aggregate.
@@ -233,16 +226,15 @@ Many Aggregates naturally create their own internal objects.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["AddMedia()"]
+N3["CollectionItem Created"]
 
-AddMedia()
-
-↓
-
-CollectionItem Created
+N1 --> N2
+N2 --> N3
 ```
 
 The Aggregate Root itself acts as the Factory.
@@ -262,28 +254,34 @@ Factory names should communicate business intent.
 Good.
 
 ```
+
 LibraryFactory
 ```
 
 ```
+
 PlaybackFactory
 ```
 
 ```
+
 CollectionFactory
 ```
 
 Poor.
 
 ```
+
 ObjectFactory
 ```
 
 ```
+
 EntityBuilder
 ```
 
 ```
+
 GenericFactory
 ```
 
@@ -340,16 +338,15 @@ Factories frequently create identities.
 
 Example.
 
-```
-LibraryFactory
+```mermaid
+flowchart TD
 
-↓
+N1["LibraryFactory"]
+N2["Generate LibraryID"]
+N3["Create Aggregate"]
 
-Generate LibraryID
-
-↓
-
-Create Aggregate
+N1 --> N2
+N2 --> N3
 ```
 
 The mechanism used to generate the identifier is an implementation concern.
@@ -380,30 +377,28 @@ Factories should create complete Aggregates.
 
 Poor.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Missing Root Collection"]
 
-Missing Root Collection
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Root Collection"]
+N3["Configuration"]
+N4["Ready"]
 
-Root Collection
-
-↓
-
-Configuration
-
-↓
-
-Ready
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The caller should never be responsible for "finishing" Aggregate construction.
@@ -416,24 +411,19 @@ Application Services frequently use Factories.
 
 Example.
 
-```
-Command
+```mermaid
+flowchart TD
 
-↓
+N1["Command"]
+N2["Application Service"]
+N3["Library Factory"]
+N4["Repository"]
+N5["Runtime"]
 
-Application Service
-
-↓
-
-Library Factory
-
-↓
-
-Repository
-
-↓
-
-Runtime
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Notice:
@@ -472,25 +462,23 @@ Factories should evolve alongside the domain.
 Initially.
 
 ```
+
 NewLibrary(...)
 ```
 
 Later.
 
-```
-LibraryFactory
+```mermaid
+flowchart TD
 
-↓
+N1["LibraryFactory"]
+N2["Policies"]
+N3["Defaults"]
+N4["Configuration"]
 
-Policies
-
-↓
-
-Defaults
-
-↓
-
-Configuration
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Complexity should move into the Factory only when it genuinely exists.
@@ -504,6 +492,7 @@ Do not anticipate complexity prematurely.
 The following are **not** Factories.
 
 ```
+
 Repository
 ```
 
@@ -512,6 +501,7 @@ Repositories retrieve and persist.
 ---
 
 ```
+
 Application Service
 ```
 
@@ -520,6 +510,7 @@ Coordinates use cases.
 ---
 
 ```
+
 Domain Service
 ```
 
@@ -528,6 +519,7 @@ Models business behaviour.
 ---
 
 ```
+
 Builder
 ```
 
@@ -541,36 +533,40 @@ Factories produce complete domain objects.
 
 Appropriate Factory responsibilities include:
 
-```
-LibraryFactory
+```mermaid
+flowchart TD
 
-↓
+N1["LibraryFactory"]
+N2["Create new Library Aggregate"]
 
-Create new Library Aggregate
-```
-
-```
-CollectionFactory
-
-↓
-
-Create default Collection hierarchy
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["CollectionFactory"]
+N2["Create default Collection hierarchy"]
+
+N1 --> N2
 ```
-PlaybackFactory
 
-↓
+```mermaid
+flowchart TD
 
-Create new Playback Session
+N1["PlaybackFactory"]
+N2["Create new Playback Session"]
+
+N1 --> N2
 ```
 
-```
-ImportFactory
+```mermaid
+flowchart TD
 
-↓
+N1["ImportFactory"]
+N2["Create Import Job Aggregate"]
 
-Create Import Job Aggregate
+N1 --> N2
 ```
 
 Each creates a valid business object.
@@ -604,6 +600,7 @@ Factories executing SQL, HTTP or message publication.
 ## Generic Factory
 
 ```
+
 ObjectFactory
 ```
 
@@ -662,23 +659,3 @@ Within Mosaic, every Aggregate should begin life:
 - expressive
 
 By encapsulating construction inside Factories, the domain remains focused on business concepts rather than construction mechanics, and every new object enters the system already satisfying the rules that define it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`12-repositories.md`
-
-**Next File**
-
-`14-domain-invariants.md`

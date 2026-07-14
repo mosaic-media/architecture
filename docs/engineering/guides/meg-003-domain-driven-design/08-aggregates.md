@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/08-aggregates.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Aggregates
@@ -74,16 +74,15 @@ If playback reaches 100%, the session must also become completed.
 
 Without an Aggregate:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Position Updated"]
+N3["Completion Forgotten"]
 
-Position Updated
-
-↓
-
-Completion Forgotten
+N1 --> N2
+N2 --> N3
 ```
 
 The business becomes inconsistent.
@@ -96,16 +95,15 @@ Aggregates prevent this.
 
 The Aggregate defines the boundary within which business consistency is guaranteed.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Business Rules"]
+N3["Always Consistent"]
 
-Business Rules
-
-↓
-
-Always Consistent
+N1 --> N2
+N2 --> N3
 ```
 
 Outside the Aggregate:
@@ -120,16 +118,19 @@ This distinction aligns naturally with Mosaic's event-driven runtime.
 
 Every Aggregate follows the same conceptual model.
 
-```
-Aggregate Root
+```mermaid
+flowchart TD
 
-├── Entity
+N1["Aggregate Root"]
+N2["Entity"]
+N3["Entity"]
+N4["Value Object"]
+N5["Value Object"]
 
-├── Entity
-
-├── Value Object
-
-└── Value Object
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 The Aggregate Root controls every modification.
@@ -144,25 +145,29 @@ Aggregates SHOULD remain small.
 
 Poor.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Everything"]
 
-Everything
+N1 --> N2
 ```
 
 Better.
 
 ```
+
 Library
 ```
 
 ```
+
 Collection
 ```
 
 ```
+
 Playback
 ```
 
@@ -180,20 +185,17 @@ Business consistency is guaranteed only inside one Aggregate.
 
 Example.
 
-```
-Playback Session
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Session"]
+N2["Update Position"]
+N3["Mark Complete"]
+N4["Commit"]
 
-Update Position
-
-↓
-
-Mark Complete
-
-↓
-
-Commit
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Everything succeeds.
@@ -230,20 +232,22 @@ Every Aggregate belongs to exactly one Bounded Context.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Playback Context"]
+N2["Playback Aggregate"]
+
+N1 --> N2
 ```
-Playback Context
 
-↓
+```mermaid
+flowchart TD
 
-Playback Aggregate
-```
+N1["Library Context"]
+N2["Library Aggregate"]
 
-```
-Library Context
-
-↓
-
-Library Aggregate
+N1 --> N2
 ```
 
 Aggregates must never span multiple Bounded Contexts.
@@ -258,34 +262,30 @@ Business behaviour belongs inside the Aggregate.
 
 Poor.
 
-```
-PlaybackService
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackService"]
+N2["Update Position"]
+N3["Validate"]
+N4["Complete"]
 
-Update Position
-
-↓
-
-Validate
-
-↓
-
-Complete
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Advance()"]
+N3["Complete()"]
 
-Advance()
-
-↓
-
-Complete()
+N1 --> N2
+N2 --> N3
 ```
 
 The Aggregate enforces its own rules.
@@ -304,26 +304,26 @@ Example.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Progress = 120%"]
 
-Progress = 120%
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Playback.Advance()
+```mermaid
+flowchart TD
 
-↓
+N1["Playback.Advance()"]
+N2["Validation"]
+N3["Progress = 100%"]
 
-Validation
-
-↓
-
-Progress = 100%
+N1 --> N2
+N2 --> N3
 ```
 
 Invalid state should never be observable.
@@ -336,22 +336,24 @@ Aggregates SHOULD reference other Aggregates by identity.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["MediaID"]
 
-MediaID
+N1 --> N2
 ```
 
 Not.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Entire Media Aggregate"]
 
-Entire Media Aggregate
+N1 --> N2
 ```
 
 Identity references reduce coupling.
@@ -374,22 +376,24 @@ Example.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Modify User Aggregate"]
 
-Modify User Aggregate
+N1 --> N2
 ```
 
 Preferred.
 
-```
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["User Context Reacts"]
 
-User Context Reacts
+N1 --> N2
 ```
 
 The runtime coordinates.
@@ -404,16 +408,15 @@ The Aggregate Root owns the lifetime of everything inside it.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Collection Item"]
+N3["Artwork Preference"]
 
-Collection Item
-
-↓
-
-Artwork Preference
+N1 --> N2
+N2 --> N3
 ```
 
 Removing the Aggregate removes its internal concepts.
@@ -428,41 +431,35 @@ One transaction should modify one Aggregate.
 
 Poor.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-+
+N1["Playback"]
+N2["User"]
+N3["Metadata"]
+N4["Single Transaction"]
 
-User
-
-+
-
-Metadata
-
-↓
-
-Single Transaction
+N1 --> N4
+N2 --> N4
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Commit"]
+N3["PlaybackCompleted"]
+N4["Other Aggregates React"]
 
-Commit
-
-↓
-
-PlaybackCompleted
-
-↓
-
-Other Aggregates React
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
-This naturally complements the Event-Driven Runtime defined in MEG-002.
+This naturally complements the Event-Driven Runtime defined in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 ---
 
@@ -495,16 +492,15 @@ Aggregates are the primary source of Domain Events.
 
 Example.
 
-```
-Playback Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Aggregate"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 Business events originate from business behaviour.
@@ -520,16 +516,19 @@ Repositories persist entire Aggregates.
 Poor.
 
 ```
+
 PlaybackPositionRepository
 ```
 
 ```
+
 PlaybackProgressRepository
 ```
 
 Preferred.
 
 ```
+
 PlaybackRepository
 ```
 
@@ -545,46 +544,41 @@ Large Aggregates often indicate poor modelling.
 
 Poor.
 
-```
-Library
+```mermaid
+flowchart TD
 
-↓
+N1["Library"]
+N2["Collections"]
+N3["Media"]
+N4["Metadata"]
+N5["Playback"]
+N6["Users"]
 
-Collections
-
-↓
-
-Media
-
-↓
-
-Metadata
-
-↓
-
-Playback
-
-↓
-
-Users
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Better.
 
+```mermaid
+flowchart TD
+
+N1["Library"]
+N2["Collection IDs"]
+
+N1 --> N2
 ```
-Library
 
-↓
+```mermaid
+flowchart TD
 
-Collection IDs
-```
+N1["Playback"]
+N2["Media ID"]
 
-```
-Playback
-
-↓
-
-Media ID
+N1 --> N2
 ```
 
 Small Aggregates naturally improve scalability.
@@ -610,6 +604,7 @@ If the answer is convenience, reconsider the boundary.
 Examples of Aggregates within Mosaic include:
 
 ```
+
 Library
 ```
 
@@ -622,6 +617,7 @@ Responsible for:
 ---
 
 ```
+
 Playback Session
 ```
 
@@ -634,6 +630,7 @@ Responsible for:
 ---
 
 ```
+
 Collection
 ```
 
@@ -653,12 +650,13 @@ The following practices are prohibited.
 
 ## Giant Aggregates
 
-```
-Media Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Media Platform"]
+N2["Everything"]
 
-Everything
+N1 --> N2
 ```
 
 ---
@@ -735,23 +733,3 @@ Within Mosaic they provide:
 Every Aggregate should exist because it protects an important business rule.
 
 If it does not, it probably should not exist.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`07-value-objects.md`
-
-**Next File**
-
-`09-aggregate-roots.md`

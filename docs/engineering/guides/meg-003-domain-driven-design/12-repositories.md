@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/12-repositories.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Repositories
@@ -63,20 +63,17 @@ A Repository provides the illusion that Aggregates are stored within an in-memor
 
 Conceptually.
 
-```
-Playback Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Repository"]
+N2["Load Playback Session"]
+N3["Modify Aggregate"]
+N4["Save Aggregate"]
 
-Load Playback Session
-
-↓
-
-Modify Aggregate
-
-↓
-
-Save Aggregate
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 How that Aggregate is stored is irrelevant to the domain.
@@ -87,40 +84,34 @@ How that Aggregate is stored is irrelevant to the domain.
 
 Without Repositories:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["SQL"]
+N3["Database"]
+N4["Rows"]
+N5["Business Logic"]
 
-SQL
-
-↓
-
-Database
-
-↓
-
-Rows
-
-↓
-
-Business Logic
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The business now understands infrastructure.
 
 Instead:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Repository"]
+N3["Persistence"]
 
-Repository
-
-↓
-
-Persistence
+N1 --> N2
+N2 --> N3
 ```
 
 The Aggregate remains infrastructure agnostic.
@@ -156,29 +147,33 @@ Every Aggregate Root SHOULD have one Repository.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Playback Aggregate"]
+N2["PlaybackRepository"]
+
+N1 --> N2
 ```
-Playback Aggregate
 
-↓
+```mermaid
+flowchart TD
 
-PlaybackRepository
-```
+N1["Library Aggregate"]
+N2["LibraryRepository"]
 
-```
-Library Aggregate
-
-↓
-
-LibraryRepository
+N1 --> N2
 ```
 
 Not:
 
 ```
+
 PlaybackPositionRepository
 ```
 
 ```
+
 WatchProgressRepository
 ```
 
@@ -196,22 +191,24 @@ Repositories should load and save Aggregate Roots.
 
 Poor.
 
-```
-PlaybackProgress
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackProgress"]
+N2["Repository"]
 
-Repository
+N1 --> N2
 ```
 
 Preferred.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Repository"]
 
-Repository
+N1 --> N2
 ```
 
 Internal Entities remain internal.
@@ -227,6 +224,7 @@ Repositories should feel like collections.
 Examples.
 
 ```
+
 Find()
 
 Save()
@@ -241,14 +239,17 @@ They should not expose database operations.
 Poor.
 
 ```
+
 ExecuteSQL()
 ```
 
 ```
+
 RunQuery()
 ```
 
 ```
+
 UpdateRow()
 ```
 
@@ -294,20 +295,22 @@ Implementations belong to infrastructure.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Domain"]
+N2["PlaybackRepository Interface"]
+
+N1 --> N2
 ```
-Domain
 
-↓
+```mermaid
+flowchart TD
 
-PlaybackRepository Interface
-```
+N1["Infrastructure"]
+N2["PostgresPlaybackRepository"]
 
-```
-Infrastructure
-
-↓
-
-PostgresPlaybackRepository
+N1 --> N2
 ```
 
 The Domain knows nothing about PostgreSQL.
@@ -350,16 +353,15 @@ They do not own them.
 
 Typical flow.
 
-```
-Load Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Load Aggregate"]
+N2["Business Behaviour"]
+N3["Save Aggregate"]
 
-Business Behaviour
-
-↓
-
-Save Aggregate
+N1 --> N2
+N2 --> N3
 ```
 
 The Repository persists the Aggregate.
@@ -376,22 +378,24 @@ Complex reporting queries often belong elsewhere.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["Playback Aggregate"]
 
-Playback Aggregate
+N1 --> N2
 ```
 
 versus.
 
-```
-Continue Watching View
+```mermaid
+flowchart TD
 
-↓
+N1["Continue Watching View"]
+N2["Read Model"]
 
-Read Model
+N1 --> N2
 ```
 
 Repositories should not become reporting engines.
@@ -413,14 +417,17 @@ While technically elegant, generic repositories frequently describe persistence 
 Instead.
 
 ```
+
 PlaybackRepository
 ```
 
 ```
+
 LibraryRepository
 ```
 
 ```
+
 CollectionRepository
 ```
 
@@ -460,40 +467,42 @@ Repositories should remain small.
 
 Poor.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["Save"]
+N3["Find"]
+N4["Export"]
+N5["Metrics"]
+N6["Analytics"]
+N7["Search"]
+N8["Cache"]
+N9["Notifications"]
 
-Save
-
-Find
-
-Export
-
-Metrics
-
-Analytics
-
-Search
-
-Cache
-
-Notifications
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
 ```
 
 Better.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["Load"]
+N3["Save"]
+N4["Delete"]
 
-Load
-
-Save
-
-Delete
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 Business behaviour belongs elsewhere.
@@ -504,24 +513,19 @@ Business behaviour belongs elsewhere.
 
 Poor.
 
-```
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["Load"]
+N3["Modify Aggregate"]
+N4["Publish Events"]
+N5["Call API"]
 
-Load
-
-↓
-
-Modify Aggregate
-
-↓
-
-Publish Events
-
-↓
-
-Call API
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Repositories should simply persist Aggregates.
@@ -580,12 +584,13 @@ Repositories should be replaceable during testing.
 
 Example.
 
-```
-PlaybackRepository
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackRepository"]
+N2["In-Memory Repository"]
 
-In-Memory Repository
+N1 --> N2
 ```
 
 Business tests should not require:
@@ -605,6 +610,7 @@ The following practices are prohibited.
 ## Generic Repository
 
 ```
+
 Repository<T>
 ```
 
@@ -621,6 +627,7 @@ Repositories for child Entities.
 ## SQL In The Domain
 
 ```
+
 SELECT ...
 ```
 
@@ -690,23 +697,3 @@ Within Mosaic, they exist for one purpose:
 When implemented correctly, changing PostgreSQL to another storage engine should require changes only within infrastructure.
 
 The business should never notice.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`11-domain-events.md`
-
-**Next File**
-
-`13-factories.md`

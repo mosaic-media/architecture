@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/01-domain-philosophy.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Domain Philosophy
@@ -66,20 +66,24 @@ A domain is the area of knowledge the software exists to support.
 Examples include:
 
 ```
+
 Banking
 ```
 
 ```
+
 Healthcare
 ```
 
 ```
+
 Retail
 ```
 
 For Mosaic:
 
 ```
+
 Media Management
 ```
 
@@ -95,38 +99,32 @@ One of the easiest mistakes engineers make is allowing technology to shape the d
 
 Poor.
 
-```
-Database
+```mermaid
+flowchart TD
 
-↓
+N1["Database"]
+N2["Tables"]
+N3["Models"]
+N4["Business"]
 
-Tables
-
-↓
-
-Models
-
-↓
-
-Business
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Business
+```mermaid
+flowchart TD
 
-↓
+N1["Business"]
+N2["Concepts"]
+N3["Domain Model"]
+N4["Persistence"]
 
-Concepts
-
-↓
-
-Domain Model
-
-↓
-
-Persistence
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The database stores the domain.
@@ -173,12 +171,14 @@ A domain model should become deeper over time.
 Early understanding.
 
 ```
+
 Media
 ```
 
 Later understanding.
 
 ```
+
 Movie
 
 Series
@@ -193,6 +193,7 @@ Collection
 Even later.
 
 ```
+
 Watched
 
 In Progress
@@ -219,18 +220,22 @@ Many systems accidentally model implementation rather than business.
 Examples.
 
 ```
+
 MediaDTO
 ```
 
 ```
+
 MediaEntity
 ```
 
 ```
+
 MediaRecord
 ```
 
 ```
+
 MediaRow
 ```
 
@@ -241,6 +246,7 @@ They describe implementation.
 The domain should instead contain:
 
 ```
+
 Media
 ```
 
@@ -254,36 +260,32 @@ A business expert should recognise domain terminology.
 
 For example.
 
-```
-PlaybackStarted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackStarted"]
+N2["Playback"]
+N3["Watch Progress"]
+N4["Library"]
 
-Playback
-
-↓
-
-Watch Progress
-
-↓
-
-Library
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 These concepts make sense to a product owner.
 
 Contrast with:
 
-```
-PlaybackManager
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackManager"]
+N2["MediaDTO"]
+N3["PlaybackController"]
 
-MediaDTO
-
-↓
-
-PlaybackController
+N1 --> N2
+N2 --> N3
 ```
 
 These names primarily communicate implementation.
@@ -297,6 +299,7 @@ The software should speak the language of the business wherever possible.
 Many applications begin with CRUD.
 
 ```
+
 Create
 
 Read
@@ -313,12 +316,14 @@ It does not describe business behaviour.
 For example:
 
 ```
+
 PlaybackCompleted
 ```
 
 is far richer than:
 
 ```
+
 Update Playback Record
 ```
 
@@ -336,30 +341,28 @@ A common mistake is equating domain models with persistence models.
 
 Example.
 
-```
-Database Table
+```mermaid
+flowchart TD
 
-↓
+N1["Database Table"]
+N2["Go Struct"]
+N3["Domain"]
 
-Go Struct
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Instead.
 
-```
-Domain Concept
+```mermaid
+flowchart TD
 
-↓
+N1["Domain Concept"]
+N2["Persistence Model"]
+N3["Database"]
 
-Persistence Model
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
 ```
 
 Persistence exists to support the domain.
@@ -379,6 +382,7 @@ They should not define it.
 Example.
 
 ```
+
 Continue Watching
 ```
 
@@ -405,34 +409,30 @@ Example.
 
 Poor.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Validate Playback"]
+N3["Repository"]
+N4["Database"]
 
-Validate Playback
-
-↓
-
-Repository
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Business Rules"]
+N3["Repository"]
 
-Business Rules
-
-↓
-
-Repository
+N1 --> N2
+N2 --> N3
 ```
 
 The domain should enforce its own rules.
@@ -449,28 +449,30 @@ Mosaic models behaviour.
 
 Instead of:
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Fields"]
 
-Fields
+N1 --> N2
 ```
 
 Think:
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Can Be Imported"]
+N3["Can Be Played"]
+N4["Can Be Archived"]
+N5["Can Be Indexed"]
 
-Can Be Imported
-
-Can Be Played
-
-Can Be Archived
-
-Can Be Indexed
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 The domain is defined by what concepts **do**, not merely what they contain.
@@ -483,28 +485,31 @@ Every concept belongs somewhere.
 
 Examples.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Watch Progress"]
 
-Watch Progress
-```
-
-```
-Library
-
-↓
-
-Collections
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Library"]
+N2["Collections"]
+
+N1 --> N2
 ```
-Metadata
 
-↓
+```mermaid
+flowchart TD
 
-Artwork
+N1["Metadata"]
+N2["Artwork"]
+
+N1 --> N2
 ```
 
 Ownership should remain explicit.
@@ -595,23 +600,3 @@ The true objective is much simpler.
 > **Create software that speaks the language of the business so naturally that the code itself becomes a model of the domain.**
 
 When the software reflects the business rather than the technology, understanding becomes easier, change becomes cheaper and architecture becomes significantly more resilient.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`00-document-control.md`
-
-**Next File**
-
-`02-ubiquitous-language.md`

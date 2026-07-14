@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/14-domain-invariants.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Domain Invariants
@@ -51,6 +51,7 @@ A Domain Invariant is a business rule that must always be true.
 Examples include:
 
 ```
+
 Playback Progress
 
 ≤
@@ -58,20 +59,22 @@ Playback Progress
 Media Duration
 ```
 
+```mermaid
+flowchart TD
+
+N1["Collection"]
+N2["Unique Media"]
+
+N1 --> N2
 ```
-Collection
 
-↓
+```mermaid
+flowchart TD
 
-Unique Media
-```
+N1["User"]
+N2["Unique Username"]
 
-```
-User
-
-↓
-
-Unique Username
+N1 --> N2
 ```
 
 The business assumes these rules are always satisfied.
@@ -84,16 +87,15 @@ The software should enforce them accordingly.
 
 Without invariants:
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Duration = 90 Minutes"]
+N3["Progress = 120 Minutes"]
 
-Duration = 90 Minutes
-
-↓
-
-Progress = 120 Minutes
+N1 --> N2
+N2 --> N3
 ```
 
 The system now contains impossible business state.
@@ -115,20 +117,24 @@ Examples.
 Good.
 
 ```
+
 Library Name Required
 ```
 
 ```
+
 Playback Cannot Complete Before It Starts
 ```
 
 Poor.
 
 ```
+
 Maximum HTTP Connections
 ```
 
 ```
+
 Database Timeout
 ```
 
@@ -149,30 +155,28 @@ Business rules should never be enforced solely by:
 
 Poor.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Validate"]
+N3["Domain"]
 
-Validate
-
-↓
-
-Domain
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```
-Domain
+```mermaid
+flowchart TD
 
-↓
+N1["Domain"]
+N2["Validate"]
+N3["Always Correct"]
 
-Validate
-
-↓
-
-Always Correct
+N1 --> N2
+N2 --> N3
 ```
 
 Infrastructure may validate for convenience.
@@ -187,20 +191,17 @@ Aggregates own invariants.
 
 Example.
 
-```
-PlaybackSession
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackSession"]
+N2["Advance()"]
+N3["Validate Progress"]
+N4["Apply Change"]
 
-Advance()
-
-↓
-
-Validate Progress
-
-↓
-
-Apply Change
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Aggregate protects itself.
@@ -215,16 +216,15 @@ Entities may also enforce local invariants.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Rename()"]
+N3["Name Cannot Be Empty"]
 
-Rename()
-
-↓
-
-Name Cannot Be Empty
+N1 --> N2
+N2 --> N3
 ```
 
 The Entity understands the rule because it owns the concept.
@@ -263,26 +263,26 @@ Factories should also enforce invariants.
 
 Poor.
 
-```
-Create Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Create Aggregate"]
+N2["Validate Later"]
 
-Validate Later
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Validate
+```mermaid
+flowchart TD
 
-↓
+N1["Validate"]
+N2["Create Aggregate"]
+N3["Always Valid"]
 
-Create Aggregate
-
-↓
-
-Always Valid
+N1 --> N2
+N2 --> N3
 ```
 
 Every Aggregate should begin life in a valid business state.
@@ -325,17 +325,19 @@ Not correction.
 
 Poor.
 
-```
-Invalid State
+```mermaid
+flowchart TD
 
-↓
+N1["Invalid State"]
+N2["Fix Later"]
 
-Fix Later
+N1 --> N2
 ```
 
 Preferred.
 
 ```
+
 Reject Invalid Change
 ```
 
@@ -349,12 +351,13 @@ Some invariants exist entirely inside one Aggregate.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Duplicate Media Prohibited"]
 
-Duplicate Media Prohibited
+N1 --> N2
 ```
 
 Only the Collection Aggregate needs to understand this rule.
@@ -372,10 +375,12 @@ Some business rules appear to span multiple Aggregates.
 Example.
 
 ```
+
 Library Storage Quota
 ```
 
 ```
+
 Subscription Limits
 ```
 
@@ -383,20 +388,17 @@ These should rarely be enforced through distributed transactions.
 
 Instead.
 
-```
-Aggregate
+```mermaid
+flowchart TD
 
-↓
+N1["Aggregate"]
+N2["Domain Event"]
+N3["Another Aggregate"]
+N4["Eventually Consistent"]
 
-Domain Event
-
-↓
-
-Another Aggregate
-
-↓
-
-Eventually Consistent
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Only rules requiring immediate consistency belong inside one Aggregate.
@@ -433,16 +435,15 @@ Intent-revealing methods naturally reinforce business rules.
 
 Business behaviour should generally follow this pattern.
 
-```
-Validate
+```mermaid
+flowchart TD
 
-↓
+N1["Validate"]
+N2["Modify State"]
+N3["Raise Domain Event"]
 
-Modify State
-
-↓
-
-Raise Domain Event
+N1 --> N2
+N2 --> N3
 ```
 
 If validation fails:
@@ -461,26 +462,26 @@ Domain Events should only be raised after invariants have been satisfied.
 
 Poor.
 
-```
-Raise Event
+```mermaid
+flowchart TD
 
-↓
+N1["Raise Event"]
+N2["Validation Fails"]
 
-Validation Fails
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Validation
+```mermaid
+flowchart TD
 
-↓
+N1["Validation"]
+N2["State Change"]
+N3["Raise Event"]
 
-State Change
-
-↓
-
-Raise Event
+N1 --> N2
+N2 --> N3
 ```
 
 Events describe completed truth.
@@ -495,16 +496,15 @@ Repositories should never repair broken Aggregates.
 
 Poor.
 
-```
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["Fix Invalid Aggregate"]
+N3["Save"]
 
-Fix Invalid Aggregate
-
-↓
-
-Save
+N1 --> N2
+N2 --> N3
 ```
 
 If an Aggregate reaches persistence in an invalid state:
@@ -542,14 +542,17 @@ Every invariant SHOULD have dedicated tests.
 Examples.
 
 ```
+
 Progress Cannot Exceed Duration
 ```
 
 ```
+
 Collection Rejects Duplicates
 ```
 
 ```
+
 Empty Library Name Rejected
 ```
 
@@ -571,17 +574,19 @@ For example.
 
 Initially.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["Maximum 100 Items"]
 
-Maximum 100 Items
+N1 --> N2
 ```
 
 Later.
 
 ```
+
 Unlimited Collections
 ```
 
@@ -699,24 +704,19 @@ Invariants ensure they remain correct.
 
 Together they guarantee:
 
-```
-Construction
+```mermaid
+flowchart TD
 
-↓
+N1["Construction"]
+N2["Valid Aggregate"]
+N3["Business Behaviour"]
+N4["Valid Aggregate"]
+N5["Persistence"]
 
-Valid Aggregate
-
-↓
-
-Business Behaviour
-
-↓
-
-Valid Aggregate
-
-↓
-
-Persistence
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The next chapter introduces **Modelling Guidelines**, bringing together the concepts introduced throughout MEG-003 into practical modelling advice for engineers designing new business capabilities.
@@ -736,23 +736,3 @@ They are the reason the Domain Model exists.
 Within Mosaic, every Aggregate, Entity and Value Object should actively prevent invalid business state rather than attempting to repair it afterwards.
 
 Correctness should be the natural outcome of the model itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`13-factories.md`
-
-**Next File**
-
-`15-modelling-guidelines.md`

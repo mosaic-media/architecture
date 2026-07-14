@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/17-contributor-guidance.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -187,6 +187,7 @@ Ask:
 If the event describes:
 
 ```
+
 Do Something
 ```
 
@@ -195,6 +196,7 @@ it is probably a command.
 If it describes:
 
 ```
+
 Something Happened
 ```
 
@@ -354,40 +356,27 @@ Pure domain tests provide the fastest feedback and the clearest business validat
 
 New contributors SHOULD study the Domain Model in the following order.
 
-```
-Ubiquitous Language
+```mermaid
+flowchart TD
 
-↓
+N1["Ubiquitous Language"]
+N2["Subdomains"]
+N3["Bounded Contexts"]
+N4["Context Maps"]
+N5["Aggregates"]
+N6["Entities"]
+N7["Value Objects"]
+N8["Domain Services"]
+N9["Domain Events"]
 
-Subdomains
-
-↓
-
-Bounded Contexts
-
-↓
-
-Context Maps
-
-↓
-
-Aggregates
-
-↓
-
-Entities
-
-↓
-
-Value Objects
-
-↓
-
-Domain Services
-
-↓
-
-Domain Events
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
 Understanding terminology first dramatically improves modelling quality.
@@ -465,23 +454,3 @@ Within Mosaic, the highest compliment a contributor can receive is not:
 It is:
 
 > **"That models the business perfectly."**
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`16-adrs.md`
-
-**Next File**
-
-`glossary.md`

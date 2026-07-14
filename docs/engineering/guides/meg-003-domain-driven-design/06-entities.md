@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/06-entities.md
 Document: MEG-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Entities
@@ -52,18 +52,22 @@ An Entity is a business object whose identity remains stable throughout its life
 Examples include:
 
 ```
+
 Media
 ```
 
 ```
+
 User
 ```
 
 ```
+
 Collection
 ```
 
 ```
+
 Playback Session
 ```
 
@@ -84,28 +88,21 @@ Identity is the defining characteristic of an Entity.
 
 Example.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Media ID"]
+N3["Title Changes"]
+N4["Artwork Changes"]
+N5["Metadata Changes"]
+N6["Still The Same Media"]
 
-Media ID
-
-↓
-
-Title Changes
-
-↓
-
-Artwork Changes
-
-↓
-
-Metadata Changes
-
-↓
-
-Still The Same Media
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Everything except identity may change.
@@ -122,30 +119,28 @@ Not the database.
 
 Poor.
 
-```
-Database Row
+```mermaid
+flowchart TD
 
-↓
+N1["Database Row"]
+N2["Primary Key"]
+N3["Entity"]
 
-Primary Key
-
-↓
-
-Entity
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```
-Business Concept
+```mermaid
+flowchart TD
 
-↓
+N1["Business Concept"]
+N2["Business Identity"]
+N3["Persistence"]
 
-Business Identity
-
-↓
-
-Persistence
+N1 --> N2
+N2 --> N3
 ```
 
 The database stores identity.
@@ -161,24 +156,29 @@ Identity should represent something meaningful to the business.
 Examples.
 
 ```
+
 MediaID
 ```
 
 ```
+
 UserID
 ```
 
 ```
+
 CollectionID
 ```
 
 Avoid exposing infrastructure concepts such as:
 
 ```
+
 RowNumber
 ```
 
 ```
+
 AutoIncrement
 ```
 
@@ -192,28 +192,21 @@ Every Entity has a lifecycle.
 
 Example.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Imported"]
+N3["Metadata Updated"]
+N4["Played"]
+N5["Archived"]
+N6["Deleted"]
 
-Imported
-
-↓
-
-Metadata Updated
-
-↓
-
-Played
-
-↓
-
-Archived
-
-↓
-
-Deleted
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The Entity remains the same throughout.
@@ -228,20 +221,17 @@ Entities naturally contain mutable state.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Position"]
+N3["Watched Percentage"]
+N4["Completed"]
 
-Position
-
-↓
-
-Watched Percentage
-
-↓
-
-Completed
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Changing these values does not create a new Playback Entity.
@@ -290,17 +280,19 @@ Example.
 
 A Playback Entity should never allow:
 
-```
-Progress
+```mermaid
+flowchart TD
 
-↓
+N1["Progress"]
+N2["120%"]
 
-120%
+N1 --> N2
 ```
 
 Or:
 
 ```
+
 Negative Duration
 ```
 
@@ -316,20 +308,22 @@ Every Entity belongs to exactly one Bounded Context.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Playback Context"]
+N2["Playback Entity"]
+
+N1 --> N2
 ```
-Playback Context
 
-↓
+```mermaid
+flowchart TD
 
-Playback Entity
-```
+N1["Metadata Context"]
+N2["Metadata Entity"]
 
-```
-Metadata Context
-
-↓
-
-Metadata Entity
+N1 --> N2
 ```
 
 Entities should never belong simultaneously to multiple contexts.
@@ -344,22 +338,24 @@ Entities should reference other Entities by identity.
 
 Preferred.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["MediaID"]
 
-MediaID
+N1 --> N2
 ```
 
 Not.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Entire Media Object"]
 
-Entire Media Object
+N1 --> N2
 ```
 
 Referencing identities rather than object graphs reduces coupling between aggregates and bounded contexts.
@@ -372,12 +368,13 @@ Entities are equal if their identities are equal.
 
 Example.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["ID = 123"]
 
-ID = 123
+N1 --> N2
 ```
 
 Even if:
@@ -406,12 +403,13 @@ media := &Media{}
 
 Later.
 
-```
-Populate Fields
+```mermaid
+flowchart TD
 
-↓
+N1["Populate Fields"]
+N2["Validate"]
 
-Validate
+N1 --> N2
 ```
 
 Preferred.
@@ -450,16 +448,15 @@ Entities frequently publish Domain Events.
 
 Example.
 
-```
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Complete()"]
+N3["PlaybackCompleted"]
 
-Complete()
-
-↓
-
-PlaybackCompleted
+N1 --> N2
+N2 --> N3
 ```
 
 The Entity owns the business transition.
@@ -482,18 +479,19 @@ type Media struct {
 
 Followed by:
 
-```
-MediaService
+```mermaid
+flowchart TD
 
-↓
+N1["MediaService"]
+N2["Rename()"]
+N3["Validate()"]
+N4["Archive()"]
+N5["Delete()"]
 
-Rename()
-
-Validate()
-
-Archive()
-
-Delete()
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 The Entity has become little more than a database record.
@@ -538,16 +536,15 @@ They should not become deeply nested object graphs.
 
 Example.
 
-```
-Collection
+```mermaid
+flowchart TD
 
-↓
+N1["Collection"]
+N2["MediaID"]
+N3["Media Retrieved Through Repository"]
 
-MediaID
-
-↓
-
-Media Retrieved Through Repository
+N1 --> N2
+N2 --> N3
 ```
 
 Avoid loading the entire domain into memory unnecessarily.
@@ -562,30 +559,32 @@ Entity behaviour should evolve as understanding improves.
 
 Initially.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Title"]
 
-Title
+N1 --> N2
 ```
 
 Later.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Rename()"]
+N3["Archive()"]
+N4["Restore()"]
+N5["Move()"]
+N6["ChangeArtwork()"]
 
-Rename()
-
-Archive()
-
-Restore()
-
-Move()
-
-ChangeArtwork()
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
 ```
 
 Behaviour grows alongside business understanding.
@@ -619,22 +618,27 @@ The next chapter explores this distinction.
 Examples of Entities within Mosaic include:
 
 ```
+
 Media
 ```
 
 ```
+
 User
 ```
 
 ```
+
 Collection
 ```
 
 ```
+
 PlaybackSession
 ```
 
 ```
+
 Library
 ```
 
@@ -728,23 +732,3 @@ Within Mosaic, Entities:
 - evolve over time
 
 By placing behaviour alongside business concepts, the domain model becomes more expressive, more maintainable and significantly closer to the language of the business itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`05-context-maps.md`
-
-**Next File**
-
-`07-value-objects.md`
