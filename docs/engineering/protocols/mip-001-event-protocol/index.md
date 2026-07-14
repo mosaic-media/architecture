@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/index.md
 Document: MIP-001
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # MIP-001 — Event Protocol
@@ -25,11 +25,15 @@ MIP-001 defines the protocol those implementations must preserve.
 
 Within Mosaic:
 
-> **Every event consists of an immutable Platform envelope surrounding an immutable business payload.**
+> **The Platform transports events. Modules give events meaning.**
 
-The Platform owns the envelope.
+Every event consists of an immutable Platform envelope surrounding an immutable payload.
 
-Capabilities own the payload.
+The SDK defines the envelope.
+
+The Platform owns transport, routing, delivery and reliability.
+
+Modules own domain event names, payloads, semantics, documentation and versioning.
 
 ---
 
@@ -42,6 +46,8 @@ This protocol defines:
 - naming rules
 - versioning rules
 - compatibility expectations
+- event ownership
+- public and private Module event visibility
 
 It does not define:
 

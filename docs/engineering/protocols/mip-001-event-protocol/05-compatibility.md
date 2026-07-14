@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/05-compatibility.md
 Document: MIP-001
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # 05 — Compatibility
@@ -25,6 +25,8 @@ Publishers should:
 - version payload contracts deliberately
 - document compatibility expectations
 - avoid removing fields without migration
+- declare public published events in the Module manifest
+- keep private events out of the external integration contract
 
 Subscribers should:
 
@@ -32,9 +34,20 @@ Subscribers should:
 - validate required fields
 - fail explicitly on unsupported versions
 - avoid relying on Platform envelope internals beyond the published contract
+- subscribe only to public events or Platform events unless explicitly participating in the same Module implementation boundary
+
+The Platform should:
+
+- route events without interpreting domain payloads
+- expose event visibility and version metadata to diagnostics
+- validate manifest-declared event publications and subscriptions before build where possible
 
 ---
 
 # Protocol Rule
 
 > **Events are contracts. Contracts evolve deliberately, never accidentally.**
+
+Public events are contracts.
+
+Private events are implementation details.

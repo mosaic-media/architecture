@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-001-event-protocol/references.md
 Document: MIP-001
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # References
