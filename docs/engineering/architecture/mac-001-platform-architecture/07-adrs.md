@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/07-adrs.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # Architectural Decision Records
@@ -13,7 +13,7 @@ Version: 0.3
 
 This chapter records decisions that govern MAC-001.
 
-Decision process, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
+Decision process, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 ---
 
@@ -124,10 +124,10 @@ Client presentation remains separate because the Platform emits Runtime SDUI rat
 
 Engineering guides should treat MAC-001 as the authority for Platform ownership.
 
-MEG-005 should describe Runtime implementation details without redefining Platform purpose.
+[MEG-005](../../guides/meg-005-runtime-architecture/index.md) should describe Runtime implementation details without redefining Platform purpose.
 
-MEG-006 should describe Module participation without giving Modules direct coordination authority.
+[MEG-006](../../guides/meg-006-module-platform/index.md) should describe Module participation without giving Modules direct coordination authority.
 
 MIP specifications should define protocol details for events and manifests without changing ownership boundaries.
 
-MDS-008 should govern how Runtime SDUI becomes client presentation.
+[MDS-008](../../../design/system/mds-008-component-library/index.md) should govern how Runtime SDUI becomes client presentation.

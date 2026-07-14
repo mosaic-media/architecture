@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/06-contract-and-communication-model.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # 06 — Contract And Communication Model
@@ -56,20 +56,17 @@ They answer:
 
 Example.
 
-```text
-Playback
+```mermaid
+flowchart TD
 
-↓
+N1["Playback"]
+N2["Metadata Manager"]
+N3["Provider"]
+N4["Result"]
 
-Metadata Manager
-
-↓
-
-Provider
-
-↓
-
-Result
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Capability calls should flow through Platform-owned managers rather than direct Module-to-Module dependencies.
@@ -84,24 +81,19 @@ It announces:
 
 Example.
 
-```text
-Media Added
+```mermaid
+flowchart TD
 
-↓
+N1["Media Added"]
+N2["Metadata"]
+N3["Artwork"]
+N4["Recommendations"]
+N5["Analytics"]
 
-Metadata
-
-↓
-
-Artwork
-
-↓
-
-Recommendations
-
-↓
-
-Analytics
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The publisher should not know who is listening.
@@ -166,7 +158,7 @@ The Platform does not know:
 
 Client renderers consume Runtime SDUI and apply Mosaic presentation locally.
 
-MDS-008 defines rendering responsibilities for client presentation.
+[MDS-008](../../../design/system/mds-008-component-library/index.md) defines rendering responsibilities for client presentation.
 
 ---
 

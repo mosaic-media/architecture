@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/03-capability-model.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # 03 — Capability Model
@@ -312,36 +312,25 @@ Capability discovery happens automatically as part of normal Go startup after th
 
 Conceptually.
 
-```text
-Supervisor
+```mermaid
+flowchart TD
 
-↓
+N1["Supervisor"]
+N2["Downloads Modules"]
+N3["Builds Platform"]
+N4["Platform Starts"]
+N5["Go init"]
+N6["SDK Registry Populated"]
+N7["Capability Managers Built"]
+N8["Platform Ready"]
 
-Downloads Modules
-
-↓
-
-Builds Platform
-
-↓
-
-Platform Starts
-
-↓
-
-Go init
-
-↓
-
-SDK Registry Populated
-
-↓
-
-Capability Managers Built
-
-↓
-
-Platform Ready
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 The Platform builds Capability Managers from registered Modules without runtime plugin loading.

@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/04-module-model.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # 04 — Module Model
@@ -55,7 +55,7 @@ They must declare:
 - consumed contracts
 - lifecycle expectations
 
-These declarations belong to MIP-002.
+These declarations belong to [MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md).
 
 ---
 
@@ -81,28 +81,21 @@ Module discovery follows the activated Platform package.
 
 Conceptually.
 
-```text
-Supervisor
+```mermaid
+flowchart TD
 
-↓
+N1["Supervisor"]
+N2["Build Pipeline"]
+N3["imports.go"]
+N4["Go init"]
+N5["SDK Registry"]
+N6["Platform Discovery"]
 
-Build Pipeline
-
-↓
-
-imports.go
-
-↓
-
-Go init
-
-↓
-
-SDK Registry
-
-↓
-
-Platform Discovery
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 At runtime, the Platform asks the SDK Registry for registered Modules.
@@ -125,16 +118,15 @@ Dependencies always point toward Platform contracts.
 
 Conceptually.
 
-```text
-Modules
+```mermaid
+flowchart TD
 
-↓
+N1["Modules"]
+N2["SDK"]
+N3["Platform Contracts"]
 
-SDK
-
-↓
-
-Platform Contracts
+N1 --> N2
+N2 --> N3
 ```
 
 Modules must not reference each other directly.

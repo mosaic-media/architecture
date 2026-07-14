@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/05-architecture-principles.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # 05 — Architecture Principles

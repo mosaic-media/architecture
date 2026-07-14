@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/02-runtime-boundary.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # 02 — Runtime Boundary
@@ -84,36 +84,25 @@ The Platform starts after the Supervisor has activated a Generation.
 
 Conceptually.
 
-```text
-Supervisor
+```mermaid
+flowchart TD
 
-↓
+N1["Supervisor"]
+N2["Build Pipeline"]
+N3["Platform Starts"]
+N4["Go init"]
+N5["SDK Registry"]
+N6["Capability Managers"]
+N7["GraphQL"]
+N8["Ready"]
 
-Build Pipeline
-
-↓
-
-Platform Starts
-
-↓
-
-Go init
-
-↓
-
-SDK Registry
-
-↓
-
-Capability Managers
-
-↓
-
-GraphQL
-
-↓
-
-Ready
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 The Platform is unaware of compilation.

@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/index.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # MAC-001 — Platform Architecture
@@ -55,16 +55,15 @@ It should not accumulate business behaviour simply because the behaviour is impo
 
 Conceptually.
 
-```text
-Supervisor
+```mermaid
+flowchart TD
 
-↓ invokes Build Pipeline and manages lifecycle
+N1["Supervisor"]
+N2["Platform"]
+N3["Modules"]
 
-Platform
-
-↓ coordinates capabilities
-
-Modules
+N1 -->|invokes Build Pipeline and manages lifecycle| N2
+N2 -->|coordinates capabilities| N3
 ```
 
 The Platform owns orchestration.
@@ -107,12 +106,12 @@ MAC-001 is the authoritative home for Mosaic's platform architecture.
 
 Related implementation and protocol documents include:
 
-- MEG-002 — Event-Driven Runtime
-- MEG-005 — Runtime Architecture
-- MEG-006 — Module Platform
-- MIP-001 — Event Protocol
-- MIP-002 — Module Manifest Protocol
-- MOP-001 — Observability Operations
-- MDS-008 — Component Library
+- [MEG-002 — Event-Driven Runtime](../../guides/meg-002-event-driven-runtime/index.md)
+- [MEG-005 — Runtime Architecture](../../guides/meg-005-runtime-architecture/index.md)
+- [MEG-006 — Module Platform](../../guides/meg-006-module-platform/index.md)
+- [MIP-001 — Event Protocol](../../protocols/mip-001-event-protocol/index.md)
+- [MIP-002 — Module Manifest Protocol](../../protocols/mip-002-module-manifest-protocol/index.md)
+- [MOP-001 — Observability Operations](../../operations/mop-001-observability-operations/index.md)
+- [MDS-008 — Component Library](../../../design/system/mds-008-component-library/index.md)
 
 When these documents need to explain platform ownership, they should reference MAC-001 rather than redefining it.

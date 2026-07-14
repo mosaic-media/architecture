@@ -2,7 +2,7 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/glossary.md
 Document: MAC-001
 Status: Draft
-Version: 0.3
+Version: 0.4
 -->
 
 # Glossary
