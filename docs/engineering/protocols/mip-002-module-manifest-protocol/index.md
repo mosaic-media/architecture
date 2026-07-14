@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/index.md
 Document: MIP-002
 Status: Draft
-Version: 0.1
+Version: 0.4
 -->
 
 # MIP-002 — Module Manifest Protocol
@@ -29,6 +29,8 @@ Within Mosaic:
 
 A module does not participate in the Platform until its manifest has been discovered, validated and accepted.
 
+The manifest is the Supervisor's primary source of truth for Module selection and build-time composition.
+
 ---
 
 # Scope
@@ -43,5 +45,8 @@ This protocol defines manifest responsibilities for:
 - consumed contracts
 - lifecycle
 - compatibility
+- SDK compatibility
+- capability support declarations
+- event declarations
 
-It does not define module implementation, SDK shape or Runtime loading internals.
+It does not define module implementation, SDK shape or Build Pipeline internals.

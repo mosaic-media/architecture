@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/03-dependencies-and-permissions.md
 Document: MIP-002
 Status: Draft
-Version: 0.1
+Version: 0.4
 -->
 
 # 03 — Dependencies And Permissions
@@ -17,11 +17,12 @@ Dependencies may include:
 
 - Platform version
 - Runtime contract version
+- SDK version
 - required capabilities
 - optional capabilities
 - incompatible modules
 
-The Platform should validate dependencies before activation.
+The Supervisor should validate dependencies before invoking the Build Pipeline.
 
 ---
 

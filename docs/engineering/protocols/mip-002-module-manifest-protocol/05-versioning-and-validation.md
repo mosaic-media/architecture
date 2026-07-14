@@ -2,7 +2,7 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/05-versioning-and-validation.md
 Document: MIP-002
 Status: Draft
-Version: 0.1
+Version: 0.4
 -->
 
 # 05 — Versioning And Validation
@@ -23,7 +23,7 @@ These versions should remain distinct.
 
 # Validation
 
-The Platform should validate a manifest before activation.
+The Supervisor should validate a manifest before invoking the Build Pipeline.
 
 Validation should confirm:
 
