@@ -3,7 +3,7 @@ File: docs/design/system/mds-003-material-system/glossary.md
 Document: MDS-003
 Title: Glossary
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -146,24 +146,19 @@ They are not equivalent to rendering effects.
 
 The ordered relationship between all Mosaic materials.
 
-```text
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Surface"]
+N3["Acrylic"]
+N4["Hero"]
+N5["Overlay"]
 
-Surface
-
-↓
-
-Acrylic
-
-↓
-
-Hero
-
-↓
-
-Overlay
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each level communicates increasing physical presence.
@@ -295,13 +290,13 @@ This system provides one coherent environmental lighting model across every clie
 
 | Specification | Primary Concepts |
 |---------------|------------------|
-| MDL-001 Vision | Companion, Immersion |
-| MDL-002 Principles | Calmness, Restraint |
-| MDL-003 Mental Model | World, Focus |
-| MDL-004 Interaction Model | Continuity |
-| MDL-005 Composition Model | Hero, Hierarchy |
-| MDS-001 Design Token Architecture | Runtime Tokens |
-| MDS-002 Colour System | Runtime Atmosphere |
+| [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md) | Companion, Immersion |
+| [MDL-002 — Principles](../../language/mdl-002-principles/index.md) | Calmness, Restraint |
+| [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World, Focus |
+| [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Continuity |
+| [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Hero, Hierarchy |
+| [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md) | Runtime Tokens |
+| [MDS-002 — Colour System](../mds-002-colour-system/index.md) | Runtime Atmosphere |
 
 ---
 
@@ -316,15 +311,3 @@ Future contributors should:
 - distinguish Refraction from blur
 
 Material terminology should remain independent from rendering implementation.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`references.md`

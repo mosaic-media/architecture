@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 03
 Title: Canvas
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Canvas
@@ -128,20 +128,17 @@ It possesses the **lowest atmospheric weighting** of every material.
 
 Conceptually.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
+N3["Canvas"]
+N4["Very Low Influence"]
 
-Atmosphere
-
-↓
-
-Canvas
-
-↓
-
-Very Low Influence
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The user should perceive the atmosphere emotionally.
@@ -159,12 +156,14 @@ Examples.
 Light Theme.
 
 ```
+
 Warm Paper
 ```
 
 Dark Theme.
 
 ```
+
 Deep Slate
 ```
 
@@ -212,20 +211,22 @@ Canvas should respond almost imperceptibly.
 
 Example.
 
+```mermaid
+flowchart TD
+
+N1["Sci-Fi Artwork"]
+N2["Very subtle cool environmental shift."]
+
+N1 --> N2
 ```
-Sci-Fi Artwork
 
-↓
+```mermaid
+flowchart TD
 
-Very subtle cool environmental shift.
-```
+N1["Fantasy Artwork"]
+N2["Very subtle warm environmental shift."]
 
-```
-Fantasy Artwork
-
-↓
-
-Very subtle warm environmental shift.
+N1 --> N2
 ```
 
 The effect should resemble ambient room lighting.
@@ -256,20 +257,17 @@ Canvas exists beneath every Composition.
 
 Conceptually.
 
-```text
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Composition"]
+N3["Materials"]
+N4["Content"]
 
-Composition
-
-↓
-
-Materials
-
-↓
-
-Content
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Composition may evolve continuously.
@@ -299,6 +297,7 @@ Despite these differences...
 Users should always recognise:
 
 ```
+
 Canvas
 ```
 
@@ -352,20 +351,17 @@ It receives refracted light from surrounding Acrylic materials.
 
 Conceptually.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
+N3["Acrylic Refraction"]
+N4["Canvas Reflection"]
 
-Atmosphere
-
-↓
-
-Acrylic Refraction
-
-↓
-
-Canvas Reflection
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This relationship subtly reinforces depth while preventing visual clutter.
@@ -493,15 +489,3 @@ Instead it should create the feeling that:
 When successful, users will remember the entertainment.
 
 Not the surface beneath it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`04-acrylic.md`

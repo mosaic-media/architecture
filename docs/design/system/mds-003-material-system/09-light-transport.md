@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 09
 Title: Light Transport
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Light Transport
@@ -78,26 +78,26 @@ Every material participates in that environment.
 
 Poor.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Own Lighting"]
 
-Own Lighting
+N1 --> N2
 ```
 
 Preferred.
 
-```text
-Environment
+```mermaid
+flowchart TD
 
-↓
+N1["Environment"]
+N2["Shared Light"]
+N3["Many Materials"]
 
-Shared Light
-
-↓
-
-Many Materials
+N1 --> N2
+N2 --> N3
 ```
 
 The Material System should feel physically coherent.
@@ -108,16 +108,15 @@ The Material System should feel physically coherent.
 
 Environmental light originates conceptually from:
 
-```text
-Current Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Current Hero"]
+N2["Runtime Atmosphere"]
+N3["Environmental Light"]
 
-Runtime Atmosphere
-
-↓
-
-Environmental Light
+N1 --> N2
+N2 --> N3
 ```
 
 The Hero does not emit visible light.
@@ -132,32 +131,23 @@ The distinction prevents exaggerated visual effects while preserving immersion.
 
 Conceptually, light moves through several stages.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
+N3["UV Field"]
+N4["Material Sampling"]
+N5["Diffusion"]
+N6["Refraction"]
+N7["Presentation"]
 
-Atmosphere
-
-↓
-
-UV Field
-
-↓
-
-Material Sampling
-
-↓
-
-Diffusion
-
-↓
-
-Refraction
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Each stage contributes one responsibility.
@@ -220,20 +210,17 @@ Edges should transport light differently from flat surfaces.
 
 Conceptually.
 
-```text
-Incoming Light
+```mermaid
+flowchart TD
 
-↓
+N1["Incoming Light"]
+N2["Internal Material"]
+N3["Edge Highlight"]
+N4["Soft Exit"]
 
-Internal Material
-
-↓
-
-Edge Highlight
-
-↓
-
-Soft Exit
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Edges communicate:
@@ -270,30 +257,28 @@ Light should evolve continuously.
 
 Preferred.
 
-```text
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Atmosphere Blends"]
+N3["Light Redistributes"]
+N4["Materials Respond"]
 
-Atmosphere Blends
-
-↓
-
-Light Redistributes
-
-↓
-
-Materials Respond
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Entire Interface Recolours"]
 
-Entire Interface Recolours
+N1 --> N2
 ```
 
 Users should perceive environmental continuity rather than colour replacement.
@@ -546,15 +531,3 @@ The result should feel:
 Users should never think about light.
 
 They should simply feel that the interface naturally belongs beside the entertainment they love.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`10-runtime-material-resolution.md`

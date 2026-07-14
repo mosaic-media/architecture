@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 05
 Title: Hero Material
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Hero Material
@@ -67,6 +67,7 @@ Every Composition should normally contain exactly one Hero Material.
 Poor.
 
 ```
+
 Hero
 
 Hero
@@ -82,16 +83,15 @@ Everything competes.
 
 Preferred.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Supporting Materials"]
+N3["Canvas"]
 
-Supporting Materials
-
-↓
-
-Canvas
+N1 --> N2
+N2 --> N3
 ```
 
 The user's attention immediately knows where to begin.
@@ -104,20 +104,17 @@ The Hero Material receives the strongest atmospheric influence of any material.
 
 Conceptually.
 
-```text
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Surface"]
+N3["Acrylic"]
+N4["Hero"]
 
-Surface
-
-↓
-
-Acrylic
-
-↓
-
-Hero
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Atmosphere weighting increases gradually.
@@ -134,30 +131,28 @@ Hero Material should change with Focus.
 
 Example.
 
-```
-Watching Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Watching Frieren"]
+N2["Hero"]
+N3["Frieren Artwork"]
 
-Hero
-
-↓
-
-Frieren Artwork
+N1 --> N2
+N2 --> N3
 ```
 
 Changing Focus.
 
-```
-Watching Fire Force
+```mermaid
+flowchart TD
 
-↓
+N1["Watching Fire Force"]
+N2["Hero Evolves"]
+N3["Fire Force Artwork"]
 
-Hero Evolves
-
-↓
-
-Fire Force Artwork
+N1 --> N2
+N2 --> N3
 ```
 
 The Hero Material evolves naturally.
@@ -229,26 +224,26 @@ Artwork always possesses higher authority than Hero Material.
 
 Correct relationship.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Hero Material"]
+N3["Supporting Interface"]
 
-Hero Material
-
-↓
-
-Supporting Interface
+N1 --> N2
+N2 --> N3
 ```
 
 Incorrect.
 
-```text
-Hero Material
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Material"]
+N2["Artwork"]
 
-Artwork
+N1 --> N2
 ```
 
 The Hero should frame artwork.
@@ -277,34 +272,30 @@ Hero Material should evolve continuously.
 
 Preferred.
 
-```text
-Old Focus
+```mermaid
+flowchart TD
 
-↓
+N1["Old Focus"]
+N2["Atmosphere Blends"]
+N3["Hero Evolves"]
+N4["New Focus"]
 
-Atmosphere Blends
-
-↓
-
-Hero Evolves
-
-↓
-
-New Focus
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Old Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Old Hero"]
+N2["Removed"]
+N3["New Hero"]
 
-Removed
-
-↓
-
-New Hero
+N1 --> N2
+N2 --> N3
 ```
 
 The Hero should preserve identity wherever practical.
@@ -567,15 +558,3 @@ Not because it is visually extravagant...
 but because it quietly reflects the user's current entertainment.
 
 The Hero Material should create the feeling that the interface belongs inside the same world as the content without ever asking users to admire the interface itself.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`06-overlay-material.md`

@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 02
 Title: Material Hierarchy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Material Hierarchy
@@ -76,24 +76,19 @@ They never create it independently.
 
 The Mosaic Material System defines five primary layers.
 
-```text
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Surface"]
+N3["Acrylic"]
+N4["Hero"]
+N5["Overlay"]
 
-Surface
-
-↓
-
-Acrylic
-
-↓
-
-Hero
-
-↓
-
-Overlay
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer increases perceived physical presence.
@@ -246,36 +241,21 @@ Every material possesses perceived physical weight.
 
 Conceptually.
 
-```text
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Very Light<br/>Surface"]
+N3["Light<br/>Acrylic"]
+N4["Medium<br/>Hero"]
+N5["High<br/>Overlay"]
+N6["Highest"]
 
-Very Light
-
-Surface
-
-↓
-
-Light
-
-Acrylic
-
-↓
-
-Medium
-
-Hero
-
-↓
-
-High
-
-Overlay
-
-↓
-
-Highest
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Physical weight influences:
@@ -297,6 +277,7 @@ Materials should behave like members of the same physical family.
 Poor.
 
 ```
+
 Glass
 
 Metal
@@ -310,24 +291,19 @@ Each behaves independently.
 
 Preferred.
 
-```
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Surface"]
+N3["Acrylic"]
+N4["Hero"]
+N5["Overlay"]
 
-Surface
-
-↓
-
-Acrylic
-
-↓
-
-Hero
-
-↓
-
-Overlay
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every material shares:
@@ -348,20 +324,17 @@ Material Hierarchy should evolve alongside Composition.
 
 Example.
 
-```
-Hero Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Changes"]
+N2["Material Importance Changes"]
+N3["Lighting Changes"]
+N4["Refraction Changes"]
 
-Material Importance Changes
-
-↓
-
-Lighting Changes
-
-↓
-
-Refraction Changes
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Materials should never change independently from behavioural hierarchy.
@@ -378,22 +351,24 @@ The hierarchy remains identical across themes.
 
 Light Theme.
 
-```
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Paper-like"]
 
-Paper-like
+N1 --> N2
 ```
 
 Dark Theme.
 
-```
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Slate-like"]
 
-Slate-like
+N1 --> N2
 ```
 
 Hero remains Hero.
@@ -590,15 +565,3 @@ Every material belongs to one coherent physical family.
 The interface should feel constructed from one environmental language rather than several unrelated visual effects.
 
 That physical coherence is one of the defining characteristics of the Mosaic Material System.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`03-canvas.md`

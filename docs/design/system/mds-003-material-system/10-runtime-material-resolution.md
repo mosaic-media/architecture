@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 10
 Title: Runtime Material Resolution
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Material Resolution
@@ -72,36 +72,25 @@ This dramatically reduces component complexity.
 
 Every material follows the same conceptual pipeline.
 
-```text
-Material Identity
+```mermaid
+flowchart TD
 
-↓
+N1["Material Identity"]
+N2["Semantic Tokens"]
+N3["Runtime Atmosphere"]
+N4["UV Field"]
+N5["Light Transport"]
+N6["Accessibility"]
+N7["Device Capability"]
+N8["Resolved Material"]
 
-Semantic Tokens
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-UV Field
-
-↓
-
-Light Transport
-
-↓
-
-Accessibility
-
-↓
-
-Device Capability
-
-↓
-
-Resolved Material
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Each stage contributes exactly one responsibility.
@@ -112,40 +101,27 @@ Each stage contributes exactly one responsibility.
 
 The Runtime Material Resolver evaluates:
 
-```text
-Current World
+```mermaid
+flowchart TD
 
-↓
+N1["Current World"]
+N2["Current Focus"]
+N3["Current Context"]
+N4["Composition"]
+N5["Material Identity"]
+N6["Runtime Atmosphere"]
+N7["Accessibility"]
+N8["Theme"]
+N9["Device"]
 
-Current Focus
-
-↓
-
-Current Context
-
-↓
-
-Composition
-
-↓
-
-Material Identity
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Accessibility
-
-↓
-
-Theme
-
-↓
-
-Device
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
 No single input should dominate.
@@ -158,40 +134,21 @@ The resolver balances all inputs according to architectural priority.
 
 Material Resolution follows a strict evaluation order.
 
-```text
-1.
+```mermaid
+flowchart TD
 
-Material Identity
+N1["1.<br/>Material Identity"]
+N2["2.<br/>Composition"]
+N3["3.<br/>Runtime Atmosphere"]
+N4["4.<br/>Accessibility"]
+N5["5.<br/>Device Capability"]
+N6["6.<br/>Rendering Backend"]
 
-↓
-
-2.
-
-Composition
-
-↓
-
-3.
-
-Runtime Atmosphere
-
-↓
-
-4.
-
-Accessibility
-
-↓
-
-5.
-
-Device Capability
-
-↓
-
-6.
-
-Rendering Backend
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Meaning always precedes implementation.
@@ -204,12 +161,13 @@ Accessibility always precedes aesthetics.
 
 One of the strongest guarantees within Mosaic is:
 
-```text
-Hero Material
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Material"]
+N2["Always Hero Material"]
 
-Always Hero Material
+N1 --> N2
 ```
 
 Regardless of:
@@ -335,36 +293,25 @@ Future implementations may internally generate Material Profiles.
 
 Conceptually.
 
-```text
-Material.Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Material.Hero"]
+N2["Runtime Profile"]
+N3["Blur"]
+N4["Refraction"]
+N5["Thickness"]
+N6["Edge Behaviour"]
+N7["Lighting"]
+N8["Resolved Material"]
 
-Runtime Profile
-
-↓
-
-Blur
-
-↓
-
-Refraction
-
-↓
-
-Thickness
-
-↓
-
-Edge Behaviour
-
-↓
-
-Lighting
-
-↓
-
-Resolved Material
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Components consume only the completed profile.
@@ -395,30 +342,28 @@ Material Resolution should favour incremental refinement.
 
 Preferred.
 
-```text
-Atmosphere Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Atmosphere Changes"]
+N2["Update Hero"]
+N3["Update Nearby Acrylic"]
+N4["Canvas Stable"]
 
-Update Hero
-
-↓
-
-Update Nearby Acrylic
-
-↓
-
-Canvas Stable
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Atmosphere Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Atmosphere Changes"]
+N2["Rebuild Entire Material Tree"]
 
-Rebuild Entire Material Tree
+N1 --> N2
 ```
 
 Incremental updates preserve continuity while reducing computational cost.
@@ -628,15 +573,3 @@ They should simply receive:
 > **Material.Hero**
 
 The Material System does everything else.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`11-governance.md`

@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -54,16 +54,15 @@ One useful mental model is to stop thinking about colour entirely.
 
 Instead imagine:
 
-```
-Light
+```mermaid
+flowchart TD
 
-↓
+N1["Light"]
+N2["Material"]
+N3["User"]
 
-Material
-
-↓
-
-User
+N1 --> N2
+N2 --> N3
 ```
 
 Ask:
@@ -135,30 +134,28 @@ Applications should never manually tint materials.
 
 Preferred.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Runtime Atmosphere"]
+N3["Material"]
+N4["Presentation"]
 
-Runtime Atmosphere
-
-↓
-
-Material
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Component Colour"]
 
-Component Colour
+N1 --> N2
 ```
 
 Atmosphere belongs to the Material System.
@@ -326,22 +323,24 @@ Performance optimisation should preserve behaviour.
 
 Preferred.
 
-```text
-Same Material Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Same Material Behaviour"]
+N2["Simpler Implementation"]
 
-Simpler Implementation
+N1 --> N2
 ```
 
 Avoid.
 
-```text
-Different Behaviour
+```mermaid
+flowchart TD
 
-↓
+N1["Different Behaviour"]
+N2["Higher Performance"]
 
-Higher Performance
+N1 --> N2
 ```
 
 If simplification becomes necessary:
@@ -444,15 +443,3 @@ If that question becomes habitual, the implementation will naturally begin align
 The strongest Material System is not the most technically impressive.
 
 It is the one users stop noticing because it feels completely natural.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`glossary.md`

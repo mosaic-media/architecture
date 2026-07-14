@@ -2,7 +2,7 @@
 File: docs/design/system/mds-003-material-system/index.md
 Document: MDS-003
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MDS-003 — Material System
@@ -45,44 +45,29 @@ and transform those inputs into a coherent visual experience.
 
 # Relationship to Previous Specifications
 
-```text
-Vision
+```mermaid
+flowchart TD
 
-↓
+N1["Vision"]
+N2["Principles"]
+N3["Mental Model"]
+N4["Interaction"]
+N5["Composition"]
+N6["Tokens"]
+N7["Colour"]
+N8["Material"]
+N9["Typography"]
+N10["Components"]
 
-Principles
-
-↓
-
-Mental Model
-
-↓
-
-Interaction
-
-↓
-
-Composition
-
-↓
-
-Tokens
-
-↓
-
-Colour
-
-↓
-
-Material
-
-↓
-
-Typography
-
-↓
-
-Components
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
 ```
 
 The Material System consumes:
@@ -165,24 +150,19 @@ before it answers:
 
 The Material System separates responsibilities into independent layers.
 
-```text
-Material Identity
+```mermaid
+flowchart TD
 
-↓
+N1["Material Identity"]
+N2["Light Behaviour"]
+N3["Runtime Atmosphere"]
+N4["Refraction"]
+N5["Presentation"]
 
-Light Behaviour
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-Refraction
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer contributes one responsibility.
@@ -245,9 +225,9 @@ design/
 
         13-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -256,30 +236,14 @@ design/
 
 Required reading:
 
-- MDL-001 → MDL-005
-- MDS-001 Design Token Architecture
-- MDS-002 Colour System
+- [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md)
+- [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md)
+- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
 
 Downstream specifications:
 
-- MDS-004 Typography
-- MDS-005 Motion System
-- MDS-006 Composition Engine
-- MDS-007 Tile Framework
-- MDS-008 Component Library
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Design Systems Architect
-
-**Next File**
-
-`00-document-control.md`
+- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
+- [MDS-005 — Motion System](../mds-005-motion-system/index.md)
+- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
+- [MDS-007 — Tile Framework](../mds-007-tile-framework/index.md)
+- [MDS-008 — Component Library](../mds-008-component-library/index.md)

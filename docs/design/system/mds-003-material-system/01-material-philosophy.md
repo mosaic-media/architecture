@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 01
 Title: Material Philosophy
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Material Philosophy
@@ -97,46 +97,43 @@ Rendering merely communicates these behaviours.
 
 Materials intentionally exist between:
 
-```
-Entertainment
+```mermaid
+flowchart TD
 
-↓
+N1["Entertainment"]
+N2["Atmosphere"]
+N3["Interface"]
 
-Atmosphere
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
 ```
 
 They form the physical medium through which entertainment influences the interface.
 
 Without materials:
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Interface"]
 
-Interface
+N1 --> N2
 ```
 
 With materials:
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Atmosphere"]
+N3["Material"]
+N4["Interface"]
 
-Atmosphere
-
-↓
-
-Material
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This additional layer creates a far more natural experience.
@@ -151,26 +148,26 @@ Not to components.
 
 Poor.
 
-```
-Button
+```mermaid
+flowchart TD
 
-↓
+N1["Button"]
+N2["Blur"]
 
-Blur
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Environment
+```mermaid
+flowchart TD
 
-↓
+N1["Environment"]
+N2["Material"]
+N3["Button Exists Inside Material"]
 
-Material
-
-↓
-
-Button Exists Inside Material
+N1 --> N2
+N2 --> N3
 ```
 
 Components inherit the behaviour of their surrounding material.
@@ -206,16 +203,15 @@ Not replace it.
 
 Example.
 
-```
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Acrylic"]
+N3["Hero"]
 
-Acrylic
-
-↓
-
-Hero
+N1 --> N2
+N2 --> N3
 ```
 
 Each material communicates increasing:
@@ -286,24 +282,19 @@ Materials determine how that light behaves.
 
 Example.
 
-```
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Runtime Atmosphere"]
+N3["Acrylic"]
+N4["Refraction"]
+N5["Presentation"]
 
-Runtime Atmosphere
-
-↓
-
-Acrylic
-
-↓
-
-Refraction
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Atmosphere supplies energy.
@@ -509,15 +500,3 @@ Their responsibility is to create the feeling that:
 When successful, users should remember the atmosphere...
 
 ...not the material that created it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`02-material-hierarchy.md`

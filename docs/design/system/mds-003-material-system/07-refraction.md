@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 07
 Title: Refraction
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Refraction
@@ -98,38 +98,32 @@ Not colour replacement.
 
 Poor.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Copy Colours"]
+N3["Interface"]
 
-Copy Colours
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
 ```
 
 Preferred.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Light"]
+N3["Material"]
+N4["Refraction"]
+N5["Interface"]
 
-Light
-
-↓
-
-Material
-
-↓
-
-Refraction
-
-↓
-
-Interface
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The distinction is critical.
@@ -144,24 +138,19 @@ Brand identity remains intact.
 
 Refraction receives several conceptual inputs.
 
-```text
-Runtime Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Atmosphere"]
+N2["Material Type"]
+N3["Material Thickness"]
+N4["Surface Orientation"]
+N5["Composition Importance"]
 
-Material Type
-
-↓
-
-Material Thickness
-
-↓
-
-Surface Orientation
-
-↓
-
-Composition Importance
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Refraction should never depend directly upon component implementation.
@@ -217,6 +206,7 @@ Refraction should possess direction.
 Light should appear to originate from:
 
 ```
+
 Hero Artwork
 ```
 
@@ -224,20 +214,17 @@ rather than uniformly illuminating every surface.
 
 Conceptually.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Light Direction"]
+N3["Nearby Materials"]
+N4["Environmental Falloff"]
 
-Light Direction
-
-↓
-
-Nearby Materials
-
-↓
-
-Environmental Falloff
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This creates a much stronger sense of physical coherence.
@@ -333,30 +320,28 @@ Refraction should evolve continuously.
 
 Preferred.
 
-```text
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Light Shifts"]
+N3["Refraction Evolves"]
+N4["Materials Settle"]
 
-Light Shifts
-
-↓
-
-Refraction Evolves
-
-↓
-
-Materials Settle
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Artwork Changes
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Changes"]
+N2["Immediate Recolour"]
 
-Immediate Recolour
+N1 --> N2
 ```
 
 The interface should appear physically illuminated rather than digitally updated.
@@ -554,15 +539,3 @@ Users should never think:
 Instead they should simply feel that the interface belongs beside the entertainment.
 
 That subtle shift in perception is the ultimate purpose of Refraction.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`08-uv-indexed-refraction.md`

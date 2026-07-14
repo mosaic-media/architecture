@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 08
 Title: UV-Indexed Refraction
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # UV-Indexed Refraction
@@ -74,18 +74,21 @@ Examples.
 Desktop.
 
 ```
+
 1920 × 1080
 ```
 
 Tablet.
 
 ```
+
 2048 × 1536
 ```
 
 Phone.
 
 ```
+
 1179 × 2556
 ```
 
@@ -94,6 +97,7 @@ Using pixels would require every client to solve atmosphere differently.
 Instead Mosaic normalises every composition into UV space.
 
 ```
+
 0.0 → 1.0
 ```
 
@@ -139,20 +143,17 @@ It emits environmental influence.
 
 Conceptually.
 
-```text
-Hero Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Hero Artwork"]
+N2["Colour Extraction"]
+N3["Runtime Atmosphere"]
+N4["UV Light Field"]
 
-Colour Extraction
-
-↓
-
-Runtime Atmosphere
-
-↓
-
-UV Light Field
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Every surrounding material samples from this shared environmental field.
@@ -167,20 +168,17 @@ Environmental influence should decrease naturally with conceptual distance.
 
 Example.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Timeline"]
+N3["Related Works"]
+N4["Peripheral Collections"]
 
-Timeline
-
-↓
-
-Related Works
-
-↓
-
-Peripheral Collections
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The Timeline should receive stronger atmospheric influence than Peripheral Collections.
@@ -235,24 +233,19 @@ The UV field should contain multiple conceptual channels.
 
 Examples include:
 
-```text
-Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Atmosphere"]
+N2["Hue"]
+N3["Intensity"]
+N4["Temperature"]
+N5["Direction"]
 
-Hue
-
-↓
-
-Intensity
-
-↓
-
-Temperature
-
-↓
-
-Direction
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Materials may sample these independently.
@@ -267,16 +260,15 @@ The UV field should preserve directional information.
 
 Example.
 
-```text
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Upper Left"]
+N3["Light propagates diagonally"]
 
-Upper Left
-
-↓
-
-Light propagates diagonally
+N1 --> N2
+N2 --> N3
 ```
 
 Materials therefore know not only:
@@ -299,34 +291,30 @@ The UV field should not reset.
 
 Preferred.
 
-```text
-Old Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Old Hero"]
+N2["Blend"]
+N3["Field Reprojects"]
+N4["New Hero"]
 
-Blend
-
-↓
-
-Field Reprojects
-
-↓
-
-New Hero
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```text
-Old Field
+```mermaid
+flowchart TD
 
-↓
+N1["Old Field"]
+N2["Delete"]
+N3["New Field"]
 
-Delete
-
-↓
-
-New Field
+N1 --> N2
+N2 --> N3
 ```
 
 Users should perceive environmental evolution.
@@ -418,24 +406,19 @@ Only sampling precision changes.
 
 Conceptually.
 
-```text
-Runtime Atmosphere
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Atmosphere"]
+N2["UV Field"]
+N3["Material Samples"]
+N4["Diffusion"]
+N5["Presentation"]
 
-UV Field
-
-↓
-
-Material Samples
-
-↓
-
-Diffusion
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every material samples from the same atmospheric environment.
@@ -689,15 +672,3 @@ This produces an interface that feels:
 Users should feel as though their entertainment is gently illuminating the world around it.
 
 Not recolouring the software beneath it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`09-light-transport.md`

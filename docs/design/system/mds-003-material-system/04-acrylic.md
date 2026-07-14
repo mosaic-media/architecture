@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 04
 Title: Acrylic
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Acrylic
@@ -58,6 +58,7 @@ Acrylic is a material.
 The industry often treats acrylic as:
 
 ```
+
 Blur
 
 +
@@ -163,34 +164,30 @@ This distinction is important.
 
 Poor.
 
-```
-Transparent Blur
+```mermaid
+flowchart TD
 
-↓
+N1["Transparent Blur"]
+N2["Background Visible"]
 
-Background Visible
+N1 --> N2
 ```
 
 Preferred.
 
-```
-Light Enters
+```mermaid
+flowchart TD
 
-↓
+N1["Light Enters"]
+N2["Diffusion"]
+N3["Refraction"]
+N4["Soft Reflection"]
+N5["Material"]
 
-Diffusion
-
-↓
-
-Refraction
-
-↓
-
-Soft Reflection
-
-↓
-
-Material
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The material becomes believable rather than decorative.
@@ -205,24 +202,19 @@ Acrylic determines how that energy behaves.
 
 Conceptually.
 
-```text
-Artwork
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork"]
+N2["Runtime Atmosphere"]
+N3["Acrylic"]
+N4["Refraction"]
+N5["Presentation"]
 
-Runtime Atmosphere
-
-↓
-
-Acrylic
-
-↓
-
-Refraction
-
-↓
-
-Presentation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Acrylic should therefore be considered an interpreter of atmosphere rather than its source.
@@ -576,15 +568,3 @@ It is not blur.
 It is the physical medium through which entertainment quietly reaches into the interface.
 
 When successful, Acrylic should make the interface feel handcrafted rather than rendered.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`05-hero-material.md`

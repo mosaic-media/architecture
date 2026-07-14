@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 06
 Title: Overlay Material
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Overlay Material
@@ -97,16 +97,15 @@ Interaction always possesses higher authority than immersion.
 
 Conceptually.
 
-```
-Interaction
+```mermaid
+flowchart TD
 
-↓
+N1["Interaction"]
+N2["Readability"]
+N3["Atmosphere"]
 
-Readability
-
-↓
-
-Atmosphere
+N1 --> N2
+N2 --> N3
 ```
 
 This ordering should remain consistent across every Overlay.
@@ -162,24 +161,19 @@ Overlay Material should never disconnect from the Canvas.
 
 Instead.
 
-```
-Canvas
+```mermaid
+flowchart TD
 
-↓
+N1["Canvas"]
+N2["Overlay Emerges"]
+N3["Canvas Remains Visible"]
+N4["Overlay Leaves"]
+N5["Canvas Continues"]
 
-Overlay Emerges
-
-↓
-
-Canvas Remains Visible
-
-↓
-
-Overlay Leaves
-
-↓
-
-Canvas Continues
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The environment remains continuous throughout the interaction.
@@ -196,28 +190,21 @@ Not disappear.
 
 Conceptually.
 
-```
-Hero
+```mermaid
+flowchart TD
 
-↓
+N1["Hero"]
+N2["Reduced Emphasis"]
+N3["Overlay"]
+N4["Interaction"]
+N5["Overlay Closes"]
+N6["Hero Returns"]
 
-Reduced Emphasis
-
-↓
-
-Overlay
-
-↓
-
-Interaction
-
-↓
-
-Overlay Closes
-
-↓
-
-Hero Returns
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Users should never feel that the Hero has been replaced.
@@ -256,24 +243,19 @@ The user's current World remains beneath it.
 
 Example.
 
-```
-Watching Frieren
+```mermaid
+flowchart TD
 
-↓
+N1["Watching Frieren"]
+N2["Search"]
+N3["Results"]
+N4["Close Search"]
+N5["Watching Frieren"]
 
-Search
-
-↓
-
-Results
-
-↓
-
-Close Search
-
-↓
-
-Watching Frieren
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Focus has not necessarily changed.
@@ -341,34 +323,30 @@ Overlay Material should feel physically connected to the World.
 
 Preferred.
 
-```
-Overlay
+```mermaid
+flowchart TD
 
-↓
+N1["Overlay"]
+N2["Emerges"]
+N3["Interaction"]
+N4["Returns"]
 
-Emerges
-
-↓
-
-Interaction
-
-↓
-
-Returns
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid.
 
-```
-Overlay
+```mermaid
+flowchart TD
 
-↓
+N1["Overlay"]
+N2["Appears"]
+N3["Disappears"]
 
-Appears
-
-↓
-
-Disappears
+N1 --> N2
+N2 --> N3
 ```
 
 Movement should communicate physical presence.
@@ -548,15 +526,3 @@ Instead, it should quietly step forward when needed...
 ...and quietly disappear once its work is complete.
 
 That restraint is what makes Overlay Material feel like part of Mosaic rather than another layer placed on top of it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`07-refraction.md`

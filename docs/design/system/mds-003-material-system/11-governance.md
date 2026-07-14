@@ -4,7 +4,7 @@ Document: MDS-003
 Chapter: 11
 Title: Material System Governance
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Material System Governance
@@ -347,15 +347,3 @@ The strongest Material System is one users feel rather than consciously notice.
 | ADR-108 | Runtime Atmosphere influences Materials rather than components directly. |
 | ADR-109 | Accessibility always has higher authority than material fidelity. |
 | ADR-110 | Modules inherit the Material System rather than extending it. |
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Next File**
-
-`12-adrs.md`
