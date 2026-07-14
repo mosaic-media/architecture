@@ -2,12 +2,12 @@
 File: docs/engineering/guides/meg-006-module-platform/07-module-lifecycle.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Module Lifecycle
 
-> *A module is not simply loaded. It participates in the lifecycle of the platform.*
+> *A module is not simply linked. It participates in the lifecycle of the platform.*
 
 ---
 
@@ -104,13 +104,13 @@ The Runtime should never invent module-specific lifecycle stages.
 
 # Discovery
 
-The Runtime discovers:
+The Supervisor discovers:
 
 - manifests
 - metadata
 - contracts
 
-No executable code has been loaded.
+No executable code has been included in a Platform package.
 
 The module remains unknown except for its manifest.
 
@@ -122,9 +122,9 @@ Discovery answers:
 
 # Registration
 
-Registration admits the module into the Runtime.
+Registration admits the statically linked module into the SDK registry.
 
-The Runtime now knows:
+The Platform now knows:
 
 - identity
 - version

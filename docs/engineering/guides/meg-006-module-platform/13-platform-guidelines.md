@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/13-platform-guidelines.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Platform Guidelines
@@ -375,6 +375,73 @@ The full Runtime should not be required.
 
 Capabilities should remain independently testable.
 
+Development tooling should also support testing against a real development Platform.
+
+The Development Supervisor may orchestrate automatic compilation of a local Module into a temporary development Platform through the Build Pipeline.
+
+This gives Module authors integration feedback without changing the production build model.
+
+---
+
+# Development Workflow
+
+The Mosaic CLI should make Module development routine.
+
+Typical workflow.
+
+```text
+mosaic new module anilist
+
+mosaic dev
+
+mosaic test
+
+mosaic build
+
+mosaic publish
+```
+
+During development, the CLI and Development Supervisor should:
+
+- create or locate the Module manifest,
+- validate SDK compatibility,
+- generate manifests from SDK Module definitions when requested,
+- prepare a temporary build workspace,
+- compile the local Module into a development Platform,
+- expose diagnostics from discovery, registration and activation.
+
+Development convenience must not introduce a separate runtime plugin model.
+
+Local development should exercise the same static composition architecture used by production builds.
+
+The CLI owns workflow.
+
+The SDK owns contracts.
+
+Chapter 14 defines the authoritative Developer Platform architecture for this workflow.
+
+---
+
+# Test Harness Modules
+
+Development environments may install Test Harness Modules automatically.
+
+Test Harness Modules provide fake implementations of common capabilities.
+
+Examples include:
+
+- Metadata
+- Media
+- Artwork
+- Authentication
+- Events
+
+Module tests should prefer a real Platform with test providers over bespoke mocking frameworks.
+
+The test harness should remain explicit and replaceable.
+
+It should not become hidden production behaviour.
+
 ---
 
 # Design For Isolation
@@ -395,14 +462,16 @@ Capability isolation should always outweigh implementation convenience.
 
 ---
 
-# Runtime Independence
+# Platform Evolution Boundary
 
-The Runtime should never change because of one capability.
+New providers should not require Runtime modification.
+
+A genuinely new capability may require Platform and SDK evolution because the Platform owns capability contracts.
 
 Poor.
 
 ```
-New Capability
+New Metadata Provider
 
 ↓
 
@@ -412,7 +481,7 @@ Modify Runtime
 Preferred.
 
 ```
-New Capability
+New Metadata Provider
 
 ↓
 
@@ -420,16 +489,18 @@ Manifest
 
 ↓
 
-Runtime Discovers
+Runtime Discovers Existing Capability Contract
 
 ↓
 
 Runtime Executes
 ```
 
-Platform growth should occur through capability addition.
+Provider growth should occur through Module addition.
 
-Not Runtime modification.
+Capability growth should occur deliberately through Platform and SDK design.
+
+Do not hide a new architectural capability inside a Module-specific contract.
 
 ---
 
@@ -460,8 +531,12 @@ Before implementing a capability confirm:
 - [ ] Configuration schema is complete.
 - [ ] Dependencies are declared.
 - [ ] Events reinforce loose coupling.
+- [ ] New providers use existing Platform contracts.
+- [ ] New capabilities are proposed as Platform and SDK changes.
+- [ ] Local development uses the Development Supervisor rather than runtime plugin loading.
+- [ ] Tests can run against Test Harness Modules where integration behaviour matters.
 - [ ] The capability is independently testable.
-- [ ] The Runtime requires no modification.
+- [ ] The Runtime requires no modification for provider-only additions.
 
 ---
 
@@ -486,7 +561,10 @@ These decisions usually weaken the platform long before they become visible.
 Within Mosaic:
 
 - Every new feature SHOULD begin as a capability.
-- Runtime modification SHOULD be the exception.
+- New providers SHOULD NOT require Runtime modification.
+- New capability contracts SHOULD require deliberate Platform and SDK review.
+- Development tooling SHOULD compile local Modules through the same static composition model as production.
+- Test Harness Modules SHOULD provide fake providers for integration testing.
 - Capabilities MUST remain independently deployable.
 - Runtime contracts SHOULD remain explicit.
 - Platform growth SHOULD occur through composition.
@@ -562,4 +640,4 @@ Lead Software Architect
 
 **Next File**
 
-`14-adrs.md`
+`14-developer-platform.md`

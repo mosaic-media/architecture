@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/01-module-philosophy.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Module Philosophy
@@ -40,7 +40,7 @@ This document establishes the architectural philosophy behind the Mosaic Module 
 
 Within Mosaic:
 
-> **The platform evolves through capabilities, not through Runtime modification.**
+> **The Platform evolves through build-time capability composition, not through Runtime plugin loading.**
 
 Every new business feature should ideally be introduced by:
 
@@ -51,6 +51,14 @@ Every new business feature should ideally be introduced by:
 Rather than modifying the Runtime itself.
 
 The Runtime should become increasingly capable without becoming increasingly complicated.
+
+Mosaic does not support runtime plugins.
+
+Modules are ordinary Go libraries that are statically linked into a Platform Binary.
+
+Mosaic also does not use RPC between local Modules.
+
+Local Module collaboration occurs through Platform capabilities, Capability Managers and the Event Bus.
 
 ---
 
@@ -164,10 +172,15 @@ The Runtime should already contain everything required to execute future capabil
 Adding a capability should **not** require:
 
 - Runtime modification
-- Runtime recompilation
 - Runtime redesign
 
-Only:
+It does require producing a new Platform package for the selected Generation.
+
+The stable Runtime foundation remains unchanged.
+
+The composed Platform Binary changes.
+
+The composition flow is:
 
 ```
 Capability
@@ -178,10 +191,99 @@ Manifest
 
 ↓
 
-Registration
+Build Pipeline
+
+↓
+
+Generated Imports
+
+↓
+
+Platform Binary
 ```
 
-The Runtime should simply recognise it.
+The Runtime should recognise statically registered capabilities at startup.
+
+---
+
+# No Runtime Plugins
+
+Mosaic intentionally avoids runtime plugin mechanisms.
+
+Modules are not:
+
+- plugin framework artefacts
+- dynamic libraries
+- DLLs
+- RPC services
+- reflection-discovered packages
+- runtime-loaded extensions
+
+They are normal Go libraries.
+
+Example.
+
+```text
+module-anilist/
+
+    go.mod
+    module.go
+    metadata.go
+    artwork.go
+```
+
+The final Runtime is a single statically linked Go executable.
+
+To the finished binary, there is no meaningful distinction between Platform code and Module code.
+
+There is only Go code selected for the current Platform package.
+
+---
+
+# What Is A Module?
+
+A Module is a normal Go project.
+
+Example.
+
+```text
+module-anilist/
+
+    go.mod
+    module.go
+    metadata.go
+    artwork.go
+    graphql.go
+```
+
+There is no special runtime container, DLL boundary, reflection registration layer or RPC sidecar.
+
+The Module depends on the Mosaic SDK.
+
+The Module implements Platform-owned contracts.
+
+The Module is compiled into the selected Platform Binary.
+
+---
+
+# Module Responsibilities
+
+A Module may contribute one or more Platform capabilities.
+
+Examples include:
+
+- Metadata Provider
+- Artwork Provider
+- Media Provider
+- Search Provider
+- Authentication Provider
+- GraphQL Schema
+- Event Handlers
+- Scheduled Jobs
+
+A Module never modifies the Platform.
+
+It contributes implementations for Platform-owned contracts.
 
 ---
 
@@ -306,7 +408,7 @@ Discovery should be metadata driven.
 
 Execution should come later.
 
-Modern module systems increasingly separate **manifest discovery** from **runtime loading**, allowing validation before executable code is activated.  [OpenClaw](https://docs.openclaw.ai/modules/architecture)
+Mosaic separates **manifest resolution** from **build-time composition**, allowing validation before executable code becomes part of an activated Generation.
 
 ---
 
@@ -323,9 +425,9 @@ The manifest describes:
 - configuration
 - capabilities
 
-The Runtime should understand the manifest before it understands the implementation.
+The Supervisor and Build Pipeline should understand the manifest before the implementation becomes part of a Platform package.
 
-The manifest becomes the Runtime's architectural contract.
+The manifest becomes the Supervisor's primary source of truth for Module composition.
 
 ---
 
@@ -486,7 +588,8 @@ That ecosystem depends upon:
 
 - predictable contracts
 - stable manifests
-- capability discovery
+- manifest resolution
+- build-time composition
 - version compatibility
 
 The Runtime should therefore be designed for capabilities that have not yet been written.

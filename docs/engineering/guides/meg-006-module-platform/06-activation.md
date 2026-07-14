@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/06-activation.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Activation
@@ -16,8 +16,10 @@ Version: 0.2
 Following:
 
 - discovery
-- registration
+- build-time admission
 - dependency resolution
+- Platform package build
+- Runtime registration
 
 the Runtime possesses a validated capability graph.
 
@@ -28,7 +30,7 @@ No executable capability has yet joined the Runtime.
 Activation is the controlled transition from:
 
 ```
-Known Capability
+Registered Module Capability
 ```
 
 to:
@@ -54,7 +56,7 @@ Capabilities should activate only when:
 - configuration is valid
 - Runtime resources are available
 
-Activation should never occur simply because code exists.
+Activation should never occur simply because Module code was statically linked.
 
 ---
 
@@ -63,7 +65,7 @@ Activation should never occur simply because code exists.
 Every capability follows the same activation sequence.
 
 ```
-Registered
+SDK Registered
 
 ↓
 

@@ -49,6 +49,8 @@ The current imported specification set lives in:
 - `docs/engineering/protocols` for MIP documents
 - `docs/engineering/operations` for MOP documents
 
+MEG-006 contains the Module Platform and its integrated Developer Platform guidance, including SDK, CLI, local development, deterministic Test Harness Modules and publication workflow boundaries.
+
 ## Document Types
 
 The structure is intended to support these document families without another major reorganisation:
@@ -74,13 +76,15 @@ index.md
 01-...
 02-...
 ...
-glossary.md
 references.md
+glossary.md
 ```
 
 Folder names are URL-safe slugs such as `meg-001-go-engineering-standards`. The generated site uses `.pages` files so navigation presents human-readable titles such as `Go Engineering Standards` while the document ID remains visible on the page.
 
 Chapter-level files are preferred over large monolithic documents because they are easier to review, diff, discuss, and evolve independently.
+
+References should appear near the end of a specification and glossary should remain the final authored chapter.
 
 ## Decision Records
 

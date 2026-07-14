@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/00-document-control.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Document Control
@@ -17,7 +17,7 @@ Version: 0.2
 | Title | Module Platform |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.1 |
+| Version | 0.8 |
 | Owner | Lead Software Architect |
 | Classification | Internal Architecture Specification |
 
@@ -34,9 +34,12 @@ Unlike Runtime Architecture, which defines **how capabilities execute**, this sp
 - how capabilities are discovered
 - how they are described
 - how they are validated
+- how they are composed into Platform packages
 - how they become operational
 
 The Module Platform is the mechanism through which the platform evolves without modifying the Platform.
+
+Version 0.8 defines the Test Harness as a deterministic suite of development-only Modules, records event-simulation ownership and defers versioned Scenario Profiles pending a protocol decision.
 
 ---
 
@@ -51,6 +54,12 @@ This specification applies to:
 - Third-party Modules
 - Enterprise Modules
 - SDK Development
+- Developer Platform tooling
+- Local Module development
+- Test Harness Modules
+- Test Harness deterministic datasets
+- Test Harness event simulation
+- deferred Scenario Profiles
 - Marketplace Integration
 
 Every capability intended to execute within the Mosaic Runtime SHOULD comply with this specification.
@@ -130,6 +139,8 @@ The Mosaic Module Platform is built upon several foundational principles.
 - Every capability is described by a manifest.
 - Discovery precedes execution.
 - Validation precedes activation.
+- Module composition occurs at build time.
+- Runtime plugins are prohibited.
 - Runtime stability takes precedence over module flexibility.
 - Capabilities remain independently deployable.
 - Built-in and third-party capabilities are architectural equals.
@@ -188,6 +199,11 @@ However, changes affecting:
 - permissions
 - activation
 - SDK contracts
+- build-time composition
+- generated imports
+- Developer Platform boundaries
+- local development composition
+- testing and publication workflow ownership
 
 SHOULD be accompanied by an Architectural Decision Record (ADR).
 
@@ -216,7 +232,7 @@ MEG-006 intentionally favours:
 
 - manifest-driven discovery
 - explicit capability contracts
-- deterministic loading
+- deterministic build-time composition
 - dependency validation
 - runtime isolation
 - version compatibility

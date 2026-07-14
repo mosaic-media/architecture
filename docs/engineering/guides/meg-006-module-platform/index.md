@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/index.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # MEG-006 — Module Platform
@@ -27,10 +27,10 @@ MEG-006 answers the final architectural question.
 
 The Mosaic Module Platform allows new capabilities to be:
 
-- installed
 - discovered
 - validated
-- loaded
+- composed
+- statically linked
 - executed
 - upgraded
 - removed
@@ -41,7 +41,7 @@ Unlike traditional module systems, modules are not an afterthought.
 
 They are a first-class architectural concept.
 
-The Runtime is intentionally designed to grow through modules rather than through continual modification of the Platform foundation.
+The Runtime is intentionally designed to grow through build-time Module composition rather than through continual modification of the Platform foundation.
 
 ---
 
@@ -124,6 +124,14 @@ This specification defines:
 - Compatibility
 - Isolation
 - SDK architecture
+- Build-time composition
+- Generated imports
+- Developer Platform architecture
+- Mosaic CLI workflow ownership
+- Development Supervisor and Development Platform boundaries
+- Test Harness Modules
+- deterministic Test Harness data and event simulation
+- local Module composition
 
 This specification intentionally does **not** define:
 
@@ -131,6 +139,7 @@ This specification intentionally does **not** define:
 - runtime internals
 - storage architecture
 - deployment topology
+- Supervisor generation activation
 
 Those concerns belong to previous or future MEG specifications.
 
@@ -162,6 +171,52 @@ The Runtime should treat them identically.
 
 The only distinction should be **how they are delivered**, not **how they execute**.
 
+Mosaic Modules are compile-time composition units.
+
+They are not runtime plugins.
+
+The finished product is always one statically linked Go executable.
+
+---
+
+# Module Architecture
+
+Mosaic Module Architecture follows this shape.
+
+```text
+Developer
+
+↓
+
+Mosaic CLI
+
+↓
+
+Mosaic SDK And Local Module
+
+↓
+
+Development Supervisor Or Production Supervisor
+
+↓
+
+Supervisor
+
+↓
+
+Build Workspace
+
+↓
+
+Mosaic Platform Binary
+```
+
+The Supervisor assembles the runtime from declarative manifests and Go modules.
+
+The Build Pipeline performs build mechanics.
+
+The Platform discovers registered Modules through the SDK registry at startup.
+
 ---
 
 # Platform Hierarchy
@@ -169,6 +224,18 @@ The only distinction should be **how they are delivered**, not **how they execut
 The Mosaic platform intentionally separates concerns into architectural layers.
 
 ```
+Supervisor
+
+↓
+
+Generation
+
+↓
+
+Platform Binary
+
+↓
+
 Runtime Kernel
 
 ↓
@@ -177,15 +244,11 @@ Runtime Services
 
 ↓
 
-Capability Registry
+Capability Managers
 
 ↓
 
-Capabilities
-
-↓
-
-Modules
+Module Capabilities
 
 ↓
 
@@ -194,9 +257,9 @@ Business Behaviour
 
 Notice:
 
-The Runtime never grows by adding business logic.
+The Platform does not load runtime plugins.
 
-It grows by loading additional capabilities.
+It grows by composing selected Modules into a statically linked Platform Binary.
 
 ---
 
@@ -208,7 +271,11 @@ After reading MEG-006 contributors should understand:
 - how capabilities register
 - how manifests define platform contracts
 - how dependencies are validated
-- how modules integrate with the Runtime
+- how Modules are composed into a Platform Binary
+- how generated imports trigger registration
+- why `imports.go` is the only generated integration source
+- how local development compiles Modules through the Development Supervisor
+- how Test Harness Modules support integration testing
 - how permissions are enforced
 - how modules evolve safely
 - how built-in and third-party capabilities coexist
@@ -256,13 +323,17 @@ engineering/
 
         13-platform-guidelines.md
 
-        14-adrs.md
+        14-developer-platform.md
 
-        15-contributor-guidance.md
+        15-test-harness.md
 
-        glossary.md
+        16-adrs.md
+
+        17-contributor-guidance.md
 
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -300,7 +371,7 @@ The Module Platform is intended to produce a platform that is:
 
 Every module should feel like a natural part of the platform rather than an external add-on.
 
-Manifest-driven discovery and registration have become the dominant architecture for extensible platforms because they allow capabilities to be discovered, validated and loaded before execution.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)
+Manifest-driven discovery and registration allow capabilities to be discovered and validated before a Platform package is produced.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)
 
 ---
 

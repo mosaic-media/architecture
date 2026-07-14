@@ -2,22 +2,22 @@
 File: docs/engineering/guides/meg-006-module-platform/03-discovery.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Discovery
 
-> *A capability cannot participate in the platform until the Runtime knows it exists.*
+> *A Module cannot participate in Mosaic until the Supervisor has resolved its manifest.*
 
 ---
 
 # Purpose
 
-The Capability Manifest defines **what** a capability is.
+The Module Manifest defines **what** a Module contributes.
 
-Discovery defines **how** the Runtime finds it.
+Discovery defines **how** the Supervisor finds it before build-time composition.
 
-The Discovery process is responsible for locating every capability available to the platform before Runtime startup continues.
+The Discovery process is responsible for locating every selected Module before the Build Pipeline creates a Platform package.
 
 Discovery is intentionally separated from:
 
@@ -26,7 +26,7 @@ Discovery is intentionally separated from:
 - activation
 - execution
 
-A discovered capability is not yet trusted.
+A discovered Module is not yet trusted.
 
 It is merely known.
 
@@ -36,9 +36,9 @@ It is merely known.
 
 Within Mosaic:
 
-> **Discovery identifies capabilities. It never executes them.**
+> **Discovery identifies Modules. It never executes them.**
 
-The Runtime should discover:
+The Supervisor should discover:
 
 - manifests
 - metadata
@@ -47,16 +47,16 @@ The Runtime should discover:
 
 without loading any executable code.
 
-A capability should be completely understood before activation begins.
+A Module should be completely understood before the Build Pipeline is invoked.
 
 ---
 
 # Discovery Pipeline
 
-Every capability follows the same discovery pipeline.
+Every selected Module follows the same discovery pipeline.
 
 ```
-Locate
+Locate Manifest
 
 ↓
 
@@ -68,15 +68,15 @@ Validate Manifest
 
 ↓
 
-Create Capability Descriptor
+Create Module Descriptor
 
 ↓
 
-Capability Registry
+Dependency Resolver
 
 ↓
 
-Ready For Registration
+Ready For Build Workspace
 ```
 
 Execution has not yet begun.
@@ -111,7 +111,7 @@ Execution
 
 A capability should never execute simply because it exists on disk.
 
-The Runtime must first determine:
+The Supervisor must first determine:
 
 - what it is
 - whether it is valid
@@ -121,7 +121,7 @@ The Runtime must first determine:
 
 # Discovery Sources
 
-Capabilities MAY be discovered from multiple sources.
+Modules MAY be discovered from multiple sources.
 
 Examples include:
 
@@ -147,37 +147,88 @@ Development Workspace
 
 Regardless of origin:
 
-Every capability enters the Runtime through the same discovery process.
+Every selected Module enters the Build Pipeline through the same discovery process.
 
 ---
 
-# Filesystem Discovery
+# Manifest Source Discovery
 
-The default discovery mechanism is filesystem scanning.
+The default discovery mechanism is manifest resolution from configured sources.
 
 Conceptually.
 
 ```
-modules/
+module-index/
 
-    playback/
+    anilist.yaml
 
-        capability.yaml
+    jellyfin.yaml
 
-    metadata/
-
-        capability.yaml
-
-    books/
-
-        capability.yaml
+    tmdb.yaml
 ```
 
-The Runtime searches configured discovery locations for manifests.
+The Supervisor reads manifests from selected Module sources.
 
 It should not inspect executable code during discovery.
 
-Filesystem scanning combined with manifest parsing is one of the most common approaches used by extensible platforms because it separates discovery from activation.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)
+Manifest parsing separates selection and validation from build-time composition.
+
+---
+
+# Module Catalogue
+
+The Module Catalogue is the metadata-only view of Modules available from configured discovery sources.
+
+The Supervisor queries the Module Catalogue during onboarding so the Shell can present current feature, provider and optional Module choices.
+
+Catalogue entries are derived from Module manifests.
+
+The Shell must not maintain a separate hardcoded list of available Modules.
+
+Adding a manifest to a configured discovery source should make that Module available as a selection candidate without requiring a Shell release.
+
+Catalogue presence does not establish compatibility.
+
+Catalogue discovery does not:
+
+- download or execute Module code
+- register Modules with the Platform
+- activate capabilities
+- guarantee that a selected Module is compatible
+
+Selection creates desired composition input.
+
+Manifest admission, dependency resolution and SDK compatibility validation still occur before the Build Pipeline is invoked.
+
+---
+
+# Build Workspace Preparation
+
+After discovery and dependency resolution, the Supervisor invokes the Build Pipeline to prepare a temporary build workspace.
+
+Conceptually.
+
+```text
+workspace/
+
+    platform/
+    sdk/
+    modules/
+    generated/
+```
+
+The Supervisor must ensure that composition does not modify the Platform source repository or Module source repositories.
+
+The Build Pipeline uses the temporary workspace to:
+
+1. resolve selected Go modules,
+2. update the temporary `go.mod`,
+3. generate `imports.go`,
+4. build the Platform Binary.
+
+The workspace is an assembly area.
+
+It is not a new source of architectural truth.
 
 ---
 
@@ -199,7 +250,7 @@ platform/
         capability.yaml
 ```
 
-The Runtime should not maintain a special discovery path for built-in capabilities.
+The Supervisor should not maintain a special discovery path for built-in capabilities.
 
 Built-in capabilities differ only in delivery.
 
@@ -237,12 +288,12 @@ Discovery should remain metadata driven.
 
 # Capability Descriptor
 
-Following successful discovery, the Runtime constructs a Capability Descriptor.
+Following successful discovery, the Supervisor constructs a Module Descriptor.
 
 Conceptually.
 
 ```
-Capability Descriptor
+Module Descriptor
 
 ↓
 
@@ -265,7 +316,7 @@ Permissions
 Contracts
 ```
 
-The Descriptor becomes the Runtime's internal representation of the capability.
+The Descriptor becomes the Supervisor's internal representation of the Module during composition.
 
 The manifest itself is no longer required for most Runtime operations.
 
@@ -362,7 +413,7 @@ Ordering should become relevant only during dependency resolution.
 
 # Lazy Discovery
 
-The Runtime MAY support lazy discovery for specialised deployment models.
+The Supervisor MAY support lazy manifest retrieval for specialised deployment models.
 
 Example.
 
@@ -384,7 +435,7 @@ Register
 
 However:
 
-Platform Runtime startup should generally prefer discovering every available capability before activation begins.
+Platform package preparation should generally prefer discovering every selected Module before the Build Pipeline begins.
 
 Predictability outweighs marginal startup optimisation.
 
@@ -411,7 +462,7 @@ It should not influence business behaviour.
 
 # Discovery Events
 
-The Runtime MAY publish Runtime Events describing discovery.
+The Supervisor MAY record events describing discovery for diagnostics.
 
 Examples include:
 
@@ -449,13 +500,13 @@ It should avoid:
 - dependency injection
 - executable inspection
 
-Startup performance depends heavily upon efficient discovery.
+Build preparation performance depends heavily upon efficient discovery.
 
 ---
 
 # Discovery Caching
 
-The Runtime MAY cache discovery results.
+The Supervisor MAY cache discovery results.
 
 Examples include:
 

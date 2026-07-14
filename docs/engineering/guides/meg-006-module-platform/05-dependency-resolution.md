@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/05-dependency-resolution.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Dependency Resolution
@@ -13,11 +13,11 @@ Version: 0.2
 
 # Purpose
 
-After discovery and registration, the Runtime possesses a complete catalogue of capabilities.
+After manifest discovery and build-time admission, the Supervisor possesses a complete catalogue of selected Modules.
 
 However, knowing which capabilities exist is insufficient.
 
-The Runtime must determine whether:
+The Supervisor must determine whether:
 
 - required capabilities exist
 - versions are compatible
@@ -27,7 +27,7 @@ The Runtime must determine whether:
 
 This process is known as **Dependency Resolution**.
 
-Dependency Resolution transforms a collection of registered capabilities into a coherent, executable platform.
+Dependency Resolution transforms a collection of selected Module manifests into a coherent Platform package plan.
 
 ---
 
@@ -35,7 +35,7 @@ Dependency Resolution transforms a collection of registered capabilities into a 
 
 Within Mosaic:
 
-> **The Runtime should reject an invalid platform before executing a valid capability.**
+> **The Supervisor should reject an invalid Module set before invoking the Build Pipeline.**
 
 Capability execution should never begin while dependency uncertainty exists.
 
@@ -47,10 +47,10 @@ Not during execution.
 
 # Dependency Resolution Pipeline
 
-Every Runtime follows the same dependency pipeline.
+Every Generation preparation follows the same dependency pipeline.
 
 ```
-Registered Capabilities
+Selected Module Manifests
 
 ↓
 
@@ -74,12 +74,12 @@ Activation Order
 
 ↓
 
-Ready
+Ready For Build Pipeline
 ```
 
-Execution has still not begun.
+Executable Module code has still not run.
 
-The Runtime now knows whether the platform is architecturally valid.
+The Supervisor now knows whether the selected Module set is architecturally valid.
 
 ---
 

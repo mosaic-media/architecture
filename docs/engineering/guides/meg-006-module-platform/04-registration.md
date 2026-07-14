@@ -2,24 +2,24 @@
 File: docs/engineering/guides/meg-006-module-platform/04-registration.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Registration
 
-> *Discovery identifies capabilities. Registration admits them into the platform.*
+> *Manifest admission happens before build. Runtime registration happens through the SDK registry at startup.*
 
 ---
 
 # Purpose
 
-Discovery locates capabilities.
+Discovery locates Module manifests.
 
-Registration determines whether they become recognised members of the Runtime.
+Registration has two distinct meanings in Mosaic.
 
-A discovered capability is simply a candidate.
+Before build, manifest admission determines whether a selected Module may enter the Build Pipeline.
 
-A registered capability is part of the platform.
+At Runtime startup, Go initialisation calls the Module's registration function and admits it into the SDK registry.
 
 Registration establishes:
 
@@ -28,11 +28,11 @@ Registration establishes:
 - Runtime visibility
 - lifecycle participation
 
-It intentionally does **not** activate executable code.
+These phases must not be confused.
 
-Registration is a control-plane operation.
+Manifest admission is metadata only.
 
-Execution comes later.
+Runtime registration is code registration only.
 
 ---
 
@@ -40,22 +40,22 @@ Execution comes later.
 
 Within Mosaic:
 
-> **Capabilities are admitted into the Runtime through registration, not execution.**
+> **Modules register through the SDK. Registration must never perform work.**
 
-Registration should establish trust in the capability's metadata.
+Registration should establish the Module's metadata and capability declarations.
 
-It should never execute capability logic.
+It should never execute capability logic, start work or perform I/O.
 
-The Runtime should complete registration before loading any executable implementation.
+The Platform should complete registration before activating capability behaviour.
 
 ---
 
-# Registration Pipeline
+# Build-Time Admission Pipeline
 
-Every capability follows the same registration pipeline.
+Every selected Module follows the same build-time admission pipeline.
 
 ```
-Capability Descriptor
+Module Descriptor
 
 ↓
 
@@ -63,7 +63,7 @@ Identity Validation
 
 ↓
 
-Registry Admission
+Manifest Admission
 
 ↓
 
@@ -71,16 +71,100 @@ Dependency Registration
 
 ↓
 
-Lifecycle Registration
+Build Workspace Eligibility
 
 ↓
 
-Registered
+Admitted
 ```
 
-Execution has still not begun.
+Executable code has still not run.
 
-The Runtime now knows the capability exists.
+The Supervisor now knows whether the Module may participate in the Build Pipeline.
+
+---
+
+# Runtime Registration Pipeline
+
+The Platform Binary contains the selected Modules as statically linked Go libraries.
+
+Go only includes packages that are imported.
+
+The Build Pipeline therefore generates a single imports file.
+
+```text
+generated/
+
+    imports.go
+```
+
+Conceptually.
+
+```go
+package generated
+
+import (
+    _ "github.com/mosaic/module-anilist"
+    _ "github.com/mosaic/module-playback"
+    _ "github.com/mosaic/module-jellyfin"
+)
+```
+
+Blank imports trigger each Module package's `init()`.
+
+Each Module registers itself with the SDK.
+
+```go
+func init() {
+    sdk.Register(NewModule())
+}
+```
+
+The only permitted responsibility of `init()` is registration.
+
+The Module definition should expose metadata and capability declarations.
+
+Example.
+
+```go
+func NewModule() sdk.Module {
+    return sdk.Module{
+        ID: "anilist",
+        Capabilities: ...
+    }
+}
+```
+
+The SDK stores this definition in its runtime registry.
+
+The definition should describe the Module.
+
+It should not activate the Module.
+
+---
+
+# Generated Code Boundary
+
+The Build Pipeline should generate exactly one Go integration file.
+
+```text
+generated/
+
+    imports.go
+```
+
+That file exists only to blank-import selected Modules so Go package initialisation can register them.
+
+The Build Pipeline should not generate:
+
+- Module adapters
+- Capability Manager code
+- provider routing code
+- event handlers
+- GraphQL resolvers
+- business logic
+
+All integration after registration should occur through SDK contracts and Platform-owned managers.
 
 ---
 
@@ -108,35 +192,35 @@ Activation
 Execution
 ```
 
-A registered capability may still fail:
+A registered Module may still fail:
 
 - dependency resolution
 - permission validation
 - compatibility checks
 
-Registration simply makes the capability visible to the Runtime.
+Registration simply makes the Module visible to the SDK registry.
 
 ---
 
 # Runtime Admission
 
-Registration admits the capability into the Capability Registry.
+Runtime registration admits the Module into the SDK registry.
 
 Conceptually.
 
 ```
-Capability Descriptor
+Go init()
 
 ↓
 
-Capability Registry
+sdk.Register(...)
 
 ↓
 
-Registered Capability
+SDK Registry
 ```
 
-Once admitted, the Runtime may reason about:
+Once registered, the Platform may reason about:
 
 - dependencies
 - contracts
@@ -190,20 +274,22 @@ The Registry becomes the Runtime's authoritative source of capability informatio
 
 ---
 
-# Registration Is Metadata Only
+# Init Is Registration Only
 
-Registration MUST remain metadata driven.
+Module `init()` functions MUST remain registration only.
 
-The Runtime should not:
+They MUST NOT:
 
-- load Go modules
-- instantiate capabilities
-- execute constructors
-- invoke lifecycle hooks
+- start goroutines
+- make HTTP requests
+- read configuration
+- perform filesystem I/O
+- perform network I/O
+- start background work
 
-Registration should complete entirely from the Capability Descriptor.
+They SHOULD only call SDK registration APIs.
 
-Separating registration from activation keeps the control plane independent of executable code, a common design principle in mature module architectures.  [OpenClaw](https://docs.openclaw.ai/modules/architecture-internals)
+Activation remains a separate Platform-controlled lifecycle phase.
 
 ---
 

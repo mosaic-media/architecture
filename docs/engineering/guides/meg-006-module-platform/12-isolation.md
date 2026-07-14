@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/12-isolation.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Isolation
@@ -189,14 +189,22 @@ Capabilities should depend only upon:
 
 - Runtime contracts
 - declared capability contracts
+- SDK contracts
 
 They should never depend upon:
 
 - implementation packages
 - internal data structures
 - private APIs
+- other Module packages
 
 Dependencies should remain explicit and manifest-driven.
+
+Modules never communicate directly with one another.
+
+They register capabilities.
+
+The Platform owns capability orchestration.
 
 ---
 

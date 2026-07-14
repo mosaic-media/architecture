@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/references.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # References
@@ -57,7 +57,7 @@ Microkernel architecture strongly influenced:
 - Runtime Kernel
 - Runtime Services
 - Module isolation
-- capability loading
+- build-time capability composition
 
 Within Mosaic:
 
@@ -360,8 +360,8 @@ Lead Software Architect
 
 **Previous File**
 
-`glossary.md`
+`17-contributor-guidance.md`
 
 **Next File**
 
-**End of Specification**
+`glossary.md`

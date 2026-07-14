@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-006-module-platform/08-module-sdk.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Module SDK
@@ -13,13 +13,17 @@ Version: 0.2
 
 # Purpose
 
+The Mosaic SDK is the public contract between the Mosaic Platform and Mosaic Modules.
+
+It defines the language that the Platform and Modules use to communicate.
+
 The Runtime exposes capabilities through stable contracts.
 
 Module authors require a safe, supported mechanism for interacting with those contracts.
 
 That mechanism is the **Module SDK**.
 
-The SDK provides the APIs, interfaces and abstractions that allow modules to participate in the Runtime without depending upon Runtime implementation details.
+The SDK provides the APIs, interfaces and abstractions that allow Modules to participate in the Runtime without depending upon Runtime implementation details.
 
 The SDK is the only supported programming interface between:
 
@@ -27,13 +31,30 @@ The SDK is the only supported programming interface between:
 - capabilities
 - third-party developers
 
+It deliberately contains almost no business logic.
+
+The SDK should remain one of the most stable repositories in the Mosaic ecosystem.
+
 ---
 
 # Philosophy
 
 Within Mosaic:
 
-> **The SDK exposes capabilities. It hides implementation.**
+> **The SDK defines contracts, not behaviour.**
+
+The SDK is not:
+
+- a framework,
+- the Platform,
+- a collection of broad helper utilities,
+- a place for business logic.
+
+Instead, the SDK defines what can exist within the Mosaic ecosystem.
+
+The Platform implements those contracts.
+
+Modules satisfy those contracts.
 
 Module authors should never interact directly with:
 
@@ -67,11 +88,51 @@ SDK
 Module
 ```
 
-The Runtime owns implementation.
+The Platform owns implementation and orchestration.
 
 The SDK owns contracts.
 
 Modules consume only the SDK.
+
+The SDK includes:
+
+- interfaces and ports
+- models
+- Event Envelope
+- Event Bus contracts
+- registration APIs
+- helper utilities
+- testing framework
+
+It is intentionally mostly definitions.
+
+Only a small amount of executable code should exist to support registration, validation and developer ergonomics.
+
+---
+
+# Dependency Direction
+
+Both Platform and Modules depend on the SDK.
+
+Neither should depend directly on the other.
+
+Conceptually.
+
+```text
+Modules
+
+↓
+
+Mosaic SDK
+
+↓
+
+Platform
+```
+
+The SDK is the shared contract surface.
+
+It should not become an implementation bridge that leaks Platform internals.
 
 ---
 
@@ -119,7 +180,7 @@ This stable abstraction layer is a defining characteristic of mature module ecos
 
 # SDK Ownership
 
-The Runtime owns the SDK.
+The Platform owns SDK contract authority.
 
 Module authors consume it.
 
@@ -129,29 +190,140 @@ Modules should never:
 - replace SDK contracts
 - depend upon internal Runtime packages
 
-The SDK represents the official contract between the platform and module developers.
+The SDK represents the official contract between the Platform and Module developers.
 
 ---
 
 # SDK Responsibilities
 
-The SDK provides access to:
+The SDK has five primary responsibilities.
 
-- lifecycle
-- configuration
-- scheduling
-- capability contracts
-- execution
-- logging
-- observability
-- permissions
+## Contracts
 
-It intentionally does **not** expose:
+The SDK defines every public Platform capability contract.
 
+Examples include:
+
+- MetadataProvider
+- MediaProvider
+- ArtworkProvider
+- SearchProvider
+- AuthenticationProvider
+- NotificationProvider
+
+The SDK owns the interfaces.
+
+The Platform owns orchestration.
+
+Modules own implementations.
+
+## Models
+
+The SDK defines canonical Platform models.
+
+Examples include:
+
+- Metadata
+- Media
+- Artwork
+- User
+- Library
+- PlaybackSession
+
+These are Platform models.
+
+They are not implementation-specific DTOs.
+
+Every Module should share the same vocabulary.
+
+## Events
+
+The SDK owns:
+
+- Event Envelope
+- Event Bus interfaces
+- core Platform events
+
+It does not own every event.
+
+Modules may define their own events.
+
+Examples include:
+
+- `platform.started`
+- `anime.episode.released`
+- `playback.started`
+
+The Platform routes events.
+
+Modules own domain event meaning.
+
+## Registration
+
+The SDK exposes Module registration APIs and maintains the runtime registry used during Platform startup.
+
+Every Module exposes itself through a single registration point.
+
+```go
+func init() {
+    sdk.Register(NewModule())
+}
+```
+
+The Platform asks:
+
+```go
+sdk.Modules()
+```
+
+and receives every registered Module.
+
+No reflection, runtime scanning or plugin loading is required.
+
+## Helper Utilities
+
+The SDK may include small utilities that improve developer experience.
+
+Examples include:
+
+- Module builders
+- registration helpers
+- validation helpers
+- testing helpers
+- version helpers
+
+Helpers should support contracts.
+
+They should not become business logic.
+
+---
+
+# SDK Non-Responsibilities
+
+The SDK intentionally avoids implementation.
+
+It should never contain:
+
+- database logic
+- storage implementation
+- GraphQL implementation
+- scheduler implementation
+- HTTP server
+- caching implementation
+- business logic
+- Capability Manager orchestration
+- rendering
 - worker implementation
 - execution engine internals
 - runtime kernel
 - dependency graph internals
+- media business policy
+
+It may define lifecycle contracts.
+
+It must not own lifecycle implementation.
+
+Those belong to the Platform or Modules.
 
 Internal Runtime architecture remains private.
 
@@ -399,10 +571,106 @@ Examples include:
 - fake schedulers
 - fake configuration
 - fake event publishers
+- contract assertions
+- provider fixtures
 
 Module authors should be able to test capabilities without starting the full Runtime.
 
 This dramatically improves developer productivity.
+
+Conceptually.
+
+```go
+sdktest.NewPlatform().
+    Register(provider).
+    Assert(...)
+```
+
+SDK testing utilities should validate behaviour against Platform contracts.
+
+They should not require a complete Mosaic installation.
+
+---
+
+# Developer Tooling Boundary
+
+The SDK is a Go library.
+
+The Mosaic CLI provides the developer experience around it.
+
+Typical CLI commands include:
+
+```text
+mosaic new module
+mosaic dev
+mosaic build
+mosaic test
+mosaic doctor
+mosaic validate
+mosaic package
+mosaic publish
+mosaic docs
+```
+
+The CLI may scaffold, develop, test, diagnose, validate, build, package, publish and document Modules.
+
+The SDK remains the developer contract.
+
+The CLI is tooling around that contract.
+
+Chapter 14 defines the complete Developer Platform around the SDK.
+
+---
+
+# Manifest Generation
+
+SDK tooling may generate Module manifests from Go Module definitions.
+
+For example, a Module may define:
+
+```go
+sdk.Module{
+    ID: "...",
+    Capabilities: ...
+    Events: ...
+    Permissions: ...
+}
+```
+
+Tooling may generate `module.yaml` from that definition.
+
+This reduces drift between source declarations and manifest metadata.
+
+However, the generated manifest remains the artefact consumed by the Supervisor during discovery and dependency resolution.
+
+The Supervisor should still validate the manifest before invoking the Build Pipeline.
+
+Manifest generation must not allow executable code to replace manifest validation.
+
+---
+
+# Proposed Repository Structure
+
+The SDK repository should be organised around contract vocabulary.
+
+Proposed shape.
+
+```text
+mosaic-sdk/
+
+    capabilities/
+    events/
+    models/
+    module/
+    permissions/
+    registration/
+    helpers/
+    testing/
+```
+
+Most packages should contain definitions, interfaces, models and small support helpers.
+
+Repository structure should reinforce that the SDK is a contract language rather than an implementation framework.
 
 ---
 
@@ -503,13 +771,18 @@ Exposing Runtime implementation details through SDK contracts.
 
 Within Mosaic:
 
-- The SDK MUST be the only supported Runtime programming interface.
+- The SDK MUST be the only supported programming interface between Platform and Modules.
+- The SDK MUST define contracts rather than behaviour.
 - Modules MUST depend only upon the SDK.
+- The Platform MUST implement SDK contracts.
+- Modules MUST satisfy SDK contracts.
 - Runtime implementation MUST remain hidden.
 - SDK contracts SHOULD remain stable.
 - Permissions SHOULD be enforced through SDK abstractions.
 - Configuration SHOULD be accessed only through the SDK.
 - The SDK SHOULD provide testing support.
+- SDK tooling MAY generate Module manifests, but generated manifests MUST still be validated by the Supervisor.
+- The SDK MUST NOT contain business logic, Capability Manager orchestration or Platform implementation.
 - Runtime evolution SHOULD rarely require SDK changes.
 
 ---
@@ -530,7 +803,7 @@ The next chapter introduces **Permissions**, defining how the Runtime safely con
 
 # Summary
 
-The Module SDK is the public face of the Runtime.
+The Module SDK is the public contract language of the Mosaic ecosystem.
 
 It allows module authors to build sophisticated capabilities while remaining completely insulated from Runtime implementation details.
 

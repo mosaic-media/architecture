@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-module-platform/15-contributor-guidance.md
+File: docs/engineering/guides/meg-006-module-platform/17-contributor-guidance.md
 Document: MEG-006
 Status: Draft
-Version: 0.2
+Version: 0.8
 -->
 
 # Contributor Guidance
@@ -526,8 +526,8 @@ Lead Software Architect
 
 **Previous File**
 
-`14-adrs.md`
+`16-adrs.md`
 
 **Next File**
 
-`glossary.md`
+`references.md`
