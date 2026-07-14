@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/05-dependency-resolution.md
+File: docs/engineering/guides/meg-006-module-platform/05-dependency-resolution.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Dependency Resolution
@@ -309,7 +309,7 @@ Metadata
 
 Circular capability dependencies should prevent activation.
 
-Dependency resolution commonly relies on topological sorting with cycle detection to ensure plugins load only after their dependencies are satisfied.  [oai_citation:0‡Hexdocs](https://hexdocs.pm/raxol_core/Raxol.Core.Runtime.Plugins.DependencyResolver.html?utm_source=chatgpt.com)
+Dependency resolution commonly relies on topological sorting with cycle detection to ensure modules load only after their dependencies are satisfied.  [Hexdocs](https://hexdocs.pm/raxol_core/Raxol.Core.Runtime.Plugins.DependencyResolver.html)
 
 ---
 
@@ -423,7 +423,7 @@ Conflicting capabilities should not activate simultaneously.
 
 The Runtime should reject incompatible platform configurations before execution begins.
 
-Modern plugin systems often validate both dependency and conflict declarations before computing load order.  [oai_citation:1‡Hexdocs](https://hexdocs.pm/raxol_core/Raxol.Core.Runtime.Plugins.DependencyResolver.html?utm_source=chatgpt.com)
+Modern module systems often validate both dependency and conflict declarations before computing load order.  [Hexdocs](https://hexdocs.pm/raxol_core/Raxol.Core.Runtime.Plugins.DependencyResolver.html)
 
 ---
 
@@ -477,7 +477,7 @@ The Runtime should avoid rebuilding the entire platform graph unnecessarily.
 
 Only affected portions should require re-evaluation.
 
-Incremental dependency resolution is a common optimisation for plugin platforms that support runtime installation.  [oai_citation:2‡Hexdocs](https://hexdocs.pm/raxol_core/Raxol.Core.Runtime.Plugins.DependencyResolver.html?utm_source=chatgpt.com)
+Incremental dependency resolution is a common optimisation for module platforms that support runtime installation.  [Hexdocs](https://hexdocs.pm/raxol_core/Raxol.Core.Runtime.Plugins.DependencyResolver.html)
 
 ---
 
@@ -640,7 +640,7 @@ It ensures that every capability entering execution does so within a platform th
 - deterministic
 - internally consistent
 
-By validating the platform before executing it, the Mosaic Runtime avoids an entire class of operational failures and preserves one of its core principles:
+By validating the platform before executing it, the Mosaic Runtime avoids an entire class of operational failures and preserves one of its governing principles:
 
 > **The Runtime should understand the platform completely before it begins executing it.**
 

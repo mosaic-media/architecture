@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 08
 Title: Token Inheritance
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Token Inheritance
@@ -405,11 +405,11 @@ Only implementation changes.
 
 ---
 
-# Inheritance And Extensions
+# Inheritance And Modules
 
-Extensions should inherit the complete Design System.
+Modules should inherit the complete Design System.
 
-Plugins should consume:
+Modules should consume:
 
 - Semantic Tokens
 - Composition Tokens

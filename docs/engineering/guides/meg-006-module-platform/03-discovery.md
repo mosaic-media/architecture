@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/03-discovery.md
+File: docs/engineering/guides/meg-006-module-platform/03-discovery.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Discovery
@@ -126,11 +126,11 @@ Capabilities MAY be discovered from multiple sources.
 Examples include:
 
 ```
-Core
+Platform Capability
 ```
 
 ```
-Extensions Directory
+Modules Directory
 ```
 
 ```
@@ -158,7 +158,7 @@ The default discovery mechanism is filesystem scanning.
 Conceptually.
 
 ```
-extensions/
+modules/
 
     playback/
 
@@ -177,18 +177,18 @@ The Runtime searches configured discovery locations for manifests.
 
 It should not inspect executable code during discovery.
 
-Filesystem scanning combined with manifest parsing is one of the most common approaches used by extensible platforms because it separates discovery from activation.  [oai_citation:0‡zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/?utm_source=chatgpt.com)
+Filesystem scanning combined with manifest parsing is one of the most common approaches used by extensible platforms because it separates discovery from activation.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)
 
 ---
 
-# Core Discovery
+# Built-In Capability Discovery
 
-Core capabilities participate in discovery exactly like extensions.
+Platform capabilities participate in discovery exactly like modules.
 
 Example.
 
 ```
-core/
+platform/
 
     playback/
 
@@ -199,9 +199,9 @@ core/
         capability.yaml
 ```
 
-The Runtime should not maintain a special discovery path for Core.
+The Runtime should not maintain a special discovery path for built-in capabilities.
 
-Core differs only in delivery.
+Built-in capabilities differ only in delivery.
 
 Architecturally, it remains another capability.
 
@@ -227,7 +227,7 @@ Runtime
 
 No Go code should execute.
 
-No plugins should load.
+No modules should load.
 
 No lifecycle methods should run.
 
@@ -384,7 +384,7 @@ Register
 
 However:
 
-Core Runtime startup should generally prefer discovering every available capability before activation begins.
+Platform Runtime startup should generally prefer discovering every available capability before activation begins.
 
 Predictability outweighs marginal startup optimisation.
 
@@ -556,7 +556,7 @@ Within Mosaic:
 - Duplicate identifiers MUST be rejected.
 - Discovery SHOULD remain deterministic.
 - Discovery SHOULD remain observable.
-- Core and extension capabilities MUST use the same discovery pipeline.
+- Built-in and module-delivered capabilities MUST use the same discovery pipeline.
 - Discovery MUST treat capabilities as untrusted until later validation stages.
 
 ---
@@ -601,7 +601,7 @@ Lead Software Architect
 
 **Previous File**
 
-`02-capability-manifest.md`
+`02-module-manifest.md`
 
 **Next File**
 

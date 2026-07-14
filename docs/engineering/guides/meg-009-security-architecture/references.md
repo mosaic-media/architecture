@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/references.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # References
@@ -78,7 +78,7 @@ Authority should continually shrink rather than expand.
 
 # Capability Security
 
-The Extension Platform strongly influenced the security architecture.
+The Module Platform strongly influenced the security architecture.
 
 Relevant concepts include:
 
@@ -293,16 +293,16 @@ Every Runtime Service becomes responsible for protecting its own architectural b
 
 ---
 
-# Extension Platform
+# Module Platform
 
 MEG-006 influences:
 
 - capability permissions
 - manifest validation
-- extension trust
+- module trust
 - SDK security
 
-Security naturally extends the Extension Platform.
+Security naturally extends the Module Platform.
 
 It does not replace it.
 
@@ -385,7 +385,7 @@ The following specifications complement MEG-009.
 - MEG-003 Domain-Driven Design
 - MEG-004 Hexagonal Architecture
 - MEG-005 Capability Runtime
-- MEG-006 Extension Platform
+- MEG-006 Module Platform
 - MEG-007 Storage Architecture
 - MEG-008 Observability
 

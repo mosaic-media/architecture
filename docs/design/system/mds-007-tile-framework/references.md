@@ -3,7 +3,7 @@ File: docs/design/system/mds-007-tile-framework/references.md
 Document: MDS-007
 Title: References
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # References
@@ -345,7 +345,7 @@ Major architectural discoveries included:
 - Expressions should never render directly.
 - Tiles provide the missing behavioural presentation layer.
 - Adaptive behaviour should preserve Tile identity.
-- Extensions should inherit presentation rather than define it.
+- Modules should inherit presentation rather than define it.
 
 Together these discoveries define the presentation architecture unique to Mosaic.
 

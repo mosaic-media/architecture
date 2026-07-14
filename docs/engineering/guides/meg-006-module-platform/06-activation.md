@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/06-activation.md
+File: docs/engineering/guides/meg-006-module-platform/06-activation.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Activation
@@ -293,7 +293,7 @@ only after:
 
 Only then may the Runtime dispatch work.
 
-Separating activation from readiness avoids dispatching work before a capability has completed its own initialisation.  [oai_citation:0‡DeepWiki](https://deepwiki.com/antfu/vscode-open-in-github-button/2.1-extension-lifecycle-and-activation?utm_source=chatgpt.com)
+Separating activation from readiness avoids dispatching work before a capability has completed its own initialisation.  [DeepWiki](https://deepwiki.com/antfu/vscode-open-in-github-button/2.1-module-lifecycle-and-activation)
 
 ---
 
@@ -481,12 +481,12 @@ Capabilities should not determine their own activation strategy.
 
 ---
 
-# Activation And Extensions
+# Activation And Modules
 
-Core and third-party capabilities activate identically.
+Built-in and third-party capabilities activate identically.
 
 ```
-Core Capability
+Built-In Capability
 
 ↓
 
@@ -494,7 +494,7 @@ Activation
 ```
 
 ```
-Extension Capability
+Module Capability
 
 ↓
 
@@ -604,7 +604,7 @@ Within Mosaic:
 - Activation SHOULD remain observable.
 - Independent capabilities SHOULD activate concurrently where safe.
 - Activation failures MUST leave the Runtime in a consistent state.
-- Core and extension capabilities MUST activate identically.
+- Built-in and module-delivered capabilities MUST activate identically.
 
 ---
 
@@ -618,7 +618,7 @@ Activation answers:
 
 > **Make this capability operational.**
 
-The next chapter introduces the **Extension Lifecycle**, describing how capabilities evolve through installation, activation, execution, upgrade, deactivation and eventual removal while remaining first-class Runtime participants.
+The next chapter introduces the **Module Lifecycle**, describing how capabilities evolve through installation, activation, execution, upgrade, deactivation and eventual removal while remaining first-class Runtime participants.
 
 ---
 
@@ -635,7 +635,7 @@ It transforms a validated capability into a live participant within the Runtime 
 
 Within Mosaic, activation should never be surprising.
 
-Every capability should become operational through the same deterministic, observable process regardless of whether it originated from Core or from a third-party extension.
+Every capability should become operational through the same deterministic, observable process regardless of whether it originated from the Platform distribution or from a third-party module.
 
 ---
 
@@ -655,4 +655,4 @@ Lead Software Architect
 
 **Next File**
 
-`07-extension-lifecycle.md`
+`07-module-lifecycle.md`

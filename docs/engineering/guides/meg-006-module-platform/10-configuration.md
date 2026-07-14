@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/10-configuration.md
+File: docs/engineering/guides/meg-006-module-platform/10-configuration.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Configuration

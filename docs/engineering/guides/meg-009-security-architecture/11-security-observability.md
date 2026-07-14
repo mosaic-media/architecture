@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/11-security-observability.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Security Observability
@@ -20,7 +20,7 @@ Throughout MEG-009 the Runtime has established:
 - authorisation
 - permissions
 - secrets
-- extension validation
+- module validation
 - cryptography
 
 Security mechanisms that cannot be observed become difficult to:
@@ -209,7 +209,7 @@ Trust transitions SHOULD remain observable.
 Examples include:
 
 ```text
-Extension Verified
+Module Verified
 ```
 
 ```text
@@ -302,7 +302,7 @@ The Runtime SHOULD expose metrics describing:
 - permission denials
 - active sessions
 - revoked sessions
-- extension verification failures
+- module verification failures
 - secret rotations
 - trust revocations
 
@@ -580,7 +580,7 @@ Security Observability defines:
 
 > **How operators understand that enforcement while preserving confidentiality.**
 
-The next chapter introduces **Security Guidelines**, bringing together the architectural principles of MEG-009 into practical engineering guidance for contributors implementing secure Runtime Services, capabilities and extensions.
+The next chapter introduces **Security Guidelines**, bringing together the architectural principles of MEG-009 into practical engineering guidance for contributors implementing secure Runtime Services, capabilities and modules.
 
 ---
 

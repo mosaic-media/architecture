@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 01
 Title: What Is A Design Token?
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # What Is A Design Token?

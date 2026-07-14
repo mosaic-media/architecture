@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/06-secrets-management.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Secrets Management
@@ -629,7 +629,7 @@ Within Mosaic:
 
 Capability Permissions define:
 
-> **Which Runtime capabilities an extension may use.**
+> **Which Runtime capabilities a module may use.**
 
 Secrets Management defines:
 

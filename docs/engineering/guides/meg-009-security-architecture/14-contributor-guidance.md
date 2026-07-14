@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/14-contributor-guidance.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Contributor Guidance
@@ -24,7 +24,7 @@ The Mosaic Security Architecture establishes how the platform:
 
 Every contributor shares responsibility for preserving those guarantees.
 
-This document provides practical guidance for engineers implementing Runtime Services, capabilities and extensions while maintaining the architectural security model defined throughout MEG-009.
+This document provides practical guidance for engineers implementing Runtime Services, capabilities and modules while maintaining the architectural security model defined throughout MEG-009.
 
 ---
 
@@ -263,7 +263,7 @@ The Trust Model underpins the entire Security Architecture.
 Changes affecting:
 
 - trusted components
-- extension trust
+- module trust
 - Runtime trust
 
 should generally require:
@@ -451,7 +451,7 @@ Secrets
 
 ↓
 
-Extension Trust
+Module Trust
 
 ↓
 

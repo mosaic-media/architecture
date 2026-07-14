@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 04
 Title: Semantic Tokens
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Semantic Tokens

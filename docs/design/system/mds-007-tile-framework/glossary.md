@@ -3,7 +3,7 @@ File: docs/design/system/mds-007-tile-framework/glossary.md
 Document: MDS-007
 Title: Glossary
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Glossary
@@ -91,11 +91,11 @@ Expression Mapping preserves behavioural meaning while remaining independent fro
 
 ---
 
-## Extension Tile
+## Module Tile
 
-A standard Mosaic Tile produced from an extension-provided Expression.
+A standard Mosaic Tile produced from a module-provided Expression.
 
-Extensions never define Tile behaviour directly.
+Modules never define Tile behaviour directly.
 
 The Tile Framework remains responsible for presentation.
 

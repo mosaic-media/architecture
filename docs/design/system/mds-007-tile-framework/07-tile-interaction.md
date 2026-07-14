@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 07
 Title: Tile Interaction
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Interaction
@@ -517,14 +517,14 @@ Responsibilities remain intentionally separated.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions contribute:
+Modules contribute:
 
 - behavioural capabilities
 - interaction metadata
 
-Plugins never implement interaction directly.
+Modules never implement interaction directly.
 
 The Tile Framework determines:
 
@@ -532,7 +532,7 @@ The Tile Framework determines:
 - runtime behaviour
 - presentation
 
-Every extension therefore inherits the same interaction language.
+Every module therefore inherits the same interaction language.
 
 ---
 
@@ -618,9 +618,9 @@ Different clients inventing different behavioural outcomes.
 
 ---
 
-## Plugin Behaviour
+## Module Behaviour
 
-Extensions bypassing the Runtime World.
+Modules bypassing the Runtime World.
 
 ---
 

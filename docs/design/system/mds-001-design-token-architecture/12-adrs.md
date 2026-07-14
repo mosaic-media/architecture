@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Architectural Decision Records
@@ -31,29 +31,11 @@ Future contributors should consult these ADRs before proposing structural change
 
 ---
 
-# ADR Format
+# Decision Format
 
-All Mosaic ADRs follow the standard structure.
+Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
 
-```text
-ADR Number
-
-Status
-
-Context
-
-Decision
-
-Consequences
-
-Alternatives Considered
-
-Related Specifications
-```
-
-Each ADR records one architectural decision.
-
----
+This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
 # ADR-084
 
@@ -245,7 +227,7 @@ Artwork adaptation, accessibility and platform changes remain predictable.
 
 ## Title
 
-Extensions Participate Through Semantic Architecture
+Modules Participate Through Semantic Architecture
 
 ### Status
 
@@ -253,17 +235,17 @@ Accepted
 
 ### Context
 
-Allowing extensions to introduce their own token hierarchies fragments product identity.
+Allowing modules to introduce their own token hierarchies fragments product identity.
 
 ### Decision
 
-Extensions contribute information and consume existing Design Tokens.
+Modules contribute information and consume existing Design Tokens.
 
 The platform owns Runtime and Presentation.
 
 ### Consequences
 
-Community extensions naturally inherit future Design System improvements.
+Community modules naturally inherit future Design System improvements.
 
 ---
 
@@ -279,7 +261,7 @@ Accepted
 
 ### Context
 
-Applications, tooling and extensions all depend upon token names.
+Applications, tooling and modules all depend upon token names.
 
 ### Decision
 
@@ -312,7 +294,7 @@ ADR089["Components"]
 
 ADR090["Meaning"]
 
-ADR091["Extensions"]
+ADR091["Modules"]
 
 ADR092["Public API"]
 
@@ -371,7 +353,7 @@ Applications should never consume raw implementation values.
 
 Instead they consume stable architectural meaning.
 
-This separation allows the Design System to evolve continuously while preserving one coherent design language across every client, extension and future platform.
+This separation allows the Design System to evolve continuously while preserving one coherent design language across every client, module and future platform.
 
 ---
 

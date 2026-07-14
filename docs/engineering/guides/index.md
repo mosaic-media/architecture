@@ -9,7 +9,7 @@ The current Mosaic Engineering Guidelines are:
 - MEG-003 - Domain-Driven Design
 - MEG-004 - Hexagonal Architecture
 - MEG-005 - Runtime Architecture
-- MEG-006 - Extension Platform
+- MEG-006 - Module Platform
 - MEG-007 - Storage Architecture
 - MEG-008 - Observability
 - MEG-009 - Security Architecture

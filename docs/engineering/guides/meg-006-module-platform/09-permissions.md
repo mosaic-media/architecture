@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/09-permissions.md
+File: docs/engineering/guides/meg-006-module-platform/09-permissions.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Permissions
@@ -25,7 +25,7 @@ Examples include:
 
 The Runtime must ensure that capabilities receive only the permissions necessary to perform their declared responsibilities.
 
-Permissions therefore form one of the primary security boundaries of the Extension Platform.
+Permissions therefore form one of the primary security boundaries of the Module Platform.
 
 ---
 
@@ -52,7 +52,7 @@ The Runtime should never infer capability permissions from implementation.
 
 Permissions should remain explicit.
 
-The principle of least privilege is widely recognised as the foundation of secure extension platforms because it limits the impact of compromised or malicious extensions.  [oai_citation:0‡MDN Web Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions?utm_source=chatgpt.com)
+The principle of least privilege is widely recognised as the foundation of secure module platforms because it limits the impact of compromised or malicious modules.  [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions)
 
 ---
 
@@ -118,7 +118,7 @@ Broad permissions should be exceptional.
 
 Narrow permissions should be the default.
 
-Requesting only the permissions required for functionality improves security and makes platform behaviour easier to reason about.  [oai_citation:1‡Chrome for Developers](https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions?hl=en&utm_source=chatgpt.com)
+Requesting only the permissions required for functionality improves security and makes platform behaviour easier to reason about.  [Chrome for Developers](https://developer.chrome.com/docs/modules/develop/concepts/declare-permissions?hl=en)
 
 ---
 
@@ -264,7 +264,7 @@ network:
 
 Capabilities should not automatically receive unrestricted network access.
 
-Granular host-level permissions are increasingly regarded as a security best practice for extension ecosystems.  [oai_citation:2‡Chrome for Developers](https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions?hl=en&utm_source=chatgpt.com)
+Granular host-level permissions are increasingly regarded as a security best practice for module ecosystems.  [Chrome for Developers](https://developer.chrome.com/docs/modules/develop/concepts/declare-permissions?hl=en)
 
 ---
 
@@ -475,13 +475,13 @@ Marketplace tooling SHOULD display:
 - permission descriptions
 - justification
 
-Extension authors should explain:
+Module authors should explain:
 
 > **Why is this permission required?**
 
 Permission transparency improves trust.
 
-Modern extension ecosystems increasingly encourage or require authors to explain permission requests to users.  [oai_citation:3‡MDN Web Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions?utm_source=chatgpt.com)
+Modern module ecosystems increasingly encourage or require authors to explain permission requests to users.  [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions)
 
 ---
 
@@ -564,7 +564,7 @@ Within Mosaic:
 
 # Relationship to MEG
 
-The Extension SDK defines:
+The Module SDK defines:
 
 > **How capabilities interact with the Runtime.**
 
@@ -607,7 +607,7 @@ Lead Software Architect
 
 **Previous File**
 
-`08-extension-sdk.md`
+`08-module-sdk.md`
 
 **Next File**
 

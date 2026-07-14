@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/07-data-protection.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Data Protection
@@ -571,7 +571,7 @@ Data Protection defines:
 
 > **How all platform information is protected throughout its lifecycle.**
 
-The next chapter introduces **Extension Trust**, defining how the Runtime evaluates, validates and safely executes third-party capabilities while preserving the trust model established earlier in this specification.
+The next chapter introduces **Module Trust**, defining how the Runtime evaluates, validates and safely executes third-party capabilities while preserving the trust model established earlier in this specification.
 
 ---
 
@@ -612,4 +612,4 @@ Lead Software Architect
 
 **Next File**
 
-`08-extension-trust.md`
+`08-module-trust.md`

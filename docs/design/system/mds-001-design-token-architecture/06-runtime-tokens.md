@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 06
 Title: Runtime Tokens
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Runtime Tokens
@@ -479,11 +479,11 @@ This separation dramatically simplifies implementation.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions never generate Runtime Tokens.
+Modules never generate Runtime Tokens.
 
-Plugins contribute:
+Modules contribute:
 
 - Information
 - Relationships
@@ -590,9 +590,9 @@ Layout should emerge from Composition.
 
 ---
 
-## Plugin Runtime
+## Module Runtime
 
-Extensions generating:
+Modules generating:
 
 - colours
 - hierarchy

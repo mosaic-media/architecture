@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/01-security-philosophy.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Security Philosophy
@@ -74,7 +74,7 @@ It should emerge naturally from:
 - capability ownership
 - storage ownership
 - repository boundaries
-- extension isolation
+- module isolation
 
 Every previous MEG already contributes to security.
 
@@ -393,7 +393,7 @@ Operators should understand:
 - permission denials
 - authentication failures
 - capability isolation
-- extension trust
+- module trust
 - secret access
 
 Security should explain itself through:

@@ -1,23 +1,23 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/references.md
+File: docs/engineering/guides/meg-006-module-platform/references.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # References
 
-> *The Extension Platform is built upon decades of experience in plugin architectures, capability systems and software platforms, adapted into a capability-oriented ecosystem for Mosaic.*
+> *The Module Platform is built upon decades of experience in module architectures, capability systems and software platforms, adapted into a capability-oriented ecosystem for Mosaic.*
 
 ---
 
 # Purpose
 
-This document records the primary references that influenced the Extension Platform described throughout MEG-006.
+This document records the primary references that influenced the Module Platform described throughout MEG-006.
 
-Unlike a traditional plugin system, the Mosaic Extension Platform combines ideas from:
+Unlike a traditional module system, the Mosaic Module Platform combines ideas from:
 
-- Plugin Architecture
+- Module Architecture
 - Microkernel Architecture
 - Capability-Oriented Design
 - Manifest-Driven Platforms
@@ -34,19 +34,19 @@ It is to adapt proven architectural principles into a platform capable of evolvi
 
 # Primary References
 
-## Eclipse Plugin Architecture
+## Eclipse Module Architecture
 
-The Eclipse Platform remains one of the most influential plugin architectures ever developed.
+The Eclipse Platform remains one of the most influential module architectures ever developed.
 
 Relevant concepts include:
 
-- plugin manifests
-- extension points
-- plugin registry
+- module manifests
+- module boundaries
+- module registry
 - runtime discovery
 - deployment-time composition
 
-Many architectural ideas behind capability discovery and registration align closely with Eclipse's plugin registry, although Mosaic replaces extension points with capability contracts.  [oai_citation:0‡Eclipse Foundation](https://www.eclipse.org/articles/Article-Plug-in-architecture/plugin_architecture.html?utm_source=chatgpt.com)
+Many architectural ideas behind capability discovery and registration align closely with Eclipse's module registry, although Mosaic replaces module boundaries with capability contracts.  [Eclipse Foundation](https://www.eclipse.org/articles/Article-Plug-in-architecture/plugin_architecture.html)
 
 ---
 
@@ -56,7 +56,7 @@ Microkernel architecture strongly influenced:
 
 - Runtime Kernel
 - Runtime Services
-- Extension isolation
+- Module isolation
 - capability loading
 
 Within Mosaic:
@@ -65,7 +65,7 @@ The Runtime remains intentionally small.
 
 Capabilities provide platform functionality.
 
-This mirrors the architectural philosophy of microkernel operating systems while adapting it to an application platform.  [oai_citation:1‡arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture?utm_source=chatgpt.com)
+This mirrors the architectural philosophy of microkernel operating systems while adapting it to an application platform.  [arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture)
 
 ---
 
@@ -73,7 +73,7 @@ This mirrors the architectural philosophy of microkernel operating systems while
 
 ## Manifest-First Discovery
 
-Modern extension platforms increasingly separate:
+Modern module platforms increasingly separate:
 
 - discovery
 - validation
@@ -89,26 +89,26 @@ This strongly influenced:
 - Registration
 - Dependency Resolution
 
-Within Mosaic, manifests are intentionally treated as architectural contracts rather than implementation details.  [oai_citation:2‡OpenClaw](https://docs.openclaw.ai/plugins/architecture-internals?utm_source=chatgpt.com)
+Within Mosaic, manifests are intentionally treated as architectural contracts rather than implementation details.  [OpenClaw](https://docs.openclaw.ai/modules/architecture-internals)
 
 ---
 
-## Extension Manifests
+## Module Manifests
 
-Modern browser extension ecosystems demonstrate the value of:
+Modern browser module ecosystems demonstrate the value of:
 
 - explicit permissions
 - declarative metadata
 - schema validation
 - compatibility checking
 
-Many permission and manifest concepts within MEG-006 were inspired by these approaches while remaining platform agnostic.  [oai_citation:3‡emdashcms.org](https://emdashcms.org/learn/plugin-system?utm_source=chatgpt.com)
+Many permission and manifest concepts within MEG-006 were inspired by these approaches while remaining platform agnostic.  [emdashcms.org](https://emdashcms.org/learn/module-system)
 
 ---
 
 # SDK Design
 
-The Extension SDK intentionally follows long-established SDK principles.
+The Module SDK intentionally follows long-established SDK principles.
 
 Relevant concepts include:
 
@@ -119,20 +119,20 @@ Relevant concepts include:
 
 The SDK should remain considerably more stable than the Runtime implementation beneath it.
 
-This separation protects extension authors from internal Runtime evolution.
+This separation protects module authors from internal Runtime evolution.
 
 ---
 
 # Dependency Management
 
-Dependency Resolution within Mosaic draws inspiration from plugin systems that:
+Dependency Resolution within Mosaic draws inspiration from module systems that:
 
 - validate dependency graphs
 - detect cycles
 - resolve versions
 - construct activation order
 
-The Runtime intentionally performs these operations before executing capability code.  [oai_citation:4‡GitHub](https://ithub.global.ssl.fastly.net/open-gsd/gsd-core/blob/next/docs/reference/capability-manifest.md?utm_source=chatgpt.com)
+The Runtime intentionally performs these operations before executing capability code.  [GitHub](https://ithub.global.ssl.fastly.net/open-gsd/gsd-core/blob/next/docs/reference/capability-manifest.md)
 
 ---
 
@@ -148,7 +148,7 @@ Common themes include:
 - contract-based integration
 - runtime validation
 
-Mosaic extends these ideas into a unified Runtime Architecture centred around independently evolving business capabilities.  [oai_citation:5‡Extentos](https://extentos.com/docs/concepts/capabilities?utm_source=chatgpt.com)
+Mosaic extends these ideas into a unified Runtime Architecture centred around independently evolving business capabilities.  [Extentos](https://extentos.com/docs/concepts/capabilities)
 
 ---
 
@@ -160,7 +160,7 @@ Mosaic extends these ideas into a unified Runtime Architecture centred around in
 
 Eric Evans
 
-The Extension Platform deliberately preserves the Domain boundaries defined in MEG-003.
+The Module Platform deliberately preserves the Domain boundaries defined in MEG-003.
 
 Capabilities own:
 
@@ -178,14 +178,14 @@ The Runtime owns execution.
 
 Alistair Cockburn
 
-The Extension Platform builds directly upon:
+The Module Platform builds directly upon:
 
 - Ports
 - Adapters
 - dependency inversion
 - infrastructure isolation
 
-Extensions communicate exclusively through Runtime contracts.
+Modules communicate exclusively through Runtime contracts.
 
 Runtime implementation remains hidden.
 
@@ -209,7 +209,7 @@ Many Runtime contracts intentionally reinforce these architectural principles.
 
 # Go References
 
-The Extension SDK intentionally embraces idiomatic Go.
+The Module SDK intentionally embraces idiomatic Go.
 
 Recommended references include:
 
@@ -286,7 +286,7 @@ The following specifications complement MEG-006.
 
 # Platform Principles
 
-The Extension Platform established throughout MEG-006 intentionally builds upon several enduring architectural principles.
+The Module Platform established throughout MEG-006 intentionally builds upon several enduring architectural principles.
 
 These include:
 
@@ -298,7 +298,7 @@ These include:
 - Permissions follow least privilege.
 - Dependencies remain explicit.
 - Capabilities remain independently deployable.
-- Core and extensions are architectural equals.
+- Built-in and module-delivered capabilities are architectural equals.
 - Platform growth occurs through composition rather than modification.
 
 These principles should remain considerably more stable than the implementation techniques used to realise them.
@@ -307,7 +307,7 @@ These principles should remain considerably more stable than the implementation 
 
 # Keeping References Current
 
-Extension platforms continue to evolve.
+Module platforms continue to evolve.
 
 Marketplace ecosystems continue to mature.
 
@@ -319,17 +319,17 @@ This reference list SHOULD therefore be reviewed periodically to ensure:
 - obsolete practices are removed
 - better ecosystem patterns are incorporated
 
-The platform philosophy should remain stable even as extension technology evolves.
+The platform philosophy should remain stable even as module technology evolves.
 
 ---
 
 # Closing Statement
 
-MEG-006 intentionally does not describe a traditional plugin framework.
+MEG-006 intentionally does not describe a traditional module framework.
 
 Instead, it describes an ecosystem architecture built around independently evolving capabilities.
 
-The resulting Extension Platform intentionally emphasises:
+The resulting Module Platform intentionally emphasises:
 
 - capability-oriented design
 - manifest-first discovery

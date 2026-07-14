@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/02-trust-model.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Trust Model
@@ -116,8 +116,8 @@ Some components become trusted only after Runtime validation.
 
 Examples include:
 
-- Core capabilities
-- signed first-party extensions
+- Platform capabilities
+- signed first-party modules
 - verified marketplace packages
 - validated manifests
 
@@ -138,7 +138,7 @@ The Runtime intentionally treats the following as untrusted.
 
 Examples include:
 
-- third-party extensions
+- third-party modules
 - user input
 - remote APIs
 - network traffic
@@ -229,9 +229,9 @@ Not permanent trust.
 
 ---
 
-# Extension Trust
+# Module Trust
 
-Third-party extensions should always begin as untrusted.
+Third-party modules should always begin as untrusted.
 
 Lifecycle.
 
@@ -341,7 +341,7 @@ They should not trust Runtime implementation.
 The SDK forms the security boundary between:
 
 - Runtime internals
-- extension code
+- module code
 
 Maintaining SDK stability therefore contributes directly to platform security.
 
@@ -482,7 +482,7 @@ Trust must remain revocable.
 
 Examples include:
 
-- revoke extension
+- revoke module
 - revoke publisher
 - revoke user
 - revoke permission
@@ -535,9 +535,9 @@ Assuming external information is valid.
 
 ---
 
-## Extension Trust
+## Module Trust
 
-Executing extensions before validation.
+Executing modules before validation.
 
 ---
 
@@ -559,7 +559,7 @@ Within Mosaic:
 
 - Every component MUST belong to one trust tier.
 - Trust MUST remain explicit.
-- Extensions MUST begin untrusted.
+- Modules MUST begin untrusted.
 - Runtime Services MUST remain trusted.
 - Trust MUST precede authority.
 - Revocation MUST remain possible.
@@ -592,7 +592,7 @@ Permissions.
 
 Secrets.
 
-Extensions.
+Modules.
 
 Marketplace verification.
 

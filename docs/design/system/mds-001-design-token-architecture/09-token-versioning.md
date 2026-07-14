@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 09
 Title: Token Versioning
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Token Versioning
@@ -28,7 +28,7 @@ Runtime capabilities will expand.
 Token Versioning exists to ensure these changes can occur without unnecessarily breaking:
 
 - applications
-- extensions
+- modules
 - components
 - tooling
 - design assets
@@ -226,7 +226,7 @@ Removed
 Deprecation should provide sufficient migration time for:
 
 - applications
-- extensions
+- modules
 - tooling
 - documentation
 
@@ -302,9 +302,9 @@ Consumers should remain unaware of the implementation change.
 
 ---
 
-# Extension Compatibility
+# Module Compatibility
 
-Community extensions should consume:
+Community modules should consume:
 
 - Semantic Tokens
 - Composition Tokens
@@ -423,7 +423,7 @@ Future migration becomes difficult.
 
 Deleting tokens without migration guidance.
 
-Extensions become unnecessarily fragile.
+Modules become unnecessarily fragile.
 
 ---
 
@@ -455,7 +455,7 @@ Future specifications should define:
 - token validation
 - compatibility tooling
 - runtime schema versioning
-- extension compatibility guarantees
+- module compatibility guarantees
 
 These systems build upon the versioning philosophy established here.
 
@@ -487,4 +487,4 @@ Draft
 
 **Next File**
 
-`10-extension-tokens.md`
+`10-module-tokens.md`

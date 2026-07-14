@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/15-contributor-guidance.md
+File: docs/engineering/guides/meg-006-module-platform/15-contributor-guidance.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Contributor Guidance
@@ -13,7 +13,7 @@ Version: 0.1
 
 # Purpose
 
-The Extension Platform exists so that the Mosaic ecosystem can continue evolving without continually modifying Core.
+The Module Platform exists so that the Mosaic ecosystem can continue evolving without continually modifying the Platform.
 
 Every contributor therefore shares responsibility for preserving:
 
@@ -454,7 +454,7 @@ These mistakes usually reduce platform quality long before they become operation
 
 # Engineering Culture
 
-Extension authors should strive to:
+Module authors should strive to:
 
 - simplify capability design
 - reduce coupling
@@ -471,7 +471,7 @@ Not harder.
 
 # Relationship to MEG
 
-This document explains how contributors should evolve the Extension Platform established throughout MEG-006.
+This document explains how contributors should evolve the Module Platform established throughout MEG-006.
 
 The previous chapters define:
 
@@ -487,7 +487,7 @@ A platform survives because contributors consistently reinforce its architectura
 
 # Summary
 
-The Extension Platform succeeds when adding a new capability feels routine.
+The Module Platform succeeds when adding a new capability feels routine.
 
 No Runtime redesign.
 

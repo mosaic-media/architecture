@@ -1,13 +1,13 @@
 <!--
-File: docs/design/system/mds-001-design-token-architecture/10-extension-tokens.md
+File: docs/design/system/mds-001-design-token-architecture/10-module-tokens.md
 Document: MDS-001
 Chapter: 10
-Title: Extension Tokens
+Title: Module Tokens
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
-# Extension Tokens
+# Module Tokens
 
 ---
 
@@ -15,15 +15,15 @@ Version: 0.1
 
 Mosaic is fundamentally a platform.
 
-Extensions are expected to become one of the primary ways the platform evolves over time.
+Modules are expected to become one of the primary ways the platform evolves over time.
 
-The Design Token Architecture must therefore provide a mechanism through which extensions can participate in the Design System without fragmenting it.
+The Design Token Architecture must therefore provide a mechanism through which modules can participate in the Design System without fragmenting it.
 
 This chapter defines that mechanism.
 
 The objective is simple.
 
-> **Every extension should feel native.**
+> **Every module should feel native.**
 
 Not merely compatible.
 
@@ -31,19 +31,19 @@ Not merely compatible.
 
 # Definition
 
-Within MDS, **Extension Tokens** are defined as:
+Within MDS, **Module Tokens** are defined as:
 
-> **Tokens contributed by extensions that integrate into the Mosaic Design Token Architecture without redefining the platform's visual language.**
+> **Tokens contributed by modules that integrate into the Mosaic Design Token Architecture without redefining the platform's visual language.**
 
-Extension Tokens extend.
+Module Tokens extend.
 
 They never replace.
 
 ---
 
-# Why Extension Tokens Exist
+# Why Module Tokens Exist
 
-Without a token architecture, extensions typically choose their own:
+Without a token architecture, modules typically choose their own:
 
 - colours
 - spacing
@@ -61,20 +61,20 @@ They experience:
 
 > Mosaic plus several unrelated interfaces.
 
-Extension Tokens prevent this.
+Module Tokens prevent this.
 
 ---
 
 # Platform Ownership
 
-The core platform always owns:
+The Platform foundation always owns:
 
 - Primitive Tokens
 - Semantic Tokens
 - Composition Tokens
 - Runtime Tokens
 
-Extensions never redefine these layers.
+Modules never redefine these layers.
 
 Instead they consume them.
 
@@ -82,9 +82,9 @@ The platform remains the source of truth.
 
 ---
 
-# Extension Responsibilities
+# Module Responsibilities
 
-Extensions may contribute:
+Modules may contribute:
 
 - new semantic concepts
 - additional domain-specific meanings
@@ -122,14 +122,14 @@ These concepts become part of the existing Composition rather than creating inde
 
 # Information Before Presentation
 
-Extension authors should think in information.
+Module authors should think in information.
 
 Not interface.
 
 Poor.
 
 ```
-Anime Extension
+Anime Module
 
 ↓
 
@@ -147,7 +147,7 @@ Custom Colours
 Preferred.
 
 ```
-Anime Extension
+Anime Module
 
 ↓
 
@@ -170,14 +170,14 @@ The platform determines how these concepts become interface.
 
 ---
 
-# Extension Token Namespace
+# Module Token Namespace
 
-Every extension should define its own namespace.
+Every module should define its own namespace.
 
 Example.
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -195,7 +195,7 @@ Release
 or
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -214,14 +214,14 @@ Namespaces prevent collisions while remaining readable.
 
 ---
 
-# Extension Categories
+# Module Categories
 
-Extensions should contribute tokens only within clearly defined categories.
+Modules should contribute tokens only within clearly defined categories.
 
 Examples include:
 
 ```text
-Extension
+Module
 
 ├── Domain
 
@@ -249,7 +249,7 @@ Those remain platform concerns.
 
 # Expression Hints
 
-An extension may suggest how information is naturally expressed.
+A module may suggest how information is naturally expressed.
 
 Example.
 
@@ -273,12 +273,12 @@ If the current Context requires another Expression, the platform should ignore t
 
 # Runtime Participation
 
-Extensions participate in Runtime resolution indirectly.
+Modules participate in Runtime resolution indirectly.
 
 Example.
 
 ```
-Anime Extension
+Anime Module
 
 ↓
 
@@ -301,7 +301,7 @@ Timeline
 Presentation
 ```
 
-The extension never resolves Runtime Tokens.
+The module never resolves Runtime Tokens.
 
 It merely enriches the information available to the Runtime Resolver.
 
@@ -309,7 +309,7 @@ It merely enriches the information available to the Runtime Resolver.
 
 # Token Consumption
 
-Extensions should consume the same Semantic Tokens as the core platform.
+Modules should consume the same Semantic Tokens as the Platform foundation.
 
 Examples.
 
@@ -323,7 +323,7 @@ Action.Primary
 Border.Subtle
 ```
 
-Using platform tokens ensures that extensions inherit:
+Using platform tokens ensures that modules inherit:
 
 - accessibility
 - themes
@@ -336,7 +336,7 @@ automatically.
 
 # Forbidden Responsibilities
 
-Extensions should **not** define:
+Modules should **not** define:
 
 - Primitive Tokens
 - Brand Tokens
@@ -347,13 +347,13 @@ Extensions should **not** define:
 
 These remain exclusively owned by the platform.
 
-Allowing extensions to redefine these layers would inevitably fragment the Design System.
+Allowing modules to redefine these layers would inevitably fragment the Design System.
 
 ---
 
 # Theme Compatibility
 
-Because extensions consume Semantic Tokens rather than physical values:
+Because modules consume Semantic Tokens rather than physical values:
 
 Dark Mode.
 
@@ -379,7 +379,7 @@ Accessibility.
 
 Works.
 
-The extension receives future improvements automatically.
+The module receives future improvements automatically.
 
 No additional implementation is required.
 
@@ -387,7 +387,7 @@ No additional implementation is required.
 
 # Future Marketplace
 
-The long-term goal of the Mosaic extension ecosystem is that users cannot visually distinguish:
+The long-term goal of the Mosaic module ecosystem is that users cannot visually distinguish:
 
 Official functionality
 
@@ -403,13 +403,13 @@ Users should recognise:
 
 Not:
 
-> Several plugins sharing the same window.
+> Several modules sharing the same window.
 
 ---
 
 # Good Examples
 
-## Anime Extension
+## Anime Module
 
 Contributes:
 
@@ -435,7 +435,7 @@ Composition.Supporting
 
 ---
 
-## Books Extension
+## Books Module
 
 Contributes:
 
@@ -459,7 +459,7 @@ Action.Primary
 
 ---
 
-## Music Extension
+## Music Module
 
 Contributes:
 
@@ -493,13 +493,13 @@ The visual language remains unified.
 Anime.Primary.Purple
 ```
 
-Extensions should not create competing brands.
+Modules should not create competing brands.
 
 ---
 
 ## Custom Themes
 
-Extensions providing independent colour systems.
+Modules providing independent colour systems.
 
 The platform loses visual coherence.
 
@@ -507,7 +507,7 @@ The platform loses visual coherence.
 
 ## Runtime Generation
 
-Extensions generating their own Runtime Tokens.
+Modules generating their own Runtime Tokens.
 
 Runtime belongs exclusively to the platform.
 
@@ -515,7 +515,7 @@ Runtime belongs exclusively to the platform.
 
 ## Component Libraries
 
-Extensions introducing:
+Modules introducing:
 
 - custom cards
 - custom buttons
@@ -525,14 +525,14 @@ The platform loses ownership of interface.
 
 ---
 
-# Extension Registration
+# Module Registration
 
-Future runtime implementations should allow extensions to register token contributions declaratively.
+Future runtime implementations should allow modules to register token contributions declaratively.
 
 Conceptually.
 
 ```yaml
-extension:
+module:
   id: anime
 
 contributes:
@@ -549,7 +549,7 @@ contributes:
     - timeline
 ```
 
-Notice that the extension contributes meaning.
+Notice that the module contributes meaning.
 
 Not presentation.
 
@@ -557,19 +557,19 @@ Not presentation.
 
 # Token Resolution
 
-Extension Tokens should participate in the standard resolution pipeline.
+Module Tokens should participate in the standard resolution pipeline.
 
 ```mermaid
 flowchart TD
 
-Extension
-Extension --> Semantic
+Module
+Module --> Semantic
 Semantic --> Composition
 Composition --> Runtime
 Runtime --> Presentation
 ```
 
-Extensions never bypass the platform.
+Modules never bypass the platform.
 
 They enrich it.
 
@@ -577,29 +577,29 @@ They enrich it.
 
 # Litmus Test
 
-Extension authors should ask:
+Module authors should ask:
 
-> **If Mosaic completely redesigned its interface tomorrow, would my extension still work?**
+> **If Mosaic completely redesigned its interface tomorrow, would my module still work?**
 
 If the answer is:
 
 **Yes.**
 
-The extension probably depends upon semantic architecture.
+The module probably depends upon semantic architecture.
 
 If the answer is:
 
 **No.**
 
-The extension probably depends upon implementation.
+The module probably depends upon implementation.
 
 ---
 
 # Summary
 
-Extension Tokens allow Mosaic to scale into a large ecosystem without sacrificing a coherent design language.
+Module Tokens allow Mosaic to scale into a large ecosystem without sacrificing a coherent design language.
 
-Extensions contribute:
+Modules contribute:
 
 - knowledge
 - capability
@@ -612,7 +612,7 @@ The platform contributes:
 - runtime
 - presentation
 
-This separation ensures that every extension naturally becomes part of one unified Mosaic experience.
+This separation ensures that every module naturally becomes part of one unified Mosaic experience.
 
 ---
 

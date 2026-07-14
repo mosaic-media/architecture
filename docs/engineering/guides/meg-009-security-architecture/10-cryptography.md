@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/10-cryptography.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Cryptography
@@ -20,7 +20,7 @@ Throughout the previous chapters, the Security Architecture established:
 - authorisation
 - permissions
 - secrets
-- extension validation
+- module validation
 - network security
 
 Many of these mechanisms rely upon cryptography.
@@ -151,7 +151,7 @@ Digital signatures SHOULD establish authenticity.
 
 Examples include:
 
-- extension packages
+- module packages
 - MOS archives
 - marketplace downloads
 

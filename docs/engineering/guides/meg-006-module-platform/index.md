@@ -1,13 +1,13 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/index.md
+File: docs/engineering/guides/meg-006-module-platform/index.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
-# MEG-006 — Extension Platform
+# MEG-006 — Module Platform
 
-> *The Runtime provides execution. Extensions provide evolution.*
+> *The Runtime provides execution. Modules provide evolution.*
 
 ---
 
@@ -23,9 +23,9 @@ The previous engineering specifications established:
 
 MEG-006 answers the final architectural question.
 
-> **How does the platform evolve without modifying Core?**
+> **How does the Platform evolve without modifying the Runtime?**
 
-The Mosaic Extension Platform allows new capabilities to be:
+The Mosaic Module Platform allows new capabilities to be:
 
 - installed
 - discovered
@@ -37,11 +37,11 @@ The Mosaic Extension Platform allows new capabilities to be:
 
 without changing the Runtime itself.
 
-Unlike traditional plugin systems, extensions are not an afterthought.
+Unlike traditional module systems, modules are not an afterthought.
 
 They are a first-class architectural concept.
 
-The Runtime is intentionally designed to grow through extensions rather than through continual modification of Core.
+The Runtime is intentionally designed to grow through modules rather than through continual modification of the Platform foundation.
 
 ---
 
@@ -92,7 +92,7 @@ MEG-006
 
 ↓
 
-Extension Platform
+Module Platform
 ```
 
 MEG-005 defines:
@@ -109,16 +109,16 @@ MEG-006 defines:
 
 This specification defines:
 
-- Extension philosophy
-- Extension lifecycle
-- Extension manifest
+- Module philosophy
+- Module lifecycle
+- Module manifest
 - Capability manifests
 - Discovery
 - Registration
 - Activation
 - Dependency resolution
-- Extension contracts
-- Extension permissions
+- Module contracts
+- Module permissions
 - Configuration
 - Versioning
 - Compatibility
@@ -136,7 +136,7 @@ Those concerns belong to previous or future MEG specifications.
 
 ---
 
-# Core Question
+# Guiding Question
 
 MEG-006 exists to answer one question.
 
@@ -144,13 +144,13 @@ MEG-006 exists to answer one question.
 
 ---
 
-# Extension Statement
+# Module Statement
 
 Within Mosaic:
 
-> **Everything beyond the Runtime is a capability. Every capability may be delivered as an extension.**
+> **Everything beyond the Runtime is a capability. Every capability may be delivered as a module.**
 
-Core capabilities.
+Platform capabilities.
 
 Third-party capabilities.
 
@@ -185,7 +185,7 @@ Capabilities
 
 ↓
 
-Extensions
+Modules
 
 ↓
 
@@ -204,14 +204,14 @@ It grows by loading additional capabilities.
 
 After reading MEG-006 contributors should understand:
 
-- how extensions are discovered
+- how modules are discovered
 - how capabilities register
 - how manifests define platform contracts
 - how dependencies are validated
-- how extensions integrate with the Runtime
+- how modules integrate with the Runtime
 - how permissions are enforced
-- how extensions evolve safely
-- how Core and third-party capabilities coexist
+- how modules evolve safely
+- how built-in and third-party capabilities coexist
 
 without modifying the Runtime itself.
 
@@ -224,15 +224,15 @@ engineering/
 
 └── meg/
 
-    └── MEG-006 Extension Platform/
+    └── MEG-006 Module Platform/
 
         README.md
 
         00-document-control.md
 
-        01-extension-philosophy.md
+        01-module-philosophy.md
 
-        02-capability-manifest.md
+        02-module-manifest.md
 
         03-discovery.md
 
@@ -242,9 +242,9 @@ engineering/
 
         06-activation.md
 
-        07-extension-lifecycle.md
+        07-module-lifecycle.md
 
-        08-extension-sdk.md
+        08-module-sdk.md
 
         09-permissions.md
 
@@ -287,7 +287,7 @@ Future companion specifications:
 
 # Design Goals
 
-The Extension Platform is intended to produce a platform that is:
+The Module Platform is intended to produce a platform that is:
 
 - Extensible
 - Discoverable
@@ -298,9 +298,9 @@ The Extension Platform is intended to produce a platform that is:
 - Replaceable
 - Operationally predictable
 
-Every extension should feel like a natural part of the platform rather than an external add-on.
+Every module should feel like a natural part of the platform rather than an external add-on.
 
-Manifest-driven discovery and registration have become the dominant architecture for extensible platforms because they allow capabilities to be discovered, validated and loaded before execution.  [oai_citation:0‡zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/?utm_source=chatgpt.com)
+Manifest-driven discovery and registration have become the dominant architecture for extensible platforms because they allow capabilities to be discovered, validated and loaded before execution.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)
 
 ---
 

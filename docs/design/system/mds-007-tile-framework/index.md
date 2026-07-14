@@ -2,7 +2,7 @@
 File: docs/design/system/mds-007-tile-framework/index.md
 Document: MDS-007
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # MDS-007 — Tile Framework
@@ -124,7 +124,7 @@ This specification defines:
 - Tile Composition
 - Tile Interaction
 - Runtime Tile Resolution
-- Extension Tile Integration
+- Module Tile Integration
 - Tile Orchestration
 
 This specification intentionally does **not** define:
@@ -138,7 +138,7 @@ Those belong to MDS-008 and platform implementations.
 
 ---
 
-# Core Question
+# Guiding Question
 
 MDS-007 exists to answer one question.
 
@@ -195,7 +195,7 @@ After reading MDS-007 contributors should understand:
 - how Expressions become Tiles
 - how Tiles adapt across devices
 - how Tiles participate in runtime behaviour
-- how extensions naturally inherit presentation
+- how modules naturally inherit presentation
 
 without discussing specific UI frameworks.
 
@@ -230,7 +230,7 @@ design/
 
         08-runtime-tile-resolution.md
 
-        09-extension-tiles.md
+        09-module-tiles.md
 
         10-tile-orchestration.md
 

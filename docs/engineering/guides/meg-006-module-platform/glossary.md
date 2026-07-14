@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/glossary.md
+File: docs/engineering/guides/meg-006-module-platform/glossary.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Glossary
@@ -13,7 +13,7 @@ Version: 0.1
 
 # Purpose
 
-This glossary defines the terminology used throughout the Mosaic Extension Platform.
+This glossary defines the terminology used throughout the Mosaic Module Platform.
 
 These definitions establish the canonical vocabulary for:
 
@@ -104,7 +104,7 @@ The manifest declares:
 
 The Runtime consumes manifests before executing capability code.
 
-Manifest-driven platforms separate metadata from implementation, enabling validation before activation.  [oai_citation:0‡chromium.googlesource.com](https://chromium.googlesource.com/chromium/src/%2B/HEAD/extensions/docs/overview.md?utm_source=chatgpt.com)
+Manifest-driven platforms separate metadata from implementation, enabling validation before activation.  [chromium.googlesource.com](https://chromium.googlesource.com/chromium/src/%2B/HEAD/modules/docs/overview.md)
 
 ---
 
@@ -148,13 +148,13 @@ No executable code should run during discovery.
 
 # E
 
-## Extension
+## Module
 
 A packaged delivery mechanism for one or more capabilities.
 
 Within Mosaic:
 
-Core capabilities and third-party extensions are architecturally equivalent.
+Platform capabilities and third-party modules are architecturally equivalent.
 
 They differ only in:
 
@@ -165,7 +165,7 @@ Not execution.
 
 ---
 
-## Extension Platform
+## Module Platform
 
 The Runtime subsystem responsible for:
 
@@ -176,7 +176,7 @@ The Runtime subsystem responsible for:
 - SDK
 - capability integration
 
-The Extension Platform enables the Mosaic ecosystem to evolve without modifying the Runtime.
+The Module Platform enables the Mosaic ecosystem to evolve without modifying the Runtime.
 
 ---
 
@@ -201,7 +201,7 @@ Isolation applies to:
 
 ## Manifest
 
-A machine-readable metadata document describing an extension or capability.
+A machine-readable metadata document describing a module or capability.
 
 Within Mosaic:
 
@@ -302,7 +302,7 @@ The official programming interface between:
 
 The SDK exposes stable contracts while hiding Runtime implementation.
 
-Extension authors should depend only upon the SDK.
+Module authors should depend only upon the SDK.
 
 ---
 
@@ -337,7 +337,7 @@ Compatibility is determined before activation.
 
 # Relationship to MEG-006
 
-This glossary supports every document within the Extension Platform specification.
+This glossary supports every document within the Module Platform specification.
 
 Definitions should remain consistent across:
 

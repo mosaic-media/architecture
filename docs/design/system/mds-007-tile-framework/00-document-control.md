@@ -3,7 +3,7 @@ File: docs/design/system/mds-007-tile-framework/00-document-control.md
 Document: MDS-007
 Title: Tile Framework
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Document Control
@@ -59,7 +59,7 @@ MDS-007 governs:
 - Tile interaction
 - Runtime Tile resolution
 - Tile orchestration
-- Extension Tile integration
+- Module Tile integration
 
 This specification intentionally does **not** govern:
 
@@ -214,7 +214,7 @@ MDS-007 succeeds when:
 - Expressions consistently resolve into appropriate Tiles
 - Tiles remain reusable across every Mosaic client
 - components become simple rendering implementations
-- extensions naturally inherit platform presentation
+- modules naturally inherit platform presentation
 - adaptive behaviour remains predictable
 - contributors think in Tiles rather than widgets
 

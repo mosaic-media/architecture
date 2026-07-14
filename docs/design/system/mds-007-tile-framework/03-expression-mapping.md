@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 03
 Title: Expression Mapping
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Expression Mapping
@@ -518,15 +518,15 @@ This preserves runtime efficiency and behavioural continuity.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions contribute:
+Modules contribute:
 
 - Expressions,
 - information,
 - relationships.
 
-Plugins never perform mapping.
+Modules never perform mapping.
 
 The Tile Framework owns:
 
@@ -535,7 +535,7 @@ The Tile Framework owns:
 - Motion intent,
 - Typography intent.
 
-Every extension therefore automatically inherits future presentation improvements.
+Every module therefore automatically inherits future presentation improvements.
 
 ---
 
@@ -615,9 +615,9 @@ Different platforms inventing different Tile identities.
 
 ---
 
-## Plugin Mapping
+## Module Mapping
 
-Extensions deciding presentation.
+Modules deciding presentation.
 
 ---
 

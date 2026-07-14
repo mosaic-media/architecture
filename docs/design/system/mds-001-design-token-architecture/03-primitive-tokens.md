@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 03
 Title: Primitive Tokens
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Primitive Tokens

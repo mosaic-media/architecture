@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/12-isolation.md
+File: docs/engineering/guides/meg-006-module-platform/12-isolation.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Isolation
@@ -41,7 +41,7 @@ Without effective isolation:
 - Runtime stability degrades
 - platform evolution slows
 
-Isolation is therefore one of the defining architectural principles of the Extension Platform.
+Isolation is therefore one of the defining architectural principles of the Module Platform.
 
 ---
 
@@ -179,7 +179,7 @@ Failure should remain local.
 
 System-wide failure should be exceptional.
 
-This principle of fault isolation is a cornerstone of resilient plugin and microkernel architectures. ([docs.aws.amazon.com](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/bulkhead.html?utm_source=chatgpt.com))
+This principle of fault isolation is a cornerstone of resilient module and microkernel architectures. ([docs.aws.amazon.com](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/bulkhead.html))
 
 ---
 
@@ -411,7 +411,7 @@ They never manage them.
 
 # SDK Isolation
 
-Extensions interact only with the SDK.
+Modules interact only with the SDK.
 
 They should never import:
 
@@ -419,7 +419,7 @@ They should never import:
 - Kernel implementation
 - Runtime Services
 
-The SDK forms the isolation boundary between Runtime evolution and extension stability.
+The SDK forms the isolation boundary between Runtime evolution and module stability.
 
 ---
 
@@ -480,12 +480,12 @@ Not accidental.
 
 ---
 
-# Extension Isolation
+# Module Isolation
 
-Third-party extensions should remain isolated from:
+Third-party modules should remain isolated from:
 
-- Core implementation
-- other extensions
+- Platform implementation
+- other modules
 - Runtime internals
 
 Architecturally.
@@ -499,10 +499,10 @@ SDK
 
 ↓
 
-Extension
+Module
 ```
 
-Extensions communicate with the platform.
+Modules communicate with the platform.
 
 Never with one another's private implementation.
 
@@ -512,7 +512,7 @@ Never with one another's private implementation.
 
 Isolation contributes directly to Runtime security.
 
-Even if an extension behaves incorrectly:
+Even if a module behaves incorrectly:
 
 It should remain constrained by:
 
@@ -633,7 +633,7 @@ Within Mosaic:
 - Runtime Services MUST preserve execution isolation.
 - Permissions MUST remain capability specific.
 - Configuration MUST remain capability specific.
-- Extensions MUST remain independent of Runtime implementation.
+- Modules MUST remain independent of Runtime implementation.
 - Failure SHOULD remain local wherever practical.
 
 ---
@@ -648,7 +648,7 @@ Isolation defines:
 
 > **How compatible capabilities safely coexist inside one Runtime.**
 
-The next chapter introduces **Platform Guidelines**, bringing together the principles of the Extension Platform into practical guidance for engineers designing new capabilities.
+The next chapter introduces **Platform Guidelines**, bringing together the principles of the Module Platform into practical guidance for engineers designing new capabilities.
 
 ---
 
@@ -658,9 +658,9 @@ Isolation is one of the defining architectural properties of the Mosaic platform
 
 It allows:
 
-- Core capabilities
-- first-party extensions
-- third-party extensions
+- Platform capabilities
+- first-party modules
+- third-party modules
 
 to coexist within one Runtime while remaining independently evolvable.
 

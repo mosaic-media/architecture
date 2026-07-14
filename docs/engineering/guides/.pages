@@ -6,7 +6,7 @@ arrange:
   - meg-003-domain-driven-design
   - meg-004-hexagonal-architecture
   - meg-005-runtime-architecture
-  - meg-006-extension-platform
+  - meg-006-module-platform
   - meg-007-storage-architecture
   - meg-008-observability
   - meg-009-security-architecture

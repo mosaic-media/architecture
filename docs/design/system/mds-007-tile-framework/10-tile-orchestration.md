@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 10
 Title: Tile Orchestration
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Orchestration
@@ -533,15 +533,15 @@ Behavioural orchestration does not.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions contribute:
+Modules contribute:
 
 - Expressions
 - Behaviour
 - Relationships
 
-Plugins never orchestrate Tiles.
+Modules never orchestrate Tiles.
 
 The Tile Framework owns:
 
@@ -549,7 +549,7 @@ The Tile Framework owns:
 - grouping
 - presentation evolution
 
-Every extension therefore automatically inherits one coherent presentation language.
+Every module therefore automatically inherits one coherent presentation language.
 
 ---
 
@@ -637,9 +637,9 @@ Different clients inventing different sequencing.
 
 ---
 
-## Plugin Orchestration
+## Module Orchestration
 
-Extensions scheduling their own presentation updates.
+Modules scheduling their own presentation updates.
 
 ---
 

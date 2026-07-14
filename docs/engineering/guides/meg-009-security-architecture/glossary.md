@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/glossary.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Glossary
@@ -144,11 +144,11 @@ They establish identity.
 
 # E
 
-## Extension Trust
+## Module Trust
 
-The Runtime process responsible for determining whether an extension may safely execute.
+The Runtime process responsible for determining whether a module may safely execute.
 
-Extension trust includes:
+Module trust includes:
 
 - verification
 - compatibility
@@ -444,7 +444,7 @@ This glossary supports every document within the Security Architecture specifica
 Definitions should remain consistent across:
 
 - Runtime documentation
-- Extension Platform
+- Module Platform
 - SDK documentation
 - Marketplace documentation
 - Operational guidance

@@ -1,30 +1,30 @@
 <!--
-File: docs/design/system/mds-007-tile-framework/09-extension-tiles.md
+File: docs/design/system/mds-007-tile-framework/09-module-tiles.md
 Document: MDS-007
 Chapter: 09
-Title: Extension Tiles
+Title: Module Tiles
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
-# Extension Tiles
+# Module Tiles
 
 ---
 
 # Purpose
 
-One of Mosaic's defining architectural goals is allowing extensions to feel indistinguishable from native functionality.
+One of Mosaic's defining architectural goals is allowing modules to feel indistinguishable from native functionality.
 
 Users should never be able to identify whether a Tile originated from:
 
-- Mosaic Core,
-- an official extension,
-- a community extension,
+- Mosaic Platform,
+- an official module,
+- a community module,
 - a third-party integration.
 
-This chapter defines how extensions participate in the Tile Framework without fragmenting the behavioural language of the platform.
+This chapter defines how modules participate in the Tile Framework without fragmenting the behavioural language of the platform.
 
-Extensions contribute understanding.
+Modules contribute understanding.
 
 The Tile Framework determines presentation.
 
@@ -32,19 +32,19 @@ The Tile Framework determines presentation.
 
 # Definition
 
-Within MDS, **Extension Tiles** are defined as:
+Within MDS, **Module Tiles** are defined as:
 
-> **Runtime Tiles produced from extension-provided Expressions using the same behavioural resolution pipeline as native Mosaic functionality.**
+> **Runtime Tiles produced from module-provided Expressions using the same behavioural resolution pipeline as native Mosaic functionality.**
 
-Extension Tiles are not custom Tile types.
+Module Tiles are not custom Tile types.
 
-They are standard Mosaic Tiles whose behavioural source happens to originate from an extension.
+They are standard Mosaic Tiles whose behavioural source happens to originate from a module.
 
 ---
 
 # Philosophy
 
-Traditional plugin systems frequently allow extensions to create arbitrary interfaces.
+Traditional module systems frequently allow modules to create arbitrary interfaces.
 
 The result is:
 
@@ -58,7 +58,7 @@ Mosaic intentionally rejects this model.
 Instead:
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -77,15 +77,15 @@ Standard Tile
 Presentation
 ```
 
-Extensions become behaviourally native.
+Modules become behaviourally native.
 
 ---
 
-# Extensions Never Create Tiles
+# Modules Never Create Tiles
 
 This principle is fundamental.
 
-Extensions provide:
+Modules provide:
 
 - information,
 - relationships,
@@ -105,7 +105,7 @@ The Tile Framework remains solely responsible for presentation.
 
 # Behaviour Before Presentation
 
-Extensions communicate behavioural meaning.
+Modules communicate behavioural meaning.
 
 Example.
 
@@ -125,18 +125,18 @@ Streaming Widget
 
 The runtime determines how playback should appear.
 
-The extension merely enriches the Runtime World.
+The module merely enriches the Runtime World.
 
 ---
 
 # Expression Ownership
 
-Extension Expressions participate identically to native Expressions.
+Module Expressions participate identically to native Expressions.
 
 Example.
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -151,7 +151,7 @@ Timeline Tile
 Platform Component
 ```
 
-The Composition Engine never distinguishes between native and extension Expressions during presentation.
+The Composition Engine never distinguishes between native and module Expressions during presentation.
 
 Only behaviour matters.
 
@@ -159,10 +159,10 @@ Only behaviour matters.
 
 # Tile Resolution
 
-Extension Expressions pass through the complete runtime pipeline.
+Module Expressions pass through the complete runtime pipeline.
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -193,12 +193,12 @@ This guarantees behavioural consistency.
 
 # Runtime Hierarchy
 
-Extensions never assign hierarchy.
+Modules never assign hierarchy.
 
 Incorrect.
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -208,7 +208,7 @@ Hero
 Correct.
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -231,7 +231,7 @@ This preserves behavioural integrity.
 
 # Material Behaviour
 
-Extension Tiles inherit standard Material behaviour.
+Module Tiles inherit standard Material behaviour.
 
 Examples.
 
@@ -253,7 +253,7 @@ Overlay.
 
 Overlay Material.
 
-Extensions should never specify Material behaviour directly.
+Modules should never specify Material behaviour directly.
 
 ---
 
@@ -263,19 +263,19 @@ Editorial hierarchy also remains platform owned.
 
 Examples.
 
-Extension Metadata.
+Module Metadata.
 
 ↓
 
 Supporting.
 
-Extension Hero.
+Module Hero.
 
 ↓
 
 Heading.
 
-Extension Diagnostics.
+Module Diagnostics.
 
 ↓
 
@@ -287,7 +287,7 @@ The editorial language remains consistent regardless of content source.
 
 # Motion Behaviour
 
-Extension Tiles inherit standard Motion.
+Module Tiles inherit standard Motion.
 
 Examples.
 
@@ -309,7 +309,7 @@ Overlay.
 
 Overlay Motion.
 
-Extensions never define transitions.
+Modules never define transitions.
 
 Movement remains behaviourally consistent.
 
@@ -317,7 +317,7 @@ Movement remains behaviourally consistent.
 
 # Adaptive Behaviour
 
-Extension Tiles adapt exactly like native Tiles.
+Module Tiles adapt exactly like native Tiles.
 
 Desktop.
 
@@ -343,13 +343,13 @@ Voice.
 
 Conversational Tile.
 
-Extensions automatically support future presentation environments.
+Modules automatically support future presentation environments.
 
 ---
 
 # Interaction Behaviour
 
-Extensions communicate interaction intent.
+Modules communicate interaction intent.
 
 Examples.
 
@@ -375,7 +375,7 @@ Interaction therefore remains platform independent.
 
 ---
 
-# Extension Identity
+# Module Identity
 
 Users should perceive:
 
@@ -386,20 +386,20 @@ Mosaic
 Not:
 
 ```
-Extension UI
+Module UI
 ```
 
 Visual identity belongs to the platform.
 
 Behaviour belongs to the Runtime World.
 
-Extensions should therefore disappear into the experience.
+Modules should therefore disappear into the experience.
 
 ---
 
 # Capability Projection
 
-Extensions may expose capabilities.
+Modules may expose capabilities.
 
 Examples.
 
@@ -425,11 +425,11 @@ Capability does not imply presentation.
 
 # Runtime Updates
 
-Extension updates should follow identical runtime behaviour.
+Module updates should follow identical runtime behaviour.
 
 Example.
 
-Extension updates metadata.
+Module updates metadata.
 
 ↓
 
@@ -443,13 +443,13 @@ Composition evolves.
 
 Tiles update.
 
-The extension should never directly manipulate presentation.
+The module should never directly manipulate presentation.
 
 ---
 
 # Accessibility
 
-Extension Tiles automatically inherit:
+Module Tiles automatically inherit:
 
 - accessibility,
 - adaptive layout,
@@ -457,7 +457,7 @@ Extension Tiles automatically inherit:
 - typography,
 - materials.
 
-Extensions should never implement accessibility independently.
+Modules should never implement accessibility independently.
 
 The platform guarantees consistency.
 
@@ -465,7 +465,7 @@ The platform guarantees consistency.
 
 # Multi-Device Behaviour
 
-Extension Tiles should remain behaviourally identical across:
+Module Tiles should remain behaviourally identical across:
 
 - desktop,
 - mobile,
@@ -477,7 +477,7 @@ Presentation adapts.
 
 Behaviour remains stable.
 
-Extensions therefore automatically support future clients without modification.
+Modules therefore automatically support future clients without modification.
 
 ---
 
@@ -485,7 +485,7 @@ Extensions therefore automatically support future clients without modification.
 
 The Tile Framework intentionally provides an architectural security boundary.
 
-Extensions should never directly influence:
+Modules should never directly influence:
 
 - rendering,
 - runtime hierarchy,
@@ -506,7 +506,7 @@ The Runtime World owns:
 - composition,
 - presentation.
 
-Extensions own:
+Modules own:
 
 - capabilities,
 - behaviour,
@@ -518,7 +518,7 @@ Responsibilities remain intentionally separated.
 
 # Good Examples
 
-## Streaming Extension
+## Streaming Module
 
 Behaviour.
 
@@ -558,7 +558,7 @@ Discovery behaves identically to native content.
 
 ---
 
-## Download Extension
+## Download Module
 
 Capability.
 
@@ -582,19 +582,19 @@ Interaction feels entirely native.
 
 ## Custom Widgets
 
-Extensions rendering independent UI.
+Modules rendering independent UI.
 
 ---
 
 ## Custom Tile Types
 
-Extensions inventing new behavioural presentation primitives.
+Modules inventing new behavioural presentation primitives.
 
 ---
 
 ## Theme Injection
 
-Extensions modifying:
+Modules modifying:
 
 - Materials,
 - Typography,
@@ -604,17 +604,17 @@ Extensions modifying:
 
 ## Runtime Ownership
 
-Extensions bypassing the Composition Engine.
+Modules bypassing the Composition Engine.
 
 ---
 
-# Extension Tile Model
+# Module Tile Model
 
 ```mermaid
 flowchart TD
 
-Extension
-Extension --> Behaviour
+Module
+Module --> Behaviour
 Behaviour --> Expression
 Expression --> CompositionEngine
 CompositionEngine --> TileFramework
@@ -622,7 +622,7 @@ TileFramework --> ResolvedTile
 ResolvedTile --> Presentation
 ```
 
-Extensions contribute behaviour.
+Modules contribute behaviour.
 
 The platform owns presentation.
 
@@ -632,9 +632,9 @@ The platform owns presentation.
 
 The next chapter defines **Tile Orchestration**.
 
-Extension Tiles explain:
+Module Tiles explain:
 
-> **How extensions participate in the Tile Framework.**
+> **How modules participate in the Tile Framework.**
 
 Tile Orchestration explains:
 
@@ -646,9 +646,9 @@ Together they complete the behavioural integration architecture of the Tile Fram
 
 # Summary
 
-Extension Tiles ensure that the Mosaic ecosystem grows without fragmenting.
+Module Tiles ensure that the Mosaic ecosystem grows without fragmenting.
 
-Extensions enrich:
+Modules enrich:
 
 - the Runtime World,
 - behavioural understanding,
@@ -658,7 +658,7 @@ The Tile Framework transforms those contributions into presentation that feels e
 
 Users should never think:
 
-> "This came from an extension."
+> "This came from a module."
 
 They should simply feel that Mosaic naturally became more capable.
 

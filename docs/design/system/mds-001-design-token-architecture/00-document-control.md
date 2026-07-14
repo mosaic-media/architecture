@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/00-document-control.m
 Document: MDS-001
 Title: Design Token Architecture
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Document Control
@@ -52,7 +52,7 @@ MDS-001 governs:
 - Runtime resolution
 - Token inheritance
 - Token lifecycle
-- Extension integration
+- Module integration
 - Cross-platform consistency
 
 This specification intentionally does **not** define:

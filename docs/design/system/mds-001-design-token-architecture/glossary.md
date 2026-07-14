@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/glossary.md
 Document: MDS-001
 Title: Glossary
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Glossary

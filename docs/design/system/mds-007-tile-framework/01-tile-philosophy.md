@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 01
 Title: Tile Philosophy
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Philosophy
@@ -443,11 +443,11 @@ Motion therefore remains behaviourally consistent without components needing ind
 
 ---
 
-# Plugins
+# Modules
 
-Extensions never define Tiles.
+Modules never define Tiles.
 
-Plugins contribute:
+Modules contribute:
 
 - behaviour,
 - information,
@@ -457,7 +457,7 @@ The Composition Engine determines Expressions.
 
 The Tile Framework determines Tiles.
 
-This guarantees every extension inherits the same presentation language.
+This guarantees every module inherits the same presentation language.
 
 ---
 
@@ -543,9 +543,9 @@ Allowing Tiles to determine runtime hierarchy.
 
 ---
 
-## Plugin Tiles
+## Module Tiles
 
-Extensions introducing independent presentation primitives.
+Modules introducing independent presentation primitives.
 
 ---
 

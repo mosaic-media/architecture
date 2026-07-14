@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 02
 Title: Token Hierarchy
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Token Hierarchy

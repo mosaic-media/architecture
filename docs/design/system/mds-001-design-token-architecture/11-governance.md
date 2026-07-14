@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 11
 Title: Token Governance
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Token Governance
@@ -18,7 +18,7 @@ The Design Token Architecture is a shared contract between:
 - Design
 - Engineering
 - Runtime Systems
-- Extensions
+- Modules
 - Tooling
 
 Without governance, token systems naturally fragment.
@@ -29,7 +29,7 @@ Semantic meaning drifts.
 
 Components begin consuming primitive values.
 
-Extensions invent competing token hierarchies.
+Modules invent competing token hierarchies.
 
 Over time, the Design System becomes increasingly difficult to maintain.
 
@@ -286,9 +286,9 @@ Adding additional abstraction should never become easier than maintaining archit
 
 ---
 
-# Extension Governance
+# Module Governance
 
-Extensions may propose new Semantic Tokens.
+Modules may propose new Semantic Tokens.
 
 They may not introduce:
 
@@ -296,9 +296,9 @@ They may not introduce:
 - Runtime architecture
 - Composition hierarchy
 
-Core platform ownership remains preserved.
+Platform foundation ownership remains preserved.
 
-Extension proposals should demonstrate:
+Module proposals should demonstrate:
 
 - reuse
 - compatibility
@@ -334,7 +334,7 @@ Every token proposal should satisfy:
 - [ ] Semantic meaning documented.
 - [ ] Runtime implications reviewed.
 - [ ] Component impact assessed.
-- [ ] Extension compatibility maintained.
+- [ ] Module compatibility maintained.
 - [ ] Documentation updated.
 
 ---
@@ -346,7 +346,7 @@ The Token Architecture succeeds when:
 - contributors naturally reuse existing tokens
 - semantic names remain stable
 - runtime adaptation remains invisible
-- extensions integrate without fragmentation
+- modules integrate without fragmentation
 - implementations remain framework independent
 
 The strongest Design Token Architecture is one contributors rarely need to think about consciously.

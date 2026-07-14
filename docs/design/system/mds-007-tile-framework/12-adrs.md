@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Architectural Decision Records
@@ -37,29 +37,11 @@ Future contributors should understand these decisions before modifying the Tile 
 
 ---
 
-# ADR Format
+# Decision Format
 
-Every Mosaic ADR follows the standard structure.
+Decision format, lifecycle and review expectations are governed by **MDG-001 — Documentation Authority Guide**.
 
-```text
-ADR Number
-
-Status
-
-Context
-
-Decision
-
-Consequences
-
-Alternatives Considered
-
-Related Specifications
-```
-
-Each ADR documents one architectural decision.
-
----
+This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
 
 # ADR-168
 
@@ -237,7 +219,7 @@ Components become extremely small implementation artefacts.
 
 ## Title
 
-Extensions Never Define Tiles
+Modules Never Define Tiles
 
 ### Status
 
@@ -245,17 +227,17 @@ Accepted
 
 ### Context
 
-Plugin-owned presentation primitives fragment behavioural consistency.
+Module-owned presentation primitives fragment behavioural consistency.
 
 ### Decision
 
-Extensions contribute Expressions.
+Modules contribute Expressions.
 
 The Tile Framework determines presentation.
 
 ### Consequences
 
-Community extensions automatically inherit future presentation improvements.
+Community modules automatically inherit future presentation improvements.
 
 ---
 
@@ -302,7 +284,7 @@ ADR173["Interaction"]
 
 ADR174["Runtime Resolution"]
 
-ADR175["Extensions"]
+ADR175["Modules"]
 
 ADR176["Orchestration"]
 

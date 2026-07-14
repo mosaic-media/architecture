@@ -1,19 +1,19 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/07-extension-lifecycle.md
+File: docs/engineering/guides/meg-006-module-platform/07-module-lifecycle.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
-# Extension Lifecycle
+# Module Lifecycle
 
-> *An extension is not simply loaded. It participates in the lifecycle of the platform.*
+> *A module is not simply loaded. It participates in the lifecycle of the platform.*
 
 ---
 
 # Purpose
 
-An extension does not merely exist.
+A module does not merely exist.
 
 Throughout its lifetime it is:
 
@@ -27,9 +27,9 @@ Throughout its lifetime it is:
 
 The Runtime must coordinate these transitions consistently.
 
-Every extension, whether supplied by Core or by a third party, should follow exactly the same lifecycle.
+Every module, whether supplied by the Platform distribution or by a third party, should follow exactly the same lifecycle.
 
-This document defines the canonical Extension Lifecycle within the Mosaic platform.
+This document defines the canonical Module Lifecycle within the Mosaic platform.
 
 ---
 
@@ -37,7 +37,7 @@ This document defines the canonical Extension Lifecycle within the Mosaic platfo
 
 Within Mosaic:
 
-> **Extensions participate in the Runtime. They never control it.**
+> **Modules participate in the Runtime. They never control it.**
 
 The Runtime owns:
 
@@ -46,15 +46,15 @@ The Runtime owns:
 - activation
 - deactivation
 
-Extensions respond.
+Modules respond.
 
 They never initiate lifecycle transitions themselves.
 
 ---
 
-# Extension Lifecycle
+# Module Lifecycle
 
-Every extension progresses through the same lifecycle.
+Every module progresses through the same lifecycle.
 
 ```
 Discovered
@@ -98,7 +98,7 @@ Removed
 
 Every stage has exactly one responsibility.
 
-The Runtime should never invent extension-specific lifecycle stages.
+The Runtime should never invent module-specific lifecycle stages.
 
 ---
 
@@ -112,7 +112,7 @@ The Runtime discovers:
 
 No executable code has been loaded.
 
-The extension remains unknown except for its manifest.
+The module remains unknown except for its manifest.
 
 Discovery answers:
 
@@ -122,7 +122,7 @@ Discovery answers:
 
 # Registration
 
-Registration admits the extension into the Runtime.
+Registration admits the module into the Runtime.
 
 The Runtime now knows:
 
@@ -132,7 +132,7 @@ The Runtime now knows:
 - permissions
 - contracts
 
-The extension still performs no work.
+The module still performs no work.
 
 Registration answers:
 
@@ -150,7 +150,7 @@ Dependency Resolution validates:
 - versions
 - dependency graph
 
-Only extensions with fully satisfied requirements may proceed.
+Only modules with fully satisfied requirements may proceed.
 
 Resolution answers:
 
@@ -160,7 +160,7 @@ Resolution answers:
 
 # Activation
 
-Activation constructs the extension.
+Activation constructs the module.
 
 Examples include:
 
@@ -169,7 +169,7 @@ Examples include:
 - configuration
 - lifecycle callbacks
 
-Activation prepares the extension.
+Activation prepares the module.
 
 It does not yet process Runtime work.
 
@@ -177,7 +177,7 @@ It does not yet process Runtime work.
 
 # Ready
 
-A Ready extension has completed:
+A Ready module has completed:
 
 - construction
 - initialisation
@@ -187,9 +187,9 @@ The Runtime may now dispatch work.
 
 Readiness is intentionally distinct from activation.
 
-An extension may activate successfully yet still require asynchronous preparation before becoming operational.
+A module may activate successfully yet still require asynchronous preparation before becoming operational.
 
-Separating activation from readiness is a common lifecycle pattern in extensible platforms because it prevents work from being dispatched before initialisation has completed.  [oai_citation:0‡Visual Studio Code](https://code.visualstudio.com/api/references/activation-events?utm_source=chatgpt.com)
+Separating activation from readiness is a common lifecycle pattern in extensible platforms because it prevents work from being dispatched before initialisation has completed.  [Visual Studio Code](https://code.visualstudio.com/api/references/activation-events)
 
 ---
 
@@ -197,7 +197,7 @@ Separating activation from readiness is a common lifecycle pattern in extensible
 
 Running is the steady operational state.
 
-The extension now:
+The module now:
 
 - receives Runtime Events
 - executes capability operations
@@ -205,7 +205,7 @@ The extension now:
 - exposes health
 - publishes metrics
 
-Most extensions remain in this state for the majority of their lifetime.
+Most modules remain in this state for the majority of their lifetime.
 
 ---
 
@@ -229,7 +229,7 @@ Running
 
 Suspension differs from deactivation.
 
-The extension remains:
+The module remains:
 
 - registered
 - activated
@@ -251,7 +251,7 @@ Suspension should remain reversible.
 
 Stopping begins graceful shutdown.
 
-The Runtime notifies the extension that:
+The Runtime notifies the module that:
 
 ```
 No New Work
@@ -261,7 +261,7 @@ No New Work
 Finish Existing Work
 ```
 
-Extensions should:
+Modules should:
 
 - release temporary resources
 - complete active work
@@ -289,7 +289,7 @@ The Runtime:
 - unregisters handlers
 - disposes internal resources
 
-The extension should no longer participate in execution.
+The module should no longer participate in execution.
 
 ---
 
@@ -305,11 +305,11 @@ Deactivated
 Removed
 ```
 
-Removal deletes the extension from the Runtime.
+Removal deletes the module from the Runtime.
 
 The Capability Registry should update accordingly.
 
-Removed extensions no longer participate in:
+Removed modules no longer participate in:
 
 - discovery
 - execution
@@ -323,7 +323,7 @@ Future participation requires rediscovery.
 
 The Runtime owns every lifecycle transition.
 
-Extensions should never:
+Modules should never:
 
 - activate themselves
 - suspend themselves
@@ -341,23 +341,23 @@ The Runtime MAY publish lifecycle events.
 Examples include:
 
 ```
-ExtensionActivated
+ModuleActivated
 ```
 
 ```
-ExtensionReady
+ModuleReady
 ```
 
 ```
-ExtensionSuspended
+ModuleSuspended
 ```
 
 ```
-ExtensionStopped
+ModuleStopped
 ```
 
 ```
-ExtensionRemoved
+ModuleRemoved
 ```
 
 These are Runtime Events.
@@ -400,7 +400,7 @@ The Runtime should:
 
 - dispose partially constructed state
 - release resources
-- mark extension unavailable
+- mark module unavailable
 - report diagnostics
 
 Partial activation must never remain inside the Runtime.
@@ -431,7 +431,7 @@ Activation
 Ready
 ```
 
-Extensions should never assume:
+Modules should never assume:
 
 - previous process state
 - cached objects
@@ -492,7 +492,7 @@ Replacing a capability should always occur through a controlled lifecycle transi
 Suppose:
 
 ```
-Metadata Extension
+Metadata Module
 
 ↓
 
@@ -509,7 +509,7 @@ Playback
 Running
 ```
 
-Extension lifecycle failures should never destabilise unrelated capabilities.
+Module lifecycle failures should never destabilise unrelated capabilities.
 
 Isolation remains a Runtime responsibility.
 
@@ -517,7 +517,7 @@ Isolation remains a Runtime responsibility.
 
 # Resource Ownership
 
-Extensions own:
+Modules own:
 
 - internal resources
 - temporary allocations
@@ -536,7 +536,7 @@ Ownership determines cleanup responsibility.
 
 # Testing
 
-Extension lifecycle behaviour SHOULD be tested.
+Module lifecycle behaviour SHOULD be tested.
 
 Examples include:
 
@@ -561,7 +561,7 @@ The following practices are prohibited.
 
 ## Self Activation
 
-Extensions activating themselves.
+Modules activating themselves.
 
 ---
 
@@ -591,7 +591,7 @@ Lifecycle transitions occurring without Runtime visibility.
 
 ## Business Behaviour During Activation
 
-Executing business workflows before the Runtime declares the extension Ready.
+Executing business workflows before the Runtime declares the module Ready.
 
 ---
 
@@ -599,7 +599,7 @@ Executing business workflows before the Runtime declares the extension Ready.
 
 Within Mosaic:
 
-- Every extension MUST follow the canonical lifecycle.
+- Every module MUST follow the canonical lifecycle.
 - The Runtime MUST own lifecycle transitions.
 - Activation MUST precede readiness.
 - Readiness MUST precede execution.
@@ -607,7 +607,7 @@ Within Mosaic:
 - Shutdown MUST remain graceful.
 - Removal MUST follow deactivation.
 - Lifecycle MUST remain observable.
-- Extension failures MUST remain isolated.
+- Module failures MUST remain isolated.
 
 ---
 
@@ -617,17 +617,17 @@ Activation answers:
 
 > **How does a capability become operational?**
 
-The Extension Lifecycle answers:
+The Module Lifecycle answers:
 
 > **How does that capability participate throughout its lifetime?**
 
-The next chapter introduces the **Extension SDK**, defining the contracts, APIs and development model through which extension authors build capabilities for the Mosaic platform.
+The next chapter introduces the **Module SDK**, defining the contracts, APIs and development model through which module authors build capabilities for the Mosaic platform.
 
 ---
 
 # Summary
 
-An extension should never simply:
+A module should never simply:
 
 > **Load.**
 
@@ -655,4 +655,4 @@ Lead Software Architect
 
 **Next File**
 
-`08-extension-sdk.md`
+`08-module-sdk.md`

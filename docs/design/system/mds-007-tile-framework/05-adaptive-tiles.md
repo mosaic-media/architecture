@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 05
 Title: Adaptive Tiles
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Adaptive Tiles
@@ -558,11 +558,11 @@ The Tile Framework should remain prepared for technologies that do not yet exist
 
 ---
 
-# Plugins
+# Modules
 
-Extensions never define adaptive behaviour.
+Modules never define adaptive behaviour.
 
-Plugins contribute:
+Modules contribute:
 
 - Expressions,
 - behaviour,
@@ -570,7 +570,7 @@ Plugins contribute:
 
 Adaptive Tiles remain entirely platform owned.
 
-Every extension therefore automatically supports future devices.
+Every module therefore automatically supports future devices.
 
 ---
 

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/04-authorisation.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Authorisation
@@ -605,7 +605,7 @@ Authorisation answers:
 
 > **What are they allowed to do?**
 
-The next chapter introduces **Capability Permissions**, defining how the Runtime grants authority to capabilities themselves, ensuring extensions and Core capabilities execute with only the permissions explicitly declared in their manifests.
+The next chapter introduces **Capability Permissions**, defining how the Runtime grants authority to capabilities themselves, ensuring modules and Platform capabilities execute with only the permissions explicitly declared in their manifests.
 
 ---
 

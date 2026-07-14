@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/00-document-control.md
+File: docs/engineering/guides/meg-006-module-platform/00-document-control.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Document Control
@@ -14,7 +14,7 @@ Version: 0.1
 | Field | Value |
 |---------|--------|
 | Document ID | MEG-006 |
-| Title | Extension Platform |
+| Title | Module Platform |
 | File | 00-document-control.md |
 | Status | Draft |
 | Version | 0.1 |
@@ -25,7 +25,7 @@ Version: 0.1
 
 # Purpose
 
-This document establishes the governance, authority and lifecycle of the Mosaic Extension Platform specification.
+This document establishes the governance, authority and lifecycle of the Mosaic Module Platform specification.
 
 MEG-006 defines how independently developed capabilities become part of the Mosaic platform.
 
@@ -36,20 +36,20 @@ Unlike Runtime Architecture, which defines **how capabilities execute**, this sp
 - how they are validated
 - how they become operational
 
-The Extension Platform is the mechanism through which the platform evolves without modifying Core.
+The Module Platform is the mechanism through which the platform evolves without modifying the Platform.
 
 ---
 
 # Authority
 
-MEG-006 is the authoritative specification governing extension development throughout the Mosaic ecosystem.
+MEG-006 is the authoritative specification governing module development throughout the Mosaic ecosystem.
 
 This specification applies to:
 
-- Core Capabilities
-- First-party Extensions
-- Third-party Extensions
-- Enterprise Extensions
+- Built-In Capabilities
+- First-party Modules
+- Third-party Modules
+- Enterprise Modules
 - SDK Development
 - Marketplace Integration
 
@@ -122,18 +122,18 @@ Examples and diagrams are informative unless explicitly identified as normative.
 
 ---
 
-# Extension Principles
+# Module Principles
 
-The Mosaic Extension Platform is built upon several foundational principles.
+The Mosaic Module Platform is built upon several foundational principles.
 
 - Everything beyond the Runtime is a capability.
 - Every capability is described by a manifest.
 - Discovery precedes execution.
 - Validation precedes activation.
-- Runtime stability takes precedence over extension flexibility.
+- Runtime stability takes precedence over module flexibility.
 - Capabilities remain independently deployable.
-- Core and third-party capabilities are architectural equals.
-- Extensions evolve the platform without modifying the Runtime.
+- Built-in and third-party capabilities are architectural equals.
+- Modules evolve the platform without modifying the Runtime.
 
 Every subsequent chapter expands one or more of these principles.
 
@@ -177,7 +177,7 @@ Historical revisions SHOULD remain available for future reference.
 
 # Platform Evolution
 
-The Extension Platform is expected to evolve.
+The Module Platform is expected to evolve.
 
 However, changes affecting:
 
@@ -197,9 +197,9 @@ Platform evolution should remain deliberate and predictable.
 
 # Compliance
 
-All extensions intended for the Mosaic Runtime SHOULD comply with MEG-006.
+All modules intended for the Mosaic Runtime SHOULD comply with MEG-006.
 
-Where deviation becomes necessary, extension authors SHOULD document:
+Where deviation becomes necessary, module authors SHOULD document:
 
 - architectural reason
 - compatibility impact
@@ -222,15 +222,15 @@ MEG-006 intentionally favours:
 - version compatibility
 - operational transparency
 
-The Runtime should understand an extension completely before executing it.
+The Runtime should understand a module completely before executing it.
 
-A machine-readable manifest describing identity, dependencies, permissions and capabilities has become the dominant approach for modern extension ecosystems because it enables validation and discovery before code execution.  [oai_citation:0‡Chrome for Developers](https://developer.chrome.com/extensions/manifest?utm_source=chatgpt.com)
+A machine-readable manifest describing identity, dependencies, permissions and capabilities has become the dominant approach for modern module ecosystems because it enables validation and discovery before code execution.  [Chrome for Developers](https://developer.chrome.com/modules/manifest)
 
 ---
 
 # Scope of Authority
 
-MEG-006 governs the Extension Platform.
+MEG-006 governs the Module Platform.
 
 It does **not** define:
 
@@ -241,7 +241,7 @@ It does **not** define:
 
 Those concerns belong to other MEG specifications.
 
-Keeping extension concerns separate from runtime concerns allows both to evolve independently.
+Keeping module concerns separate from runtime concerns allows both to evolve independently.
 
 ---
 
@@ -261,4 +261,4 @@ Lead Software Architect
 
 **Next File**
 
-`01-extension-philosophy.md`
+`01-module-philosophy.md`

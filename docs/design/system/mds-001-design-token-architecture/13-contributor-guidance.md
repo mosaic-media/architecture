@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Contributor Guidance
@@ -21,7 +21,7 @@ Engineers consume tokens.
 
 Tooling generates tokens.
 
-Extensions inherit tokens.
+Modules inherit tokens.
 
 For this reason, MDS-001 establishes a common set of practices intended to preserve the long-term integrity of the Design System.
 
@@ -197,9 +197,9 @@ Higher layers reduce implementation complexity.
 
 ---
 
-# Extensions
+# Modules
 
-Extension authors should think in capabilities rather than appearance.
+Module authors should think in capabilities rather than appearance.
 
 Contribute:
 
@@ -219,7 +219,7 @@ Avoid introducing:
 - typography scales
 - material definitions
 
-The extension ecosystem should inherit the Mosaic visual language automatically.
+The module ecosystem should inherit the Mosaic visual language automatically.
 
 ---
 

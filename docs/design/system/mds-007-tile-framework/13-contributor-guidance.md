@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Contributor Guidance
@@ -19,7 +19,7 @@ Every contributor working on:
 
 - runtime,
 - frontend,
-- extensions,
+- modules,
 - components,
 - interaction,
 - presentation,
@@ -279,9 +279,9 @@ They never redefine it.
 
 ---
 
-# Plugins Enrich Behaviour
+# Modules Enrich Behaviour
 
-Extensions contribute:
+Modules contribute:
 
 - behaviour,
 - information,
@@ -294,7 +294,7 @@ They never contribute:
 - widgets,
 - Materials.
 
-Every extension should disappear naturally into Mosaic.
+Every module should disappear naturally into Mosaic.
 
 ---
 
@@ -398,9 +398,9 @@ Allowing geometry to redefine behaviour.
 
 ---
 
-### Plugin Presentation
+### Module Presentation
 
-Extensions creating their own UI language.
+Modules creating their own UI language.
 
 ---
 
@@ -444,7 +444,7 @@ Every Tile implementation should satisfy the following.
 - [ ] Adaptive behaviour preserves identity.
 - [ ] Accessibility is maintained.
 - [ ] Components remain implementation only.
-- [ ] Extensions cannot bypass the Tile Framework.
+- [ ] Modules cannot bypass the Tile Framework.
 
 ---
 

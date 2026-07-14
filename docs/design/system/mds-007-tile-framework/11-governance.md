@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 11
 Title: Tile Framework Governance
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Framework Governance
@@ -23,7 +23,7 @@ Poor governance would gradually produce:
 - presentation fragmentation,
 - inconsistent interaction,
 - platform divergence,
-- extension incompatibility.
+- module incompatibility.
 
 This chapter defines how the Tile Framework should evolve while preserving one coherent presentation language.
 
@@ -160,7 +160,7 @@ Tile Drift occurs when:
 
 - duplicate Tile identities appear,
 - platform-specific Tiles emerge,
-- extensions introduce presentation primitives,
+- modules introduce presentation primitives,
 - behaviour leaks into components,
 - rendering influences runtime vocabulary.
 
@@ -249,16 +249,16 @@ It never changes their identity.
 
 ---
 
-# Plugin Governance
+# Module Governance
 
-Extensions must never define:
+Modules must never define:
 
 - Tile families,
 - adaptive behaviour,
 - presentation hierarchy,
 - interaction models.
 
-Plugins contribute:
+Modules contribute:
 
 - Expressions,
 - behaviours,
@@ -266,7 +266,7 @@ Plugins contribute:
 
 The Tile Framework owns presentation.
 
-This guarantees every extension feels unmistakably Mosaic.
+This guarantees every module feels unmistakably Mosaic.
 
 ---
 
@@ -297,7 +297,7 @@ Future tooling should automatically validate:
 - Expression mapping
 - adaptive variants
 - runtime consistency
-- extension compatibility
+- module compatibility
 - platform parity
 
 Validation should reinforce architectural review.
@@ -335,7 +335,7 @@ The Tile Framework succeeds when:
 - adaptive behaviour remains predictable,
 - rendering frameworks remain replaceable,
 - contributors naturally think in Tiles rather than widgets,
-- extensions integrate seamlessly,
+- modules integrate seamlessly,
 - users experience one coherent presentation language.
 
 Tiles should become invisible.
@@ -352,7 +352,7 @@ Only understanding should remain.
 | ADR-164 | Expressions map deterministically into Tile identities. |
 | ADR-165 | Adaptive behaviour never changes Tile identity. |
 | ADR-166 | Runtime Tile Resolution owns presentation behaviour. |
-| ADR-167 | Extensions inherit the Tile Framework rather than extending it. |
+| ADR-167 | Modules inherit the Tile Framework rather than extending it. |
 
 ---
 

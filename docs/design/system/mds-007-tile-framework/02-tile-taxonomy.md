@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 02
 Title: Tile Taxonomy
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Taxonomy
@@ -516,11 +516,11 @@ The taxonomy remains unchanged.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions should never define new Tile families.
+Modules should never define new Tile families.
 
-Plugins contribute:
+Modules contribute:
 
 - Expressions,
 - information,
@@ -612,9 +612,9 @@ Behaviour should remain domain independent.
 
 ---
 
-## Plugin Taxonomy
+## Module Taxonomy
 
-Extensions introducing independent Tile families.
+Modules introducing independent Tile families.
 
 ---
 
@@ -678,7 +678,7 @@ It ensures that:
 - Expressions remain behavioural,
 - Tiles remain reusable,
 - Components remain replaceable,
-- Extensions remain native.
+- Modules remain native.
 
 Every future Mosaic client should therefore communicate one consistent visual language built from the same small vocabulary of behavioural Tiles.
 

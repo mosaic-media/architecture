@@ -1,11 +1,11 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/01-extension-philosophy.md
+File: docs/engineering/guides/meg-006-module-platform/01-module-philosophy.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
-# Extension Philosophy
+# Module Philosophy
 
 > *The Runtime should never need to know what tomorrow's capabilities look like. It should simply know how to host them.*
 
@@ -13,7 +13,7 @@ Version: 0.1
 
 # Purpose
 
-Traditional software grows by modifying its core.
+Traditional software grows by modifying the Platform foundation.
 
 Every new feature requires:
 
@@ -22,7 +22,7 @@ Every new feature requires:
 - new dependencies
 - new deployment
 
-Over time, the core becomes increasingly complex.
+Over time, the Platform foundation becomes increasingly complex.
 
 Mosaic intentionally rejects this approach.
 
@@ -32,7 +32,7 @@ The Runtime remains small.
 
 The platform grows by adding capabilities.
 
-This document establishes the architectural philosophy behind the Mosaic Extension Platform.
+This document establishes the architectural philosophy behind the Mosaic Module Platform.
 
 ---
 
@@ -54,7 +54,7 @@ The Runtime should become increasingly capable without becoming increasingly com
 
 ---
 
-# Why Extensions Exist
+# Why Modules Exist
 
 Consider adding support for:
 
@@ -68,7 +68,7 @@ Consider adding support for:
 Traditional architecture.
 
 ```
-Core
+Platform Capability
 
 ↓
 
@@ -89,7 +89,7 @@ IPTV
 
 Eventually:
 
-The Core owns every business concept.
+The base application owns every business concept.
 
 Instead.
 
@@ -185,11 +185,11 @@ The Runtime should simply recognise it.
 
 ---
 
-# Core Is Just Another Capability
+# Built-In Capabilities Are Not Special
 
 Architecturally:
 
-Core capabilities should be treated exactly like extension capabilities.
+Platform capabilities should be treated exactly like module capabilities.
 
 Example.
 
@@ -211,13 +211,13 @@ The only distinction is:
 
 Delivery.
 
-Core capabilities ship with the Runtime.
+Platform capabilities ship with the Runtime.
 
-Extensions ship independently.
+Modules ship independently.
 
 Execution should remain identical.
 
-This plugin-first philosophy, where core functionality and extensions share the same architectural model, is increasingly common in extensible platforms because it keeps the core small and stable.  [oai_citation:0‡Bifrost](https://docs.getbifrost.ai/architecture/core/plugins?utm_source=chatgpt.com)
+This module-first philosophy keeps the Platform foundation small and stable by giving built-in and module-delivered capabilities the same architectural model.  [Bifrost](https://docs.getbifrost.ai/architecture/platform/plugins)
 
 ---
 
@@ -278,7 +278,7 @@ Not accumulation.
 
 # Discovery Before Execution
 
-One of the defining characteristics of the Extension Platform is:
+One of the defining characteristics of the Module Platform is:
 
 ```
 Discover
@@ -306,7 +306,7 @@ Discovery should be metadata driven.
 
 Execution should come later.
 
-Modern plugin systems increasingly separate **manifest discovery** from **runtime loading**, allowing validation before executable code is activated.  [oai_citation:1‡OpenClaw](https://docs.openclaw.ai/plugins/architecture?utm_source=chatgpt.com)
+Modern module systems increasingly separate **manifest discovery** from **runtime loading**, allowing validation before executable code is activated.  [OpenClaw](https://docs.openclaw.ai/modules/architecture)
 
 ---
 
@@ -457,11 +457,11 @@ Neither should require modifying the other.
 
 ---
 
-# Extension Equality
+# Module Equality
 
 The Runtime should never distinguish between:
 
-- Core
+- Platform capabilities
 - First-party
 - Third-party
 
@@ -491,13 +491,13 @@ That ecosystem depends upon:
 
 The Runtime should therefore be designed for capabilities that have not yet been written.
 
-Platform ecosystems thrive when the host defines stable extension points and capabilities register through manifests rather than bespoke integration code.  [oai_citation:2‡arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture?utm_source=chatgpt.com)
+Platform ecosystems thrive when the host defines stable module boundaries and capabilities register through manifests rather than bespoke integration code.  [arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture)
 
 ---
 
 # Simplicity
 
-The Extension Platform should remain conceptually simple.
+The Module Platform should remain conceptually simple.
 
 Everything reduces to one sentence.
 
@@ -527,14 +527,14 @@ Within Mosaic:
 
 - The Runtime grows through capabilities.
 - Capabilities are first-class architectural units.
-- Core and extensions are architectural equals.
+- Built-in and module-delivered capabilities are architectural equals.
 - Discovery precedes execution.
 - Manifests define Runtime contracts.
 - Runtime neutrality must be preserved.
 - Capabilities remain independently deployable.
 - Runtime evolution and capability evolution remain independent.
 
-These principles define the identity of the Extension Platform.
+These principles define the identity of the Module Platform.
 
 ---
 
@@ -554,7 +554,7 @@ The next chapter introduces the **Capability Manifest**, the machine-readable co
 
 # Summary
 
-The Extension Platform exists for one purpose.
+The Module Platform exists for one purpose.
 
 > **Allow the platform to grow forever without growing the Runtime.**
 
@@ -582,4 +582,4 @@ Lead Software Architect
 
 **Next File**
 
-`02-capability-manifest.md`
+`02-module-manifest.md`

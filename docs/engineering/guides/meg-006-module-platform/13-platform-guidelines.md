@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/13-platform-guidelines.md
+File: docs/engineering/guides/meg-006-module-platform/13-platform-guidelines.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Platform Guidelines
@@ -13,7 +13,7 @@ Version: 0.1
 
 # Purpose
 
-The previous chapters introduced the building blocks of the Extension Platform:
+The previous chapters introduced the building blocks of the Module Platform:
 
 - Capability Manifests
 - Discovery
@@ -287,7 +287,7 @@ Declare every dependency explicitly.
 
 Never assume:
 
-- Core capability exists
+- Platform capability exists
 - SDK feature exists
 - Runtime contract exists
 
@@ -522,7 +522,7 @@ The remaining MEGs build upon these foundations rather than redefining them.
 
 # Summary
 
-The Extension Platform succeeds when new capabilities feel ordinary.
+The Module Platform succeeds when new capabilities feel ordinary.
 
 Installing:
 

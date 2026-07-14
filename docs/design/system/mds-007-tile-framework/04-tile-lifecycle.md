@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 04
 Title: Tile Lifecycle
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Lifecycle
@@ -488,17 +488,17 @@ Behaviour remains authoritative.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions contribute:
+Modules contribute:
 
 - Expressions,
 - behaviour,
 - information.
 
-Plugins never manage Tile lifecycles.
+Modules never manage Tile lifecycles.
 
-Every extension therefore inherits one consistent behavioural model automatically.
+Every module therefore inherits one consistent behavioural model automatically.
 
 ---
 
@@ -576,9 +576,9 @@ Different clients managing behavioural lifetime differently.
 
 ---
 
-## Plugin Lifecycle
+## Module Lifecycle
 
-Extensions owning Tile creation and destruction.
+Modules owning Tile creation and destruction.
 
 ---
 

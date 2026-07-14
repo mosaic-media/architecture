@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/09-network-security.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Network Security
@@ -21,7 +21,7 @@ Examples include:
 - Mobile clients
 - TV clients
 - Third-party metadata providers
-- Extension APIs
+- Module APIs
 - Marketplace services
 - Reverse proxies
 - Other Mosaic instances
@@ -415,7 +415,7 @@ Marketplace downloads SHOULD support:
 
 Transport security protects delivery.
 
-Extension Trust verifies execution.
+Module Trust verifies execution.
 
 These responsibilities remain separate.
 
@@ -591,7 +591,7 @@ Within Mosaic:
 
 # Relationship to MEG
 
-Extension Trust defines:
+Module Trust defines:
 
 > **How executable code becomes trusted.**
 
@@ -637,7 +637,7 @@ Lead Software Architect
 
 **Previous File**
 
-`08-extension-trust.md`
+`08-module-trust.md`
 
 **Next File**
 

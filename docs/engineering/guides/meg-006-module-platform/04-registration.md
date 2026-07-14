@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/04-registration.md
+File: docs/engineering/guides/meg-006-module-platform/04-registration.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Registration
@@ -196,14 +196,14 @@ Registration MUST remain metadata driven.
 
 The Runtime should not:
 
-- load Go plugins
+- load Go modules
 - instantiate capabilities
 - execute constructors
 - invoke lifecycle hooks
 
 Registration should complete entirely from the Capability Descriptor.
 
-Separating registration from activation keeps the control plane independent of executable code, a common design principle in mature plugin architectures.  [oai_citation:0‡OpenClaw](https://docs.openclaw.ai/plugins/architecture-internals?utm_source=chatgpt.com)
+Separating registration from activation keeps the control plane independent of executable code, a common design principle in mature module architectures.  [OpenClaw](https://docs.openclaw.ai/modules/architecture-internals)
 
 ---
 

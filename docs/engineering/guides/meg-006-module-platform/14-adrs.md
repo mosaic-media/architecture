@@ -1,19 +1,19 @@
 <!--
-File: docs/engineering/guides/meg-009-security-architecture/13-adrs.md
-Document: MEG-009
+File: docs/engineering/guides/meg-006-module-platform/14-adrs.md
+Document: MEG-006
 Status: Draft
 Version: 0.2
 -->
 
 # Architectural Decision Guidance
 
-> *Decision history belongs in decision records. This chapter identifies when MEG-009 needs them and where readers should look for the governing process.*
+> *Decision history belongs in decision records. This chapter identifies when MEG-006 needs them and where readers should look for the governing process.*
 
 ---
 
 # Purpose
 
-MEG-009 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries.
+MEG-006 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries.
 
 The decision process itself is governed by **MDG-001 — Documentation Authority Guide**.
 
@@ -25,14 +25,14 @@ This chapter avoids repeating ADR process rules so the documentation library has
 
 Create or update a decision record when a change affects:
 
-- Zero Trust Runtime
-- Capability Permission Model
-- Runtime-Owned Secrets
-- Module Trust Pipeline
-- Security Observability
-- Network Trust Boundaries
-- Cryptographic Strategy
-- Authentication Architecture
+- Manifest-Driven Platform
+- Capability-Oriented Architecture
+- SDK Stability Policy
+- Permission Model
+- Capability Lifecycle
+- Dependency Resolution Strategy
+- Marketplace Compatibility
+- Module Isolation
 
 ---
 

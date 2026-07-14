@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/references.md
 Document: MDS-001
 Title: References
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # References
@@ -232,7 +232,7 @@ Key architectural discoveries include:
 - Components should consume intent rather than values.
 - Runtime should adapt implementation rather than semantics.
 - Composition should remain independent from presentation.
-- Extensions should inherit the Design System rather than redefining it.
+- Modules should inherit the Design System rather than redefining it.
 
 These ideas collectively define the Mosaic Design System.
 

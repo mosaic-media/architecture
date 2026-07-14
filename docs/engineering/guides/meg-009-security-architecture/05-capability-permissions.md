@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/05-capability-permissions.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Capability Permissions
@@ -23,7 +23,7 @@ Examples include:
 - Recommendations
 - Books
 - Music
-- Third-party extensions
+- Third-party modules
 
 Every capability requires some degree of authority.
 

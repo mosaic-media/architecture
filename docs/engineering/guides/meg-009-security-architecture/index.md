@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/index.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # MEG-009 — Security Architecture
@@ -30,7 +30,7 @@ MEG-009 answers the next architectural question.
 
 Unlike traditional applications, Mosaic executes:
 
-- Core capabilities
+- Platform capabilities
 - first-party capabilities
 - third-party capabilities
 - user configuration
@@ -90,7 +90,7 @@ MEG-006
 
 ↓
 
-Extension Platform
+Module Platform
 
 ↓
 
@@ -138,7 +138,7 @@ This specification defines:
 - Capability permissions
 - Secrets management
 - Data protection
-- Extension trust
+- Module trust
 - Network security
 - Cryptography
 - Security observability
@@ -155,7 +155,7 @@ Those concerns belong to previous or future MEG specifications.
 
 ---
 
-# Core Question
+# Guiding Question
 
 MEG-009 exists to answer one question.
 
@@ -178,7 +178,7 @@ The platform trusts:
 
 It does **not** trust:
 
-- arbitrary extension code
+- arbitrary module code
 - user input
 - remote services
 - implicit assumptions
@@ -234,7 +234,7 @@ After reading MEG-009 contributors should understand:
 - how capabilities receive authority
 - how secrets are managed
 - how information is protected
-- how third-party extensions remain isolated
+- how third-party modules remain isolated
 - how security integrates with every previous MEG
 
 without weakening the capability-oriented architecture.
@@ -268,7 +268,7 @@ engineering/
 
         07-data-protection.md
 
-        08-extension-trust.md
+        08-module-trust.md
 
         09-network-security.md
 
@@ -298,7 +298,7 @@ Required reading:
 - MEG-003 Domain-Driven Design
 - MEG-004 Hexagonal Architecture
 - MEG-005 Capability Runtime
-- MEG-006 Extension Platform
+- MEG-006 Module Platform
 - MEG-007 Storage Architecture
 - MEG-008 Observability
 

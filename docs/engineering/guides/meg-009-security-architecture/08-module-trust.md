@@ -1,31 +1,31 @@
 <!--
-File: docs/engineering/guides/meg-009-security-architecture/08-extension-trust.md
+File: docs/engineering/guides/meg-009-security-architecture/08-module-trust.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
-# Extension Trust
+# Module Trust
 
-> *Installing an extension should never imply trusting it. Trust is earned through verification, validation and controlled execution.*
+> *Installing a module should never imply trusting it. Trust is earned through verification, validation and controlled execution.*
 
 ---
 
 # Purpose
 
-One of Mosaic's defining characteristics is its Extension Platform.
+One of Mosaic's defining characteristics is its Module Platform.
 
 Capabilities may originate from:
 
-- Core
-- first-party extensions
+- Platform capabilities
+- first-party modules
 - third-party developers
 - enterprise deployments
 - future marketplaces
 
 The Runtime therefore cannot assume that every capability deserves equal trust.
 
-Extension Trust defines how the Runtime evaluates, validates and safely executes capabilities while preserving platform security.
+Module Trust defines how the Runtime evaluates, validates and safely executes capabilities while preserving platform security.
 
 ---
 
@@ -33,9 +33,9 @@ Extension Trust defines how the Runtime evaluates, validates and safely executes
 
 Within Mosaic:
 
-> **Extensions begin untrusted. The Runtime decides whether they become trusted enough to execute.**
+> **Modules begin untrusted. The Runtime decides whether they become trusted enough to execute.**
 
-An extension should never receive authority because:
+A module should never receive authority because:
 
 - it exists
 - it was downloaded
@@ -53,7 +53,7 @@ Trust is earned through:
 
 # Trust Lifecycle
 
-Every extension follows the same trust lifecycle.
+Every module follows the same trust lifecycle.
 
 ```text
 Discovered
@@ -89,9 +89,9 @@ None should be skipped.
 
 ---
 
-# Extension Identity
+# Module Identity
 
-Every extension MUST possess a unique identity.
+Every module MUST possess a unique identity.
 
 Examples include:
 
@@ -110,12 +110,12 @@ Identity precedes trust.
 
 # Publisher Identity
 
-The Runtime SHOULD recognise extension publishers.
+The Runtime SHOULD recognise module publishers.
 
 Examples include:
 
 ```text
-Core
+Platform Capability
 ```
 
 ```text
@@ -158,7 +158,7 @@ Manifest validation is the first trust boundary.
 
 # Package Integrity
 
-Extension packages SHOULD support integrity verification.
+Module packages SHOULD support integrity verification.
 
 Examples include:
 
@@ -180,7 +180,7 @@ These are separate questions.
 
 # Digital Signatures
 
-Extension packages SHOULD support digital signatures.
+Module packages SHOULD support digital signatures.
 
 A signature proves:
 
@@ -210,7 +210,7 @@ Trust.
 Before activation:
 
 ```text
-Extension
+Module
 
 ↓
 
@@ -317,7 +317,7 @@ from:
 Trusted
 ```
 
-An extension may be:
+A module may be:
 
 - published
 - downloaded
@@ -331,9 +331,9 @@ Distribution should never imply execution.
 
 ---
 
-# First-Party Extensions
+# First-Party Modules
 
-First-party extensions SHOULD still participate in:
+First-party modules SHOULD still participate in:
 
 - discovery
 - validation
@@ -343,13 +343,13 @@ The Runtime should avoid special execution paths.
 
 Architectural equality simplifies security review.
 
-Core capabilities and extensions should follow the same lifecycle.
+Platform capabilities and modules should follow the same lifecycle.
 
 ---
 
-# Core Capabilities
+# Built-In Capabilities
 
-Core capabilities represent the highest trust level.
+Platform capabilities represent the highest trust level.
 
 Nevertheless:
 
@@ -360,13 +360,13 @@ They SHOULD still satisfy:
 - Runtime contracts
 - permissions
 
-The Runtime should avoid hidden exceptions for Core.
+The Runtime should avoid hidden exceptions for built-in capabilities.
 
 Consistency strengthens security.
 
 ---
 
-# Enterprise Extensions
+# Enterprise Modules
 
 Enterprise deployments MAY establish additional trust policies.
 
@@ -384,12 +384,12 @@ They should not replace it.
 
 # Revocation
 
-Extension trust MUST remain revocable.
+Module trust MUST remain revocable.
 
 Examples include:
 
 - compromised publisher
-- vulnerable extension
+- vulnerable module
 - revoked signature
 - unsupported version
 
@@ -417,9 +417,9 @@ Trust should never become permanent.
 
 # Quarantine
 
-The Runtime MAY quarantine extensions.
+The Runtime MAY quarantine modules.
 
-Quarantined extensions:
+Quarantined modules:
 
 - remain installed
 - do not execute
@@ -456,19 +456,19 @@ Trust changes SHOULD generate Runtime Events.
 Examples include:
 
 ```text
-ExtensionVerified
+ModuleVerified
 ```
 
 ```text
-ExtensionRejected
+ModuleRejected
 ```
 
 ```text
-ExtensionRevoked
+ModuleRevoked
 ```
 
 ```text
-ExtensionQuarantined
+ModuleQuarantined
 ```
 
 Trust changes are operational events.
@@ -479,7 +479,7 @@ Not business events.
 
 # Security Observability
 
-Extension trust SHOULD remain observable.
+Module trust SHOULD remain observable.
 
 Operators should inspect:
 
@@ -498,7 +498,7 @@ Security decisions should never become hidden Runtime behaviour.
 One of the most important distinctions is:
 
 ```text
-Trusted Extension
+Trusted Module
 
 ≠
 
@@ -533,13 +533,13 @@ The following practices are prohibited.
 
 ## Download Equals Trust
 
-Executing downloaded extensions immediately.
+Executing downloaded modules immediately.
 
 ---
 
 ## Unsigned Packages
 
-Skipping integrity validation for production extensions.
+Skipping integrity validation for production modules.
 
 ---
 
@@ -549,9 +549,9 @@ Granting irrevocable execution authority.
 
 ---
 
-## Hidden Core Privileges
+## Hidden Platform Privileges
 
-Core capabilities bypassing Runtime permission enforcement.
+Platform capabilities bypassing Runtime permission enforcement.
 
 ---
 
@@ -563,7 +563,7 @@ Granting unrestricted authority because of publisher identity.
 
 ## Runtime Bypass
 
-Extensions accessing Runtime internals directly because they are "trusted."
+Modules accessing Runtime internals directly because they are "trusted."
 
 ---
 
@@ -571,14 +571,14 @@ Extensions accessing Runtime internals directly because they are "trusted."
 
 Within Mosaic:
 
-- Extensions MUST begin untrusted.
+- Modules MUST begin untrusted.
 - Manifest validation MUST precede activation.
 - Package integrity SHOULD be verified.
 - Digital signatures SHOULD verify publisher identity.
 - Compatibility MUST be validated.
 - Trust MUST remain revocable.
 - Trust MUST NOT weaken Runtime isolation.
-- Extension trust SHOULD remain observable.
+- Module trust SHOULD remain observable.
 - Trust and authority MUST remain separate concepts.
 
 ---
@@ -589,7 +589,7 @@ Data Protection defines:
 
 > **How information is protected.**
 
-Extension Trust defines:
+Module Trust defines:
 
 > **How executable code becomes trusted enough to operate within the Runtime.**
 
@@ -599,7 +599,7 @@ The next chapter introduces **Network Security**, defining how Mosaic protects c
 
 # Summary
 
-Extension Trust transforms third-party code from:
+Module Trust transforms third-party code from:
 
 > **Unknown software**
 

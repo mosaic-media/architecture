@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/12-security-guidelines.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Security Guidelines
@@ -22,7 +22,7 @@ The previous chapters established the architectural foundations of Mosaic Securi
 - Capability Permissions
 - Secrets Management
 - Data Protection
-- Extension Trust
+- Module Trust
 - Network Security
 - Cryptography
 - Security Observability
@@ -363,7 +363,7 @@ The following symptoms usually indicate architectural drift.
 - Broad wildcard permissions.
 - Business code performing authentication.
 - Direct storage access.
-- Runtime implementation imported into extensions.
+- Runtime implementation imported into modules.
 - Hidden trust assumptions.
 
 Security drift should be corrected immediately.
@@ -445,7 +445,7 @@ Data Protection
 
 ↓
 
-Extension Trust
+Module Trust
 ```
 
 Understanding trust first makes every later security mechanism significantly easier to understand.

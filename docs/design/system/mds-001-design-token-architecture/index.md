@@ -2,7 +2,7 @@
 File: docs/design/system/mds-001-design-token-architecture/index.md
 Document: MDS-001
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # MDS-001 — Design Token Architecture
@@ -76,7 +76,7 @@ This specification defines:
 - Token resolution
 - Token lifecycle
 - Versioning
-- Extension interaction
+- Module interaction
 
 This specification intentionally does **not** define:
 
@@ -90,7 +90,7 @@ Those are defined by later MDS specifications.
 
 ---
 
-# Core Question
+# Guiding Question
 
 MDS-001 exists to answer one question.
 
@@ -172,7 +172,7 @@ After reading MDS-001 contributors should understand:
 - why semantic tokens exist
 - why runtime tokens exist
 - how components consume tokens
-- how extensions interact with tokens
+- how modules interact with tokens
 - how future token systems should evolve
 
 without discussing specific colour palettes or component implementations.
@@ -210,7 +210,7 @@ design/
 
         09-token-versioning.md
 
-        10-extension-tokens.md
+        10-module-tokens.md
 
         11-governance.md
 

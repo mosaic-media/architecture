@@ -1,8 +1,8 @@
 <!--
-File: docs/engineering/guides/meg-006-extension-platform/11-versioning.md
+File: docs/engineering/guides/meg-006-module-platform/11-versioning.md
 Document: MEG-006
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Versioning
@@ -22,9 +22,9 @@ Over time:
 - manifests gain features
 - Runtime contracts expand
 
-Without a clear versioning strategy, extension compatibility quickly becomes unpredictable.
+Without a clear versioning strategy, module compatibility quickly becomes unpredictable.
 
-This document defines how versioning is managed throughout the Mosaic Extension Platform.
+This document defines how versioning is managed throughout the Mosaic Module Platform.
 
 ---
 
@@ -45,13 +45,13 @@ It should never merely answer:
 
 > **Which release is newer?**
 
-Semantic Versioning exists primarily to communicate compatibility between independently evolving components.  [oai_citation:0‡Semantic Versioning](https://semver.org/?utm_source=chatgpt.com)
+Semantic Versioning exists primarily to communicate compatibility between independently evolving components.  [Semantic Versioning](https://semver.org/)
 
 ---
 
 # Versioned Components
 
-The Extension Platform versions several independent artefacts.
+The Module Platform versions several independent artefacts.
 
 Examples include:
 
@@ -177,7 +177,7 @@ Breaking changes to one Runtime contract should not require versioning the entir
 
 Contract-level versioning provides finer compatibility control.
 
-This approach is increasingly used in extensible platforms to reduce unnecessary ecosystem breakage.  [oai_citation:1‡Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/extensibility/migration/extension-compatibility?view=visualstudio&utm_source=chatgpt.com)
+This approach is increasingly used in extensible platforms to reduce unnecessary ecosystem breakage.  [Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/extensibility/migration/module-compatibility?view=visualstudio)
 
 ---
 
@@ -215,9 +215,9 @@ PATCH
 Backward Compatible Fix
 ```
 
-This provides predictable upgrade behaviour for extension authors.
+This provides predictable upgrade behaviour for module authors.
 
- [oai_citation:2‡Semantic Versioning](https://semver.org/?utm_source=chatgpt.com)
+ [Semantic Versioning](https://semver.org/)
 
 ---
 
@@ -425,7 +425,7 @@ Example.
 | 3.x | 2.x | 3 |
 | 4.x | 3.x | 4 |
 
-Extension authors should immediately understand:
+Module authors should immediately understand:
 
 > **Will this capability execute on this Runtime?**
 

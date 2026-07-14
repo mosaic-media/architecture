@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 05
 Title: Composition Tokens
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Composition Tokens
@@ -593,7 +593,7 @@ This separation enables:
 - adaptive composition
 - runtime hierarchy
 - device independence
-- plugin consistency
+- module consistency
 - future evolution
 
 Every future runtime implementation should treat Composition Tokens as behavioural intent rather than visual styling.

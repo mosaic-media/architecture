@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 08
 Title: Runtime Tile Resolution
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Runtime Tile Resolution
@@ -509,15 +509,15 @@ Determinism improves:
 
 ---
 
-# Plugins
+# Modules
 
-Extensions contribute:
+Modules contribute:
 
 - Expressions,
 - behaviour,
 - relationships.
 
-Plugins never resolve Tiles.
+Modules never resolve Tiles.
 
 The Tile Framework owns:
 
@@ -525,7 +525,7 @@ The Tile Framework owns:
 - adaptive behaviour,
 - runtime presentation.
 
-Every extension therefore automatically inherits future Tile improvements.
+Every module therefore automatically inherits future Tile improvements.
 
 ---
 
@@ -609,9 +609,9 @@ Rendering technology influencing behavioural presentation.
 
 ---
 
-## Plugin Resolution
+## Module Resolution
 
-Extensions bypassing the Tile Framework.
+Modules bypassing the Tile Framework.
 
 ---
 
@@ -643,13 +643,13 @@ The Runtime Tile Resolver transforms behavioural presentation into implementatio
 
 # Relationship To Future Chapters
 
-The next chapter defines **Extension Tiles**.
+The next chapter defines **Module Tiles**.
 
 Runtime Tile Resolution explains:
 
 > **How Tiles become runtime presentation.**
 
-Extension Tiles explain:
+Module Tiles explain:
 
 > **How third-party runtime contributions participate in the Tile Framework while remaining indistinguishable from native Mosaic presentation.**
 
@@ -679,4 +679,4 @@ Draft
 
 **Next File**
 
-`09-extension-tiles.md`
+`09-module-tiles.md`

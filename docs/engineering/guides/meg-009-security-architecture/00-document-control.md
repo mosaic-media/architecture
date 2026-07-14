@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-009-security-architecture/00-document-control.md
 Document: MEG-009
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Document Control
@@ -55,7 +55,7 @@ This specification applies to:
 - Runtime Kernel
 - Runtime Services
 - Capabilities
-- Extension Platform
+- Module Platform
 - Storage Systems
 - SDK
 - Administrative APIs
@@ -120,7 +120,7 @@ Specifically:
 - **MEG-003** defines business modelling.
 - **MEG-004** defines architectural boundaries.
 - **MEG-005** defines Runtime Architecture.
-- **MEG-006** defines the Extension Platform.
+- **MEG-006** defines the Module Platform.
 - **MEG-007** defines Storage Architecture.
 - **MEG-008** defines Observability.
 - **MEG-009** defines trust, authority and protection.
@@ -209,7 +209,7 @@ However, changes affecting:
 - authentication
 - authorisation
 - permission model
-- extension trust
+- module trust
 - secret handling
 - cryptographic policy
 

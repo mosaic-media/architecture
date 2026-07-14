@@ -4,7 +4,7 @@ Document: MDS-007
 Chapter: 06
 Title: Tile Composition
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Tile Composition
@@ -490,9 +490,9 @@ Presentation communicates it.
 
 ---
 
-# Plugins
+# Modules
 
-Extensions contribute Expressions.
+Modules contribute Expressions.
 
 The Tile Framework determines:
 
@@ -500,9 +500,9 @@ The Tile Framework determines:
 - Tile groups,
 - behavioural composition.
 
-Plugins should never construct Tile groups independently.
+Modules should never construct Tile groups independently.
 
-Every extension therefore inherits one coherent presentation language.
+Every module therefore inherits one coherent presentation language.
 
 ---
 
@@ -588,9 +588,9 @@ Different clients inventing different behavioural groupings.
 
 ---
 
-## Plugin Groups
+## Module Groups
 
-Extensions constructing independent presentation structures.
+Modules constructing independent presentation structures.
 
 ---
 

@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 07
 Title: Token Resolution
 Status: Draft
-Version: 0.1
+Version: 0.2
 -->
 
 # Token Resolution
