@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/05-dependency-management.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Dependency Management
@@ -53,28 +53,21 @@ The application's construction should be obvious.
 
 Every Mosaic application follows the same construction flow.
 
-```
-Configuration
+```mermaid
+flowchart TD
 
-↓
+N1["Configuration"]
+N2["Infrastructure"]
+N3["Repositories"]
+N4["Services"]
+N5["Transport"]
+N6["Application"]
 
-Infrastructure
-
-↓
-
-Repositories
-
-↓
-
-Services
-
-↓
-
-Transport
-
-↓
-
-Application
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Dependencies should always move in one direction.
@@ -90,12 +83,14 @@ Every executable application MUST have a single composition root.
 Typically this is:
 
 ```
+
 cmd/server/main.go
 ```
 
 or
 
 ```
+
 cmd/worker/main.go
 ```
 
@@ -277,24 +272,19 @@ The creator of an object owns its lifecycle.
 
 Example:
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["database"]
+N3["repository"]
+N4["service"]
+N5["handler"]
 
-database
-
-↓
-
-repository
-
-↓
-
-service
-
-↓
-
-handler
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The handler should not close the database.
@@ -379,20 +369,17 @@ Tests remain fast and deterministic.
 
 Dependencies should always point towards stable abstractions.
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Application"]
+N3["Domain"]
+N4["Infrastructure"]
 
-Application
-
-↓
-
-Domain
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Infrastructure must never depend on transport.
@@ -415,44 +402,29 @@ Business logic should remain transport agnostic.
 
 A typical Mosaic service should resemble:
 
-```text
-Load configuration
+```mermaid
+flowchart TD
 
-↓
+N1["Load configuration"]
+N2["Create logger"]
+N3["Create database pools"]
+N4["Create repositories"]
+N5["Create services"]
+N6["Create HTTP handlers"]
+N7["Register routes"]
+N8["Start HTTP server"]
+N9["Wait for shutdown signal"]
+N10["Gracefully terminate"]
 
-Create logger
-
-↓
-
-Create database pools
-
-↓
-
-Create repositories
-
-↓
-
-Create services
-
-↓
-
-Create HTTP handlers
-
-↓
-
-Register routes
-
-↓
-
-Start HTTP server
-
-↓
-
-Wait for shutdown signal
-
-↓
-
-Gracefully terminate
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
 ```
 
 An engineer unfamiliar with the project should understand the application's entire construction by reading this file.
@@ -466,6 +438,7 @@ The following practices SHOULD NOT be used.
 ## Hidden Singletons
 
 ```
+
 database.Get()
 ```
 
@@ -474,6 +447,7 @@ database.Get()
 ## Service Locator
 
 ```
+
 container.Resolve(...)
 ```
 
@@ -482,6 +456,7 @@ container.Resolve(...)
 ## Runtime Dependency Discovery
 
 ```
+
 reflect.New(...)
 ```
 
@@ -489,36 +464,32 @@ reflect.New(...)
 
 ## Circular Construction
 
-```
-Service A
+```mermaid
+flowchart TD
 
-↓
+N1["Service A"]
+N2["Service B"]
+N3["Service A"]
 
-Service B
-
-↓
-
-Service A
+N1 --> N2
+N2 --> N3
 ```
 
 ---
 
 ## Constructors With Side Effects
 
-```
-NewService()
+```mermaid
+flowchart TD
 
-↓
+N1["NewService()"]
+N2["Starts goroutines"]
+N3["Creates timers"]
+N4["Calls APIs"]
 
-Starts goroutines
-
-↓
-
-Creates timers
-
-↓
-
-Calls APIs
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Construction should never unexpectedly begin application behaviour.
@@ -537,23 +508,3 @@ Dependency management within Mosaic is intentionally simple.
 - Make application startup readable.
 
 If an engineer can understand an application's dependency graph by reading `main.go`, the architecture is probably moving in the right direction.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`04-package-design.md`
-
-**Next File**
-
-`06-interfaces-and-abstraction.md`

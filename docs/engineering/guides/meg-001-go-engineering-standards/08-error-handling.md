@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/08-error-handling.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Error Handling
@@ -272,24 +272,29 @@ Error messages SHOULD:
 Good:
 
 ```
+
 connection refused
 ```
 
 ```
+
 media not found
 ```
 
 Poor:
 
 ```
+
 Error:
 ```
 
 ```
+
 An unexpected error occurred.
 ```
 
 ```
+
 MetadataService failed because...
 ```
 
@@ -373,24 +378,19 @@ Different architectural layers speak different languages.
 
 Example:
 
-```
-sql.ErrNoRows
+```mermaid
+flowchart TD
 
-↓
+N1["sql.ErrNoRows"]
+N2["Repository"]
+N3["ErrMediaNotFound"]
+N4["Service"]
+N5["HTTP 404"]
 
-Repository
-
-↓
-
-ErrMediaNotFound
-
-↓
-
-Service
-
-↓
-
-HTTP 404
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Business logic should never depend upon SQL errors.
@@ -520,23 +520,3 @@ Every error should answer:
 - Is there enough context to diagnose the problem?
 
 If those questions are answered clearly, the error has fulfilled its purpose.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`07-composition-and-polymorphism.md`
-
-**Next File**
-
-`09-context-and-cancellation.md`

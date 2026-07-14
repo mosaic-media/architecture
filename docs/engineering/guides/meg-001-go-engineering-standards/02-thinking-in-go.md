@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/02-thinking-in-go.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Thinking in Go
@@ -49,38 +49,32 @@ Go begins with behaviour.
 
 Traditional OO thinking often follows:
 
-```
-Object
+```mermaid
+flowchart TD
 
-↓
+N1["Object"]
+N2["Inheritance"]
+N3["Framework"]
+N4["Application"]
 
-Inheritance
-
-↓
-
-Framework
-
-↓
-
-Application
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Go thinking instead follows:
 
-```
-Problem
+```mermaid
+flowchart TD
 
-↓
+N1["Problem"]
+N2["Behaviour"]
+N3["Composition"]
+N4["Application"]
 
-Behaviour
-
-↓
-
-Composition
-
-↓
-
-Application
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The focus shifts from building class hierarchies to composing small behaviours into larger systems.
@@ -115,24 +109,19 @@ One of the most common mistakes made by developers new to Go is introducing abst
 
 For example:
 
-```
-UserService
+```mermaid
+flowchart TD
 
-↓
+N1["UserService"]
+N2["UserServiceImpl"]
+N3["DefaultUserService"]
+N4["BaseUserService"]
+N5["AbstractUserService"]
 
-UserServiceImpl
-
-↓
-
-DefaultUserService
-
-↓
-
-BaseUserService
-
-↓
-
-AbstractUserService
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 This hierarchy communicates very little.
@@ -140,6 +129,7 @@ This hierarchy communicates very little.
 Instead, Go encourages:
 
 ```
+
 UserService
 ```
 
@@ -191,32 +181,23 @@ This aligns with common Go guidance that interfaces generally belong near the co
 
 Enterprise software often accumulates unnecessary architectural layers.
 
-```
-Controller
+```mermaid
+flowchart TD
 
-↓
+N1["Controller"]
+N2["Service"]
+N3["Manager"]
+N4["Provider"]
+N5["Repository"]
+N6["DAO"]
+N7["Database"]
 
-Service
-
-↓
-
-Manager
-
-↓
-
-Provider
-
-↓
-
-Repository
-
-↓
-
-DAO
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Each layer introduces:
@@ -259,38 +240,32 @@ Dependencies should always be visible.
 
 Poor:
 
-```
-Global state
+```mermaid
+flowchart TD
 
-↓
+N1["Global state"]
+N2["Hidden singleton"]
+N3["Reflection"]
+N4["Runtime discovery"]
 
-Hidden singleton
-
-↓
-
-Reflection
-
-↓
-
-Runtime discovery
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Preferred:
 
-```
-main()
+```mermaid
+flowchart TD
 
-↓
+N1["main()"]
+N2["Construct dependencies"]
+N3["Inject explicitly"]
+N4["Application starts"]
 
-Construct dependencies
-
-↓
-
-Inject explicitly
-
-↓
-
-Application starts
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Reading `main.go` should explain how the application is assembled.
@@ -392,23 +367,3 @@ Thinking in Go means accepting several fundamental ideas.
 - Good architecture removes unnecessary decisions.
 
 These ideas form the foundation upon which every subsequent engineering standard within the MEG is built.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`01-engineering-philosophy.md`
-
-**Next File**
-
-`03-project-structure.md`

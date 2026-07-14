@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/00-document-control.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Document Control
@@ -17,8 +17,8 @@ Version: 0.2
 | Title | Go Engineering Standards |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Lead Software Architect |
+| Version | 0.4 |
+| Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 
 ---
@@ -74,28 +74,21 @@ Examples and code samples contained within this specification are **informative*
 
 Every MEG specification progresses through the following lifecycle.
 
-```
-Draft
+```mermaid
+flowchart TD
 
-↓
+N1["Draft"]
+N2["Review"]
+N3["Accepted"]
+N4["Implemented"]
+N5["Maintained"]
+N6["Superseded (optional)"]
 
-Review
-
-↓
-
-Accepted
-
-↓
-
-Implemented
-
-↓
-
-Maintained
-
-↓
-
-Superseded (optional)
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Engineering standards are expected to evolve alongside the Mosaic platform.
@@ -167,23 +160,3 @@ Primary references include:
 - Go Documentation Guidelines
 
 Where Mosaic introduces additional conventions, those conventions exist to improve consistency across the project rather than redefine the Go language itself. The Go project itself describes the Code Review Comments as a supplement to *Effective Go*, not a complete style guide, which is the philosophy adopted here.  [Google Source](https://go.googlesource.com/wiki/%2B/6fe9f52ac7c4d92cb8fc878d8dee1bda0c63c8a5/CodeReviewComments.md)
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`README.md`
-
-**Next File**
-
-`01-engineering-philosophy.md`

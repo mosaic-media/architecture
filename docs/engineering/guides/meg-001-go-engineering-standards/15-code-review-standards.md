@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/15-code-review-standards.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Code Review Standards
@@ -439,23 +439,3 @@ Most importantly, it protects the long-term health of the codebase.
 Within Mosaic, the objective of review is simple:
 
 > **Leave both the software and the engineer better than you found them.**
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`14-anti-patterns.md`
-
-**Next File**
-
-`16-boy-scout-rule.md`

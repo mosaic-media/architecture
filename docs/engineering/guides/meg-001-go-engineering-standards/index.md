@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/index.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MEG-001 — Go Engineering Standards
@@ -39,36 +39,25 @@ It defines the engineering philosophy through which every future Mosaic service,
 
 # Relationship to Mosaic Architecture
 
-```
-MDL
+```mermaid
+flowchart TD
 
-↓
+N1["MDL"]
+N2["Product Philosophy"]
+N3["MDS"]
+N4["Design System"]
+N5["MEG"]
+N6["Engineering Standards"]
+N7["Implementation"]
+N8["Runtime Behaviour"]
 
-Product Philosophy
-
-↓
-
-MDS
-
-↓
-
-Design System
-
-↓
-
-MEG
-
-↓
-
-Engineering Standards
-
-↓
-
-Implementation
-
-↓
-
-Runtime Behaviour
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Engineering standards are the bridge between architecture and implementation.
@@ -137,32 +126,23 @@ Architecture should make the correct implementation the easiest implementation.
 
 The Mosaic Engineering Standards intentionally separate engineering concerns into conceptual layers.
 
-```
-Engineering Philosophy
+```mermaid
+flowchart TD
 
-↓
+N1["Engineering Philosophy"]
+N2["Architectural Principles"]
+N3["Project Structure"]
+N4["Package Design"]
+N5["Implementation Patterns"]
+N6["Runtime Behaviour"]
+N7["Operational Excellence"]
 
-Architectural Principles
-
-↓
-
-Project Structure
-
-↓
-
-Package Design
-
-↓
-
-Implementation Patterns
-
-↓
-
-Runtime Behaviour
-
-↓
-
-Operational Excellence
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 Each layer has exactly one responsibility.
@@ -191,6 +171,7 @@ without discussing specific business features or product implementations.
 # Repository Structure
 
 ```
+
 engineering/
 
 └── meg/
@@ -237,9 +218,9 @@ engineering/
 
         18-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -248,11 +229,11 @@ engineering/
 
 Required reading:
 
-- MDL-001 Vision
-- MDL-002 Principles
-- MDL-003 Mental Model
-- MDL-004 Interaction Model
-- MDL-005 Composition Model
+- [MDL-001 — Mosaic Design Language Vision](../../../design/language/mdl-001-vision/index.md)
+- [MDL-002 — Principles](../../../design/language/mdl-002-principles/index.md)
+- [MDL-003 — Mental Model](../../../design/language/mdl-003-mental-model/index.md)
+- [MDL-004 — Interaction Model](../../../design/language/mdl-004-interaction-model/index.md)
+- [MDL-005 — Composition Model](../../../design/language/mdl-005-composition-model/index.md)
 
 Recommended references:
 
@@ -277,19 +258,3 @@ The standards defined by MEG-001 are intended to produce software that is:
 - Easy to refactor
 
 Optimisation should never come at the expense of clarity without measurable justification.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Next File**
-
-`00-document-control.md`

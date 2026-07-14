@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/16-boy-scout-rule.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # The Boy Scout Rule
@@ -102,12 +102,14 @@ Example.
 Poor:
 
 ```
+
 "I'm not touching that because this isn't my feature."
 ```
 
 Preferred:
 
 ```
+
 "I'm already here.
 
 I'll improve this function while I'm modifying it."
@@ -343,68 +345,55 @@ Not individual authors.
 
 ## Good
 
-```
-Implement feature
+```mermaid
+flowchart TD
 
-↓
+N1["Implement feature"]
+N2["Rename confusing variable"]
+N3["Add missing test"]
+N4["Improve package comment"]
 
-Rename confusing variable
-
-↓
-
-Add missing test
-
-↓
-
-Improve package comment
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 ---
 
 ## Better
 
-```
-Implement feature
+```mermaid
+flowchart TD
 
-↓
+N1["Implement feature"]
+N2["Simplify control flow"]
+N3["Remove duplication"]
+N4["Improve logging"]
+N5["Update documentation"]
+N6["Add benchmark"]
 
-Simplify control flow
-
-↓
-
-Remove duplication
-
-↓
-
-Improve logging
-
-↓
-
-Update documentation
-
-↓
-
-Add benchmark
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 ---
 
 ## Poor
 
-```
-Implement feature
+```mermaid
+flowchart TD
 
-↓
+N1["Implement feature"]
+N2["Ignore obvious problems"]
+N3["Leave dead code"]
+N4["Introduce more duplication"]
 
-Ignore obvious problems
-
-↓
-
-Leave dead code
-
-↓
-
-Introduce more duplication
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Technical debt rarely arrives dramatically.
@@ -475,23 +464,3 @@ No change is too small to improve something.
 The cumulative effect of thousands of small improvements is a platform that remains maintainable, understandable and enjoyable to work on for many years.
 
 That is the true objective of the Boy Scout Rule.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`15-code-review-standards.md`
-
-**Next File**
-
-`17-adrs.md`

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/14-anti-patterns.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Anti-Patterns
@@ -51,26 +51,27 @@ A God Object owns too many unrelated responsibilities.
 
 Example:
 
-```
-MediaService
+```mermaid
+flowchart TD
 
-↓
+N1["MediaService"]
+N2["Authentication"]
+N3["Metadata"]
+N4["Playback"]
+N5["Caching"]
+N6["Logging"]
+N7["Scheduling"]
+N8["Analytics"]
+N9["Notifications"]
 
-Authentication
-
-Metadata
-
-Playback
-
-Caching
-
-Logging
-
-Scheduling
-
-Analytics
-
-Notifications
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
+N1 --> N6
+N1 --> N7
+N1 --> N8
+N1 --> N9
 ```
 
 Every new feature eventually finds its way into the same component.
@@ -105,6 +106,7 @@ Split responsibilities.
 Prefer:
 
 ```
+
 Metadata
 
 Playback
@@ -129,18 +131,22 @@ A package that gradually becomes responsible for unrelated concepts.
 Examples:
 
 ```
+
 common
 ```
 
 ```
+
 utils
 ```
 
 ```
+
 shared
 ```
 
 ```
+
 helpers
 ```
 
@@ -168,24 +174,26 @@ Creating abstractions before multiple implementations exist.
 
 Example:
 
-```
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["RepositoryImpl"]
 
-RepositoryImpl
+N1 --> N2
 ```
 
 when only one repository exists.
 
 Or:
 
-```
-MediaService
+```mermaid
+flowchart TD
 
-↓
+N1["MediaService"]
+N2["MediaServiceInterface"]
 
-MediaServiceInterface
+N1 --> N2
 ```
 
 with exactly one implementation.
@@ -210,12 +218,13 @@ Creating interfaces simply because "everything should have one."
 
 Example:
 
-```
-Every struct
+```mermaid
+flowchart TD
 
-↓
+N1["Every struct"]
+N2["Matching interface"]
 
-Matching interface
+N1 --> N2
 ```
 
 Large numbers of unused interfaces reduce clarity.
@@ -306,14 +315,17 @@ Attempting to recreate inheritance.
 Examples:
 
 ```
+
 BaseService
 ```
 
 ```
+
 AbstractRepository
 ```
 
 ```
+
 BaseHandler
 ```
 
@@ -342,14 +354,17 @@ General-purpose dumping grounds.
 Examples:
 
 ```
+
 utils
 ```
 
 ```
+
 common
 ```
 
 ```
+
 helpers
 ```
 
@@ -380,6 +395,7 @@ Process(media, true)
 The meaning of:
 
 ```
+
 true
 ```
 
@@ -486,24 +502,19 @@ Excessive indentation.
 
 Example:
 
-```
-if
+```mermaid
+flowchart TD
 
-↓
+N1["if"]
+N2["for"]
+N3["switch"]
+N4["if"]
+N5["select"]
 
-for
-
-↓
-
-switch
-
-↓
-
-if
-
-↓
-
-select
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Deep nesting reduces readability.
@@ -552,6 +563,7 @@ Constructors accepting excessive dependencies.
 Example:
 
 ```
+
 NewService(
 
 12 parameters
@@ -585,6 +597,7 @@ NewCache()
 Internally:
 
 ```
+
 Starts goroutines
 
 Starts timers
@@ -600,16 +613,15 @@ Construction should never unexpectedly begin application behaviour.
 
 Separate:
 
-```
-New()
+```mermaid
+flowchart TD
 
-↓
+N1["New()"]
+N2["Start()"]
+N3["Stop()"]
 
-Start()
-
-↓
-
-Stop()
+N1 --> N2
+N2 --> N3
 ```
 
 Lifecycle becomes explicit.
@@ -755,23 +767,3 @@ The responsibility of every engineer is therefore not merely to write good code.
 It is to recognise when good code begins drifting towards bad architecture.
 
 The earlier an anti-pattern is identified, the cheaper it is to remove.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`13-design-patterns.md`
-
-**Next File**
-
-`15-code-review-standards.md`

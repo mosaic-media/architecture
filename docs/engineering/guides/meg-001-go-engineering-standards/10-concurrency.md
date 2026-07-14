@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/10-concurrency.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Concurrency
@@ -87,6 +87,7 @@ Concurrency SHOULD be introduced when:
 Examples include:
 
 ```
+
 Metadata Lookup
 
 +
@@ -115,20 +116,17 @@ Concurrency SHOULD NOT be introduced when:
 
 Poor:
 
-```
-Validate
+```mermaid
+flowchart TD
 
-↓
+N1["Validate"]
+N2["Spawn Goroutine"]
+N3["Wait"]
+N4["Continue"]
 
-Spawn Goroutine
-
-↓
-
-Wait
-
-↓
-
-Continue
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Nothing has been gained.
@@ -157,24 +155,19 @@ If these questions cannot be answered, the goroutine should not exist.
 
 Every goroutine should follow the same lifecycle.
 
-```
-Created
+```mermaid
+flowchart TD
 
-↓
+N1["Created"]
+N2["Running"]
+N3["Cancellation Requested"]
+N4["Cleanup"]
+N5["Exit"]
 
-Running
-
-↓
-
-Cancellation Requested
-
-↓
-
-Cleanup
-
-↓
-
-Exit
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 No goroutine should run indefinitely without an explicit architectural reason.
@@ -208,20 +201,17 @@ When multiple goroutines contribute towards a single operation, `errgroup` SHOUL
 
 Example:
 
-```
-Metadata
+```mermaid
+flowchart TD
 
-+
+N1["Metadata"]
+N2["Artwork"]
+N3["Subtitles"]
+N4["Combined Result"]
 
-Artwork
-
-+
-
-Subtitles
-
-↓
-
-Combined Result
+N1 --> N4
+N2 --> N4
+N3 --> N4
 ```
 
 Benefits include:
@@ -242,20 +232,21 @@ Repeated background work SHOULD use worker pools.
 
 Example:
 
-```
-Queue
+```mermaid
+flowchart TD
 
-↓
+N1["Queue"]
+N2["Worker 1"]
+N3["Worker 2"]
+N4["Worker 3"]
+N5["Completed Tasks"]
 
-Worker 1
-
-Worker 2
-
-Worker 3
-
-↓
-
-Completed Tasks
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N2 --> N5
+N3 --> N5
+N4 --> N5
 ```
 
 Worker pools provide:
@@ -325,6 +316,7 @@ Good reasons include:
 Poor reason:
 
 ```
+
 It fixed a deadlock.
 ```
 
@@ -393,18 +385,17 @@ A mutex protects ownership of mutable state.
 
 Example:
 
-```text
-Cache
+```mermaid
+flowchart TD
 
-↓
+N1["Cache"]
+N2["Mutex"]
+N3["Read"]
+N4["Write"]
 
-Mutex
-
-↓
-
-Read
-
-Write
+N1 --> N2
+N2 --> N3
+N2 --> N4
 ```
 
 Mutexes SHOULD remain private.
@@ -457,28 +448,21 @@ Every queue should have a maximum capacity.
 
 Long-running services should follow a common lifecycle.
 
-```
-Start
+```mermaid
+flowchart TD
 
-↓
+N1["Start"]
+N2["Wait"]
+N3["Process"]
+N4["Cancellation"]
+N5["Cleanup"]
+N6["Exit"]
 
-Wait
-
-↓
-
-Process
-
-↓
-
-Cancellation
-
-↓
-
-Cleanup
-
-↓
-
-Exit
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Every service should honour context cancellation.
@@ -520,6 +504,7 @@ with no ownership.
 ## Unbounded Goroutines
 
 ```
+
 for {
 
 go process()
@@ -594,23 +579,3 @@ Within Mosaic, concurrency is considered successful when:
 A concurrent system should feel predictable.
 
 Not mysterious.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`09-context-and-cancellation.md`
-
-**Next File**
-
-`11-testing.md`

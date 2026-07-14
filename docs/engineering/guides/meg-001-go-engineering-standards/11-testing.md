@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/11-testing.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Testing
@@ -100,36 +100,35 @@ Integration tests verify collaboration between components.
 
 Examples include:
 
-```
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["PostgreSQL"]
 
-PostgreSQL
-```
-
-```
-Metadata
-
-↓
-
-DuckDB
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Metadata"]
+N2["DuckDB"]
+
+N1 --> N2
 ```
-HTTP
 
-↓
+```mermaid
+flowchart TD
 
-Authentication
+N1["HTTP"]
+N2["Authentication"]
+N3["Service"]
+N4["Repository"]
 
-↓
-
-Service
-
-↓
-
-Repository
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Real infrastructure SHOULD be used whenever practical.
@@ -144,28 +143,21 @@ End-to-end tests exercise complete workflows.
 
 Example:
 
-```
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["Authentication"]
+N3["Metadata"]
+N4["Playback"]
+N5["Database"]
+N6["Response"]
 
-Authentication
-
-↓
-
-Metadata
-
-↓
-
-Playback
-
-↓
-
-Database
-
-↓
-
-Response
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 These tests provide the highest confidence.
@@ -185,12 +177,14 @@ They SHOULD NOT verify implementation details.
 Poor:
 
 ```
+
 Did function A call function B?
 ```
 
 Better:
 
 ```
+
 Was the expected behaviour observed?
 ```
 
@@ -271,24 +265,19 @@ Over-mocking does not.
 
 Poor:
 
-```
-HTTP
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP"]
+N2["Mock Service"]
+N3["Mock Repository"]
+N4["Mock Database"]
+N5["Mock Cache"]
 
-Mock Service
-
-↓
-
-Mock Repository
-
-↓
-
-Mock Database
-
-↓
-
-Mock Cache
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Nothing meaningful is being exercised.
@@ -383,6 +372,7 @@ Optimisation without measurement is prohibited.
 Every repository SHOULD regularly execute:
 
 ```
+
 go test -race ./...
 ```
 
@@ -451,32 +441,23 @@ Test your behaviour.
 
 Every pull request SHOULD execute:
 
-```
-Formatting
+```mermaid
+flowchart TD
 
-↓
+N1["Formatting"]
+N2["Static Analysis"]
+N3["Unit Tests"]
+N4["Integration Tests"]
+N5["Race Detector"]
+N6["Benchmarks (optional)"]
+N7["Build"]
 
-Static Analysis
-
-↓
-
-Unit Tests
-
-↓
-
-Integration Tests
-
-↓
-
-Race Detector
-
-↓
-
-Benchmarks (optional)
-
-↓
-
-Build
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 No code should be merged without automated verification.
@@ -562,23 +543,3 @@ Good tests emerge naturally from good architecture.
 When testing becomes painful, engineers should first question the architecture rather than the testing framework.
 
 Within Mosaic, software is considered complete only when its behaviour can be verified confidently and repeatedly through automated tests.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`10-concurrency.md`
-
-**Next File**
-
-`12-performance.md`

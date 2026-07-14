@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/07-composition-and-polymorphism.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Composition and Polymorphism
@@ -106,24 +106,19 @@ Ask:
 
 Example.
 
-```
-Playback Service
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Service"]
+N2["Metadata Provider"]
+N3["Transcoder"]
+N4["Progress Store"]
+N5["Event Publisher"]
 
-Metadata Provider
-
-↓
-
-Transcoder
-
-↓
-
-Progress Store
-
-↓
-
-Event Publisher
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each capability remains independently replaceable.
@@ -136,44 +131,36 @@ No capability needs knowledge of the others.
 
 Inheritance often produces deep hierarchies.
 
-```
-Media
+```mermaid
+flowchart TD
 
-↓
+N1["Media"]
+N2["Video"]
+N3["Movie"]
+N4["AnimeMovie"]
 
-Video
-
-↓
-
-Movie
-
-↓
-
-AnimeMovie
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Responsibility becomes fragmented across multiple types.
 
 Instead:
 
-```
-Movie
+```mermaid
+flowchart TD
 
-↓
+N1["Movie"]
+N2["Metadata"]
+N3["Artwork"]
+N4["Playback"]
+N5["Progress"]
 
-Metadata
-
-↓
-
-Artwork
-
-↓
-
-Playback
-
-↓
-
-Progress
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each concern remains isolated.
@@ -281,28 +268,31 @@ type Storage interface {
 
 Multiple implementations may exist.
 
-```
-Postgres
+```mermaid
+flowchart TD
 
-↓
+N1["Postgres"]
+N2["Storage"]
 
-Storage
-```
-
-```
-DuckDB
-
-↓
-
-Storage
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["DuckDB"]
+N2["Storage"]
+
+N1 --> N2
 ```
-Memory
 
-↓
+```mermaid
+flowchart TD
 
-Storage
+N1["Memory"]
+N2["Storage"]
+
+N1 --> N2
 ```
 
 The service does not care which implementation it receives.
@@ -331,30 +321,28 @@ The behaviour remains constant.
 
 Composition and interfaces work together.
 
-```
-Service
+```mermaid
+flowchart TD
 
-↓
+N1["Service"]
+N2["Publisher Interface"]
+N3["NATS Publisher"]
 
-Publisher Interface
-
-↓
-
-NATS Publisher
+N1 --> N2
+N2 --> N3
 ```
 
 or
 
-```
-Service
+```mermaid
+flowchart TD
 
-↓
+N1["Service"]
+N2["Publisher Interface"]
+N3["Memory Publisher"]
 
-Publisher Interface
-
-↓
-
-Memory Publisher
+N1 --> N2
+N2 --> N3
 ```
 
 The service remains unchanged.
@@ -370,18 +358,22 @@ This is one of Go's greatest strengths.
 The following patterns SHOULD NOT exist.
 
 ```
+
 BaseService
 ```
 
 ```
+
 BaseRepository
 ```
 
 ```
+
 AbstractHandler
 ```
 
 ```
+
 AbstractProvider
 ```
 
@@ -399,20 +391,17 @@ Suppose several services require metrics.
 
 Avoid:
 
-```text
-BaseService
+```mermaid
+flowchart TD
 
-↓
+N1["BaseService"]
+N2["Metrics"]
+N3["Logging"]
+N4["Tracing"]
 
-Metrics
-
-↓
-
-Logging
-
-↓
-
-Tracing
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Prefer:
@@ -486,23 +475,3 @@ Interfaces enable polymorphism.
 Each solves a different problem.
 
 Keeping these concepts separate allows Mosaic to produce software that is modular, testable and resilient to change without inheriting the complexity traditionally associated with object-oriented inheritance.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`06-interfaces-and-abstraction.md`
-
-**Next File**
-
-`08-error-handling.md`

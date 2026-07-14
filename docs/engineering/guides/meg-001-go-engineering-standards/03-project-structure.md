@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/03-project-structure.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Project Structure
@@ -55,32 +55,39 @@ Packages own business capabilities.
 Examples:
 
 ```
+
 library
 ```
 
 ```
+
 metadata
 ```
 
 ```
+
 playback
 ```
 
 ```
+
 authentication
 ```
 
 rather than technical concepts such as:
 
 ```
+
 helpers
 ```
 
 ```
+
 common
 ```
 
 ```
+
 misc
 ```
 
@@ -102,40 +109,34 @@ Large "catch-all" packages inevitably become architectural bottlenecks.
 
 Dependencies always flow inward.
 
-```
-Transport
+```mermaid
+flowchart TD
 
-↓
+N1["Transport"]
+N2["Application"]
+N3["Domain"]
+N4["Infrastructure"]
 
-Application
-
-↓
-
-Domain
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Lower layers MUST NOT depend upon higher layers.
 
 For example:
 
-```
-HTTP Handler
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Handler"]
+N2["Service"]
+N3["Repository"]
+N4["Database"]
 
-Service
-
-↓
-
-Repository
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The repository must never import an HTTP package.
@@ -161,6 +162,7 @@ Go's `internal` mechanism exists specifically to enforce package boundaries at c
 Every Mosaic service SHOULD follow the same high-level structure.
 
 ```
+
 cmd/
 
 internal/
@@ -195,6 +197,7 @@ Contains application entry points.
 Examples:
 
 ```
+
 cmd/server
 
 cmd/migrate
@@ -226,6 +229,7 @@ Everything inside `internal` is considered implementation detail.
 Typical contents include:
 
 ```
+
 internal/
 
     app/
@@ -323,6 +327,7 @@ Within `internal`, packages SHOULD be organised around business capabilities.
 Preferred:
 
 ```
+
 internal/
 
     library/
@@ -339,6 +344,7 @@ internal/
 Avoid:
 
 ```
+
 internal/
 
     services/
@@ -371,32 +377,39 @@ Package names MUST:
 Good examples:
 
 ```
+
 library
 ```
 
 ```
+
 metadata
 ```
 
 ```
+
 playback
 ```
 
 Poor examples:
 
 ```
+
 helpers
 ```
 
 ```
+
 common
 ```
 
 ```
+
 shared
 ```
 
 ```
+
 utils
 ```
 
@@ -439,6 +452,7 @@ Sharing code prematurely often creates tighter coupling than duplication.
 A typical Mosaic service may resemble:
 
 ```
+
 cmd/
 
     mosaic-server/
@@ -495,30 +509,37 @@ This structure balances discoverability, encapsulation and future growth while r
 The following package names SHOULD NOT exist without exceptional justification.
 
 ```
+
 utils
 ```
 
 ```
+
 common
 ```
 
 ```
+
 base
 ```
 
 ```
+
 shared
 ```
 
 ```
+
 misc
 ```
 
 ```
+
 manager
 ```
 
 ```
+
 helper
 ```
 
@@ -541,23 +562,3 @@ If that question cannot be answered clearly, the structure should be reconsidere
 Good structure enables good engineering.
 
 Poor structure amplifies technical debt long before implementation quality begins to decline.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`02-thinking-in-go.md`
-
-**Next File**
-
-`04-package-design.md`

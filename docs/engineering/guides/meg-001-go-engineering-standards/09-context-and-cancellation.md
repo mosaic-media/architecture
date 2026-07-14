@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/09-context-and-cancellation.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Context and Cancellation
@@ -48,28 +48,21 @@ Modern applications perform many concurrent operations.
 
 Consider an HTTP request.
 
-```
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["Authentication"]
+N3["Database Query"]
+N4["Metadata Lookup"]
+N5["Blob Storage"]
+N6["Event Publishing"]
 
-Authentication
-
-↓
-
-Database Query
-
-↓
-
-Metadata Lookup
-
-↓
-
-Blob Storage
-
-↓
-
-Event Publishing
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 If the client disconnects halfway through, every remaining operation should stop.
@@ -93,28 +86,21 @@ This is precisely the design intent of Go's `context` package.  [Go](https://go.
 
 Every request begins with a root context.
 
-```
-Incoming Request
+```mermaid
+flowchart TD
 
-↓
+N1["Incoming Request"]
+N2["Context Created"]
+N3["Passed Down"]
+N4["Derived Where Necessary"]
+N5["Cancelled"]
+N6["All Child Operations Exit"]
 
-Context Created
-
-↓
-
-Passed Down
-
-↓
-
-Derived Where Necessary
-
-↓
-
-Cancelled
-
-↓
-
-All Child Operations Exit
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Contexts form a tree.
@@ -229,20 +215,17 @@ It should rarely create them.
 
 Example:
 
-```
-HTTP Handler
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Handler"]
+N2["Service"]
+N3["Repository"]
+N4["Database"]
 
-Service
-
-↓
-
-Repository
-
-↓
-
-Database
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 The handler creates the context.
@@ -415,24 +398,19 @@ One of the most common mistakes is using a request context for background proces
 
 Poor:
 
-```
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["Spawn Goroutine"]
+N3["Request Completes"]
+N4["Context Cancelled"]
+N5["Background Work Stops"]
 
-Spawn Goroutine
-
-↓
-
-Request Completes
-
-↓
-
-Context Cancelled
-
-↓
-
-Background Work Stops
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 If work must continue after the request ends, a new context with an appropriate lifetime should be created deliberately.
@@ -447,28 +425,21 @@ Application shutdown should propagate through context.
 
 Typical flow:
 
-```
-SIGTERM
+```mermaid
+flowchart TD
 
-↓
+N1["SIGTERM"]
+N2["Root Context Cancelled"]
+N3["Workers Stop"]
+N4["Requests Finish"]
+N5["Resources Closed"]
+N6["Application Exits"]
 
-Root Context Cancelled
-
-↓
-
-Workers Stop
-
-↓
-
-Requests Finish
-
-↓
-
-Resources Closed
-
-↓
-
-Application Exits
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Every long-running component should honour context cancellation.
@@ -499,7 +470,7 @@ Process(nil)
 
 ---
 
-## Creating Background Context Deep In Business Logic
+## Background Context Creation Deep In Business Logic
 
 ```go
 context.Background()
@@ -509,7 +480,7 @@ inside services or repositories.
 
 ---
 
-## Using Context As Dependency Injection
+## Context As Dependency Injection
 
 ```go
 ctx.Value("database")
@@ -564,23 +535,3 @@ Every operation within Mosaic should be able to answer:
 - Are downstream operations respecting it?
 
 If those questions have clear answers, the application will naturally become more responsive, more efficient and easier to shut down safely.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`08-error-handling.md`
-
-**Next File**
-
-`10-concurrency.md`

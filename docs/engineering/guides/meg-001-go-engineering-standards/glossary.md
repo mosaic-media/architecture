@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/glossary.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -142,6 +142,7 @@ The location where application dependencies are constructed.
 Typically:
 
 ```
+
 cmd/server/main.go
 ```
 
@@ -212,20 +213,17 @@ A point where errors are translated into a more meaningful representation.
 
 Example:
 
-```
-SQL
+```mermaid
+flowchart TD
 
-↓
+N1["SQL"]
+N2["Repository"]
+N3["Domain Error"]
+N4["HTTP Response"]
 
-Repository
-
-↓
-
-Domain Error
-
-↓
-
-HTTP Response
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 ---
@@ -438,14 +436,17 @@ A generic package lacking a clearly defined responsibility.
 Examples include:
 
 ```
+
 utils
 ```
 
 ```
+
 common
 ```
 
 ```
+
 helpers
 ```
 
@@ -493,23 +494,3 @@ Definitions should remain consistent across:
 - contributor documentation
 
 Where terminology evolves, this glossary SHOULD be updated before introducing new definitions elsewhere.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`18-contributor-guidance.md`
-
-**Next File**
-
-`references.md`

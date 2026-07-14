@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/06-interfaces-and-abstraction.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Interfaces and Abstraction
@@ -136,12 +136,13 @@ One of the most important Go design principles is:
 
 Example:
 
-```
-metadata
+```mermaid
+flowchart TD
 
-↓
+N1["metadata"]
+N2["library"]
 
-library
+N1 --> N2
 ```
 
 If `library` only needs:
@@ -272,17 +273,19 @@ Consumers should depend only upon behaviour they require.
 
 Instead of:
 
-```text
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["Everything"]
 
-Everything
+N1 --> N2
 ```
 
 Prefer:
 
 ```
+
 Finder
 
 Writer
@@ -301,14 +304,17 @@ Each consumer receives only the behaviour it needs.
 Avoid names such as:
 
 ```
+
 RepositoryImpl
 ```
 
 ```
+
 DefaultRepository
 ```
 
 ```
+
 UserServiceImpl
 ```
 
@@ -317,18 +323,22 @@ These names usually indicate object-oriented thinking rather than Go thinking.
 Instead:
 
 ```
+
 Repository
 ```
 
 ```
+
 Service
 ```
 
 ```
+
 Store
 ```
 
 ```
+
 Client
 ```
 
@@ -383,40 +393,41 @@ The following usually indicate unnecessary abstraction.
 
 ## Single Implementation
 
-```
-Repository
+```mermaid
+flowchart TD
 
-↓
+N1["Repository"]
+N2["RepositoryImpl"]
 
-RepositoryImpl
+N1 --> N2
 ```
 
 ---
 
 ## Interface With One User
 
-```
-Service
+```mermaid
+flowchart TD
 
-↓
+N1["Service"]
+N2["ServiceImpl"]
+N3["One caller"]
 
-ServiceImpl
-
-↓
-
-One caller
+N1 --> N2
+N2 --> N3
 ```
 
 ---
 
 ## Mirror Interfaces
 
-```
-Every struct
+```mermaid
+flowchart TD
 
-↓
+N1["Every struct"]
+N2["Matching interface"]
 
-Matching interface
+N1 --> N2
 ```
 
 ---
@@ -424,14 +435,17 @@ Matching interface
 ## Generic Interfaces
 
 ```
+
 Manager
 ```
 
 ```
+
 Provider
 ```
 
 ```
+
 Processor
 ```
 
@@ -442,12 +456,14 @@ without clearly defined behaviour.
 ## Empty Interfaces
 
 ```
+
 interface{}
 ```
 
 or
 
 ```
+
 any
 ```
 
@@ -464,12 +480,14 @@ They should never hide uncertainty.
 Poor:
 
 ```
+
 Can this object become another subclass?
 ```
 
 Better:
 
 ```
+
 What behaviour does this consumer require?
 ```
 
@@ -513,23 +531,3 @@ Within Mosaic, abstraction is considered successful when:
 - implementation details disappear
 
 If abstraction increases complexity instead, it has failed.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`05-dependency-management.md`
-
-**Next File**
-
-`07-composition-and-polymorphism.md`

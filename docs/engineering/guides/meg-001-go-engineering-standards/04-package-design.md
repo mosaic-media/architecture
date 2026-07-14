@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/04-package-design.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Package Design
@@ -60,18 +60,22 @@ Every package MUST own exactly one responsibility.
 Examples include:
 
 ```
+
 library
 ```
 
 ```
+
 metadata
 ```
 
 ```
+
 playback
 ```
 
 ```
+
 authentication
 ```
 
@@ -157,40 +161,49 @@ Package names SHOULD be:
 Good examples:
 
 ```
+
 metadata
 ```
 
 ```
+
 library
 ```
 
 ```
+
 playback
 ```
 
 ```
+
 scheduler
 ```
 
 Poor examples:
 
 ```
+
 metadataservice
 ```
 
 ```
+
 helpers
 ```
 
 ```
+
 common
 ```
 
 ```
+
 misc
 ```
 
 ```
+
 stuff
 ```
 
@@ -259,34 +272,42 @@ Avoid repeating it.
 The following package names SHOULD NOT exist.
 
 ```
+
 util
 ```
 
 ```
+
 utils
 ```
 
 ```
+
 common
 ```
 
 ```
+
 shared
 ```
 
 ```
+
 base
 ```
 
 ```
+
 types
 ```
 
 ```
+
 interfaces
 ```
 
 ```
+
 helpers
 ```
 
@@ -311,6 +332,7 @@ Ownership answers:
 Example:
 
 ```
+
 metadata
 ```
 
@@ -340,26 +362,26 @@ They should not rely upon one another's implementation details.
 
 Good:
 
-```
-metadata.Provider
+```mermaid
+flowchart TD
 
-↓
+N1["metadata.Provider"]
+N2["library.Service"]
 
-library.Service
+N1 --> N2
 ```
 
 Poor:
 
-```
-library
+```mermaid
+flowchart TD
 
-↓
+N1["library"]
+N2["metadata/internal/parser"]
+N3["metadata/private/cache"]
 
-metadata/internal/parser
-
-↓
-
-metadata/private/cache
+N1 --> N2
+N2 --> N3
 ```
 
 If another package requires access to implementation details, the abstraction is probably incorrect.
@@ -372,34 +394,30 @@ Imports should naturally form a directed graph.
 
 Preferred:
 
-```
-transport
+```mermaid
+flowchart TD
 
-↓
+N1["transport"]
+N2["application"]
+N3["domain"]
+N4["infrastructure"]
 
-application
-
-↓
-
-domain
-
-↓
-
-infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid:
 
-```
-library
+```mermaid
+flowchart TD
 
-↓
+N1["library"]
+N2["metadata"]
+N3["library"]
 
-metadata
-
-↓
-
-library
+N1 --> N2
+N2 --> N3
 ```
 
 Circular dependencies are prohibited by the Go compiler.
@@ -484,23 +502,3 @@ They encourage clear ownership.
 Within Mosaic, packages are considered architectural boundaries rather than folders.
 
 They should therefore be designed with the same care as public APIs.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`03-project-structure.md`
-
-**Next File**
-
-`05-dependency-management.md`

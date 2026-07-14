@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/18-contributor-guidance.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -289,28 +289,21 @@ New contributors SHOULD prioritise understanding before modification.
 
 Recommended order:
 
-```
-Architecture Specifications
+```mermaid
+flowchart TD
 
-↓
+N1["Architecture Specifications"]
+N2["ADRs"]
+N3["Package Documentation"]
+N4["Public APIs"]
+N5["Implementation"]
+N6["Tests"]
 
-ADRs
-
-↓
-
-Package Documentation
-
-↓
-
-Public APIs
-
-↓
-
-Implementation
-
-↓
-
-Tests
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Understanding architecture first reduces accidental complexity later.
@@ -400,23 +393,3 @@ Every contributor influences:
 Within Mosaic, contributions are measured not only by the features they introduce, but by the lasting improvements they make to the platform.
 
 The best contribution is one that future contributors barely notice because it feels like it has always belonged.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`17-adrs.md`
-
-**Next File**
-
-`glossary.md`

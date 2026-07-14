@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/13-design-patterns.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Design Patterns
@@ -94,20 +94,17 @@ Combine small components into larger behaviour.
 
 Example:
 
-```text
-Library Service
+```mermaid
+flowchart TD
 
-↓
+N1["Library Service"]
+N2["Metadata Provider"]
+N3["Artwork Provider"]
+N4["Event Publisher"]
 
-Metadata Provider
-
-↓
-
-Artwork Provider
-
-↓
-
-Event Publisher
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Composition is the primary architectural mechanism within Mosaic.
@@ -124,16 +121,15 @@ Separate domain logic from persistence.
 
 Example:
 
-```text
-Service
+```mermaid
+flowchart TD
 
-↓
+N1["Service"]
+N2["Repository"]
+N3["PostgreSQL"]
 
-Repository
-
-↓
-
-PostgreSQL
+N1 --> N2
+N2 --> N3
 ```
 
 Repositories own persistence.
@@ -152,28 +148,31 @@ Translate one interface into another.
 
 Typical Mosaic examples include:
 
-```
-Jellyfin
+```mermaid
+flowchart TD
 
-↓
+N1["Jellyfin"]
+N2["Mosaic API"]
 
-Mosaic API
-```
-
-```
-Stremio
-
-↓
-
-Metadata Provider
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Stremio"]
+N2["Metadata Provider"]
+
+N1 --> N2
 ```
-Docker
 
-↓
+```mermaid
+flowchart TD
 
-Module Runtime
+N1["Docker"]
+N2["Module Runtime"]
+
+N1 --> N2
 ```
 
 Adapters isolate external systems from internal architecture.
@@ -190,16 +189,17 @@ Allow behaviour to vary without modifying callers.
 
 Example:
 
-```text
-Artwork Provider
+```mermaid
+flowchart TD
 
-↓
+N1["Artwork Provider"]
+N2["TMDB"]
+N3["AniList"]
+N4["Local Storage"]
 
-TMDB
-
-AniList
-
-Local Storage
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 Each implementation satisfies the same behaviour.
@@ -249,28 +249,21 @@ Wrap behaviour without modifying implementations.
 
 Example:
 
-```
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["Logging"]
+N3["Authentication"]
+N4["Metrics"]
+N5["Compression"]
+N6["Handler"]
 
-Logging
-
-↓
-
-Authentication
-
-↓
-
-Metrics
-
-↓
-
-Compression
-
-↓
-
-Handler
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Middleware composes behaviour cleanly.
@@ -289,16 +282,15 @@ Process bounded concurrent work.
 
 Example:
 
-```
-Queue
+```mermaid
+flowchart TD
 
-↓
+N1["Queue"]
+N2["Workers"]
+N3["Results"]
 
-Workers
-
-↓
-
-Results
+N1 --> N2
+N2 --> N3
 ```
 
 Worker pools prevent unbounded goroutine creation.
@@ -317,24 +309,19 @@ Break processing into sequential stages.
 
 Example:
 
-```
-Read
+```mermaid
+flowchart TD
 
-↓
+N1["Read"]
+N2["Parse"]
+N3["Transform"]
+N4["Validate"]
+N5["Persist"]
 
-Parse
-
-↓
-
-Transform
-
-↓
-
-Validate
-
-↓
-
-Persist
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each stage owns one responsibility.
@@ -353,28 +340,21 @@ Decouple producers from consumers.
 
 Example:
 
-```
-Media Imported
+```mermaid
+flowchart TD
 
-↓
+N1["Media Imported"]
+N2["Event Bus"]
+N3["Metadata"]
+N4["Artwork"]
+N5["Search Index"]
+N6["Analytics"]
 
-Event Bus
-
-↓
-
-Metadata
-
-↓
-
-Artwork
-
-↓
-
-Search Index
-
-↓
-
-Analytics
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Events communicate facts.
@@ -395,20 +375,17 @@ Represent finite business processes explicitly.
 
 Example:
 
-```
-Queued
+```mermaid
+flowchart TD
 
-↓
+N1["Queued"]
+N2["Processing"]
+N3["Completed"]
+N4["Archived"]
 
-Processing
-
-↓
-
-Completed
-
-↓
-
-Archived
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid scattered boolean flags.
@@ -425,20 +402,17 @@ Improve responsiveness by serving cached data while refreshing asynchronously.
 
 Example:
 
-```
-Cache Hit
+```mermaid
+flowchart TD
 
-↓
+N1["Cache Hit"]
+N2["Immediate Response"]
+N3["Background Refresh"]
+N4["Cache Updated"]
 
-Immediate Response
-
-↓
-
-Background Refresh
-
-↓
-
-Cache Updated
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 This pattern is heavily used throughout Mosaic for metadata and artwork.
@@ -559,14 +533,17 @@ Do not simulate it.
 Packages named:
 
 ```
+
 Manager
 ```
 
 ```
+
 Processor
 ```
 
 ```
+
 Coordinator
 ```
 
@@ -582,7 +559,7 @@ Explicit code is easier to understand.
 
 ---
 
-# Choosing A Pattern
+# Pattern Evaluation
 
 Every pattern should justify itself.
 
@@ -602,40 +579,27 @@ If the answer is "no", another approach should be preferred.
 
 Patterns are preferred in roughly the following order.
 
-```
-Functions
+```mermaid
+flowchart TD
 
-↓
+N1["Functions"]
+N2["Composition"]
+N3["Interfaces"]
+N4["Constructors"]
+N5["Middleware"]
+N6["Events"]
+N7["Worker Pools"]
+N8["Pipelines"]
+N9["Advanced Patterns"]
 
-Composition
-
-↓
-
-Interfaces
-
-↓
-
-Constructors
-
-↓
-
-Middleware
-
-↓
-
-Events
-
-↓
-
-Worker Pools
-
-↓
-
-Pipelines
-
-↓
-
-Advanced Patterns
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
 Always begin with the simplest possible solution.
@@ -664,23 +628,3 @@ Within Mosaic:
 The best pattern is the one that disappears into the architecture.
 
 It should make the software feel obvious rather than impressive.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`12-performance.md`
-
-**Next File**
-
-`14-anti-patterns.md`

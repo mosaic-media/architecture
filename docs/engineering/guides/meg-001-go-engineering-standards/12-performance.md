@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/12-performance.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Performance
@@ -50,24 +50,19 @@ Never by intuition alone.
 
 Performance decisions should follow the same order.
 
-```
-Correctness
+```mermaid
+flowchart TD
 
-↓
+N1["Correctness"]
+N2["Readability"]
+N3["Maintainability"]
+N4["Measurement"]
+N5["Optimisation"]
 
-Readability
-
-↓
-
-Maintainability
-
-↓
-
-Measurement
-
-↓
-
-Optimisation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Optimising incorrect software simply produces incorrect software more quickly.
@@ -113,28 +108,21 @@ Profiling SHOULD always precede optimisation.
 
 The preferred workflow is:
 
-```
-Observe
+```mermaid
+flowchart TD
 
-↓
+N1["Observe"]
+N2["Profile"]
+N3["Identify Bottleneck"]
+N4["Optimise"]
+N5["Benchmark"]
+N6["Repeat"]
 
-Profile
-
-↓
-
-Identify Bottleneck
-
-↓
-
-Optimise
-
-↓
-
-Benchmark
-
-↓
-
-Repeat
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 Go provides excellent profiling tools.
@@ -159,20 +147,17 @@ Every meaningful optimisation SHOULD include benchmarks.
 
 Example:
 
-```text
-Before
+```mermaid
+flowchart TD
 
-↓
+N1["Before"]
+N2["Optimisation"]
+N3["Benchmark"]
+N4["Compare"]
 
-Optimisation
-
-↓
-
-Benchmark
-
-↓
-
-Compare
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 An optimisation without measurable improvement should be reconsidered.
@@ -210,6 +195,7 @@ They SHOULD NOT write unreadable code attempting to outsmart the compiler.
 Escape analysis should be inspected using:
 
 ```
+
 go build -gcflags="-m"
 ```
 
@@ -401,16 +387,15 @@ Concurrency is not automatically a performance optimisation.
 
 Poor:
 
-```
-Sequential
+```mermaid
+flowchart TD
 
-↓
+N1["Sequential"]
+N2["Concurrent"]
+N3["Wait"]
 
-Concurrent
-
-↓
-
-Wait
+N1 --> N2
+N2 --> N3
 ```
 
 Nothing has improved.
@@ -492,6 +477,7 @@ The following practices are prohibited.
 ## Optimising Without Profiling
 
 ```
+
 "I think this is slow."
 ```
 
@@ -515,7 +501,7 @@ Reflection replacing explicit code without measurable benefit.
 
 ---
 
-## Using unsafe
+## `unsafe` Usage
 
 Breaking type safety to save hypothetical nanoseconds.
 
@@ -561,23 +547,3 @@ Within Mosaic, engineers optimise by:
 Fast software is valuable.
 
 Understandable fast software is considerably more valuable.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`11-testing.md`
-
-**Next File**
-
-`13-design-patterns.md`

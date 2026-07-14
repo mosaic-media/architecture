@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/01-engineering-philosophy.md
 Document: MEG-001
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Engineering Philosophy
@@ -278,32 +278,23 @@ The implementation that scores highest overall should generally be preferred.
 
 When trade-offs exist, Mosaic evaluates engineering decisions using the following priority order.
 
-```
-Correctness
+```mermaid
+flowchart TD
 
-↓
+N1["Correctness"]
+N2["Maintainability"]
+N3["Readability"]
+N4["Testability"]
+N5["Observability"]
+N6["Performance"]
+N7["Convenience"]
 
-Maintainability
-
-↓
-
-Readability
-
-↓
-
-Testability
-
-↓
-
-Observability
-
-↓
-
-Performance
-
-↓
-
-Convenience
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 This ordering intentionally places long-term maintainability above short-term development speed.
@@ -346,23 +337,3 @@ If a rule makes software harder to understand, harder to test or harder to evolv
 Engineering standards exist to improve software.
 
 Never to burden it.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`00-document-control.md`
-
-**Next File**
-
-`02-thinking-in-go.md`
