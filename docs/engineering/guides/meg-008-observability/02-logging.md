@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/02-logging.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Structured Logging
@@ -96,28 +96,31 @@ Logging follows architectural ownership.
 
 Examples.
 
-```
-Scheduler
+```mermaid
+flowchart TD
 
-↓
+N1["Scheduler"]
+N2["Scheduling Logs"]
 
-Scheduling Logs
-```
-
-```
-Worker Manager
-
-↓
-
-Worker Logs
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Worker Manager"]
+N2["Worker Logs"]
+
+N1 --> N2
 ```
-Capability Registry
 
-↓
+```mermaid
+flowchart TD
 
-Capability Logs
+N1["Capability Registry"]
+N2["Capability Logs"]
+
+N1 --> N2
 ```
 
 Every Runtime Service owns the logs describing its own behaviour.
@@ -140,14 +143,17 @@ Logs should describe:
 Examples.
 
 ```
+
 Capability Activated
 ```
 
 ```
+
 Worker Allocated
 ```
 
 ```
+
 Storage Migration Completed
 ```
 
@@ -162,12 +168,14 @@ Business behaviour and Runtime behaviour remain separate.
 Business.
 
 ```
+
 Playback Completed
 ```
 
 Operational.
 
 ```
+
 Playback Capability Activated
 ```
 
@@ -329,12 +337,13 @@ Every significant Runtime Event MAY produce one structured log.
 
 Example.
 
-```text
-CapabilityActivated
+```mermaid
+flowchart TD
 
-↓
+N1["CapabilityActivated"]
+N2["Structured Log"]
 
-Structured Log
+N1 --> N2
 ```
 
 The Runtime should avoid producing multiple unrelated logs for one architectural event.
@@ -362,16 +371,15 @@ Database failed.
 
 Preferred.
 
-```text
-Repository.Save
+```mermaid
+flowchart TD
 
-↓
+N1["Repository.Save"]
+N2["PostgreSQL Timeout"]
+N3["Retry Scheduled"]
 
-PostgreSQL Timeout
-
-↓
-
-Retry Scheduled
+N1 --> N2
+N2 --> N3
 ```
 
 Good logs explain failure.
@@ -571,23 +579,3 @@ Within Mosaic, every significant architectural event should produce one clear, s
 without requiring an operator to inspect the implementation.
 
 Good logs make the architecture readable while the platform is running.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`01-observability-philosophy.md`
-
-**Next File**
-
-`03-metrics.md`

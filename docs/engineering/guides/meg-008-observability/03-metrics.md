@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/03-metrics.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Metrics
@@ -56,32 +56,35 @@ Metrics should survive implementation changes.
 
 Unlike logs:
 
-```
-One Event
+```mermaid
+flowchart TD
 
-↓
+N1["One Event"]
+N2["One Log"]
 
-One Log
+N1 --> N2
 ```
 
 Metrics describe:
 
-```
-Thousands Of Events
+```mermaid
+flowchart TD
 
-↓
+N1["Thousands Of Events"]
+N2["One Trend"]
 
-One Trend
+N1 --> N2
 ```
 
 Example.
 
-```
-Worker Utilisation
+```mermaid
+flowchart TD
 
-↓
+N1["Worker Utilisation"]
+N2["74%"]
 
-74%
+N1 --> N2
 ```
 
 The metric summarises Runtime behaviour over time.
@@ -96,28 +99,31 @@ Metrics follow architectural ownership.
 
 Examples.
 
-```
-Worker Manager
+```mermaid
+flowchart TD
 
-↓
+N1["Worker Manager"]
+N2["Worker Metrics"]
 
-Worker Metrics
-```
-
-```
-Scheduler
-
-↓
-
-Scheduling Metrics
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Scheduler"]
+N2["Scheduling Metrics"]
+
+N1 --> N2
 ```
-Capability Registry
 
-↓
+```mermaid
+flowchart TD
 
-Capability Metrics
+N1["Capability Registry"]
+N2["Capability Metrics"]
+
+N1 --> N2
 ```
 
 Every Runtime component owns the metrics describing its responsibilities.
@@ -296,18 +302,22 @@ Runtime Events naturally produce metrics.
 Examples include:
 
 ```
+
 Events Published
 ```
 
 ```
+
 Events Delivered
 ```
 
 ```
+
 Events Failed
 ```
 
 ```
+
 Events Retried
 ```
 
@@ -466,20 +476,22 @@ Metrics exist only while meaningful.
 
 Examples.
 
+```mermaid
+flowchart TD
+
+N1["Worker Utilisation"]
+N2["Runtime Lifetime"]
+
+N1 --> N2
 ```
-Worker Utilisation
 
-↓
+```mermaid
+flowchart TD
 
-Runtime Lifetime
-```
+N1["Migration Duration"]
+N2["Migration Only"]
 
-```
-Migration Duration
-
-↓
-
-Migration Only
+N1 --> N2
 ```
 
 Metrics should disappear naturally when their architectural responsibility ends.
@@ -492,28 +504,26 @@ Metrics SHOULD aggregate naturally.
 
 Examples.
 
+```mermaid
+flowchart TD
+
+N1["Worker"]
+N2["Worker Pool"]
+N3["Runtime"]
+
+N1 --> N2
+N2 --> N3
 ```
-Worker
 
-↓
+```mermaid
+flowchart TD
 
-Worker Pool
+N1["Capability"]
+N2["Capability Group"]
+N3["Platform"]
 
-↓
-
-Runtime
-```
-
-```
-Capability
-
-↓
-
-Capability Group
-
-↓
-
-Platform
+N1 --> N2
+N2 --> N3
 ```
 
 Aggregation should follow architectural ownership.
@@ -644,23 +654,3 @@ Within Mosaic, every significant architectural component should expose metrics d
 - behaviour
 
 Because if the Runtime cannot measure itself over time, it cannot know whether it is improving or slowly drifting towards failure.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`02-logging.md`
-
-**Next File**
-
-`04-distributed-tracing.md`

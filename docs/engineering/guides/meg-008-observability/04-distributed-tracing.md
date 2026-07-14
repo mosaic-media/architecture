@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/04-distributed-tracing.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Distributed Tracing
@@ -61,40 +61,27 @@ A trace is the complete execution journey of one logical operation.
 
 Example.
 
-```text
-User Request
+```mermaid
+flowchart TD
 
-↓
+N1["User Request"]
+N2["Playback Capability"]
+N3["Repository"]
+N4["PostgreSQL"]
+N5["PlaybackCompleted"]
+N6["Runtime"]
+N7["Recommendation Capability"]
+N8["DuckDB"]
+N9["Response"]
 
-Playback Capability
-
-↓
-
-Repository
-
-↓
-
-PostgreSQL
-
-↓
-
-PlaybackCompleted
-
-↓
-
-Runtime
-
-↓
-
-Recommendation Capability
-
-↓
-
-DuckDB
-
-↓
-
-Response
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
 ```
 
 Although multiple Runtime components participate:
@@ -107,16 +94,15 @@ The operator sees one trace.
 
 Every trace consists of:
 
-```text
-Trace
+```mermaid
+flowchart TD
 
-↓
+N1["Trace"]
+N2["Spans"]
+N3["Events"]
 
-Spans
-
-↓
-
-Events
+N1 --> N2
+N2 --> N3
 ```
 
 The Trace represents:
@@ -139,28 +125,31 @@ The component performing work owns the span describing that work.
 
 Example.
 
-```
-Scheduler
+```mermaid
+flowchart TD
 
-↓
+N1["Scheduler"]
+N2["Scheduling Span"]
 
-Scheduling Span
-```
-
-```
-Execution Engine
-
-↓
-
-Execution Span
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Execution Engine"]
+N2["Execution Span"]
+
+N1 --> N2
 ```
-Repository
 
-↓
+```mermaid
+flowchart TD
 
-Persistence Span
+N1["Repository"]
+N2["Persistence Span"]
+
+N1 --> N2
 ```
 
 Each architectural component describes its own responsibility.
@@ -224,20 +213,17 @@ Not implementation details.
 
 Spans naturally form a hierarchy.
 
-```text
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["Playback Capability"]
+N3["Repository"]
+N4["PostgreSQL"]
 
-Playback Capability
-
-↓
-
-Repository
-
-↓
-
-PostgreSQL
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Each child span explains work performed on behalf of its parent.
@@ -339,16 +325,15 @@ Runtime Events naturally extend traces.
 
 Example.
 
-```text
-PlaybackCompleted
+```mermaid
+flowchart TD
 
-↓
+N1["PlaybackCompleted"]
+N2["Runtime Event"]
+N3["Recommendation Capability"]
 
-Runtime Event
-
-↓
-
-Recommendation Capability
+N1 --> N2
+N2 --> N3
 ```
 
 The Trace should continue across the Runtime Event boundary.
@@ -383,14 +368,17 @@ Parallel work creates sibling spans.
 
 Example.
 
-```text
-Media Imported
+```mermaid
+flowchart TD
 
-├── Artwork Download
+N1["Media Imported"]
+N2["Artwork Download"]
+N3["Metadata Resolution"]
+N4["Recommendation Update"]
 
-├── Metadata Resolution
-
-└── Recommendation Update
+N1 --> N2
+N1 --> N3
+N1 --> N4
 ```
 
 Each executes independently.
@@ -407,16 +395,15 @@ Failures SHOULD appear inside spans.
 
 Example.
 
-```text
-Blob Download
+```mermaid
+flowchart TD
 
-↓
+N1["Blob Download"]
+N2["Timeout"]
+N3["Retry Scheduled"]
 
-Timeout
-
-↓
-
-Retry Scheduled
+N1 --> N2
+N2 --> N3
 ```
 
 The trace should explain:
@@ -672,23 +659,3 @@ The result is a platform where operators can answer one of the most valuable ope
 > **Exactly how did this happen?**
 
 without guessing, reproducing the problem or reading implementation code.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`03-metrics.md`
-
-**Next File**
-
-`05-health-model.md`

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/10-debugging.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Debugging
@@ -13,7 +13,7 @@ Version: 0.2
 
 # Purpose
 
-MOP-001 defines operational debugging boundaries.
+[MOP-001](../../operations/mop-001-observability-operations/index.md) defines operational debugging boundaries.
 
 This chapter explains how engineers should provide safe investigation mechanisms.
 
@@ -46,4 +46,4 @@ They should not bypass Platform authority or expose hidden operational APIs.
 
 Operational authority is provided by:
 
-- MOP-001 — Observability Operations
+- [MOP-001 — Observability Operations](../../operations/mop-001-observability-operations/index.md)

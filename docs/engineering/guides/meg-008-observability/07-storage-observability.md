@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/07-storage-observability.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Storage Observability
@@ -13,7 +13,7 @@ Version: 0.2
 
 # Purpose
 
-MEG-007 defined the Storage Architecture.
+[MEG-007](../meg-007-storage-architecture/index.md) defined the Storage Architecture.
 
 Mosaic persists information across several specialised storage systems.
 
@@ -29,7 +29,7 @@ Each system owns different information.
 
 Each therefore requires different observability.
 
-Storage Observability exposes the operational behaviour of every storage subsystem while preserving the architectural ownership established in MEG-007.
+Storage Observability exposes the operational behaviour of every storage subsystem while preserving the architectural ownership established in [MEG-007](../meg-007-storage-architecture/index.md).
 
 ---
 
@@ -56,24 +56,19 @@ Information ownership remains the primary architectural concern.
 
 Storage telemetry follows the Storage Taxonomy.
 
-```text
-Business State
+```mermaid
+flowchart TD
 
-↓
+N1["Business State"]
+N2["Analytical State"]
+N3["Binary Assets"]
+N4["Derived Assets"]
+N5["Archive Data"]
 
-Analytical State
-
-↓
-
-Binary Assets
-
-↓
-
-Derived Assets
-
-↓
-
-Archive Data
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every storage engine exposes telemetry appropriate to its responsibility.
@@ -228,7 +223,7 @@ Recommendation Rebuilt
 
 These events describe information movement throughout the Storage Lifecycle.
 
-They complement Runtime Events defined in MEG-002.
+They complement Runtime Events defined in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 ---
 
@@ -238,28 +233,31 @@ Every storage system SHOULD expose health independently.
 
 Examples.
 
-```text
-PostgreSQL
+```mermaid
+flowchart TD
 
-↓
+N1["PostgreSQL"]
+N2["Healthy"]
 
-Healthy
+N1 --> N2
 ```
 
-```text
-DuckDB
+```mermaid
+flowchart TD
 
-↓
+N1["DuckDB"]
+N2["Healthy"]
 
-Healthy
+N1 --> N2
 ```
 
-```text
-Blob Storage
+```mermaid
+flowchart TD
 
-↓
+N1["Blob Storage"]
+N2["Degraded"]
 
-Degraded
+N1 --> N2
 ```
 
 Health should describe operational readiness.
@@ -363,20 +361,17 @@ Storage observability should respect architectural ownership.
 
 Example.
 
-```text
-Blob Storage
+```mermaid
+flowchart TD
 
-↓
+N1["Blob Storage"]
+N2["Unavailable"]
+N3["Metadata Capability"]
+N4["Degraded"]
 
-Unavailable
-
-↓
-
-Metadata Capability
-
-↓
-
-Degraded
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Storage failures naturally propagate through:
@@ -397,28 +392,21 @@ Operators should be able to correlate storage operations.
 
 Example.
 
-```text
-Playback Saved
+```mermaid
+flowchart TD
 
-↓
+N1["Playback Saved"]
+N2["PostgreSQL"]
+N3["Recommendation Updated"]
+N4["DuckDB"]
+N5["Cache Invalidated"]
+N6["MOS Cache"]
 
-PostgreSQL
-
-↓
-
-Recommendation Updated
-
-↓
-
-DuckDB
-
-↓
-
-Cache Invalidated
-
-↓
-
-MOS Cache
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
 ```
 
 The complete storage journey should be visible through:
@@ -597,23 +585,3 @@ Within Mosaic, Storage Observability ensures that operators understand:
 The platform should never leave information architecture hidden behind database implementations.
 
 Instead, storage should explain itself through the same architectural principles that govern every other part of the platform.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`06-runtime-diagnostics.md`
-
-**Next File**
-
-`08-performance-telemetry.md`

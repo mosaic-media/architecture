@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/01-observability-philosophy.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Observability Philosophy
@@ -78,52 +78,58 @@ Every previous MEG contributes to Observability.
 
 Examples.
 
-```
-MEG-002
+```mermaid
+flowchart TD
 
-↓
+N1["MEG-002"]
+N2["Runtime Events"]
 
-Runtime Events
-```
-
-```
-MEG-003
-
-↓
-
-Business Events
+N1 --> N2
 ```
 
-```
-MEG-004
+```mermaid
+flowchart TD
 
-↓
+N1["MEG-003"]
+N2["Business Events"]
 
-Architectural Boundaries
-```
-
-```
-MEG-005
-
-↓
-
-Runtime Services
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["MEG-004"]
+N2["Architectural Boundaries"]
+
+N1 --> N2
 ```
-MEG-006
 
-↓
+```mermaid
+flowchart TD
 
-Capability Lifecycle
+N1["MEG-005"]
+N2["Runtime Services"]
+
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["MEG-006"]
+N2["Capability Lifecycle"]
+
+N1 --> N2
 ```
-MEG-007
 
-↓
+```mermaid
+flowchart TD
 
-Storage Ownership
+N1["MEG-007"]
+N2["Storage Ownership"]
+
+N1 --> N2
 ```
 
 The architecture itself creates the telemetry.
@@ -143,18 +149,22 @@ Observability answers:
 Examples.
 
 ```
+
 Why did startup take 14 seconds?
 ```
 
 ```
+
 Why is Recommendation slow?
 ```
 
 ```
+
 Why is Artwork rebuilding continuously?
 ```
 
 ```
+
 Which Runtime Event caused this execution?
 ```
 
@@ -168,28 +178,31 @@ Observability simply exposes them.
 
 Every Runtime operation can be viewed through three complementary perspectives.
 
-```
-Logs
+```mermaid
+flowchart TD
 
-↓
+N1["Logs"]
+N2["Events"]
 
-Events
-```
-
-```
-Metrics
-
-↓
-
-Behaviour Over Time
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Metrics"]
+N2["Behaviour Over Time"]
+
+N1 --> N2
 ```
-Traces
 
-↓
+```mermaid
+flowchart TD
 
-Execution Journey
+N1["Traces"]
+N2["Execution Journey"]
+
+N1 --> N2
 ```
 
 Each answers different operational questions.
@@ -207,14 +220,17 @@ Logs answer:
 Examples.
 
 ```
+
 Capability Activated
 ```
 
 ```
+
 Worker Failed
 ```
 
 ```
+
 Storage Rebuilt
 ```
 
@@ -252,32 +268,23 @@ Traces answer:
 
 Example.
 
-```text
-HTTP Request
+```mermaid
+flowchart TD
 
-↓
+N1["HTTP Request"]
+N2["Capability"]
+N3["Repository"]
+N4["PostgreSQL"]
+N5["Runtime Event"]
+N6["Recommendation Capability"]
+N7["DuckDB"]
 
-Capability
-
-↓
-
-Repository
-
-↓
-
-PostgreSQL
-
-↓
-
-Runtime Event
-
-↓
-
-Recommendation Capability
-
-↓
-
-DuckDB
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
 ```
 
 A trace explains one execution path.
@@ -299,18 +306,22 @@ Health answers:
 Examples.
 
 ```
+
 Ready
 ```
 
 ```
+
 Healthy
 ```
 
 ```
+
 Degraded
 ```
 
 ```
+
 Unavailable
 ```
 
@@ -348,24 +359,19 @@ This differs fundamentally from observing execution.
 
 Every architectural layer should expose telemetry.
 
-```text
-Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Platform"]
+N2["Runtime"]
+N3["Capabilities"]
+N4["Storage"]
+N5["Infrastructure"]
 
-Runtime
-
-↓
-
-Capabilities
-
-↓
-
-Storage
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Each layer exposes:
@@ -386,12 +392,14 @@ One of the most important distinctions within Mosaic is:
 Business Events.
 
 ```
+
 Playback Completed
 ```
 
 Operational Events.
 
 ```
+
 Worker Allocated
 ```
 
@@ -415,28 +423,31 @@ A useful principle is:
 
 Examples.
 
-```
-Worker Manager
+```mermaid
+flowchart TD
 
-↓
+N1["Worker Manager"]
+N2["Worker Metrics"]
 
-Worker Metrics
-```
-
-```
-Scheduler
-
-↓
-
-Scheduling Metrics
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Scheduler"]
+N2["Scheduling Metrics"]
+
+N1 --> N2
 ```
-Capability Registry
 
-↓
+```mermaid
+flowchart TD
 
-Capability Health
+N1["Capability Registry"]
+N2["Capability Health"]
+
+N1 --> N2
 ```
 
 Telemetry ownership follows architectural ownership.
@@ -464,16 +475,19 @@ Observability should mirror the Runtime Architecture.
 
 Example.
 
-```text
-Runtime
+```mermaid
+flowchart TD
 
-├── Scheduler
+N1["Runtime"]
+N2["Scheduler"]
+N3["Worker Manager"]
+N4["Execution Engine"]
+N5["Storage"]
 
-├── Worker Manager
-
-├── Execution Engine
-
-└── Storage
+N1 --> N2
+N1 --> N3
+N1 --> N4
+N1 --> N5
 ```
 
 Telemetry should naturally follow the same hierarchy.
@@ -544,7 +558,7 @@ Operational telemetry should avoid exposing:
 
 Observability should improve understanding without compromising privacy.
 
-Sensitive information belongs in Security Architecture (MEG-009).
+Sensitive information belongs in Security Architecture ([MEG-009](../meg-009-security-architecture/index.md)).
 
 ---
 
@@ -600,23 +614,3 @@ A healthy platform should never leave operators asking:
 > **What just happened?**
 
 It should already have the answer.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`00-document-control.md`
-
-**Next File**
-
-`02-logging.md`

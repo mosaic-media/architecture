@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/11-opentelemetry.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # OpenTelemetry
@@ -53,22 +53,24 @@ OpenTelemetry owns:
 
 The platform should never confuse:
 
-```
-Observability
+```mermaid
+flowchart TD
 
-↓
+N1["Observability"]
+N2["Architecture"]
 
-Architecture
+N1 --> N2
 ```
 
 with
 
-```
-OpenTelemetry
+```mermaid
+flowchart TD
 
-↓
+N1["OpenTelemetry"]
+N2["Implementation"]
 
-Implementation
+N1 --> N2
 ```
 
 ---
@@ -105,24 +107,19 @@ OpenTelemetry sits outside the Runtime.
 
 Conceptually.
 
-```text
-Runtime
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime"]
+N2["Observability Layer"]
+N3["OpenTelemetry"]
+N4["Exporter"]
+N5["Monitoring Platform"]
 
-Observability Layer
-
-↓
-
-OpenTelemetry
-
-↓
-
-Exporter
-
-↓
-
-Monitoring Platform
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 The Runtime should never know which monitoring platform ultimately consumes its telemetry.
@@ -217,12 +214,13 @@ Every Runtime instance SHOULD expose resource metadata.
 
 Examples include:
 
-```text
-service.name
+```mermaid
+flowchart TD
 
-↓
+N1["service.name"]
+N2["mosaic-runtime"]
 
-mosaic-runtime
+N1 --> N2
 ```
 
 ```text
@@ -612,23 +610,3 @@ and OpenTelemetry simply carries those signals safely to whatever operational ec
 That separation preserves one of the platform's most important architectural principles:
 
 > **The platform defines observability. External tooling consumes it.**
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`10-debugging.md`
-
-**Next File**
-
-`12-observability-guidelines.md`

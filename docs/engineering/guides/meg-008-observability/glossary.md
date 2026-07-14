@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/glossary.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Glossary
@@ -128,16 +128,15 @@ The process through which component health contributes to higher-level platform 
 
 Example.
 
-```text
-Blob Storage
+```mermaid
+flowchart TD
 
-↓
+N1["Blob Storage"]
+N2["Metadata Capability"]
+N3["Platform"]
 
-Metadata Capability
-
-↓
-
-Platform
+N1 --> N2
+N2 --> N3
 ```
 
 Health follows dependency relationships.
@@ -415,23 +414,3 @@ Definitions should remain consistent across:
 - Architecture Specifications
 
 Whenever observability terminology evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`14-contributor-guidance.md`
-
-**Next File**
-
-`references.md`

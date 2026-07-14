@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/index.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # MEG-008 — Observability
@@ -48,68 +48,41 @@ Not added afterwards.
 
 # Relationship to MEG
 
-```text
-MEG-001
+```mermaid
+flowchart TD
 
-↓
+N1["MEG-001"]
+N2["Engineering Standards"]
+N3["MEG-002"]
+N4["Reactive Runtime"]
+N5["MEG-003"]
+N6["Domain Model"]
+N7["MEG-004"]
+N8["Hexagonal Architecture"]
+N9["MEG-005"]
+N10["Capability Runtime"]
+N11["MEG-006"]
+N12["Module Platform"]
+N13["MEG-007"]
+N14["Storage Architecture"]
+N15["MEG-008"]
+N16["Observability"]
 
-Engineering Standards
-
-↓
-
-MEG-002
-
-↓
-
-Reactive Runtime
-
-↓
-
-MEG-003
-
-↓
-
-Domain Model
-
-↓
-
-MEG-004
-
-↓
-
-Hexagonal Architecture
-
-↓
-
-MEG-005
-
-↓
-
-Capability Runtime
-
-↓
-
-MEG-006
-
-↓
-
-Module Platform
-
-↓
-
-MEG-007
-
-↓
-
-Storage Architecture
-
-↓
-
-MEG-008
-
-↓
-
-Observability
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 --> N9
+N9 --> N10
+N10 --> N11
+N11 --> N12
+N12 --> N13
+N13 --> N14
+N14 --> N15
+N15 --> N16
 ```
 
 Previous specifications define:
@@ -186,24 +159,19 @@ Observability simply exposes them.
 
 Observability intentionally follows the platform architecture.
 
-```text
-Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Platform"]
+N2["Runtime"]
+N3["Capabilities"]
+N4["Storage"]
+N5["Infrastructure"]
 
-Runtime
-
-↓
-
-Capabilities
-
-↓
-
-Storage
-
-↓
-
-Infrastructure
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every layer exposes:
@@ -274,9 +242,9 @@ engineering/
 
         14-contributor-guidance.md
 
-        glossary.md
-
         references.md
+
+        glossary.md
 ```
 
 ---
@@ -285,19 +253,19 @@ engineering/
 
 Required reading:
 
-- MEG-001 Go Engineering Standards
-- MEG-002 Reactive Runtime
-- MEG-003 Domain-Driven Design
-- MEG-004 Hexagonal Architecture
-- MEG-005 Capability Runtime
-- MEG-006 Module Platform
-- MEG-007 Storage Architecture
+- [MEG-001 — Go Engineering Standards](../meg-001-go-engineering-standards/index.md)
+- [MEG-002 — Event-Driven Runtime](../meg-002-event-driven-runtime/index.md)
+- [MEG-003 — Domain-Driven Design](../meg-003-domain-driven-design/index.md)
+- [MEG-004 — Hexagonal Architecture](../meg-004-hexagonal-architecture/index.md)
+- [MEG-005 — Runtime Architecture](../meg-005-runtime-architecture/index.md)
+- [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
+- [MEG-007 — Storage Architecture](../meg-007-storage-architecture/index.md)
 
 Future companion specifications:
 
-- MEG-009 Security
-- MEG-010 Performance Engineering
-- MEG-011 Deployment Architecture
+- [MEG-009 — Security Architecture](../meg-009-security-architecture/index.md)
+- [MEG-010 — Performance Engineering](../meg-010-performance-engineering/index.md)
+- MEG-011 Deployment Architecture *(planned; not yet published)*
 
 ---
 
@@ -315,19 +283,3 @@ The Observability Architecture is intended to produce a platform that is:
 - Production ready
 
 The platform should answer operational questions through architecture rather than manual debugging.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Next File**
-
-`00-document-control.md`

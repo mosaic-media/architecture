@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/13-adrs.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Architectural Decision Guidance
@@ -15,7 +15,7 @@ Version: 0.2
 
 MEG-008 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries.
 
-The decision process itself is governed by **MDG-001 — Documentation Authority Guide**.
+The decision process itself is governed by **[MDG-001 — Documentation Authority Guide](../../documentation/mdg-001-documentation-authority-guide/index.md)**.
 
 This chapter avoids repeating ADR process rules so the documentation library has one authoritative home for decision practice.
 
@@ -36,9 +36,9 @@ Create or update a decision record when a change affects:
 
 ---
 
-# Relationship To MDG-001
+# Relationship To [MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md)
 
-MDG-001 defines ADR structure, review expectations, lifecycle and cross-reference rules.
+[MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md) defines ADR structure, review expectations, lifecycle and cross-reference rules.
 
 This guide should reference decisions that affect it, but should not redefine the decision process.
 

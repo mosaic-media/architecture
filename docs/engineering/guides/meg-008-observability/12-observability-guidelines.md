@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/12-observability-guidelines.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Observability Guidelines
@@ -60,28 +60,31 @@ Before adding telemetry ask:
 
 Examples.
 
-```
-Scheduler
+```mermaid
+flowchart TD
 
-↓
+N1["Scheduler"]
+N2["Scheduling Metrics"]
 
-Scheduling Metrics
-```
-
-```
-Worker Manager
-
-↓
-
-Worker Metrics
+N1 --> N2
 ```
 
+```mermaid
+flowchart TD
+
+N1["Worker Manager"]
+N2["Worker Metrics"]
+
+N1 --> N2
 ```
-Blob Storage
 
-↓
+```mermaid
+flowchart TD
 
-Blob Metrics
+N1["Blob Storage"]
+N2["Blob Metrics"]
+
+N1 --> N2
 ```
 
 Telemetry ownership should always mirror architectural ownership.
@@ -118,12 +121,14 @@ Before adding a log ask:
 Good.
 
 ```
+
 Capability Activated
 ```
 
 Poor.
 
 ```
+
 Entered Function X
 ```
 
@@ -301,12 +306,14 @@ Maintain a clear distinction.
 Business.
 
 ```
+
 Playback Completed
 ```
 
 Operations.
 
 ```
+
 Playback Capability Activated
 ```
 
@@ -520,7 +527,7 @@ The remaining documents describe:
 - terminology
 - references
 
-Together, MEG-001 through MEG-008 now define:
+Together, [MEG-001](../meg-001-go-engineering-standards/index.md) through MEG-008 now define:
 
 - engineering
 - execution
@@ -550,23 +557,3 @@ Within Mosaic, every Runtime component should naturally explain:
 without exposing unnecessary implementation detail.
 
 When architecture and observability become reflections of one another, operating the platform becomes dramatically simpler.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`11-opentelemetry.md`
-
-**Next File**
-
-`13-adrs.md`

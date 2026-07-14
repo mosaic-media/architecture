@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/14-contributor-guidance.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Contributor Guidance
@@ -124,20 +124,17 @@ Create spans around architectural boundaries.
 
 Examples.
 
-```
-Runtime Service
+```mermaid
+flowchart TD
 
-↓
+N1["Runtime Service"]
+N2["Capability"]
+N3["Repository"]
+N4["Storage"]
 
-Capability
-
-↓
-
-Repository
-
-↓
-
-Storage
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Avoid tracing:
@@ -404,36 +401,25 @@ Not quantity.
 
 New contributors SHOULD study MEG-008 in the following order.
 
-```text
-Observability Philosophy
+```mermaid
+flowchart TD
 
-↓
+N1["Observability Philosophy"]
+N2["Logging"]
+N3["Metrics"]
+N4["Tracing"]
+N5["Health"]
+N6["Diagnostics"]
+N7["Alerting"]
+N8["OpenTelemetry"]
 
-Logging
-
-↓
-
-Metrics
-
-↓
-
-Tracing
-
-↓
-
-Health
-
-↓
-
-Diagnostics
-
-↓
-
-Alerting
-
-↓
-
-OpenTelemetry
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
 ```
 
 Understanding ownership first makes every later observability concept significantly easier.
@@ -503,23 +489,3 @@ Every new Runtime component should naturally explain:
 Within Mosaic, observability should emerge from architecture itself.
 
 The clearer the architecture becomes, the easier the platform becomes to operate.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`13-adrs.md`
-
-**Next File**
-
-`glossary.md`

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/05-health-model.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Health Model
@@ -15,7 +15,7 @@ Version: 0.2
 
 MEG-008 explains how engineers build observability into Mosaic.
 
-Operational health interpretation is defined by **MOP-001 — Observability Operations**.
+Operational health interpretation is defined by **[MOP-001 — Observability Operations](../../operations/mop-001-observability-operations/index.md)**.
 
 This chapter describes the engineering work required to support that model.
 
@@ -47,4 +47,4 @@ Health implementations should be:
 
 Operational authority is provided by:
 
-- MOP-001 — Observability Operations
+- [MOP-001 — Observability Operations](../../operations/mop-001-observability-operations/index.md)

@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/09-alerting.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Alerting
@@ -13,7 +13,7 @@ Version: 0.2
 
 # Purpose
 
-MOP-001 defines operational alert handling.
+[MOP-001](../../operations/mop-001-observability-operations/index.md) defines operational alert handling.
 
 This chapter explains how engineers should produce actionable alert signals.
 
@@ -46,4 +46,4 @@ Alerts should include:
 
 Operational authority is provided by:
 
-- MOP-001 — Observability Operations
+- [MOP-001 — Observability Operations](../../operations/mop-001-observability-operations/index.md)

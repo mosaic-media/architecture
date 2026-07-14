@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/06-runtime-diagnostics.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Runtime Diagnostics
@@ -13,7 +13,7 @@ Version: 0.2
 
 # Purpose
 
-MOP-001 defines how diagnostics are used operationally.
+[MOP-001](../../operations/mop-001-observability-operations/index.md) defines how diagnostics are used operationally.
 
 This chapter explains how engineers should provide diagnostic surfaces without exposing implementation internals.
 
@@ -52,4 +52,4 @@ Diagnostic APIs should be:
 
 Operational authority is provided by:
 
-- MOP-001 — Observability Operations
+- [MOP-001 — Observability Operations](../../operations/mop-001-observability-operations/index.md)

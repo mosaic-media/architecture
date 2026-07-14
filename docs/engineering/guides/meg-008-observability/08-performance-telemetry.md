@@ -2,7 +2,7 @@
 File: docs/engineering/guides/meg-008-observability/08-performance-telemetry.md
 Document: MEG-008
 Status: Draft
-Version: 0.2
+Version: 0.4
 -->
 
 # Performance Telemetry
@@ -60,24 +60,19 @@ So should telemetry.
 
 Performance naturally follows the Runtime Architecture.
 
-```text
-Platform
+```mermaid
+flowchart TD
 
-↓
+N1["Platform"]
+N2["Runtime"]
+N3["Capabilities"]
+N4["Repositories"]
+N5["Storage"]
 
-Runtime
-
-↓
-
-Capabilities
-
-↓
-
-Repositories
-
-↓
-
-Storage
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Every architectural layer exposes performance telemetry independently.
@@ -243,24 +238,19 @@ Startup SHOULD expose stage timings.
 
 Examples include:
 
-```text
-Configuration
+```mermaid
+flowchart TD
 
-↓
+N1["Configuration"]
+N2["Runtime Kernel"]
+N3["Capability Registration"]
+N4["Dependency Resolution"]
+N5["Activation"]
 
-Runtime Kernel
-
-↓
-
-Capability Registration
-
-↓
-
-Dependency Resolution
-
-↓
-
-Activation
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
 ```
 
 Slow startup should identify:
@@ -270,6 +260,7 @@ The architectural stage responsible.
 Not merely:
 
 ```
+
 Startup Slow
 ```
 
@@ -337,16 +328,15 @@ Capacity differs from utilisation.
 
 Example.
 
-```text
-Worker Pool
+```mermaid
+flowchart TD
 
-↓
+N1["Worker Pool"]
+N2["32 Workers"]
+N3["27 Active"]
 
-32 Workers
-
-↓
-
-27 Active
+N1 --> N2
+N2 --> N3
 ```
 
 Utilisation.
@@ -387,16 +377,15 @@ Performance should always be interpreted relative to historical baselines.
 
 Example.
 
-```
-Capability Activation
+```mermaid
+flowchart TD
 
-↓
+N1["Capability Activation"]
+N2["180 ms"]
+N3["Normally 60 ms"]
 
-180 ms
-
-↓
-
-Normally 60 ms
+N1 --> N2
+N2 --> N3
 ```
 
 Raw numbers rarely explain behaviour.
@@ -414,18 +403,21 @@ Examples.
 Startup.
 
 ```
+
 <10 Seconds
 ```
 
 Capability activation.
 
 ```
+
 <250 ms
 ```
 
 Repository load.
 
 ```
+
 <50 ms
 ```
 
@@ -460,20 +452,17 @@ Performance telemetry should correlate naturally with:
 
 Example.
 
-```
-High Repository Latency
+```mermaid
+flowchart TD
 
-↓
+N1["High Repository Latency"]
+N2["Trace"]
+N3["Storage Span"]
+N4["PostgreSQL"]
 
-Trace
-
-↓
-
-Storage Span
-
-↓
-
-PostgreSQL
+N1 --> N2
+N2 --> N3
+N3 --> N4
 ```
 
 Performance should explain architecture.
@@ -601,23 +590,3 @@ Within Mosaic, every performance measurement should reinforce architectural owne
 Performance should become understandable.
 
 Not mysterious.
-
----
-
-# Review Status
-
-**Status**
-
-Draft
-
-**Owner**
-
-Lead Software Architect
-
-**Previous File**
-
-`07-storage-observability.md`
-
-**Next File**
-
-`09-alerting.md`
