@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/05-runtime-hierarchy.md
+File: docs/design/system/mds-006-composition-engine/05-runtime-hierarchy.md
 Document: MDS-006
 Chapter: 05
 Title: Runtime Hierarchy

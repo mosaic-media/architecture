@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-002 Event-Driven Runtime/08-publishers.md
+File: docs/engineering/guides/meg-002-event-driven-runtime/08-publishers.md
 Document: MEG-002
 Status: Draft
 Version: 0.1

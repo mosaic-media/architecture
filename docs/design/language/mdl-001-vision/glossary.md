@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/glossary.md
+File: docs/design/language/mdl-001-vision/glossary.md
 Document: MDL-001
 Title: Glossary
 Status: Draft

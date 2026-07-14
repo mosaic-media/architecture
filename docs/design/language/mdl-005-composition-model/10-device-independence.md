@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/10-device-independence.md
+File: docs/design/language/mdl-005-composition-model/10-device-independence.md
 Document: MDL-005
 Chapter: 10
 Title: Device Independence

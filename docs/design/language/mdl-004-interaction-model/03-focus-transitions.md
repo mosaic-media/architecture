@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/03-focus-transitions.md
+File: docs/design/language/mdl-004-interaction-model/03-focus-transitions.md
 Document: MDL-004
 Chapter: 03
 Title: Focus Transitions

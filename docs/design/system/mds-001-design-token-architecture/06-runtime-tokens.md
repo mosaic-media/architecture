@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/06-runtime-tokens.md
+File: docs/design/system/mds-001-design-token-architecture/06-runtime-tokens.md
 Document: MDS-001
 Chapter: 06
 Title: Runtime Tokens

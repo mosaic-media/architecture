@@ -1,5 +1,5 @@
 <!--
-File: engineering/documentation/MDG-001 Documentation Authority Guide/05-review-process.md
+File: docs/engineering/documentation/mdg-001-documentation-authority-guide/05-review-process.md
 Document: MDG-001
 Status: Draft
 Version: 0.1

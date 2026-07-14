@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/00-document-control.md
+File: docs/engineering/guides/meg-009-security-architecture/00-document-control.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

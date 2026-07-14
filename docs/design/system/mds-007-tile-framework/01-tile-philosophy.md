@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/01-tile-philosophy.md
+File: docs/design/system/mds-007-tile-framework/01-tile-philosophy.md
 Document: MDS-007
 Chapter: 01
 Title: Tile Philosophy

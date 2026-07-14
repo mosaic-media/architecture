@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-007 Storage Architecture/03-postgresql.md
+File: docs/engineering/guides/meg-007-storage-architecture/03-postgresql.md
 Document: MEG-007
 Status: Draft
 Version: 0.1

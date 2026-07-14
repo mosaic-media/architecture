@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/11-governance.md
+File: docs/design/system/mds-003-material-system/11-governance.md
 Document: MDS-003
 Chapter: 11
 Title: Material System Governance

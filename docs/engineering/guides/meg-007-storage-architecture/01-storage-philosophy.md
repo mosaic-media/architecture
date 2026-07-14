@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-007 Storage Architecture/01-storage-philosophy.md
+File: docs/engineering/guides/meg-007-storage-architecture/01-storage-philosophy.md
 Document: MEG-007
 Status: Draft
 Version: 0.1

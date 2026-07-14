@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-003 Domain-Driven Design/16-adrs.md
+File: docs/engineering/guides/meg-003-domain-driven-design/16-adrs.md
 Document: MEG-003
 Status: Draft
 Version: 0.1

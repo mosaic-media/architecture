@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-005 Runtime Architecture/13-runtime-modelling-guidelines.md
+File: docs/engineering/guides/meg-005-runtime-architecture/13-runtime-modelling-guidelines.md
 Document: MEG-005
 Status: Draft
 Version: 0.1

@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-001 Go Engineering Standards/09-context-and-cancellation.md
+File: docs/engineering/guides/meg-001-go-engineering-standards/09-context-and-cancellation.md
 Document: MEG-001
 Status: Draft
 Version: 0.1

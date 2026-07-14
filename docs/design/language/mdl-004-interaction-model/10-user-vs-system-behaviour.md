@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/10-user-vs-system-behaviour.md
+File: docs/design/language/mdl-004-interaction-model/10-user-vs-system-behaviour.md
 Document: MDL-004
 Chapter: 10
 Title: User Behaviour vs System Behaviour

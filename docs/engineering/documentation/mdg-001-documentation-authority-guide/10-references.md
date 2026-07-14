@@ -1,5 +1,5 @@
 <!--
-File: engineering/documentation/MDG-001 Documentation Authority Guide/10-references.md
+File: docs/engineering/documentation/mdg-001-documentation-authority-guide/10-references.md
 Document: MDG-001
 Status: Draft
 Version: 0.1

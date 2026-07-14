@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/09-runtime-rendering.md
+File: docs/design/system/mds-008-component-library/09-runtime-rendering.md
 Document: MDS-008
 Chapter: 09
 Title: Runtime Rendering

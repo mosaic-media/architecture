@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/10-design-review-checklist.md
+File: docs/design/language/mdl-001-vision/10-design-review-checklist.md
 Document: MDL-001
 Chapter: 10
 Title: Design Review Checklist

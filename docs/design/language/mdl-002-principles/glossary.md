@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/glossary.md
+File: docs/design/language/mdl-002-principles/glossary.md
 Document: MDL-002
 Title: Glossary
 Status: Draft

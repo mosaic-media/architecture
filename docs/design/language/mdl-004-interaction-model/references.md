@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/references.md
+File: docs/design/language/mdl-004-interaction-model/references.md
 Document: MDL-004
 Title: References
 Status: Draft

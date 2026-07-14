@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-008 Observability/07-storage-observability.md
+File: docs/engineering/guides/meg-008-observability/07-storage-observability.md
 Document: MEG-008
 Status: Draft
 Version: 0.1

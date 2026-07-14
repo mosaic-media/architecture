@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/09-platform-typography.md
+File: docs/design/system/mds-004-typography-system/09-platform-typography.md
 Document: MDS-004
 Chapter: 09
 Title: Platform Typography

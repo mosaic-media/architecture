@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/05-composition-tokens.md
+File: docs/design/system/mds-001-design-token-architecture/05-composition-tokens.md
 Document: MDS-001
 Chapter: 05
 Title: Composition Tokens

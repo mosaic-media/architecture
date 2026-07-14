@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/06-overlay-material.md
+File: docs/design/system/mds-003-material-system/06-overlay-material.md
 Document: MDS-003
 Chapter: 06
 Title: Overlay Material

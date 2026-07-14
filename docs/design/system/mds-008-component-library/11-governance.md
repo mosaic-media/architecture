@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/11-governance.md
+File: docs/design/system/mds-008-component-library/11-governance.md
 Document: MDS-008
 Chapter: 11
 Title: Component Library Governance

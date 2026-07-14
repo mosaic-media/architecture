@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/glossary.md
+File: docs/design/language/mdl-004-interaction-model/glossary.md
 Document: MDL-004
 Title: Glossary
 Status: Draft

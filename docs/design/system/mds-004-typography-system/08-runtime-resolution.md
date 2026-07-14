@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/08-runtime-resolution.md
+File: docs/design/system/mds-004-typography-system/08-runtime-resolution.md
 Document: MDS-004
 Chapter: 08
 Title: Runtime Typography Resolution

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/04-component-lifecycle.md
+File: docs/design/system/mds-008-component-library/04-component-lifecycle.md
 Document: MDS-008
 Chapter: 04
 Title: Component Lifecycle

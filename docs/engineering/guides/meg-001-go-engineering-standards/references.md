@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-001 Go Engineering Standards/references.md
+File: docs/engineering/guides/meg-001-go-engineering-standards/references.md
 Document: MEG-001
 Status: Draft
 Version: 0.1

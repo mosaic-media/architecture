@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/glossary.md
+File: docs/design/system/mds-006-composition-engine/glossary.md
 Document: MDS-006
 Title: Glossary
 Status: Draft

@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-004 Hexagonal Architecture/13-modelling-guidelines.md
+File: docs/engineering/guides/meg-004-hexagonal-architecture/13-modelling-guidelines.md
 Document: MEG-004
 Status: Draft
 Version: 0.1

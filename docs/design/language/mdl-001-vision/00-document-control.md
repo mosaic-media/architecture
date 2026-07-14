@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/00-document-control.md
+File: docs/design/language/mdl-001-vision/00-document-control.md
 Document: MDL-001
 Status: Draft
 Version: 0.1

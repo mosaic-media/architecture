@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/02-hierarchy.md
+File: docs/design/language/mdl-005-composition-model/02-hierarchy.md
 Document: MDL-005
 Chapter: 02
 Title: Hierarchy

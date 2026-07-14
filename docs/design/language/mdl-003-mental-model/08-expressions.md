@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/08-expressions.md
+File: docs/design/language/mdl-003-mental-model/08-expressions.md
 Document: MDL-003
 Chapter: 08
 Title: Expressions

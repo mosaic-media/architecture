@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/12-adrs.md
+File: docs/design/language/mdl-005-composition-model/12-adrs.md
 Document: MDL-005
 Chapter: 12
 Title: Architectural Decision Records

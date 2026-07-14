@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/00-document-control.md
+File: docs/design/language/mdl-004-interaction-model/00-document-control.md
 Document: MDL-004
 Title: Interaction Model
 Status: Draft

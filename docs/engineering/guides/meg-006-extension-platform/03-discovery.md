@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-006 Extension Platform/03-discovery.md
+File: docs/engineering/guides/meg-006-extension-platform/03-discovery.md
 Document: MEG-006
 Status: Draft
 Version: 0.1

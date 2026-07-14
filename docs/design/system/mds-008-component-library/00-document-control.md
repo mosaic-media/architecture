@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/00-document-control.md
+File: docs/design/system/mds-008-component-library/00-document-control.md
 Document: MDS-008
 Title: Component Library
 Status: Draft

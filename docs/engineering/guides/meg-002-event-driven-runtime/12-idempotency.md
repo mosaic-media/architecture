@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-002 Event-Driven Runtime/12-idempotency.md
+File: docs/engineering/guides/meg-002-event-driven-runtime/12-idempotency.md
 Document: MEG-002
 Status: Draft
 Version: 0.1

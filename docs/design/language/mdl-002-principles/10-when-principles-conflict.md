@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/10-when-principles-conflict.md
+File: docs/design/language/mdl-002-principles/10-when-principles-conflict.md
 Document: MDL-002
 Chapter: 10
 Title: When Principles Conflict

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/07-token-resolution.md
+File: docs/design/system/mds-001-design-token-architecture/07-token-resolution.md
 Document: MDS-001
 Chapter: 07
 Title: Token Resolution

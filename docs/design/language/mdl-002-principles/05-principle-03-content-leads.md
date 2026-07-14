@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/05-principle-03-content-leads.md
+File: docs/design/language/mdl-002-principles/05-principle-03-content-leads.md
 Document: MDL-002
 Chapter: 05
 Principle: 03

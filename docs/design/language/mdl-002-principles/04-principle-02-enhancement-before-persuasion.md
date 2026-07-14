@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/04-principle-02-enhancement-before-persuasion.md
+File: docs/design/language/mdl-002-principles/04-principle-02-enhancement-before-persuasion.md
 Document: MDL-002
 Chapter: 04
 Principle: 02

@@ -1,5 +1,5 @@
 <!--
-File: engineering/documentation/MDG-001 Documentation Authority Guide/00-document-control.md
+File: docs/engineering/documentation/mdg-001-documentation-authority-guide/00-document-control.md
 Document: MDG-001
 Status: Draft
 Version: 0.1

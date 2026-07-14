@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/12-adrs.md
+File: docs/design/system/mds-001-design-token-architecture/12-adrs.md
 Document: MDS-001
 Chapter: 12
 Title: Architectural Decision Records

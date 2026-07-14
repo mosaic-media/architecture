@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/glossary.md
+File: docs/design/language/mdl-003-mental-model/glossary.md
 Document: MDL-003
 Title: Glossary
 Status: Draft

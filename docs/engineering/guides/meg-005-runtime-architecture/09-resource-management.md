@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-005 Runtime Architecture/09-resource-management.md
+File: docs/engineering/guides/meg-005-runtime-architecture/09-resource-management.md
 Document: MEG-005
 Status: Draft
 Version: 0.1

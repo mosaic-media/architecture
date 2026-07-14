@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/11-governance.md
+File: docs/design/system/mds-001-design-token-architecture/11-governance.md
 Document: MDS-001
 Chapter: 11
 Title: Token Governance

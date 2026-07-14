@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/13-contributor-guidance.md
+File: docs/design/language/mdl-002-principles/13-contributor-guidance.md
 Document: MDL-002
 Chapter: 13
 Title: Contributor Guidance

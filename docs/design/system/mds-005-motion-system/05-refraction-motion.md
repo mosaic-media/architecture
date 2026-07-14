@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/05-refraction-motion.md
+File: docs/design/system/mds-005-motion-system/05-refraction-motion.md
 Document: MDS-005
 Chapter: 05
 Title: Refraction Motion

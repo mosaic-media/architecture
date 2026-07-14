@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/08-runtime-tile-resolution.md
+File: docs/design/system/mds-007-tile-framework/08-runtime-tile-resolution.md
 Document: MDS-007
 Chapter: 08
 Title: Runtime Tile Resolution

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/10-runtime-synthesis.md
+File: docs/design/system/mds-002-colour-system/10-runtime-synthesis.md
 Document: MDS-002
 Chapter: 10
 Title: Runtime Synthesis

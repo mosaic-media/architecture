@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/04-acrylic.md
+File: docs/design/system/mds-003-material-system/04-acrylic.md
 Document: MDS-003
 Chapter: 04
 Title: Acrylic

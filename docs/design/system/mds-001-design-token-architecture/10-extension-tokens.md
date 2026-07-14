@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/10-extension-tokens.md
+File: docs/design/system/mds-001-design-token-architecture/10-extension-tokens.md
 Document: MDS-001
 Chapter: 10
 Title: Extension Tokens

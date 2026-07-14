@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/README.md
+File: docs/engineering/guides/meg-009-security-architecture/index.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

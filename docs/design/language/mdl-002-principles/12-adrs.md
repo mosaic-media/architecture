@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/12-adrs.md
+File: docs/design/language/mdl-002-principles/12-adrs.md
 Document: MDL-002
 Chapter: 12
 Title: Architectural Decision Records

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/04-semantic-tokens.md
+File: docs/design/system/mds-001-design-token-architecture/04-semantic-tokens.md
 Document: MDS-001
 Chapter: 04
 Title: Semantic Tokens

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/10-tile-orchestration.md
+File: docs/design/system/mds-007-tile-framework/10-tile-orchestration.md
 Document: MDS-007
 Chapter: 10
 Title: Tile Orchestration

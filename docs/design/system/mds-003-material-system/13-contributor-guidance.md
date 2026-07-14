@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/13-contributor-guidance.md
+File: docs/design/system/mds-003-material-system/13-contributor-guidance.md
 Document: MDS-003
 Chapter: 13
 Title: Contributor Guidance

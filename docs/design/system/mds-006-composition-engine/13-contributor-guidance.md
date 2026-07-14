@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/13-contributor-guidance.md
+File: docs/design/system/mds-006-composition-engine/13-contributor-guidance.md
 Document: MDS-006
 Chapter: 13
 Title: Contributor Guidance

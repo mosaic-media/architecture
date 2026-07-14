@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-005 Runtime Architecture/00-document-control.md
+File: docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md
 Document: MEG-005
 Status: Draft
 Version: 0.1

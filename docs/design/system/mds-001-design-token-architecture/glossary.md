@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/glossary.md
+File: docs/design/system/mds-001-design-token-architecture/glossary.md
 Document: MDS-001
 Title: Glossary
 Status: Draft

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/12-adrs.md
+File: docs/design/system/mds-008-component-library/12-adrs.md
 Document: MDS-008
 Chapter: 12
 Title: Architectural Decision Records

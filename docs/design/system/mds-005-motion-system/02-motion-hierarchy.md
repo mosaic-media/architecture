@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/02-motion-hierarchy.md
+File: docs/design/system/mds-005-motion-system/02-motion-hierarchy.md
 Document: MDS-005
 Chapter: 02
 Title: Motion Hierarchy

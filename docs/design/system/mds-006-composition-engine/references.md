@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/references.md
+File: docs/design/system/mds-006-composition-engine/references.md
 Document: MDS-006
 Title: References
 Status: Draft

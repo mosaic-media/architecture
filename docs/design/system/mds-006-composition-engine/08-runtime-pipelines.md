@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/08-runtime-pipelines.md
+File: docs/design/system/mds-006-composition-engine/08-runtime-pipelines.md
 Document: MDS-006
 Chapter: 08
 Title: Runtime Pipelines

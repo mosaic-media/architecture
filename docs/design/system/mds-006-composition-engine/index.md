@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/README.md
+File: docs/design/system/mds-006-composition-engine/index.md
 Document: MDS-006
 Status: Draft
 Version: 0.1

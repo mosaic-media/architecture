@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-002 Event-Driven Runtime/03-event-model.md
+File: docs/engineering/guides/meg-002-event-driven-runtime/03-event-model.md
 Document: MEG-002
 Status: Draft
 Version: 0.1

@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/11-governance.md
+File: docs/design/language/mdl-002-principles/11-governance.md
 Document: MDL-002
 Chapter: 11
 Title: Principle Governance

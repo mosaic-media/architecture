@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-008 Observability/06-runtime-diagnostics.md
+File: docs/engineering/guides/meg-008-observability/06-runtime-diagnostics.md
 Document: MEG-008
 Status: Draft
 Version: 0.1

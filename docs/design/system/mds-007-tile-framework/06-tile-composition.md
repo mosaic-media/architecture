@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/06-tile-composition.md
+File: docs/design/system/mds-007-tile-framework/06-tile-composition.md
 Document: MDS-007
 Chapter: 06
 Title: Tile Composition

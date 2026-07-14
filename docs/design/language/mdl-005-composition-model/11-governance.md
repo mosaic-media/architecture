@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/11-governance.md
+File: docs/design/language/mdl-005-composition-model/11-governance.md
 Document: MDL-005
 Chapter: 11
 Title: Composition Model Governance

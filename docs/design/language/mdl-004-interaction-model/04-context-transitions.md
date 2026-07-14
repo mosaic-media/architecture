@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/04-context-transitions.md
+File: docs/design/language/mdl-004-interaction-model/04-context-transitions.md
 Document: MDL-004
 Chapter: 04
 Title: Context Transitions

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/01-material-philosophy.md
+File: docs/design/system/mds-003-material-system/01-material-philosophy.md
 Document: MDS-003
 Chapter: 01
 Title: Material Philosophy

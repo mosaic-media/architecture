@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/04-hero.md
+File: docs/design/language/mdl-005-composition-model/04-hero.md
 Document: MDL-005
 Chapter: 04
 Title: Hero

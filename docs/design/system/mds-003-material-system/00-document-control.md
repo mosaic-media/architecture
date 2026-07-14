@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/00-document-control.md
+File: docs/design/system/mds-003-material-system/00-document-control.md
 Document: MDS-003
 Title: Material System
 Status: Draft

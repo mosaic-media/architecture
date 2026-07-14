@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/07-data-protection.md
+File: docs/engineering/guides/meg-009-security-architecture/07-data-protection.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

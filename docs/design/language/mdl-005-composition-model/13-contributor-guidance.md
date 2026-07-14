@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/13-contributor-guidance.md
+File: docs/design/language/mdl-005-composition-model/13-contributor-guidance.md
 Document: MDL-005
 Chapter: 13
 Title: Contributor Guidance

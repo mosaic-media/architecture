@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/13-contributor-guidance.md
+File: docs/design/system/mds-001-design-token-architecture/13-contributor-guidance.md
 Document: MDS-001
 Chapter: 13
 Title: Contributor Guidance

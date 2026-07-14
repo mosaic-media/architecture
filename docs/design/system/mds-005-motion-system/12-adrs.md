@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/12-adrs.md
+File: docs/design/system/mds-005-motion-system/12-adrs.md
 Document: MDS-005
 Chapter: 12
 Title: Architectural Decision Records

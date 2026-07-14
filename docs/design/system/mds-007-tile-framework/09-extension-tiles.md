@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/09-extension-tiles.md
+File: docs/design/system/mds-007-tile-framework/09-extension-tiles.md
 Document: MDS-007
 Chapter: 09
 Title: Extension Tiles

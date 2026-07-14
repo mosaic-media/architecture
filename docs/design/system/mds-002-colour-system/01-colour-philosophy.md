@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/01-colour-philosophy.md
+File: docs/design/system/mds-002-colour-system/01-colour-philosophy.md
 Document: MDS-002
 Chapter: 01
 Title: Colour Philosophy

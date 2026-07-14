@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/05-artwork-colour-extraction.md
+File: docs/design/system/mds-002-colour-system/05-artwork-colour-extraction.md
 Document: MDS-002
 Chapter: 05
 Title: Artwork Colour Extraction

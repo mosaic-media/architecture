@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-003 Domain-Driven Design/references.md
+File: docs/engineering/guides/meg-003-domain-driven-design/references.md
 Document: MEG-003
 Status: Draft
 Version: 0.1

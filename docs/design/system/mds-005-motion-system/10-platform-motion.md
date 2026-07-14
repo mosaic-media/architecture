@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/10-platform-motion.md
+File: docs/design/system/mds-005-motion-system/10-platform-motion.md
 Document: MDS-005
 Chapter: 10
 Title: Platform Motion

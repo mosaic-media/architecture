@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/03-primitive-tokens.md
+File: docs/design/system/mds-001-design-token-architecture/03-primitive-tokens.md
 Document: MDS-001
 Chapter: 03
 Title: Primitive Tokens

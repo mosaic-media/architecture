@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/09-presentation.md
+File: docs/design/language/mdl-003-mental-model/09-presentation.md
 Document: MDL-003
 Chapter: 09
 Title: Presentation

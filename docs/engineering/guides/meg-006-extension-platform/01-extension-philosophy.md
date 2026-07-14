@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-006 Extension Platform/01-extension-philosophy.md
+File: docs/engineering/guides/meg-006-extension-platform/01-extension-philosophy.md
 Document: MEG-006
 Status: Draft
 Version: 0.1

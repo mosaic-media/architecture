@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/01-what-is-a-composition.md
+File: docs/design/language/mdl-005-composition-model/01-what-is-a-composition.md
 Document: MDL-005
 Chapter: 01
 Title: What Is A Composition?

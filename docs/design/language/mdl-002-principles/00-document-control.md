@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/00-document-control.md
+File: docs/design/language/mdl-002-principles/00-document-control.md
 Document: MDL-002
 Title: Design Principles
 Status: Draft

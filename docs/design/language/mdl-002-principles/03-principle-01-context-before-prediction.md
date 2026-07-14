@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/03-principle-01-context-before-prediction.md
+File: docs/design/language/mdl-002-principles/03-principle-01-context-before-prediction.md
 Document: MDL-002
 Chapter: 03
 Principle: 01

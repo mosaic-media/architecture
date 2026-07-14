@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/13-contributor-guidance.md
+File: docs/design/system/mds-004-typography-system/13-contributor-guidance.md
 Document: MDS-004
 Chapter: 13
 Title: Contributor Guidance

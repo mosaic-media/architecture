@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/references.md
+File: docs/design/system/mds-007-tile-framework/references.md
 Document: MDS-007
 Title: References
 Status: Draft

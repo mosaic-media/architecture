@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/07-motion-curves.md
+File: docs/design/system/mds-005-motion-system/07-motion-curves.md
 Document: MDS-005
 Chapter: 07
 Title: Motion Curves

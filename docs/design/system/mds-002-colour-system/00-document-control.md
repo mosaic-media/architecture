@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/00-document-control.md
+File: docs/design/system/mds-002-colour-system/00-document-control.md
 Document: MDS-002
 Title: Colour System
 Status: Draft

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/13-contributor-guidance.md
+File: docs/design/system/mds-007-tile-framework/13-contributor-guidance.md
 Document: MDS-007
 Chapter: 13
 Title: Contributor Guidance

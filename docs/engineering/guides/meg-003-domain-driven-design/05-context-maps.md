@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-003 Domain-Driven Design/05-context-maps.md
+File: docs/engineering/guides/meg-003-domain-driven-design/05-context-maps.md
 Document: MEG-003
 Status: Draft
 Version: 0.1

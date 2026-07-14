@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/12-adrs.md
+File: docs/design/language/mdl-004-interaction-model/12-adrs.md
 Document: MDL-004
 Chapter: 12
 Title: Architectural Decision Records

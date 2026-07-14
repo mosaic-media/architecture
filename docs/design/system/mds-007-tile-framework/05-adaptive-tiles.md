@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/05-adaptive-tiles.md
+File: docs/design/system/mds-007-tile-framework/05-adaptive-tiles.md
 Document: MDS-007
 Chapter: 05
 Title: Adaptive Tiles

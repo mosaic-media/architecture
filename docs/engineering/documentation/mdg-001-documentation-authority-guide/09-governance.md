@@ -1,5 +1,5 @@
 <!--
-File: engineering/documentation/MDG-001 Documentation Authority Guide/09-governance.md
+File: docs/engineering/documentation/mdg-001-documentation-authority-guide/09-governance.md
 Document: MDG-001
 Status: Draft
 Version: 0.1

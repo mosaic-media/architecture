@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/04-goals.md
+File: docs/design/language/mdl-001-vision/04-goals.md
 Document: MDL-001
 Chapter: 04
 Title: Goals

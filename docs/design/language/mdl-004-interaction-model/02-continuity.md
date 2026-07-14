@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/02-continuity.md
+File: docs/design/language/mdl-004-interaction-model/02-continuity.md
 Document: MDL-004
 Chapter: 02
 Title: Continuity

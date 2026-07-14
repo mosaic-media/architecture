@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/06-design-philosophy.md
+File: docs/design/language/mdl-001-vision/06-design-philosophy.md
 Document: MDL-001
 Chapter: 06
 Title: Design Philosophy

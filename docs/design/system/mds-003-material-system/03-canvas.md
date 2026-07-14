@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/03-canvas.md
+File: docs/design/system/mds-003-material-system/03-canvas.md
 Document: MDS-003
 Chapter: 03
 Title: Canvas

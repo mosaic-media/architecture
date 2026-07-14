@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/references.md
+File: docs/design/system/mds-004-typography-system/references.md
 Document: MDS-004
 Title: References
 Status: Draft

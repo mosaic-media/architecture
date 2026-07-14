@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/07-behaviour-orchestration.md
+File: docs/design/system/mds-006-composition-engine/07-behaviour-orchestration.md
 Document: MDS-006
 Chapter: 07
 Title: Behaviour Orchestration

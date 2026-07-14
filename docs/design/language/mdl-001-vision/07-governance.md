@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/07-governance.md
+File: docs/design/language/mdl-001-vision/07-governance.md
 Document: MDL-001
 Chapter: 07
 Title: Governance

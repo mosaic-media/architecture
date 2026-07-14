@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/06-relationships.md
+File: docs/design/language/mdl-003-mental-model/06-relationships.md
 Document: MDL-003
 Chapter: 06
 Title: Relationships

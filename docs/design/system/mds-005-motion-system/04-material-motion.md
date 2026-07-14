@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/04-material-motion.md
+File: docs/design/system/mds-005-motion-system/04-material-motion.md
 Document: MDS-005
 Chapter: 04
 Title: Material Motion

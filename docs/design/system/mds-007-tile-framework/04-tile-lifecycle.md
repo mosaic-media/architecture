@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/04-tile-lifecycle.md
+File: docs/design/system/mds-007-tile-framework/04-tile-lifecycle.md
 Document: MDS-007
 Chapter: 04
 Title: Tile Lifecycle

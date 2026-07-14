@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/03-focus.md
+File: docs/design/language/mdl-003-mental-model/03-focus.md
 Document: MDL-003
 Chapter: 03
 Title: Focus

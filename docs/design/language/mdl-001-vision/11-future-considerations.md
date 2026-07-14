@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/11-future-considerations.md
+File: docs/design/language/mdl-001-vision/11-future-considerations.md
 Document: MDL-001
 Chapter: 11
 Title: Future Considerations

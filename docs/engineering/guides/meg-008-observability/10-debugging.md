@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-008 Observability/10-debugging.md
+File: docs/engineering/guides/meg-008-observability/10-debugging.md
 Document: MEG-008
 Status: Draft
 Version: 0.1

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/02-brand-colours.md
+File: docs/design/system/mds-002-colour-system/02-brand-colours.md
 Document: MDS-002
 Chapter: 02
 Title: Brand Colours

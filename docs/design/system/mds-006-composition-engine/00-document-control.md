@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/00-document-control.md
+File: docs/design/system/mds-006-composition-engine/00-document-control.md
 Document: MDS-006
 Title: Composition Engine
 Status: Draft

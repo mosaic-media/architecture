@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/05-anchors.md
+File: docs/design/language/mdl-005-composition-model/05-anchors.md
 Document: MDL-005
 Chapter: 05
 Title: Anchors

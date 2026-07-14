@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/02-component-taxonomy.md
+File: docs/design/system/mds-008-component-library/02-component-taxonomy.md
 Document: MDS-008
 Chapter: 02
 Title: Component Taxonomy

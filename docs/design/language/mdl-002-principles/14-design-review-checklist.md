@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/14-design-review-checklist.md
+File: docs/design/language/mdl-002-principles/14-design-review-checklist.md
 Document: MDL-002
 Chapter: 14
 Title: Design Review Checklist

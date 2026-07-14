@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/03-expression-mapping.md
+File: docs/design/system/mds-007-tile-framework/03-expression-mapping.md
 Document: MDS-007
 Chapter: 03
 Title: Expression Mapping

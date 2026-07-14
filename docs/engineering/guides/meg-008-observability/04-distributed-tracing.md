@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-008 Observability/04-distributed-tracing.md
+File: docs/engineering/guides/meg-008-observability/04-distributed-tracing.md
 Document: MEG-008
 Status: Draft
 Version: 0.1

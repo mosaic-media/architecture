@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/07-composition.md
+File: docs/design/language/mdl-003-mental-model/07-composition.md
 Document: MDL-003
 Chapter: 07
 Title: Composition

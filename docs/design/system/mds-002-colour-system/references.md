@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/references.md
+File: docs/design/system/mds-002-colour-system/references.md
 Document: MDS-002
 Title: References
 Status: Draft

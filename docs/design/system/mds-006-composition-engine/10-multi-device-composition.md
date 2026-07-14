@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/10-multi-device-composition.md
+File: docs/design/system/mds-006-composition-engine/10-multi-device-composition.md
 Document: MDS-006
 Chapter: 10
 Title: Multi-Device Composition

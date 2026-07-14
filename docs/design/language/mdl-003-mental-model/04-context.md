@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/04-context.md
+File: docs/design/language/mdl-003-mental-model/04-context.md
 Document: MDL-003
 Chapter: 04
 Title: Context

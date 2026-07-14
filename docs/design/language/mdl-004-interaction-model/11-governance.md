@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/11-governance.md
+File: docs/design/language/mdl-004-interaction-model/11-governance.md
 Document: MDL-004
 Chapter: 11
 Title: Interaction Model Governance

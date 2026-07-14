@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/03-composition-solver.md
+File: docs/design/system/mds-006-composition-engine/03-composition-solver.md
 Document: MDS-006
 Chapter: 03
 Title: Composition Solver

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/references.md
+File: docs/design/system/mds-008-component-library/references.md
 Document: MDS-008
 Title: References
 Status: Draft

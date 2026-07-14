@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/02-tile-taxonomy.md
+File: docs/design/system/mds-007-tile-framework/02-tile-taxonomy.md
 Document: MDS-007
 Chapter: 02
 Title: Tile Taxonomy

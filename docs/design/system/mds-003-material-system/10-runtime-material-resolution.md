@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/10-runtime-material-resolution.md
+File: docs/design/system/mds-003-material-system/10-runtime-material-resolution.md
 Document: MDS-003
 Chapter: 10
 Title: Runtime Material Resolution

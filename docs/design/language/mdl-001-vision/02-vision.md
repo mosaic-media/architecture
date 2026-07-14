@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/02-vision.md
+File: docs/design/language/mdl-001-vision/02-vision.md
 Document: MDL-001
 Chapter: 02
 Title: Vision

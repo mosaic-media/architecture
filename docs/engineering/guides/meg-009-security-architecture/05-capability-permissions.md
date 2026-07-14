@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/05-capability-permissions.md
+File: docs/engineering/guides/meg-009-security-architecture/05-capability-permissions.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

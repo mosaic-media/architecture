@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-010 Performance Engineering/05-storage-performance.md
+File: docs/engineering/guides/meg-010-performance-engineering/05-storage-performance.md
 Document: MEG-010
 Status: Draft
 Version: 0.1

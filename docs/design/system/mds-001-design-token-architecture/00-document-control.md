@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/00-document-control.md
+File: docs/design/system/mds-001-design-token-architecture/00-document-control.md
 Document: MDS-001
 Title: Design Token Architecture
 Status: Draft

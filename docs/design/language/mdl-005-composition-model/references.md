@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/references.md
+File: docs/design/language/mdl-005-composition-model/references.md
 Document: MDL-005
 Title: References
 Status: Draft

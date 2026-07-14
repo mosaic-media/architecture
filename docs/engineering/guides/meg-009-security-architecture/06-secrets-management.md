@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/06-secrets-management.md
+File: docs/engineering/guides/meg-009-security-architecture/06-secrets-management.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

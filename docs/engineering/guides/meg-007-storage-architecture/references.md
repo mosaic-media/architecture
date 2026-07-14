@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-007 Storage Architecture/references.md
+File: docs/engineering/guides/meg-007-storage-architecture/references.md
 Document: MEG-007
 Status: Draft
 Version: 0.1

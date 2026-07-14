@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/05-hero-material.md
+File: docs/design/system/mds-003-material-system/05-hero-material.md
 Document: MDS-003
 Chapter: 05
 Title: Hero Material

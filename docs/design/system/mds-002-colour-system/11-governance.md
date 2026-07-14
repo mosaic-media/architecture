@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/11-governance.md
+File: docs/design/system/mds-002-colour-system/11-governance.md
 Document: MDS-002
 Chapter: 11
 Title: Colour System Governance

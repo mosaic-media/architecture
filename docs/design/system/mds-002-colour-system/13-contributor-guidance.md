@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/13-contributor-guidance.md
+File: docs/design/system/mds-002-colour-system/13-contributor-guidance.md
 Document: MDS-002
 Chapter: 13
 Title: Contributor Guidance

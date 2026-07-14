@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-001 Go Engineering Standards/06-interfaces-and-abstraction.md
+File: docs/engineering/guides/meg-001-go-engineering-standards/06-interfaces-and-abstraction.md
 Document: MEG-001
 Status: Draft
 Version: 0.1

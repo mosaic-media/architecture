@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/07-user-flow.md
+File: docs/design/language/mdl-004-interaction-model/07-user-flow.md
 Document: MDL-004
 Chapter: 07
 Title: User Flow

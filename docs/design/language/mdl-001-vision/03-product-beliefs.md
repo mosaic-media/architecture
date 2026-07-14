@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/03-product-beliefs.md
+File: docs/design/language/mdl-001-vision/03-product-beliefs.md
 Document: MDL-001
 Chapter: 03
 Title: Product Beliefs

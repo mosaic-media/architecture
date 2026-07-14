@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/README.md
+File: docs/design/language/mdl-003-mental-model/index.md
 Document: MDL-003
 Status: Draft
 Version: 0.1

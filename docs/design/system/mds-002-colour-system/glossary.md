@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/glossary.md
+File: docs/design/system/mds-002-colour-system/glossary.md
 Document: MDS-002
 Title: Glossary
 Status: Draft

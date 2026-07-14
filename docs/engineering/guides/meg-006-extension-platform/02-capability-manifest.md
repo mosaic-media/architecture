@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-006 Extension Platform/02-capability-manifest.md
+File: docs/engineering/guides/meg-006-extension-platform/02-capability-manifest.md
 Document: MEG-006
 Status: Draft
 Version: 0.1

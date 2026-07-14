@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/09-interaction-states.md
+File: docs/design/language/mdl-004-interaction-model/09-interaction-states.md
 Document: MDL-004
 Chapter: 09
 Title: Interaction States

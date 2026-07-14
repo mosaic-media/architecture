@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/09-composition-caching.md
+File: docs/design/system/mds-006-composition-engine/09-composition-caching.md
 Document: MDS-006
 Chapter: 09
 Title: Composition Caching

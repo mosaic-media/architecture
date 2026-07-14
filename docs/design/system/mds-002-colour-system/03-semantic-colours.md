@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/03-semantic-colours.md
+File: docs/design/system/mds-002-colour-system/03-semantic-colours.md
 Document: MDS-002
 Chapter: 03
 Title: Semantic Colours

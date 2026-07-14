@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/README.md
+File: docs/design/language/mdl-005-composition-model/index.md
 Document: MDL-005
 Status: Draft
 Version: 0.1

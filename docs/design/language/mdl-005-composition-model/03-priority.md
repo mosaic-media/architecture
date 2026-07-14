@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/03-priority.md
+File: docs/design/language/mdl-005-composition-model/03-priority.md
 Document: MDL-005
 Chapter: 03
 Title: Priority

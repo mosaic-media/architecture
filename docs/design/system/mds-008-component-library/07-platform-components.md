@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/07-platform-components.md
+File: docs/design/system/mds-008-component-library/07-platform-components.md
 Document: MDS-008
 Chapter: 07
 Title: Platform Components

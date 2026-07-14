@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/00-document-control.md
+File: docs/design/language/mdl-003-mental-model/00-document-control.md
 Document: MDL-003
 Title: Mental Model
 Status: Draft

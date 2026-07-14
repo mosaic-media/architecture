@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/07-density.md
+File: docs/design/language/mdl-005-composition-model/07-density.md
 Document: MDL-005
 Chapter: 07
 Title: Density

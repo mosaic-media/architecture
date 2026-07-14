@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/references.md
+File: docs/design/language/mdl-002-principles/references.md
 Document: MDL-002
 Title: References
 Status: Draft

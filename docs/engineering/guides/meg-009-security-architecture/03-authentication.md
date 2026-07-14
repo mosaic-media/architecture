@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/03-authentication.md
+File: docs/engineering/guides/meg-009-security-architecture/03-authentication.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

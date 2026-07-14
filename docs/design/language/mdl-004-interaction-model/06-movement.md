@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/06-movement.md
+File: docs/design/language/mdl-004-interaction-model/06-movement.md
 Document: MDL-004
 Chapter: 06
 Title: Movement

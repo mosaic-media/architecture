@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/README.md
+File: docs/design/system/mds-002-colour-system/index.md
 Document: MDS-002
 Status: Draft
 Version: 0.1

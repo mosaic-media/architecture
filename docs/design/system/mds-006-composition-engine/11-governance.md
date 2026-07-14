@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/11-governance.md
+File: docs/design/system/mds-006-composition-engine/11-governance.md
 Document: MDS-006
 Chapter: 11
 Title: Composition Engine Governance

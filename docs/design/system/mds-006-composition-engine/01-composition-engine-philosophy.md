@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/01-composition-engine-philosophy.md
+File: docs/design/system/mds-006-composition-engine/01-composition-engine-philosophy.md
 Document: MDS-006
 Chapter: 01
 Title: Composition Engine Philosophy

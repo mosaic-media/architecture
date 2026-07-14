@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/00-document-control.md
+File: docs/design/system/mds-007-tile-framework/00-document-control.md
 Document: MDS-007
 Title: Tile Framework
 Status: Draft

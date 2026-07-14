@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/references.md
+File: docs/design/system/mds-005-motion-system/references.md
 Document: MDS-005
 Title: References
 Status: Draft

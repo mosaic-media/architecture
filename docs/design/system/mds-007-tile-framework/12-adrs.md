@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/12-adrs.md
+File: docs/design/system/mds-007-tile-framework/12-adrs.md
 Document: MDS-007
 Chapter: 12
 Title: Architectural Decision Records

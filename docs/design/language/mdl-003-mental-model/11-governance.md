@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/11-governance.md
+File: docs/design/language/mdl-003-mental-model/11-governance.md
 Document: MDL-003
 Chapter: 11
 Title: Mental Model Governance

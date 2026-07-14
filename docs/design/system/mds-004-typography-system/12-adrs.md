@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/12-adrs.md
+File: docs/design/system/mds-004-typography-system/12-adrs.md
 Document: MDS-004
 Chapter: 12
 Title: Architectural Decision Records

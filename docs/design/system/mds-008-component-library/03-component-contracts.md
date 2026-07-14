@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/03-component-contracts.md
+File: docs/design/system/mds-008-component-library/03-component-contracts.md
 Document: MDS-008
 Chapter: 03
 Title: Component Contracts

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/06-theme-architecture.md
+File: docs/design/system/mds-002-colour-system/06-theme-architecture.md
 Document: MDS-002
 Chapter: 06
 Title: Theme Architecture

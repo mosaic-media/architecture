@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/glossary.md
+File: docs/design/system/mds-007-tile-framework/glossary.md
 Document: MDS-007
 Title: Glossary
 Status: Draft

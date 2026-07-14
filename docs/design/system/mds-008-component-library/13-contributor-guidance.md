@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/13-contributor-guidance.md
+File: docs/design/system/mds-008-component-library/13-contributor-guidance.md
 Document: MDS-008
 Chapter: 13
 Title: Contributor Guidance

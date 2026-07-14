@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/README.md
+File: docs/design/language/mdl-001-vision/index.md
 Specification: MDL-001
 Title: Mosaic Design Language Vision
 Status: Draft

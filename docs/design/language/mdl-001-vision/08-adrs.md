@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/08-adrs.md
+File: docs/design/language/mdl-001-vision/08-adrs.md
 Document: MDL-001
 Chapter: 08
 Title: Architectural Decision Records

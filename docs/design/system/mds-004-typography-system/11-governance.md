@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/11-governance.md
+File: docs/design/system/mds-004-typography-system/11-governance.md
 Document: MDS-004
 Chapter: 11
 Title: Typography System Governance

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/references.md
+File: docs/design/system/mds-003-material-system/references.md
 Document: MDS-003
 Title: References
 Status: Draft

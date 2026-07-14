@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/09-contributor-guidance.md
+File: docs/design/language/mdl-001-vision/09-contributor-guidance.md
 Document: MDL-001
 Chapter: 09
 Title: Contributor Guidance

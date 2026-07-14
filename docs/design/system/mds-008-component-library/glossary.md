@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/glossary.md
+File: docs/design/system/mds-008-component-library/glossary.md
 Document: MDS-008
 Title: Glossary
 Status: Draft

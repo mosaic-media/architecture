@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/11-governance.md
+File: docs/design/system/mds-005-motion-system/11-governance.md
 Document: MDS-005
 Chapter: 11
 Title: Motion System Governance

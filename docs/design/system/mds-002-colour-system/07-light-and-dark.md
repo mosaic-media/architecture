@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/07-light-and-dark.md
+File: docs/design/system/mds-002-colour-system/07-light-and-dark.md
 Document: MDS-002
 Chapter: 07
 Title: Light and Dark

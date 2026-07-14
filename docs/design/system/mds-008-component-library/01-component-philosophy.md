@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/01-component-philosophy.md
+File: docs/design/system/mds-008-component-library/01-component-philosophy.md
 Document: MDS-008
 Chapter: 01
 Title: Component Philosophy

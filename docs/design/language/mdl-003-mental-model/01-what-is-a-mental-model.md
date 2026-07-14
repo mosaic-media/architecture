@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/01-what-is-a-mental-model.md
+File: docs/design/language/mdl-003-mental-model/01-what-is-a-mental-model.md
 Document: MDL-003
 Chapter: 01
 Title: What Is A Mental Model?

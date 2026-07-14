@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-005 Runtime Architecture/05-dependency-graph.md
+File: docs/engineering/guides/meg-005-runtime-architecture/05-dependency-graph.md
 Document: MEG-005
 Status: Draft
 Version: 0.1

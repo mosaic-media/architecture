@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/12-adrs.md
+File: docs/design/system/mds-002-colour-system/12-adrs.md
 Document: MDS-002
 Chapter: 12
 Title: Architectural Decision Records

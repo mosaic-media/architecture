@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/09-principle-07-be-a-companion.md
+File: docs/design/language/mdl-002-principles/09-principle-07-be-a-companion.md
 Document: MDL-002
 Chapter: 09
 Principle: 07

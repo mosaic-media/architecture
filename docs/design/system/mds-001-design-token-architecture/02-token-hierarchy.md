@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-001 Design Token Architecture/02-token-hierarchy.md
+File: docs/design/system/mds-001-design-token-architecture/02-token-hierarchy.md
 Document: MDS-001
 Chapter: 02
 Title: Token Hierarchy

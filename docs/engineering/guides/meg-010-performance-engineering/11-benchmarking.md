@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-010 Performance Engineering/11-benchmarking.md
+File: docs/engineering/guides/meg-010-performance-engineering/11-benchmarking.md
 Document: MEG-010
 Status: Draft
 Version: 0.1

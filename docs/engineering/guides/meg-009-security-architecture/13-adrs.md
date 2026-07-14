@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-009 Security Architecture/13-adrs.md
+File: docs/engineering/guides/meg-009-security-architecture/13-adrs.md
 Document: MEG-009
 Status: Draft
 Version: 0.1

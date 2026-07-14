@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/12-adrs.md
+File: docs/design/system/mds-006-composition-engine/12-adrs.md
 Document: MDS-006
 Chapter: 12
 Title: Architectural Decision Records

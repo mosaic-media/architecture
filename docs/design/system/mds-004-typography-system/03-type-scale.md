@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/03-type-scale.md
+File: docs/design/system/mds-004-typography-system/03-type-scale.md
 Document: MDS-004
 Chapter: 03
 Title: Type Scale

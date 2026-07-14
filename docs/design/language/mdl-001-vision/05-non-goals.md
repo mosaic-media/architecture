@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-001 Vision/05-non-goals.md
+File: docs/design/language/mdl-001-vision/05-non-goals.md
 Document: MDL-001
 Chapter: 05
 Title: Non-Goals

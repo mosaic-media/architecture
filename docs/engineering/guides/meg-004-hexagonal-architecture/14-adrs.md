@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-004 Hexagonal Architecture/14-adrs.md
+File: docs/engineering/guides/meg-004-hexagonal-architecture/14-adrs.md
 Document: MEG-004
 Status: Draft
 Version: 0.1

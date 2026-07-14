@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-002 Event-Driven Runtime/02-why-events.md
+File: docs/engineering/guides/meg-002-event-driven-runtime/02-why-events.md
 Document: MEG-002
 Status: Draft
 Version: 0.1

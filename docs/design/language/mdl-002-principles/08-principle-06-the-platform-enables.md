@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/08-principle-06-the-platform-enables.md
+File: docs/design/language/mdl-002-principles/08-principle-06-the-platform-enables.md
 Document: MDL-002
 Chapter: 08
 Principle: 06

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/README.md
+File: docs/design/system/mds-004-typography-system/index.md
 Document: MDS-004
 Status: Draft
 Version: 0.1

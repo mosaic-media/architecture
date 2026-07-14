@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/03-behavioural-motion.md
+File: docs/design/system/mds-005-motion-system/03-behavioural-motion.md
 Document: MDS-005
 Chapter: 03
 Title: Behavioural Motion

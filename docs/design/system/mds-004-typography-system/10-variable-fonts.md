@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/10-variable-fonts.md
+File: docs/design/system/mds-004-typography-system/10-variable-fonts.md
 Document: MDS-004
 Chapter: 10
 Title: Variable Fonts

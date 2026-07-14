@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-008 Observability/12-observability-guidelines.md
+File: docs/engineering/guides/meg-008-observability/12-observability-guidelines.md
 Document: MEG-008
 Status: Draft
 Version: 0.1

@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-001 Go Engineering Standards/15-code-review-standards.md
+File: docs/engineering/guides/meg-001-go-engineering-standards/15-code-review-standards.md
 Document: MEG-001
 Status: Draft
 Version: 0.1

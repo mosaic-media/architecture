@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/09-runtime-motion-resolution.md
+File: docs/design/system/mds-005-motion-system/09-runtime-motion-resolution.md
 Document: MDS-005
 Chapter: 09
 Title: Runtime Motion Resolution

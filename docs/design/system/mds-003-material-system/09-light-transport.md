@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-003 Material System/09-light-transport.md
+File: docs/design/system/mds-003-material-system/09-light-transport.md
 Document: MDS-003
 Chapter: 09
 Title: Light Transport

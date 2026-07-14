@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-007 Tile Framework/07-tile-interaction.md
+File: docs/design/system/mds-007-tile-framework/07-tile-interaction.md
 Document: MDS-007
 Chapter: 07
 Title: Tile Interaction

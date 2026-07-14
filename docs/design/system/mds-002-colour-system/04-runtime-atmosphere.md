@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-002 Colour System/04-runtime-atmosphere.md
+File: docs/design/system/mds-002-colour-system/04-runtime-atmosphere.md
 Document: MDS-002
 Chapter: 04
 Title: Runtime Atmosphere

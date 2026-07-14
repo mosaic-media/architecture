@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-005 Composition Model/00-document-control.md
+File: docs/design/language/mdl-005-composition-model/00-document-control.md
 Document: MDL-005
 Title: Composition Model
 Status: Draft

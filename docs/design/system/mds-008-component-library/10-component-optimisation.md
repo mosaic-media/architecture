@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-008 Component Library/10-component-optimisation.md
+File: docs/design/system/mds-008-component-library/10-component-optimisation.md
 Document: MDS-008
 Chapter: 10
 Title: Component Optimisation

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-005 Motion System/00-document-control.md
+File: docs/design/system/mds-005-motion-system/00-document-control.md
 Document: MDS-005
 Title: Motion System
 Status: Draft

@@ -1,5 +1,5 @@
 <!--
-File: engineering/meg/MEG-004 Hexagonal Architecture/03-driving-ports.md
+File: docs/engineering/guides/meg-004-hexagonal-architecture/03-driving-ports.md
 Document: MEG-004
 Status: Draft
 Version: 0.1

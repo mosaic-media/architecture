@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-003 Mental Model/12-adrs.md
+File: docs/design/language/mdl-003-mental-model/12-adrs.md
 Document: MDL-003
 Chapter: 12
 Title: Architectural Decision Records

@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/01-what-is-a-principle.md
+File: docs/design/language/mdl-002-principles/01-what-is-a-principle.md
 Document: MDL-002
 Chapter: 01
 Title: What Is A Principle?

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/06-adaptive-layout.md
+File: docs/design/system/mds-006-composition-engine/06-adaptive-layout.md
 Document: MDS-006
 Chapter: 06
 Title: Adaptive Layout

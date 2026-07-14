@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-006 Composition Engine/02-runtime-world.md
+File: docs/design/system/mds-006-composition-engine/02-runtime-world.md
 Document: MDS-006
 Chapter: 02
 Title: Runtime World

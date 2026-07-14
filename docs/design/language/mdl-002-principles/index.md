@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-002 Principles/README.md
+File: docs/design/language/mdl-002-principles/index.md
 Document: MDL-002
 Status: Draft
 Version: 0.1

@@ -1,5 +1,5 @@
 <!--
-File: design/mds/MDS-004 Typography System/04-reading-rhythm.md
+File: docs/design/system/mds-004-typography-system/04-reading-rhythm.md
 Document: MDS-004
 Chapter: 04
 Title: Reading Rhythm

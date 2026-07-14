@@ -1,5 +1,5 @@
 <!--
-File: design/mdl/MDL-004 Interaction Model/08-temporal-behaviour.md
+File: docs/design/language/mdl-004-interaction-model/08-temporal-behaviour.md
 Document: MDL-004
 Chapter: 08
 Title: Temporal Behaviour
