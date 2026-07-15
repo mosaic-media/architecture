@@ -127,7 +127,7 @@ Movement reinforces understanding already established by Composition.
 
 Provides:
 
-- Runtime Tokens
+- Resolved Tokens
 - Resolution
 - Semantic hierarchy
 
