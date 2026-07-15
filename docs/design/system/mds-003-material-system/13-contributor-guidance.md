@@ -228,7 +228,9 @@ Refraction should always explain physical presence.
 
 It should never exist because shaders are available.
 
-The artwork should remain the only global primary source for the Acrylic transport environment.
+One selected Material-light source should remain the only global primary source for the Acrylic transport environment.
+
+Use focused or Hero artwork when available and the governed Brand Illumination Pair fallback otherwise.
 
 Spatially related Acrylic should preserve coherent knock-on transport without creating or indefinitely recirculating energy.
 

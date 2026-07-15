@@ -123,10 +123,10 @@ Physical presence should reinforce conceptual hierarchy.
 Provides:
 
 - Semantic Tokens
-- Runtime Tokens
+- Resolved Tokens
 - Resolution Pipeline
 
-Materials consume Runtime Tokens rather than generating their own semantic meaning.
+Materials consume Resolved Tokens and governed Resolution Context rather than generating their own semantic meaning.
 
 ---
 

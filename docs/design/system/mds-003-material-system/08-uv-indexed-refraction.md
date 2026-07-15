@@ -419,15 +419,19 @@ The analysis pipeline should favour current source information rather than accum
 
 # Shared Global Transport
 
-One active artwork field should act as the global primary source for every Acrylic receiver associated with that artwork.
+One active Material-light field should act as the global primary source for every Acrylic receiver in the environment.
 
-The active source should come from focused artwork, or from Hero artwork when Focus is not associated with artwork.
+The active source should come from focused artwork, Hero artwork, an approved Brand Illumination Pair or the default Mosaic pair in that order.
+
+Artwork sources use the standardised `UVLightFrame` path.
+
+Static Brand Illumination Pairs may generate an equivalent stable runtime field locally without entering the interchange protocol.
 
 Acrylic may then redistribute remaining light to other spatially related Acrylic.
 
 This creates:
 
-- one source of material light,
+- one source of Material light,
 - consistent spatial behaviour,
 - reusable computation,
 - coherent direct and secondary Acrylic response.

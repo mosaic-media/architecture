@@ -189,7 +189,7 @@ After reading MDS-003 contributors should understand:
 - how Refraction works
 - how artwork-space UV light fields enter the three-dimensional Composition
 - why artwork emission remains visible only through Acrylic response
-- how focused artwork, or Hero artwork when none is focused, selects the active source
+- how focused artwork, Hero artwork and governed static Brand Illumination Pairs select the active source
 - how local backdrop distortion remains separate from hidden artwork light
 - how still images and periodically sampled video produce the same standard light-field model
 - how two-dimensional Acrylic composites create physical depth through bounded parallax

@@ -221,7 +221,9 @@ Artwork should remain visually ordinary.
 
 Its emitter role should become apparent only through Acrylic transmission, diffusion and edge emission.
 
-The artwork remains the only global primary source for the Acrylic transport environment.
+One selected Material-light source remains the only global primary source for the Acrylic transport environment.
+
+Artwork has priority; a governed Brand Illumination Pair supplies the source only when focused and Hero artwork are absent.
 
 Acrylic may redistribute that energy to other Acrylic but must never create energy or propagate it without a termination condition.
 

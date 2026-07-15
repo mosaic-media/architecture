@@ -82,6 +82,14 @@ Backdrop Participation remains separate from the hidden artwork-derived `UVLight
 
 ---
 
+## Brand Illumination Pair
+
+Two approved Mosaic or partner colours resolved into a stable synthetic Material-light field when no focused or Hero artwork is available.
+
+The pair supplies Acrylic illumination without recolouring components or replacing Mosaic Material behaviour.
+
+---
+
 # C
 
 ## Canvas
@@ -174,6 +182,14 @@ Edge Emission belongs to Acrylic rather than the visible artwork.
 ---
 
 # F
+
+## Fidelity Maximum
+
+The highest Refraction fidelity permitted by user preference: Automatic, Balanced or Essential.
+
+Accessibility, capability, current budget and Presentation deadlines may resolve to a lower level.
+
+---
 
 ## Focused Artwork Source
 
@@ -333,6 +349,16 @@ The current artwork acting as the single global origin of energy for its Acrylic
 
 Global applies within the Acrylic transport layer and does not make the artwork visibly emissive in ordinary Presentation.
 
+When no focused or Hero artwork exists, a Brand Illumination Pair becomes the Primary Material-Light Source instead.
+
+---
+
+## Primary Material-Light Source
+
+The single global origin of energy for one Acrylic transport environment.
+
+It is selected from focused artwork, Hero artwork, an approved Brand Illumination Pair or the default Mosaic pair in that order.
+
 ---
 
 # R
@@ -390,6 +416,12 @@ Applications consume resolved materials rather than constructing them.
 The reduced and transformed light passed from one Acrylic object to another after an earlier direct or secondary interaction.
 
 Secondary transport depends upon relative position, distance, orientation, surface bounds, masks, visibility and remaining energy.
+
+---
+
+## Static Material-Light Source
+
+A stable synthetic light field derived from a Brand Illumination Pair and used where meaningful artwork is absent.
 
 ---
 
@@ -480,7 +512,7 @@ This system provides one coherent material light source across every client.
 | [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World, Focus |
 | [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Continuity |
 | [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Hero, Hierarchy |
-| [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md) | Runtime Tokens |
+| [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md) | Semantic Tokens, Resolved Tokens |
 | [MDS-002 — Colour System](../mds-002-colour-system/index.md) | Runtime Atmosphere |
 
 ---

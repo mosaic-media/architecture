@@ -122,21 +122,25 @@ N10["Active UVLightField"]
 N11["Three-Dimensional Transforms"]
 N12["Acrylic Transport Environment"]
 N13["Occluding Geometry"]
-N14["Resolved Material"]
+N14["Brand Illumination Pair"]
+N15["User Fidelity Maximum"]
+N16["Resolved Material"]
 
-N1 --> N14
-N2 --> N14
-N3 --> N14
-N4 --> N14
-N5 --> N14
-N6 --> N14
-N7 --> N14
-N8 --> N14
-N9 --> N14
-N10 --> N14
-N11 --> N14
-N12 --> N14
-N13 --> N14
+N1 --> N16
+N2 --> N16
+N3 --> N16
+N4 --> N16
+N5 --> N16
+N6 --> N16
+N7 --> N16
+N8 --> N16
+N9 --> N16
+N10 --> N16
+N11 --> N16
+N12 --> N16
+N13 --> N16
+N14 --> N16
+N15 --> N16
 ```
 
 Active `UVLightField`, three-dimensional transform, Acrylic transport environment and occlusion inputs apply only when resolving Acrylic.
@@ -510,6 +514,12 @@ Quality reduction should occur quickly enough to protect frame pacing.
 Quality restoration should require sustained headroom and occur gradually enough to avoid visible oscillation or popping.
 
 Every quality state must preserve the Material System's perceptual invariants.
+
+Users may set Automatic, Balanced or Essential as their maximum Refraction fidelity.
+
+The preference may be synced across their account or overridden for one client.
+
+The resolver may reduce below that maximum for accessibility, capability, current budget or Presentation deadlines and must never exceed it.
 
 ---
 

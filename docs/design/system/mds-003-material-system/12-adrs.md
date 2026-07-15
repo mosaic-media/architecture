@@ -242,7 +242,7 @@ Maintain One Global Acrylic Transport Environment
 
 ### Status
 
-Accepted
+Amended by ADR-127
 
 ### Context
 
@@ -250,9 +250,11 @@ Per-component lighting and independently resolved Acrylic create inconsistent ph
 
 ### Decision
 
-The current artwork is the global primary source for one shared Acrylic transport environment.
+One active Material-light source governs one shared Acrylic transport environment.
 
-Spatially related Acrylic resolves direct artwork transport and secondary Acrylic-to-Acrylic transport as one coupled system.
+Artwork remains preferred; ADR-127 defines the governed static source used when artwork is absent.
+
+Spatially related Acrylic resolves direct source transport and secondary Acrylic-to-Acrylic transport as one coupled system.
 
 Canvas, Surface, typography, icons and components do not sample that field.
 
@@ -564,6 +566,64 @@ Backdrop distortion may simplify under performance or accessibility pressure wit
 
 ---
 
+# ADR-127
+
+## Title
+
+Use Governed Brand Illumination When Artwork Is Absent
+
+### Status
+
+Accepted
+
+### Context
+
+Settings, administration and dashboard experiences may have no focused or Hero artwork but must retain Mosaic Acrylic identity.
+
+### Decision
+
+Primary source priority is focused artwork, Hero artwork, approved Mosaic or partner Brand Illumination Pair, then the default Mosaic pair.
+
+The pair resolves into one stable synthetic Material-light field using Platform-owned placement, intensity and transition rules.
+
+It does not recolour components directly, create new Material physics or require a partner-owned `UVLightFrame` format.
+
+### Consequences
+
+No-artwork experiences preserve Acrylic and Refraction with low continuous rendering cost.
+
+Governed co-branding may influence illumination without replacing Mosaic identity.
+
+---
+
+# ADR-128
+
+## Title
+
+Treat User Refraction Preference As A Fidelity Maximum
+
+### Status
+
+Accepted
+
+### Context
+
+Users may prefer a calmer or less expensive Acrylic experience even when the client can render Enhanced fidelity.
+
+### Decision
+
+Automatic, Balanced and Essential define the maximum fidelity permitted by the user.
+
+The preference may be synced or locally overridden for one client.
+
+Accessibility, capability, current budget and Presentation deadlines may reduce further and must never be overridden by the preference.
+
+### Consequences
+
+Users can select a stable lower-refinement experience without controlling individual Refraction mechanics.
+
+---
+
 # ADR Relationships
 
 ```mermaid
@@ -600,6 +660,10 @@ ADR124["Acrylic Parallax"]
 ADR125["Focused Artwork Selection"]
 
 ADR126["Local Backdrop Participation"]
+
+ADR127["Static Brand Illumination"]
+
+ADR128["User Fidelity Maximum"]
 
 ADR111 --> ADR112
 
@@ -640,6 +704,14 @@ ADR112 --> ADR126
 ADR123 --> ADR126
 
 ADR126 --> ADR116
+
+ADR125 --> ADR127
+
+ADR127 --> ADR116
+
+ADR121 --> ADR128
+
+ADR128 --> ADR116
 
 ADR118 --> ADR116
 

@@ -223,37 +223,51 @@ Screen coordinates become relevant only when the resolved material is projected 
 
 # Global Primary Source
 
-The current artwork is the single global primary source for its Acrylic transport environment.
+The active Material light source is the single global primary source for its Acrylic transport environment.
+
+Focused or Hero artwork is preferred.
+
+When no artwork exists, a governed static Brand Illumination Pair preserves the same Acrylic environment.
 
 Global means that every spatially related Acrylic object may participate in one shared transport solution.
 
-It does not mean that the artwork visibly illuminates Canvas, components or the wider Presentation.
+It does not mean that artwork or brand input visibly illuminates Canvas, components or the wider Presentation.
 
-Acrylic receivers must not create independent interpretations of the artwork source.
+Acrylic receivers must not create independent interpretations of the active source.
 
 ---
 
 # Primary Source Selection
 
-The artwork associated with current Focus should act as the global primary source for the active Acrylic transport environment.
+Source selection follows this priority:
 
-When Focus is not associated with artwork, the Hero artwork should act as the source.
+1. artwork associated with current Focus
+2. Hero artwork
+3. approved Mosaic or partner Brand Illumination Pair
+4. default Mosaic Brand Illumination Pair
 
 ```mermaid
 flowchart TD
 
-N1{"Focused Artwork Available?"}
-N2["Focused Artwork"]
-N3["Hero Artwork"]
-N4["Active Primary Artwork Source"]
+N1["Focused Artwork"]
+N2["Hero Artwork"]
+N3["Approved Brand Pair"]
+N4["Default Mosaic Pair"]
+N5["Select First Available"]
+N6["Active Primary Material-Light Source"]
 
-N1 -->|"Yes"| N2
-N1 -->|"No"| N3
-N2 --> N4
-N3 --> N4
+N1 --> N5
+N2 --> N5
+N3 --> N5
+N4 --> N5
+N5 --> N6
 ```
 
 Focus changes should transition between source fields without an abrupt Material reset.
+
+A Brand Illumination Pair should resolve into one stable synthetic field using Platform-owned placement, intensity and transition rules.
+
+It does not require artwork analysis or imply a partner-owned `UVLightFrame` format.
 
 The source-selection rule remains Platform-owned and must not be reinterpreted independently by components.
 
