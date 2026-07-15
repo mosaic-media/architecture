@@ -142,14 +142,32 @@ async def extract_chapter(
     origin: str,
     specification: Specification,
     chapter: str,
-) -> dict[str, str]:
+) -> dict[str, object]:
     path = chapter_url(specification, chapter)
     await page.goto(origin + path, wait_until="networkidle")
     await page.wait_for_selector("article.md-content__inner")
+    if await page.locator(".mermaid").count():
+        await page.wait_for_function(
+            """
+            () => {
+              const diagrams = [...document.querySelectorAll("div.mermaid")];
+              return diagrams.length > 0 && diagrams.every(
+                (diagram) => diagram.shadowRoot?.querySelector("svg"),
+              );
+            }
+            """
+        )
     return await page.evaluate(
         """
         ({ path, origin, siteUrl }) => {
-          const article = document.querySelector("article.md-content__inner").cloneNode(true);
+          const source = document.querySelector("article.md-content__inner");
+          const article = source.cloneNode(true);
+          const renderedDiagrams = source.querySelectorAll("div.mermaid");
+          const clonedDiagrams = article.querySelectorAll("div.mermaid");
+          renderedDiagrams.forEach((diagram, index) => {
+            clonedDiagrams[index].innerHTML = diagram.shadowRoot.innerHTML;
+          });
+
           const chapterId = `chapter-${path.replace(/^\\/|\\/$/g, "").replace(/[^a-z0-9]+/gi, "-")}`;
           const ids = new Map();
           article.querySelectorAll("[id]").forEach((element) => {
@@ -157,6 +175,22 @@ async def extract_chapter(
             const newId = `${chapterId}--${oldId}`;
             ids.set(oldId, newId);
             element.id = newId;
+          });
+          article.querySelectorAll("*").forEach((element) => {
+            [...element.attributes].forEach((attribute) => {
+              if (attribute.name === "id") return;
+              let value = attribute.value;
+              ids.forEach((newId, oldId) => {
+                value = value.replaceAll(`url(#${oldId})`, `url(#${newId})`);
+                if (value === `#${oldId}`) value = `#${newId}`;
+              });
+              if (value !== attribute.value) element.setAttribute(attribute.name, value);
+            });
+          });
+          article.querySelectorAll("style").forEach((style) => {
+            ids.forEach((newId, oldId) => {
+              style.textContent = style.textContent.replaceAll(`#${oldId}`, `#${newId}`);
+            });
           });
 
           article.querySelectorAll("[src]").forEach((element) => {
@@ -183,6 +217,7 @@ async def extract_chapter(
             id: chapterId,
             title: heading ? heading.textContent.trim() : document.title,
             html: article.innerHTML,
+            diagrams: renderedDiagrams.length,
           };
         }
         """,
@@ -201,11 +236,20 @@ async def render_specification(
     output_dir: Path,
 ) -> Path:
     page = await browser.new_page(color_scheme="light")
+    await page.add_init_script(
+        """
+        const attachShadow = Element.prototype.attachShadow;
+        Element.prototype.attachShadow = function(options) {
+          return attachShadow.call(this, { ...options, mode: "open" });
+        };
+        """
+    )
     try:
         chapters = [
             await extract_chapter(page, origin, specification, chapter)
             for chapter in specification.chapters
         ]
+        expected_diagrams = sum(int(chapter["diagrams"]) for chapter in chapters)
         toc = "".join(
             f'<li><a href="#{chapter["id"]}">{html.escape(chapter["title"])}</a></li>'
             for chapter in chapters
@@ -257,6 +301,10 @@ async def render_specification(
                 .mosaic-pdf-chapter { break-before: page; }
                 .mosaic-pdf-chapter:first-of-type { break-before: auto; }
                 .mosaic-pdf-chapter h1:first-child { margin-top: 0; }
+                .mosaic-pdf-document .mermaid {
+                  break-inside: avoid; display: flex; justify-content: center;
+                }
+                .mosaic-pdf-document .mermaid svg { max-height: 235mm; }
                 pre, table, figure, .admonition, details { break-inside: avoid; }
                 a { color: #007c91 !important; }
                 .headerlink, .mosaic-pdf-download { display: none !important; }
@@ -272,6 +320,12 @@ async def render_specification(
                 "siteUrl": SITE_URL,
             },
         )
+        actual_diagrams = await page.locator(".mosaic-pdf-document .mermaid svg").count()
+        if actual_diagrams != expected_diagrams:
+            raise RuntimeError(
+                f"{specification.document_id} rendered {actual_diagrams} of "
+                f"{expected_diagrams} Mermaid diagrams"
+            )
         await page.emulate_media(media="print")
         output = output_dir / specification.output_name
         await page.pdf(
