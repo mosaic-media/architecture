@@ -344,6 +344,12 @@ It communicates this through two related behaviours.
 
 The apparent-thickness profile constrains internal optical displacement.
 
+The one-centimetre reference establishes the intended perceptual character rather than a universal runtime coefficient.
+
+The governed Acrylic Material profile should define the numerical relationship between apparent thickness, diffusion, displacement and safe sampling margins when that profile is standardised.
+
+Renderers should consume that profile rather than independently hard-code thickness or refractive-index values.
+
 The outer surface, interaction bounds and semantic layout remain stable while internal composite layers move relative to them.
 
 Edge glare may move at a different or opposing rate to strengthen the impression of a polished physical surface.
