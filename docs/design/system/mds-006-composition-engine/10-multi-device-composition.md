@@ -152,7 +152,7 @@ The Adaptive Layout system determines presentation.
 
 # Device Projection
 
-The Composition Engine projects solved Expressions into device-specific layouts.
+The client-side Adaptive Layout implementation projects solved Expressions into layouts for the current Presentation constraints.
 
 Conceptually.
 
@@ -186,31 +186,22 @@ Behaviour remains identical.
 
 ---
 
-# Device Classes
+# Capability Profiles
 
-Future implementations may define conceptual device classes.
+Implementations may describe current Presentation constraints through a capability profile.
 
-Examples.
+The profile may include:
 
-```text
-Phone
+- available extent and orientation
+- viewing distance
+- input methods
+- typography and accessibility settings
+- renderer features
+- measured runtime budget
 
-Tablet
+It must not reduce these inputs to a permanent phone, tablet, desktop or television layout class.
 
-Desktop
-
-Television
-
-Foldable
-
-Voice
-
-Spatial
-```
-
-Each device class receives its own Presentation Model.
-
-No device receives a different Composition.
+No capability profile receives a different Composition.
 
 ---
 

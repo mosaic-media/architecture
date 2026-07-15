@@ -240,7 +240,7 @@ Modules Enrich The Runtime World
 
 ### Status
 
-Accepted
+Amended by ADR-163
 
 ### Context
 
@@ -248,13 +248,49 @@ Allowing modules to construct presentation fragments runtime consistency.
 
 ### Decision
 
-Modules contribute behaviour, relationships and information only.
+Modules contribute behaviour, relationships, information and governed domain layout constraints.
+
+They do not provide final Presentation geometry or private Platform values.
 
 The Composition Engine owns runtime solving.
 
 ### Consequences
 
 Community modules inherit every future runtime improvement automatically.
+
+---
+
+# ADR-163
+
+## Title
+
+Resolve Presentation Geometry In The Client From Capability And Constraints
+
+### Status
+
+Accepted
+
+### Context
+
+SDUI must support browsers and native clients with widely different extents, input contexts, accessibility settings and rendering budgets.
+
+Device categories do not reliably describe those constraints, while server-authored coordinates would couple semantic intent to one Presentation.
+
+### Decision
+
+Composition and Runtime SDUI provide semantic hierarchy, relationships, Expressions and permitted domain layout modes.
+
+The client-side Adaptive Layout implementation calculates final location, size, depth ordering, padding, spacing, density and typography from private Platform primitives and the current capability profile.
+
+Modules may provide governed domain invariants, but cannot provide final Presentation geometry or select private primitives.
+
+Intrinsic domain coordinates, such as those in an authored diagram or spatial canvas, remain content data and are projected into Presentation space by the client.
+
+### Consequences
+
+Web and native clients share one semantic contract while adapting to their actual runtime conditions.
+
+Mosaic retains control of visual rhythm without exposing controls such as `Spacing.Large` to SDUI, Modules or users.
 
 ---
 
@@ -281,6 +317,8 @@ ADR161["Deterministic Pipelines"]
 
 ADR162["Modules"]
 
+ADR163["Client Geometry Resolution"]
+
 ADR154 --> ADR155
 ADR155 --> ADR156
 ADR156 --> ADR157
@@ -289,6 +327,8 @@ ADR155 --> ADR158
 ADR158 --> ADR161
 ADR156 --> ADR159
 ADR161 --> ADR162
+ADR160 --> ADR163
+ADR162 --> ADR163
 ```
 
 Together these decisions establish the Composition Engine as a behavioural runtime architecture rather than a rendering framework.

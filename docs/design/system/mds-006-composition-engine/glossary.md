@@ -31,7 +31,7 @@ Future specifications should reuse these definitions consistently.
 
 ## Adaptive Layout
 
-The runtime process that projects one solved Composition into different presentation environments.
+The client-side runtime process that projects one solved Composition into different presentation environments using current constraints and private Platform primitives.
 
 Adaptive Layout changes:
 
@@ -65,6 +65,16 @@ all evolve together.
 ---
 
 # C
+
+## Capability Profile
+
+The current set of Presentation constraints used by Adaptive Layout.
+
+It may include available extent, orientation, viewing distance, input methods, accessibility, renderer features and measured runtime budget.
+
+A Capability Profile is not a permanent device category.
+
+---
 
 ## Composition
 

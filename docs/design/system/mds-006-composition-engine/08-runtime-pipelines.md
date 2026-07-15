@@ -237,10 +237,10 @@ Project Expressions into spatial organisation.
 
 Adaptive Layout considers:
 
-- device class
-- orientation
-- viewing distance
-- accessibility
+- available extent and orientation
+- viewing distance and input context
+- typography and accessibility
+- renderer capability and runtime budget
 
 Behaviour remains unchanged.
 

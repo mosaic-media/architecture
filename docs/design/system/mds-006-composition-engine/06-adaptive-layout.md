@@ -33,7 +33,7 @@ Layout becomes a consequence.
 
 Within MDS, **Adaptive Layout** is defined as:
 
-> **The deterministic projection of a solved Composition into a device-specific spatial arrangement while preserving behavioural hierarchy and understanding.**
+> **The deterministic client-side projection of a solved Composition into a spatial arrangement while preserving behavioural hierarchy and understanding.**
 
 Adaptive Layout changes:
 
@@ -146,10 +146,10 @@ flowchart TD
 
 N1["Expression Tree"]
 N2["Hierarchy"]
-N3["Device Class"]
-N4["Orientation"]
-N5["Viewing Distance"]
-N6["Capabilities"]
+N3["Available Extent"]
+N4["Orientation And Viewing Context"]
+N5["Typography And Accessibility"]
+N6["Capability And Runtime Budget"]
 
 N1 --> N2
 N2 --> N3
@@ -186,6 +186,10 @@ N3 --> N4
 These outputs remain independent from components.
 
 Future rendering systems consume them directly.
+
+The client-side Mosaic design runtime calculates concrete Presentation geometry from these outputs and private Platform primitives.
+
+Runtime SDUI does not provide final coordinates, dimensions, padding, spacing, radius or typography values.
 
 ---
 
@@ -422,27 +426,15 @@ Changing layout should never create a different Motion language.
 
 ---
 
-# Device Classes
+# Capability-Driven Layout
 
-Future runtime implementations may define conceptual device classes.
+Adaptive Layout must not select a permanent strategy from a product category such as phone, tablet, desktop or television.
 
-Examples.
+Those labels do not reliably describe the available extent, input method, viewing distance, typography scale, renderer capability or current workload.
 
-```text
-Phone
+The same solved Composition is projected from measured and declared constraints.
 
-Tablet
-
-Desktop
-
-Television
-
-Voice
-```
-
-Each device class receives its own adaptive layout strategy.
-
-All consume identical Expressions.
+Clients with equivalent effective constraints should produce equivalent spatial behaviour even when their product categories differ.
 
 ---
 
@@ -525,11 +517,11 @@ Not behavioural meaning.
 
 # Modules
 
-Modules contribute Expressions.
+Modules contribute Expressions and may declare governed domain layout constraints or valid presentation modes.
 
-Modules never determine layout.
+Modules do not provide final Presentation coordinates, spacing, padding, radius, density or typography values.
 
-Adaptive Layout remains entirely platform owned.
+Adaptive Layout remains Platform-owned and chooses how the Module contract is projected through Mosaic primitives.
 
 Every module therefore automatically inherits future layout improvements.
 

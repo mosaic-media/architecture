@@ -340,7 +340,9 @@ Examples include:
 - Context
 - Focus
 - Accessibility
-- Device Class
+- available extent and orientation
+- viewing and input context
+- effective renderer capability
 
 Implementation-specific values should never become behavioural cache keys.
 
