@@ -2,7 +2,7 @@
 File: docs/design/system/mds-001-design-token-architecture/index.md
 Document: MDS-001
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # MDS-001 — Design Token Architecture
@@ -63,13 +63,14 @@ This specification defines:
 - Token philosophy
 - Token hierarchy
 - Token taxonomy
-- Semantic layers
-- Runtime token model
+- Primitive and Semantic Token states
+- Composition inputs
+- Resolved Token model
 - Token inheritance
 - Token resolution
 - Token lifecycle
 - Versioning
-- Module interaction
+- Module intent interaction
 
 This specification intentionally does **not** define:
 
@@ -126,28 +127,26 @@ The further implementation moves from raw values towards meaning, the easier the
 
 ---
 
-# Primary Token Hierarchy
+# Primary Token Model
 
-The Mosaic Design System intentionally separates tokens into conceptual layers.
+The Mosaic Design System separates authored Platform tokens from generated client output.
 
 ```mermaid
-flowchart TD
+flowchart LR
 
 N1["Primitive"]
 N2["Semantic"]
-N3["Composition"]
-N4["Component"]
-N5["Runtime"]
-N6["Presentation"]
+N3["Runtime Resolver"]
+N4["Resolved Token Set"]
+N5["Renderer Adapter"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
 N4 --> N5
-N5 --> N6
 ```
 
-Each layer has exactly one responsibility.
+Composition, Module intent, Focus, accessibility, capability and budget enter the resolver as governed context rather than additional token layers.
 
 Future chapters define every layer in detail.
 
@@ -159,9 +158,9 @@ After reading MDS-001 contributors should understand:
 
 - how tokens are organised
 - why semantic tokens exist
-- why runtime tokens exist
+- why Resolved Tokens exist
 - how components consume tokens
-- how modules interact with tokens
+- how Modules provide intent without creating tokens
 - how future token systems should evolve
 
 without discussing specific colour palettes or component implementations.
@@ -190,9 +189,9 @@ design/
 
         04-semantic-tokens.md
 
-        05-composition-tokens.md
+        05-composition-inputs.md
 
-        06-runtime-tokens.md
+        06-resolved-tokens.md
 
         07-token-resolution.md
 
@@ -200,7 +199,7 @@ design/
 
         09-token-versioning.md
 
-        10-module-tokens.md
+        10-module-intent.md
 
         11-governance.md
 

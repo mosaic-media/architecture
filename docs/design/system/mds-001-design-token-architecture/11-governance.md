@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 11
 Title: Token Governance
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Token Governance
@@ -13,355 +13,130 @@ Version: 0.4
 
 # Purpose
 
-The Design Token Architecture is a shared contract between:
-
-- Design
-- Engineering
-- Runtime Systems
-- Modules
-- Tooling
-
-Without governance, token systems naturally fragment.
-
-Teams introduce duplicate tokens.
-
-Semantic meaning drifts.
-
-Components begin consuming primitive values.
-
-Modules invent competing token hierarchies.
-
-Over time, the Design System becomes increasingly difficult to maintain.
-
-This chapter defines how the Mosaic Design Token Architecture should evolve while preserving long-term consistency.
+Governance protects Mosaic from duplicated meaning, local primitives, device-specific forks and Module-owned design systems.
 
 ---
 
-# Governance Philosophy
+# Ownership
 
-Tokens should be treated as public APIs.
+| Artefact | Owner |
+|----------|-------|
+| Primitive Token | Platform Design System |
+| Semantic Token | Platform Design System |
+| Module domain intent | Owning Module, subject to Platform mapping rules |
+| Composition role and layout resolution | Composition Engine |
+| Resolved Token Set | Client runtime |
+| Renderer artefact | Client adapter |
 
-Once a token becomes part of the Design System, other systems begin depending upon it.
-
-Changing a token therefore has architectural consequences.
-
-Token governance exists to preserve:
-
-- consistency
-- compatibility
-- maintainability
-- predictability
-
-rather than simply enforcing naming conventions.
+Only the Platform Design System may create Primitive or Semantic Tokens.
 
 ---
 
-# The Token Contract
+# Protected Core
 
-Every token published by the Design System forms part of the public design contract.
+Modules and clients must not redefine:
 
-That contract guarantees:
+- semantic hierarchy
+- brand meaning
+- Material behaviour
+- typography roles
+- motion mechanics
+- Focus and interaction meaning
+- accessibility outcomes
+- performance degradation policy
 
-- stable semantic meaning
-- deterministic resolution
-- documented inheritance
-- predictable lifecycle
-
-The contract intentionally does **not** guarantee:
-
-- implementation values
-- colour palettes
-- runtime algorithms
-
-These may evolve without breaking consumers.
+Implementation may adapt while these meanings remain invariant.
 
 ---
 
-# Token Ownership
+# Introducing A Primitive Token
 
-Each layer has a defined owner.
+A proposed Primitive Token should be accepted only when:
 
-| Layer | Owner |
-|---------|-------|
-| Primitive | Design Systems |
-| Semantic | Design Systems |
-| Composition | Design Systems |
-| Runtime | Runtime Engine |
-| Platform | Client Implementations |
+1. it represents a reusable foundational value
+2. no existing Primitive can express it accurately
+3. its type and unit are explicit
+4. it contains no usage or renderer meaning
+5. downstream Semantic ownership is identified
 
-Ownership exists to preserve architectural integrity.
-
-It does not prevent contribution.
+Primitive Tokens must not be created merely to avoid an existing semantic constraint.
 
 ---
 
-# Introducing New Tokens
+# Introducing A Semantic Token
 
-Before introducing a token, contributors should answer the following questions.
+A proposed Semantic Token should be accepted only when:
 
-## Question One
+1. the meaning applies across more than one local implementation
+2. no existing Semantic Token expresses the responsibility
+3. its distinction is semantic rather than visual
+4. accessibility behaviour is defined
+5. fallback and migration behaviour are defined
+6. downstream owning specifications agree with the meaning
 
-Does an existing token already describe this intent?
-
----
-
-## Question Two
-
-Is the proposed token semantic...
-
-or implementation?
-
----
-
-## Question Three
-
-Does the new token belong at the correct architectural layer?
-
----
-
-## Question Four
-
-Will the token remain meaningful in five years?
-
----
-
-## Question Five
-
-Would another contributor naturally discover this token?
-
-If the answer to any question is "no", refinement should continue before implementation.
-
----
-
-# Token Creation Workflow
-
-Every new token should follow the same lifecycle.
-
-```mermaid
-flowchart TD
-
-Need
-Need --> ExistingTokenReview["Existing Token Review"]
-ExistingTokenReview["Existing Token Review"] --> NewToken["New Token?"]
-NewToken["New Token?"] -->|No| ReuseExisting["Reuse Existing"]
-NewToken["New Token?"] -->|Yes| Proposal
-Proposal --> Review
-Review --> Documentation
-Documentation --> Implementation
-Implementation --> RuntimeValidation["Runtime Validation"]
-```
-
-The preferred outcome is always:
-
-Reuse.
-
-Not growth.
-
----
-
-# Layer Governance
-
-Each layer follows slightly different governance rules.
-
-## Primitive
-
-Growth should remain extremely slow.
-
-Primitive Tokens should represent long-lived physical values.
-
----
-
-## Semantic
-
-Semantic Tokens form the public Design API.
-
-New Semantic Tokens require strong justification.
-
----
-
-## Composition
-
-Composition Tokens affect runtime behaviour.
-
-Changes require Design Systems review.
-
----
-
-## Runtime
-
-Runtime Tokens may evolve more frequently.
-
-However, they must never alter semantic intent.
-
----
-
-## Platform
-
-Platform implementations should consume tokens.
-
-They should not redefine them.
-
----
-
-# Token Reviews
-
-Every proposed token should be reviewed against:
-
-- MDL Vision
-- Design Principles
-- Mental Model
-- Composition Model
-
-The question should never be:
-
-> "Does this token work?"
-
-Instead ask:
-
-> **"Does this token strengthen the architecture?"**
-
----
-
-# Duplicate Tokens
-
-Duplicate semantic meaning is one of the greatest threats to long-term maintainability.
-
-Poor.
-
-```
-
-Surface.Primary
-
-Primary.Surface
-
-Canvas.Primary
-```
-
-Three tokens.
-
-One meaning.
-
-Preferred.
-
-```
-
-Surface.Primary
-```
-
-One meaning.
-
-One token.
-
-One source of truth.
-
----
-
-# Token Drift
-
-Token Drift occurs when:
-
-- meaning changes
-- implementation leaks upwards
-- layers become blurred
-- duplicate semantics appear
-- component-specific tokens accumulate
-
-Token Drift weakens the Design System significantly faster than visual inconsistency.
-
-It should therefore be treated as architectural debt.
-
----
-
-# Token Debt
-
-Examples include:
-
-- duplicated Semantic Tokens
-- unnecessary aliases
-- Primitive Token consumption
-- component-specific values
-- undocumented Runtime Tokens
-
-Token debt should be removed whenever practical.
-
-Adding additional abstraction should never become easier than maintaining architectural clarity.
+Repeated Module intent may reveal a missing Semantic Token but does not create one automatically.
 
 ---
 
 # Module Governance
 
-Modules may propose new Semantic Tokens.
+A Module may register domain intent without creating Design Tokens when the intent:
 
-They may not introduce:
+- is namespaced
+- describes domain meaning
+- maps to an existing Platform semantic role
+- supplies a safe fallback
+- preserves locked Platform behaviour
 
-- Primitive categories
-- Runtime architecture
-- Composition hierarchy
+Entirely new cross-product meaning requires Platform review.
 
-Platform foundation ownership remains preserved.
+Module layout extensions are governed by [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) and must preserve Platform rendering authority.
 
-Module proposals should demonstrate:
+---
 
-- reuse
-- compatibility
-- long-term usefulness
+# Capability Governance
 
-before acceptance.
+Resolution must use measured capability and current budget.
+
+Permanent branches based on mobile, television, desktop, tablet or similar product categories are prohibited.
+
+Capability inputs must describe observable support or cost, such as backdrop availability, shader support, measured frame headroom or memory pressure.
 
 ---
 
 # Automated Validation
 
-Future tooling should automatically validate:
+Tooling should validate:
 
-- naming conventions
-- hierarchy correctness
-- inheritance
-- duplicate semantics
-- deprecated tokens
-- unused tokens
+- unique token identifiers
+- permitted token ownership
+- value type and unit compatibility
+- alias targets and cycle freedom
+- Semantic Token documentation
+- Module intent namespace and fallback
+- absence of renderer names in authored tokens
+- absence of device-category resolution branches
+- deprecation and migration metadata
 
-Automated validation should supplement architectural review.
-
-It should never replace it.
+Invalid extension data should fail closed to a declared Platform fallback.
 
 ---
 
-# Governance Checklist
+# Review Checklist
 
-Every token proposal should satisfy:
-
-- [ ] Correct architectural layer.
-- [ ] Existing tokens evaluated.
-- [ ] Semantic meaning documented.
-- [ ] Runtime implications reviewed.
-- [ ] Component impact assessed.
-- [ ] Module compatibility maintained.
-- [ ] Documentation updated.
+- [ ] Is this artefact actually a Design Token?
+- [ ] Is ownership explicit?
+- [ ] Does the name communicate stable meaning?
+- [ ] Can an existing Semantic Token or mapped intent solve it?
+- [ ] Are Primitive values hidden from ordinary consumers?
+- [ ] Is runtime context kept outside the token hierarchy?
+- [ ] Are accessibility constraints preserved?
+- [ ] Is capability measured rather than inferred from device type?
+- [ ] Is fallback behaviour deterministic?
+- [ ] Are compatibility and deprecation effects documented?
 
 ---
 
 # Success Criteria
 
-The Token Architecture succeeds when:
-
-- contributors naturally reuse existing tokens
-- semantic names remain stable
-- runtime adaptation remains invisible
-- modules integrate without fragmentation
-- implementations remain framework independent
-
-The strongest Design Token Architecture is one contributors rarely need to think about consciously.
-
-They simply trust it.
-
----
-
-# Architectural Decisions
-
-| ADR | Decision |
-|------|----------|
-| ADR-080 | Design Tokens are treated as a public architectural contract. |
-| ADR-081 | Semantic stability has higher priority than implementation stability. |
-| ADR-082 | Reuse is preferred over introducing new tokens. |
-| ADR-083 | Token drift is considered architectural debt. |
+Governance succeeds when Modules remain expressive, clients remain adaptive and the Platform retains one coherent Design Token API.

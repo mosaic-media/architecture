@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/00-document-control.m
 Document: MDS-001
 Title: Design Token Architecture
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Document Control
@@ -18,7 +18,7 @@ Version: 0.4
 | Title | Mosaic Design System — Design Token Architecture |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
+| Version | 0.1 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md) |
 | Repository | `/design/mds/MDS-001 Design Token Architecture/` |
@@ -49,10 +49,10 @@ MDS-001 governs:
 - Token hierarchy
 - Token taxonomy
 - Semantic naming
-- Runtime resolution
+- Resolved Token generation
 - Token inheritance
 - Token lifecycle
-- Module integration
+- Module intent integration
 - Cross-platform consistency
 
 This specification intentionally does **not** define:
@@ -177,6 +177,10 @@ Those become client-specific implementation details.
 
 # Stability
 
+Version 0.1 begins a new draft cycle after replacing the former six-layer model with Platform-owned Primitive and Semantic Tokens plus client-generated Resolved Tokens.
+
+The earlier 0.4 draft remains represented in repository history and requires renewed editorial, structural, cross-reference and technical review.
+
 Expected lifetime.
 
 | Artefact | Expected Lifetime |
@@ -200,6 +204,8 @@ MDS-001 succeeds when:
 - token names communicate meaning rather than implementation
 - runtime adaptation becomes implementation-independent
 - contributors rarely consume primitive values directly
+- Modules extend domain intent and Composition without creating Design Tokens
+- capability and budget influence resolution without device classification
 - future specifications naturally build upon this architecture
 
 A successful Design Token Architecture should become almost invisible.

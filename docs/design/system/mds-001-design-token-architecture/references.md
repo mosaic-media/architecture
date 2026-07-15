@@ -3,7 +3,7 @@ File: docs/design/system/mds-001-design-token-architecture/references.md
 Document: MDS-001
 Title: References
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # References
@@ -74,7 +74,7 @@ Provides:
 - Information
 - Relationships
 
-Runtime Tokens are intentionally designed to adapt these concepts rather than replace them.
+Token Resolution evaluates these runtime concepts without turning them into new token categories.
 
 ---
 
@@ -87,7 +87,7 @@ Provides:
 - Adaptive evolution
 - Interaction States
 
-Runtime Tokens should reinforce behavioural consistency rather than introduce alternative interaction models.
+Resolved Tokens should reinforce behavioural consistency rather than introduce alternative interaction models.
 
 ---
 
@@ -101,7 +101,7 @@ Provides:
 - Density
 - Composition
 
-Composition Tokens are the implementation of these conceptual ideas.
+The Composition Engine supplies these concepts as governed inputs to Token Resolution.
 
 ---
 
@@ -129,12 +129,7 @@ The architecture of MDS-001 draws inspiration from modern token systems that dis
 - semantic meaning
 - implementation
 
-Mosaic extends this approach by introducing:
-
-- Composition Tokens
-- Runtime Tokens
-
-allowing the Design System to adapt continuously while preserving semantic stability.
+Mosaic extends this approach by evaluating Composition, Module intent, accessibility, capability and budget as governed resolution inputs while keeping the authored hierarchy Platform-owned.
 
 ---
 
@@ -242,7 +237,7 @@ Future runtime systems are expected to implement concepts such as:
 - Atmosphere generation
 - Adaptive materials
 - Theme resolution
-- Device adaptation
+- Capability-driven adaptation
 - Accessibility adaptation
 
 MDS-001 intentionally defines the architectural boundaries within which those systems operate.

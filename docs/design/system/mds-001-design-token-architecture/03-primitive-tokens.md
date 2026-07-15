@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 03
 Title: Primitive Tokens
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Primitive Tokens
@@ -35,7 +35,7 @@ Within MDS, a **Primitive Token** is defined as:
 
 Primitive Tokens are the lowest stable layer within the Design Token Architecture.
 
-Every higher token layer ultimately resolves to Primitive Tokens.
+Every authored Semantic Token ultimately resolves through permitted Primitive Tokens or compatible Semantic aliases.
 
 Applications should almost never consume them directly.
 
@@ -48,12 +48,10 @@ Every design system ultimately resolves to physical values.
 Examples include:
 
 - colours
-- spacing
 - typography sizes
-- corner radii
 - opacity
-- blur
-- elevation
+- motion durations and curves
+- Material coefficients
 
 Without Primitive Tokens, these values become duplicated throughout implementations.
 
@@ -73,11 +71,9 @@ Good.
 
 Primitive.Colour.Indigo.500
 
-Primitive.Space.16
+Primitive.Duration.200
 
-Primitive.Radius.8
-
-Primitive.Blur.24
+Primitive.Opacity.80
 ```
 
 Poor.
@@ -127,22 +123,21 @@ Semantic meaning belongs to the next layer.
 
 The Primitive layer is intentionally small.
 
-Current categories include:
+Current candidate categories include:
 
 ```mermaid
 flowchart TD
 
 N1["Primitive"]
 N2["Colour"]
-N3["Space"]
-N4["Radius"]
-N5["Typography"]
-N6["Elevation"]
-N7["Blur"]
-N8["Opacity"]
-N9["Duration"]
-N10["Easing"]
-N11["ZIndex"]
+N3["Typography"]
+N4["Opacity"]
+N5["Duration"]
+N6["Easing"]
+N7["Material Coefficient"]
+N8["Space"]
+N9["Radius"]
+N10["Typeface Resource"]
 
 N1 --> N2
 N1 --> N3
@@ -153,7 +148,6 @@ N1 --> N7
 N1 --> N8
 N1 --> N9
 N1 --> N10
-N1 --> N11
 ```
 
 Future categories should be introduced sparingly.
@@ -185,53 +179,28 @@ Primitive Colours should never be consumed directly by components.
 
 ---
 
-# Space
+# Private Geometry Primitives
 
-Purpose.
+Mosaic requires internal spacing, radius and geometric coefficients to produce professional and coherent Presentation.
 
-Represent physical spacing units.
+Examples may include:
 
-Examples.
-
-```
-
-Primitive.Space.2
-
+```text
 Primitive.Space.4
-
 Primitive.Space.8
-
-Primitive.Space.16
-
-Primitive.Space.24
-
-Primitive.Space.32
-```
-
-Spacing meaning belongs to Semantic Tokens.
-
----
-
-# Radius
-
-Purpose.
-
-Represent physical corner radii.
-
-Examples.
-
-```
-
-Primitive.Radius.4
-
 Primitive.Radius.8
-
-Primitive.Radius.12
-
-Primitive.Radius.20
+Primitive.Radius.16
 ```
 
-Radius Tokens intentionally avoid describing where they should be used.
+These are Platform-owned implementation inputs.
+
+They are not public semantic choices such as `Spacing.Large`, and Modules, components, users and SDUI do not select them.
+
+The client-side Adaptive Layout implementation chooses and interpolates private values while calculating location, size, padding, spacing and density from content relationships, available space and governed constraints.
+
+The Material System similarly consumes private radius and Material coefficients when deriving clipping and edge treatment from resolved geometry.
+
+Exact categories, values and mathematical profiles are defined only after the token contract establishes their types, units and ownership.
 
 ---
 
@@ -510,19 +479,18 @@ Platform concerns should never appear within Primitive Tokens.
 # Primitive Model
 
 ```mermaid
-flowchart TD
+flowchart LR
 
 Primitive
 Primitive --> Semantic
-Semantic --> Composition
-Composition --> Component
-Component --> Runtime
-Runtime --> Presentation
+Semantic --> Resolver
+Resolver --> Resolved
+Resolved --> Presentation
 ```
 
 Primitive Tokens provide the physical foundation.
 
-Every higher layer progressively adds meaning.
+Semantic Tokens add meaning and runtime resolution produces a concrete Presentation value.
 
 ---
 

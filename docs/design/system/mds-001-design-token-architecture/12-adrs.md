@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 12
 Title: Architectural Decision Records
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Architectural Decision Records
@@ -13,344 +13,274 @@ Version: 0.4
 
 # Purpose
 
-The Architectural Decision Records (ADRs) contained within MDS-001 preserve the architectural reasoning behind the Design Token Architecture.
+These records explain the accepted architecture and retain superseded decisions for traceability.
 
-Where the MDL specifications established:
-
-- Vision
-- Principles
-- Mental Model
-- Interaction
-- Composition
-
-MDS-001 establishes how those concepts become machine-readable implementation.
-
-These ADRs explain why the token architecture has been deliberately layered and why responsibility is separated between Primitive, Semantic, Composition and Runtime Tokens.
-
-Future contributors should consult these ADRs before proposing structural changes to the Design System.
+Decision format, lifecycle and review expectations are governed by [MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md).
 
 ---
 
-# Decision Format
-
-Decision format, lifecycle and review expectations are governed by **[MDG-001 — Documentation Authority Guide](../../../engineering/documentation/mdg-001-documentation-authority-guide/index.md)**.
-
-This chapter records decisions specific to this specification and avoids redefining the shared ADR process.
-
 # ADR-084
 
-## Title
+## Treat Design Tokens As Architectural Concepts
 
-Treat Design Tokens As Architectural Concepts
+**Status:** Accepted
 
-### Status
+Design Tokens represent implementation-independent design decisions rather than framework variables.
 
-Accepted
-
-### Context
-
-Many Design Systems treat tokens as implementation variables.
-
-This tightly couples tokens to frontend technologies.
-
-### Decision
-
-Design Tokens become architectural concepts representing design intent rather than implementation values.
-
-### Consequences
-
-Future client implementations remain interchangeable while sharing one common Design Language.
+Client technologies may change without changing semantic meaning.
 
 ---
 
 # ADR-085
 
-## Title
+## Separate Primitive Tokens From Semantic Tokens
 
-Separate Primitive Tokens From Semantic Tokens
+**Status:** Accepted
 
-### Status
+Primitive Tokens represent foundational values without usage meaning.
 
-Accepted
+Semantic Tokens represent stable Platform design meaning.
 
-### Context
-
-Direct consumption of colour and spacing values weakens long-term maintainability.
-
-### Decision
-
-Primitive Tokens represent physical values.
-
-Semantic Tokens represent design meaning.
-
-### Consequences
-
-Themes, runtime systems and accessibility improvements can evolve without changing component implementations.
+Ordinary consumers request Semantic Tokens rather than Primitive Tokens.
 
 ---
 
 # ADR-086
 
-## Title
+## Introduce Composition Tokens
 
-Introduce Composition Tokens
+**Status:** Superseded by ADR-093
 
-### Status
+The former architecture treated Composition roles as an independent token layer.
 
-Accepted
-
-### Context
-
-Semantic Tokens alone cannot adequately describe compositional responsibilities.
-
-### Decision
-
-Composition Tokens become an independent architectural layer.
-
-### Consequences
-
-Runtime systems gain the ability to reorganise hierarchy without modifying component implementations.
+Composition roles are now governed resolver inputs owned by [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md).
 
 ---
 
 # ADR-087
 
-## Title
+## Introduce Runtime Tokens
 
-Introduce Runtime Tokens
+**Status:** Superseded by ADR-093
 
-### Status
+The former architecture treated generated runtime state as another token namespace.
 
-Accepted
-
-### Context
-
-Traditional Design Systems assume static design values.
-
-Mosaic requires adaptation based upon:
-
-- artwork
-- Focus
-- Context
-- accessibility
-- device
-
-### Decision
-
-Runtime Tokens become dynamically resolved implementation values.
-
-### Consequences
-
-The platform becomes adaptive while preserving stable semantic architecture.
+Clients now generate immutable Resolved Tokens without creating runtime semantic names.
 
 ---
 
 # ADR-088
 
-## Title
+## Generate Presentation Artefacts
 
-Presentation Is Generated
+**Status:** Accepted
 
-### Status
+CSS custom properties, Flutter values, SwiftUI environment values, shader uniforms and equivalent outputs are generated renderer artefacts.
 
-Accepted
-
-### Context
-
-Different platforms require different implementation technologies.
-
-### Decision
-
-Presentation becomes the generated output of the Design Token Architecture.
-
-### Consequences
-
-Future platforms may consume identical Design Tokens while producing different implementation artefacts.
+They are not Design Tokens and cannot redefine meaning.
 
 ---
 
 # ADR-089
 
-## Title
+## Components Consume Meaning Rather Than Values
 
-Components Consume Meaning Rather Than Values
+**Status:** Amended by ADR-093
 
-### Status
+Components consume completed resolved semantic values or profiles.
 
-Accepted
-
-### Context
-
-Components directly consuming Primitive Tokens become tightly coupled to implementation.
-
-### Decision
-
-Components consume Semantic and Composition Tokens.
-
-Primitive Tokens remain hidden beneath the architecture.
-
-### Consequences
-
-Component implementations become significantly easier to maintain and migrate.
+They do not consume Primitive Tokens, decide Composition roles or own a component-token hierarchy.
 
 ---
 
 # ADR-090
 
-## Title
+## Runtime Never Changes Meaning
 
-Runtime Never Changes Meaning
+**Status:** Accepted
 
-### Status
+Runtime resolution may change implementation, fidelity and technique.
 
-Accepted
-
-### Context
-
-Runtime adaptation introduces significant implementation flexibility.
-
-Without architectural boundaries runtime could accidentally redefine semantic intent.
-
-### Decision
-
-Runtime Tokens may alter implementation.
-
-They must never alter semantic meaning.
-
-### Consequences
-
-Artwork adaptation, accessibility and platform changes remain predictable.
+It must preserve semantic, hierarchy, interaction and accessibility meaning.
 
 ---
 
 # ADR-091
 
-## Title
+## Modules Participate Through Semantic Architecture
 
-Modules Participate Through Semantic Architecture
+**Status:** Superseded by ADR-094
 
-### Status
+The original decision prevented Module-owned foundations but left Module token terminology ambiguous.
 
-Accepted
-
-### Context
-
-Allowing modules to introduce their own token hierarchies fragments product identity.
-
-### Decision
-
-Modules contribute information and consume existing Design Tokens.
-
-The platform owns Runtime and Presentation.
-
-### Consequences
-
-Community modules naturally inherit future Design System improvements.
+ADR-094 establishes intent mapping without Module Design Tokens.
 
 ---
 
 # ADR-092
 
-## Title
+## Prefer Semantic Stability Over Implementation Stability
 
-Treat The Design Token Hierarchy As A Stable API
+**Status:** Accepted
 
-### Status
-
-Accepted
-
-### Context
-
-Applications, tooling and modules all depend upon token names.
-
-### Decision
-
-The token hierarchy becomes a public architectural contract.
-
-Semantic stability receives higher priority than implementation stability.
-
-### Consequences
-
-Future redesigns become dramatically less disruptive.
+Token values, renderer techniques and adapters may evolve more frequently than the Semantic Token API.
 
 ---
 
-# ADR Relationships
+# ADR-093
+
+## Use Primitive, Semantic And Resolved Token States
+
+**Status:** Accepted
+
+### Context
+
+The former six-layer chain mixed stable design authority with Composition, component and transient runtime responsibilities.
+
+It encouraged device-category tokens and made it unclear whether Modules or components could extend the hierarchy.
+
+### Decision
+
+Mosaic recognises two authored Platform token states:
+
+- Primitive Tokens
+- Semantic Tokens
+
+Clients generate an immutable Resolved Token Set from those tokens and governed runtime inputs.
+
+Composition roles, Module intent, Focus, accessibility, capability and budget are resolver inputs rather than token layers.
+
+Renderer values are generated outputs.
+
+### Consequences
+
+The public token API becomes smaller and more stable.
+
+Composition and component specifications retain their own authority.
+
+Runtime adaptation remains powerful without minting transient semantic names.
+
+---
+
+# ADR-094
+
+## Modules Extend Domain Intent And Composition, Not Design Tokens
+
+**Status:** Accepted
+
+### Context
+
+Modules need domain-specific expression and layouts without fragmenting the Mosaic brand.
+
+### Decision
+
+Modules may declare namespaced domain intent mapped to existing Platform semantics and may provide governed domain layout extension contracts.
+
+They cannot create Primitive or Semantic Tokens, Material physics or renderer rules.
+
+New cross-product semantic meaning requires Platform review.
+
+### Consequences
+
+Modules can express concepts such as `Calendar.Today` or `Sports.Live` while inheriting Platform appearance, accessibility and degradation behaviour.
+
+The Mosaic shell and semantic language remain coherent.
+
+---
+
+# ADR-095
+
+## Resolve From Capability And Budget Rather Than Device Category
+
+**Status:** Accepted
+
+### Context
+
+Device labels do not reliably describe browser, GPU, compositor or current workload capability.
+
+### Decision
+
+Runtime resolution uses observable capability, measured cost and current budget.
+
+Mobile, television, desktop and tablet categories do not select permanent token values or fidelity.
+
+### Consequences
+
+Clients with equivalent effective capability produce equivalent semantic fidelity regardless of product category.
+
+---
+
+# ADR-096
+
+## Keep Geometry Outside The Public Token API
+
+**Status:** Accepted
+
+### Context
+
+Exposing spacing, padding, radius, width, height or density choices would allow Modules and components to bypass adaptive Composition.
+
+### Decision
+
+Composition provides semantic relationships and constraints.
+
+The client-side Adaptive Layout implementation calculates concrete geometry using those constraints, private Platform primitives, available space, typography and accessibility.
+
+Modules, components, users and SDUI do not select geometry tokens or final Presentation coordinates.
+
+### Consequences
+
+Domain layouts express invariants and valid modes rather than pixels.
+
+Material clipping and component rendering consume completed geometry.
+
+Private spacing, radius, type and geometric Primitive Tokens remain valid internal inputs and are not exposed as public semantic controls.
+
+---
+
+# ADR-097
+
+## Treat User Refraction Quality As A Maximum
+
+**Status:** Accepted
+
+### Context
+
+Users may prefer a calmer or less expensive Acrylic experience even when the renderer can support full fidelity.
+
+### Decision
+
+Users may select Automatic, Balanced or Essential as a maximum Refraction fidelity.
+
+The preference may be synced or locally overridden for one client.
+
+Accessibility, measured capability, current budget and Presentation deadlines may reduce below that maximum but never force a higher level.
+
+### Consequences
+
+Users gain meaningful control without manipulating blur, parallax or renderer techniques directly.
+
+---
+
+# Decision Relationships
 
 ```mermaid
 flowchart TD
 
-ADR084["Design Intent"]
+A84["ADR-084 Tokens As Architecture"]
+A85["ADR-085 Primitive And Semantic"]
+A93["ADR-093 Three Token States"]
+A94["ADR-094 Module Intent"]
+A95["ADR-095 Capability Resolution"]
+A96["ADR-096 Composition Geometry"]
+A97["ADR-097 User Fidelity Maximum"]
+A88["ADR-088 Generated Presentation"]
 
-ADR085["Primitive / Semantic"]
-
-ADR086["Composition"]
-
-ADR087["Runtime"]
-
-ADR088["Presentation"]
-
-ADR089["Components"]
-
-ADR090["Meaning"]
-
-ADR091["Modules"]
-
-ADR092["Public API"]
-
-ADR084 --> ADR085
-ADR085 --> ADR086
-ADR086 --> ADR087
-ADR087 --> ADR088
-ADR086 --> ADR089
-ADR087 --> ADR090
-ADR090 --> ADR091
-ADR091 --> ADR092
+A84 --> A85
+A85 --> A93
+A93 --> A94
+A93 --> A95
+A93 --> A96
+A95 --> A97
+A93 --> A88
 ```
-
-Each decision reinforces a single architectural objective.
-
-**Meaning should remain stable while implementation remains flexible.**
-
----
-
-# Future ADRs
-
-Future Design Token ADRs are expected to formalise:
-
-- Token Schema
-- Token Registry
-- Runtime Resolver
-- Theme Generation
-- Multi-Brand Architecture
-- Token Validation
-- Build Pipelines
-- Design Tool Synchronisation
-- SDK Code Generation
-
-These intentionally remain outside the scope of MDS-001 Version 0.1.
-
----
-
-# ADR Governance
-
-Changes to the Design Token Architecture should occur only when:
-
-- semantic ambiguity exists,
-- architectural layering proves insufficient,
-- runtime evolution requires new abstraction,
-- multiple specifications repeatedly conflict.
-
-Implementation convenience is **not** sufficient justification for changing the architecture.
-
----
-
-# Summary
-
-The ADRs contained within MDS-001 define one of the most important implementation boundaries within Mosaic.
-
-Applications should never consume raw implementation values.
-
-Instead they consume stable architectural meaning.
-
-This separation allows the Design System to evolve continuously while preserving one coherent design language across every client, module and future platform.

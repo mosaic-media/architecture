@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 01
 Title: What Is A Design Token?
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # What Is A Design Token?
@@ -42,7 +42,6 @@ A token should communicate:
 before it communicates:
 
 - colour
-- spacing
 - typography
 - implementation
 
@@ -67,6 +66,10 @@ Nothing communicates:
 - why these values exist
 - whether they should change
 - where they should be reused
+
+Mosaic does not replace every raw value with a token.
+
+Colour meaning may resolve through a Semantic Token, while padding and radius are calculated by Composition and Material systems from governed context.
 
 Instead.
 
@@ -277,17 +280,17 @@ The architecture should therefore favour clarity over implementation convenience
 
 ---
 
-# Tokens Are Runtime Aware
+# Tokens Resolve At Runtime
 
-Unlike many design systems, Mosaic introduces Runtime Tokens.
+Unlike static design systems, Mosaic resolves stable Semantic Tokens against current context.
 
-Runtime Tokens allow the Design System to respond to:
+Runtime resolution allows the Design System to respond to:
 
 - artwork
 - Focus
 - Context
 - accessibility
-- device class
+- measured capability and current budget
 
 while preserving the same semantic token hierarchy.
 
@@ -370,12 +373,12 @@ Not colour.
 
 ```
 
-Spacing.Section
+Motion.Focus.Enter
 ```
 
-Communicates relationship.
+Communicates behavioural intent.
 
-Not pixel values.
+Not duration or easing values.
 
 ---
 
@@ -403,7 +406,7 @@ Technology has leaked into architecture.
 
 ---
 
-## Component Tokens
+## Component-Named Tokens
 
 ```
 
@@ -460,8 +463,9 @@ The following chapters define:
 - token hierarchy
 - primitive tokens
 - semantic tokens
-- composition tokens
-- runtime tokens
+- Composition inputs
+- Resolved Tokens
+- Module intent
 - token resolution
 
 Together they form the complete Design Token Architecture.
@@ -480,7 +484,7 @@ Every future Mosaic client should therefore think in tokens...
 
 ...not colours.
 
-...not spacing.
+...not raw geometry.
 
 ...not components.
 

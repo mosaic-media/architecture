@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 02
 Title: Token Hierarchy
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Token Hierarchy
@@ -13,513 +13,187 @@ Version: 0.4
 
 # Purpose
 
-A Design Token Architecture is only valuable if every token has a clearly defined responsibility.
+This chapter defines which Mosaic artefacts are Design Tokens and which contextual concepts remain outside the token hierarchy.
 
-Without hierarchy:
-
-- tokens duplicate one another
-- components consume inconsistent values
-- themes become difficult to evolve
-- runtime adaptation becomes unpredictable
-
-This chapter defines the canonical hierarchy of every token used within Mosaic.
-
-Every future MDS specification should build upon this hierarchy.
-
-It should never replace it.
+The hierarchy must keep Platform-owned design decisions stable while allowing runtime adaptation and Module creativity through governed intent.
 
 ---
 
-# The Hierarchy
+# Three Token States
 
-The Mosaic Design System intentionally separates tokens into six conceptual layers.
+Mosaic recognises three token states.
 
 ```mermaid
-flowchart TD
+flowchart LR
 
-N1["Primitive"]
-N2["Semantic"]
-N3["Composition"]
-N4["Component"]
-N5["Runtime"]
-N6["Presentation"]
+P["Primitive Tokens"]
+S["Semantic Tokens"]
+R["Runtime Resolver"]
+O["Resolved Token Set"]
+A["Renderer Adapter"]
 
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
+P --> S
+S --> R
+R --> O
+O --> A
 ```
 
-Each layer exists for one reason only.
+| State | Authority | Responsibility |
+|-------|-----------|----------------|
+| Primitive Token | Platform | Defines a foundational value without usage meaning. |
+| Semantic Token | Platform | Defines stable design meaning and references permitted Primitive Tokens or other Semantic Tokens. |
+| Resolved Token | Client | Materialises one Semantic Token for the current resolution context. |
 
-No layer should perform the responsibilities of another.
+Primitive and Semantic Tokens are authored.
+
+Resolved Tokens are generated and immutable for one resolution cycle.
 
 ---
 
-# Why Layers Exist
-
-Most token systems contain only two layers.
-
-```mermaid
-flowchart TD
-
-N1["Primitive"]
-N2["Semantic"]
-
-N1 --> N2
-```
-
-This works well for relatively static interfaces.
-
-Mosaic intentionally supports:
-
-- adaptive composition
-- runtime atmosphere
-- contextual hierarchy
-- artwork-driven experiences
-- multiple client platforms
-
-These capabilities require additional abstraction.
-
-The hierarchy therefore separates:
-
-Meaning
-
-from
-
-Implementation
-
-at every stage.
-
----
-
-# Layer 01
-
-## Primitive
-
-Purpose:
-
-Represent physical values.
+# Primitive Tokens
 
 Primitive Tokens answer:
 
-> **What physical value exists?**
+> **What foundational value exists?**
 
-Examples include:
+Examples include governed colours, dimensional scales, type metrics, motion curves and Material coefficients.
 
-- colours
-- spacing
-- typography sizes
-- blur radii
-- corner radii
-- elevation values
+Primitive Tokens:
 
-Primitive Tokens intentionally possess **no semantic meaning**.
-
-Example.
-
-```
-
-Primitive.Colour.Indigo.500
-```
-
-Nothing about this token explains:
-
-- where it should be used
-- why it exists
-
-That responsibility belongs to Semantic Tokens.
+- contain no usage meaning
+- are owned only by the Platform
+- may be referenced by Semantic Tokens
+- must not be consumed directly by Modules or ordinary components
+- must not contain CSS, Flutter or other renderer terminology
 
 ---
 
-# Layer 02
-
-## Semantic
-
-Purpose:
-
-Represent design intent.
+# Semantic Tokens
 
 Semantic Tokens answer:
 
-> **Why does this value exist?**
+> **Why does this design value exist?**
 
 Examples include:
 
+```text
+Colour.Content.Primary
+Colour.Status.Critical
+Material.Hero
+Motion.Focus.Enter
+Typography.Content.Supporting
 ```
 
-Surface.Primary
+Semantic Tokens:
 
-Text.Secondary
-
-Border.Subtle
-
-Action.Primary
-
-Atmosphere.Supporting
-```
-
-Components should consume Semantic Tokens rather than Primitive Tokens.
-
-This allows implementation to evolve without changing consuming code.
+- form the stable public design API
+- are owned only by the Platform
+- preserve meaning across themes and clients
+- may resolve differently without changing their meaning
+- are the only authored token state ordinary consumers may request
 
 ---
 
-# Layer 03
+# Resolved Tokens
 
-## Composition
+Resolved Tokens answer:
 
-Purpose:
+> **What concrete value expresses this meaning now?**
 
-Represent compositional intent.
+A Resolved Token contains the concrete value selected for one Semantic Token after evaluation of Composition, domain intent, Focus, accessibility, capability and budget.
 
-Composition Tokens answer:
+Resolved Tokens:
 
-> **What role does this concept play within the current Composition?**
-
-Examples include:
-
-```
-
-Hero
-
-Anchor
-
-Supporting
-
-Peripheral
-
-Overlay
-
-Navigation
-```
-
-Composition Tokens intentionally describe:
-
-importance
-
-rather than
-
-appearance.
+- are generated by the client
+- remain immutable for one resolution cycle
+- do not become a new semantic namespace
+- may be cached by complete resolution context
+- are translated into renderer-specific artefacts by adapters
 
 ---
 
-# Layer 04
+# Resolver Inputs Are Not Tokens
 
-## Component
+The following concepts influence resolution but do not form token layers:
 
-Purpose:
+| Input | Owning authority |
+|-------|------------------|
+| Composition role and hierarchy | [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) |
+| Module domain intent | Module contract governed by MDS-001 |
+| Component responsibility | [MDS-008 — Component Library](../mds-008-component-library/index.md) |
+| Focus and current Context | Runtime Composition state |
+| Accessibility requirements | Platform accessibility state |
+| Renderer capability and current budget | Client runtime |
 
-Map semantic meaning onto reusable interface primitives.
-
-Component Tokens answer:
-
-> **How should this component express its role?**
-
-Examples include:
-
-```
-
-Button.Primary
-
-Tile.Hero
-
-Navigation.Active
-
-Timeline.Current
-```
-
-Component Tokens should consume:
-
-- Semantic Tokens
-- Composition Tokens
-
-They should never consume Primitive Tokens directly.
+Treating these inputs as tokens would allow transient state or domain vocabulary to fragment the stable design API.
 
 ---
 
-# Layer 05
+# Recipes And Profiles
 
-## Runtime
+A recipe or profile is a governed combination of Semantic Tokens and constrained inputs.
 
-Purpose:
+It is not another token layer.
 
-Adapt the Design System to the user's current World.
+Recipes may coordinate several systems, such as Colour, Material, Typography and Motion, while each underlying token retains its own authority.
 
-Runtime Tokens answer:
-
-> **What changed?**
-
-Examples include:
-
-```
-
-Atmosphere.Primary
-
-Current.Domain
-
-Current.Focus
-
-Device.Class
-
-Accessibility.Motion
-```
-
-Runtime Tokens are generated.
-
-They are not manually authored.
-
-Future runtime systems will continuously resolve these tokens.
+Modules may request or compose permitted recipes but cannot create Primitive or Semantic Tokens.
 
 ---
 
-# Layer 06
+# Presentation Outputs
 
-## Presentation
+CSS custom properties, Flutter values, SwiftUI environment values and shader uniforms are generated renderer artefacts.
 
-Purpose:
+They are not Design Tokens and must not become an authority for semantic meaning.
 
-Produce implementation artefacts.
-
-Examples include:
-
-- CSS Variables
-- Flutter ThemeData
-- SwiftUI Environment
-- Compose Theme
-- Design Kit Variables
-
-Presentation is intentionally excluded from the Design Token Architecture.
-
-It is generated from it.
-
----
-
-# Responsibility Matrix
-
-| Layer | Responsibility | Changes Frequently |
-|--------|----------------|-------------------|
-| Primitive | Physical values | Rarely |
-| Semantic | Meaning | Very rarely |
-| Composition | Experience roles | Rarely |
-| Component | Interface mapping | Occasionally |
-| Runtime | Current World | Continuously |
-| Presentation | Platform implementation | Continuously |
-
-Notice that the higher layers change significantly less frequently than the lower layers.
-
----
-
-# Information Flow
-
-Token flow always proceeds in one direction.
-
-```mermaid
-flowchart TD
-
-Primitive
-Primitive --> Semantic
-Semantic --> Composition
-Composition --> Component
-Component --> Runtime
-Runtime --> Presentation
-```
-
-Tokens should never resolve backwards.
-
-For example:
-
-Presentation should never determine:
-
-- Semantic
-- Composition
-- Priority
-
-Understanding always precedes implementation.
+Renderer adapters may change without changing the token hierarchy.
 
 ---
 
 # Dependency Rules
 
-Every layer may consume tokens from layers above it.
+Permitted flow is:
 
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Component"]
-N2["Semantic"]
-N3["Primitive"]
-
-N1 --> N2
-N2 --> N3
+```text
+Primitive Token
+    → Semantic Token
+    → runtime resolution with governed inputs
+    → Resolved Token
+    → renderer artefact
 ```
 
-It may **not** bypass layers unnecessarily.
+The following are prohibited:
 
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Component"]
-N2["Primitive"]
-
-N1 --> N2
-```
-
-Meaning has been skipped.
-
-This weakens maintainability.
+- Module intent creating Primitive or Semantic Tokens
+- components consuming Primitive Tokens directly
+- renderer artefacts redefining Semantic Tokens
+- device categories selecting permanent token values
+- runtime state creating new semantic meaning
+- local overrides bypassing accessibility or Platform constraints
 
 ---
 
-# Hierarchy Example
+# Litmus Test
 
-A Hero Tile.
+Ask:
 
-```mermaid
-flowchart TD
+> **Does this name describe a stable Platform design decision, or does it describe current domain and runtime state?**
 
-N1["Primitive"]
-N2["Colour.Indigo.600"]
-N3["Semantic"]
-N4["Surface.Primary"]
-N5["Composition"]
-N6["Hero"]
-N7["Component"]
-N8["Tile.Hero"]
-N9["Runtime"]
-N10["Atmosphere.Primary"]
-N11["Presentation"]
-N12["CSS Variable"]
+Stable foundational values belong to Primitive Tokens.
 
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-N6 --> N7
-N7 --> N8
-N8 --> N9
-N9 --> N10
-N10 --> N11
-N11 --> N12
-```
+Stable design meaning belongs to Semantic Tokens.
 
-Every layer contributes exactly one responsibility.
+Current state belongs in the resolution context.
 
-No layer duplicates another.
-
----
-
-# Layer Independence
-
-Each layer should remain independently replaceable.
-
-Examples.
-
-Primitive colours may change.
-
-Semantic meaning remains.
-
-Component implementations may change.
-
-Composition remains.
-
-Presentation frameworks may change.
-
-Runtime behaviour remains.
-
-This separation significantly improves long-term maintainability.
-
----
-
-# Anti-patterns
-
-## Component → Primitive
-
-Components directly consuming physical values.
-
-Meaning disappears.
-
----
-
-## Runtime → Primitive
-
-Runtime generating raw colours instead of semantic intent.
-
-Consistency weakens.
-
----
-
-## Semantic → Presentation
-
-Semantic Tokens directly referencing CSS variables.
-
-Architecture becomes platform dependent.
-
----
-
-## Composition As Components
-
-Treating:
-
-```
-
-Hero
-```
-
-as a component rather than a compositional role.
-
-Future adaptability decreases.
-
----
-
-# Hierarchy Litmus Test
-
-Contributors should be able to answer:
-
-> **Which responsibility belongs exclusively to this layer?**
-
-If the answer is:
-
-"Several."
-
-The hierarchy probably requires refinement.
-
-Every layer should possess one responsibility.
-
----
-
-# Relationship To Future Specifications
-
-Future specifications define every layer in greater detail.
-
-Examples include:
-
-- [MDS-002 — Colour System](../mds-002-colour-system/index.md)
-- [MDS-003 — Material System](../mds-003-material-system/index.md)
-- [MDS-004 — Typography System](../mds-004-typography-system/index.md)
-- [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md)
-- [MDS-008 — Component Library](../mds-008-component-library/index.md)
-
-Each specification should extend one or more layers without redefining the hierarchy itself.
+Concrete output belongs in a Resolved Token or renderer artefact.
 
 ---
 
 # Summary
 
-The Token Hierarchy is the backbone of the Mosaic Design System.
+Mosaic has one Platform-owned authored hierarchy: Primitive Tokens and Semantic Tokens.
 
-It ensures that:
+Clients generate Resolved Tokens from that hierarchy and the current governed context.
 
-- meaning remains stable
-- implementation remains flexible
-- runtime adaptation becomes possible
-- clients remain consistent
-- contributors think in intent rather than values
-
-Every future token introduced into Mosaic should have a clear home within this hierarchy.
+Composition, Modules, components and renderers participate without extending token ownership.

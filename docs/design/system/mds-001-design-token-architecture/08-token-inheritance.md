@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 08
 Title: Token Inheritance
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Token Inheritance
@@ -13,551 +13,118 @@ Version: 0.4
 
 # Purpose
 
-One of the primary responsibilities of the Mosaic Design Token Architecture is allowing design decisions to evolve without requiring widespread implementation changes.
-
-Token Inheritance provides this capability.
-
-Instead of every component defining its own values, components inherit increasingly specialised design intent from higher layers of the architecture.
-
-Inheritance therefore allows the Design System to express:
-
-- consistency
-- adaptability
-- maintainability
-
-through one coherent hierarchy.
+Inheritance permits stable Semantic Tokens to reuse Platform definitions without duplicating values or allowing consumers to bypass meaning.
 
 ---
 
-# Definition
+# Permitted Relationships
 
-Within MDS, **Token Inheritance** is defined as:
+Primitive Tokens terminate an inheritance chain.
 
-> **The process by which a token derives its meaning or implementation from another token while preserving a single responsibility at each layer.**
+Semantic Tokens may reference:
 
-Inheritance exists to preserve meaning.
+- one Primitive Token
+- another compatible Semantic Token
+- a governed composite of compatible Semantic Tokens
 
-Not duplicate values.
+Resolved Tokens inherit the completed meaning and value selected by resolution.
+
+Composition roles, Module intent and component identities do not participate in token inheritance.
+
+They influence resolution through explicit inputs and mappings.
 
 ---
 
-# Why Inheritance Exists
+# Type Compatibility
 
-Without inheritance, every component becomes responsible for resolving its own appearance.
+Every inheritance relationship must preserve value type and unit compatibility.
 
-Example.
+A colour token cannot inherit a duration.
+
+A relative length must not silently inherit an absolute physical value when their scaling rules differ.
+
+Composite tokens must declare the type of every member.
+
+---
+
+# Alias Direction
+
+Aliases must resolve toward an authoritative definition.
 
 ```mermaid
-flowchart TD
+flowchart LR
 
-N1["Hero Tile"]
-N2["Colour"]
-N3["Spacing"]
-N4["Radius"]
-N5["Blur"]
-N6["Elevation"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
+S1["Semantic Alias"] --> S2["Semantic Authority"]
+S2 --> P["Primitive Value"]
 ```
 
-Every component repeats identical decisions.
+Aliases must not:
 
-Instead.
-
-```mermaid
-flowchart TD
-
-N1["Hero Tile"]
-N2["Composition.Hero"]
-N3["Surface.Hero"]
-N4["Primitive Values"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Responsibility becomes centralised.
-
-Consistency naturally follows.
+- form cycles
+- cross incompatible token families
+- point to renderer artefacts
+- depend on Module namespaces
+- bypass deprecation metadata
 
 ---
 
-# Inheritance Hierarchy
+# Theme Variation
 
-Inheritance always follows the same architectural direction.
+A theme may change the permitted Primitive or Semantic mapping used during resolution.
 
-```mermaid
-flowchart TD
+It must not change what a Semantic Token means.
 
-N1["Primitive"]
-N2["Semantic"]
-N3["Composition"]
-N4["Component"]
-N5["Runtime"]
-N6["Platform"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-```
-
-No layer should inherit directly from a lower layer.
-
-Each layer inherits only the responsibilities it requires.
-
----
-
-# Primitive Inheritance
-
-Primitive Tokens do not inherit.
-
-They represent the physical foundation of the Design System.
-
-Example.
-
-```
-
-Primitive.Space.16
-```
-
-This value is absolute.
-
-Primitive Tokens terminate the inheritance chain.
-
----
-
-# Semantic Inheritance
-
-Semantic Tokens inherit physical implementation.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Surface.Primary"]
-N2["Primitive.Colour.Slate.950"]
-
-N1 --> N2
-```
-
-The Semantic Token gains:
-
-- colour
-- contrast
-- physical implementation
-
-while preserving semantic meaning.
-
----
-
-# Composition Inheritance
-
-Composition Tokens inherit semantic meaning.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Composition.Hero"]
-N2["Surface.Hero"]
-N3["Text.Primary"]
-N4["Elevation.Primary"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Composition therefore combines multiple semantic concepts into one compositional role.
-
-Importantly...
-
-It still does not know anything about components.
-
----
-
-# Component Inheritance
-
-Components inherit compositional responsibilities.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Hero Tile"]
-N2["Composition.Hero"]
-N3["Semantic.Surface.Hero"]
-N4["Primitive Values"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The component consumes design intent.
-
-It does not create it.
-
----
-
-# Runtime Inheritance
-
-Runtime Tokens inherit the complete conceptual chain.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Runtime.Atmosphere.Primary"]
-N2["Composition.Hero"]
-N3["Surface.Hero"]
-N4["Primitive Colour"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Runtime then resolves implementation according to:
-
-- artwork
-- accessibility
-- device
-- user preferences
-
-Meaning remains unchanged.
-
----
-
-# Platform Inheritance
-
-Platform implementations inherit fully resolved Runtime Tokens.
-
-Examples include:
-
-- CSS Variables
-- Flutter Theme
-- SwiftUI Environment
-- Compose Theme
-
-Platform code should never reconstruct inheritance.
-
-It should consume the completed result.
-
----
-
-# Multiple Inheritance
-
-A token may inherit from multiple parent tokens.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Composition.Hero"]
-N2["Surface.Hero"]
-N3["Text.Primary"]
-N4["Elevation.Primary"]
-N5["Spacing.Section"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
-
-The resulting role communicates:
-
-- hierarchy
-- material
-- typography
-- rhythm
-
-without duplicating implementation.
-
-Multiple inheritance should remain intentional and predictable.
-
----
-
-# Override Rules
-
-Inheritance should support controlled overrides.
-
-Permitted.
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["Accessibility Override"]
-
-N1 --> N2
-```
-
-Not permitted.
-
-```mermaid
-flowchart TD
-
-N1["Component"]
-N2["Primitive Override"]
-
-N1 --> N2
-```
-
-Bypassing semantic layers weakens the architecture.
-
-Overrides should occur as high in the hierarchy as practical.
+For example, `Colour.Content.Primary` may resolve to different accessible colours in light and dark themes while retaining its responsibility.
 
 ---
 
 # Local Overrides
 
-Occasionally local overrides are necessary.
+Modules and components cannot locally override token inheritance.
 
-These should remain exceptional.
+Permitted customisation occurs through:
 
-Before introducing an override ask:
+- mapped domain intent
+- governed recipes
+- Composition inputs
+- user preferences
+- accessibility requirements
 
-1. Can an existing Semantic Token solve this?
-2. Can Composition solve this?
-3. Is Runtime the correct place?
-4. Is a new token required?
-
-Overrides should be the exception.
-
-Not the default workflow.
+If a required expression cannot be achieved through those inputs, it requires Platform review rather than a local alias.
 
 ---
 
-# Inheritance And Themes
+# Resolution And Inheritance
 
-Themes should never redefine semantic meaning.
+Inheritance is resolved before contextual constraints are applied.
 
-Instead.
-
-```mermaid
-flowchart TD
-
-N1["Surface.Primary"]
-N2["Dark Theme"]
-N3["Slate 950"]
-
-N1 --> N2
-N2 --> N3
+```text
+validate token
+    → resolve aliases
+    → evaluate context
+    → enforce accessibility and budget
+    → publish Resolved Token
 ```
 
-```mermaid
-flowchart TD
-
-N1["Surface.Primary"]
-N2["Light Theme"]
-N3["Slate 50"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The consuming component remains identical.
-
-Only implementation changes.
+The renderer receives no unresolved inheritance graph.
 
 ---
 
-# Inheritance And Modules
+# Validation
 
-Modules should inherit the complete Design System.
+Automated validation should reject:
 
-Modules should consume:
-
-- Semantic Tokens
-- Composition Tokens
-
-They should never redefine:
-
-- Primitive values
-- Runtime resolution
-- Platform implementation
-
-This guarantees ecosystem consistency.
-
----
-
-# Good Examples
-
-```mermaid
-flowchart TD
-
-N1["Button"]
-N2["Action.Primary"]
-N3["Primitive Colour"]
-
-N1 --> N2
-N2 --> N3
-```
-
-```mermaid
-flowchart TD
-
-N1["Hero Tile"]
-N2["Composition.Hero"]
-N3["Surface.Hero"]
-N4["Primitive Values"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-```mermaid
-flowchart TD
-
-N1["Timeline"]
-N2["Composition.Supporting"]
-N3["Surface.Secondary"]
-N4["Primitive Values"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Meaning accumulates.
-
-Implementation remains centralised.
-
----
-
-# Anti-patterns
-
-## Primitive Consumption
-
-```mermaid
-flowchart TD
-
-N1["Component"]
-N2["Primitive"]
-
-N1 --> N2
-```
-
-Semantic meaning has been bypassed.
-
----
-
-## Circular Inheritance
-
-```mermaid
-flowchart TD
-
-N1["Semantic"]
-N2["Component"]
-N3["Semantic"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Inheritance should always remain directional.
-
----
-
-## Component Overrides
-
-Components redefining inherited values locally.
-
-Consistency weakens.
-
----
-
-## Runtime Mutation
-
-Runtime changing semantic identity.
-
-Runtime resolves implementation.
-
-It never changes meaning.
-
----
-
-# Inheritance Model
-
-```mermaid
-flowchart TD
-
-Primitive
-Primitive --> Semantic
-Semantic --> Composition
-Composition --> Component
-Component --> Runtime
-Runtime --> Platform
-Platform --> Rendering
-```
-
-Every layer contributes additional understanding.
-
-No layer duplicates responsibilities owned elsewhere.
-
----
-
-# Relationship To Future Specifications
-
-Future specifications should inherit from this architecture.
-
-Examples include:
-
-- Colour System
-- Material System
-- Typography
-- Motion
-- Component Library
-
-None of these specifications should redefine inheritance.
-
-They should extend it.
-
----
-
-# Litmus Test
-
-Contributors should ask:
-
-> **Can this change be made higher in the hierarchy?**
-
-If the answer is yes...
-
-The change should almost always occur there.
-
-Higher-level inheritance generally produces:
-
-- fewer overrides
-- stronger consistency
-- easier maintenance
+- circular aliases
+- missing targets
+- incompatible value types
+- Module-defined Primitive or Semantic targets
+- aliases to generated renderer names
+- unresolved deprecated targets without migration paths
 
 ---
 
 # Summary
 
-Token Inheritance allows Mosaic to express one coherent Design System across:
+Inheritance exists only within the Platform-owned Primitive and Semantic hierarchy.
 
-- multiple devices
-- multiple themes
-- runtime adaptation
-- accessibility
-- future implementations
-
-Every layer inherits meaning from the layer above it while adding exactly one new responsibility.
-
-This deliberate separation is what allows the Design System to evolve without losing conceptual integrity.
+Runtime and domain concepts influence resolution without becoming inheritance layers.

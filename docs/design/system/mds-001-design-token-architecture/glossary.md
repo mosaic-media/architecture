@@ -1,139 +1,111 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/glossary.md
 Document: MDS-001
-Title: Glossary
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Glossary
 
 ---
 
-# Purpose
+# A
 
-This glossary defines the architectural terminology introduced by **MDS-001 — Design Token Architecture**.
+## Appearance Preference
 
-Unlike previous MDL glossaries, this document focuses on implementation concepts rather than product concepts.
+The user or operating-system choice of Light, Dark or system-controlled appearance.
 
-These definitions should be considered normative throughout every future MDS specification.
+Appearance Preference does not permit arbitrary shell recolouring.
 
 ---
 
 # C
 
-## Composition Token
+## Capability Input
 
-A token describing the compositional role of an element.
+Observable client support or measured renderer behaviour used to constrain token resolution.
 
-Composition Tokens communicate:
+Capability Input describes what can be performed correctly and does not classify the device.
 
-- hierarchy
-- importance
-- behavioural responsibility
+## Composition Input
 
-They intentionally avoid communicating physical implementation.
+A role, relationship, priority or constraint supplied by the Composition Engine to token resolution.
 
-Examples include:
-
-- Hero
-- Supporting
-- Anchor
-- Peripheral
+Composition Input is runtime context rather than a Design Token.
 
 ---
 
-## Component Token
+# D
 
-A token consumed directly by a reusable interface component.
+## Domain Intent
 
-Component Tokens inherit semantic meaning rather than defining it.
+A namespaced Module-owned identifier describing a domain fact that maps to existing Platform semantic meaning.
 
-They should rarely reference Primitive Tokens directly.
+Domain Intent is not a Primitive or Semantic Token.
+
+## Dynamic Budget
+
+The client-owned estimate of CPU, GPU, memory, transfer and compositor work safely available for optional Presentation refinement now.
 
 ---
 
-# I
+# F
 
-## Inheritance
+## Fidelity Maximum
 
-The architectural process through which one token derives meaning from another.
+The highest Refraction fidelity the user permits: Automatic, Balanced or Essential.
 
-Inheritance should always flow downward through the token hierarchy.
+Capability, budget and accessibility may resolve to a lower level.
 
-Meaning accumulates.
+---
 
-Responsibilities remain separated.
+# L
+
+## Local Override
+
+A preference stored for one client that takes precedence over the corresponding synced account preference on that client only.
 
 ---
 
 # P
 
-## Platform Token
+## Presentation Artefact
 
-A platform-specific implementation generated from resolved Runtime Tokens.
+A generated renderer-specific value such as a CSS custom property, Flutter value, SwiftUI environment value or shader uniform.
 
-Examples include:
-
-- CSS variables
-- Flutter ThemeData
-- SwiftUI Environment values
-- Compose theme objects
-
-Platform Tokens are generated artefacts.
-
-They are not authored manually.
-
----
+Presentation Artefacts do not own semantic meaning.
 
 ## Primitive Token
 
-A token representing a measurable physical value.
+A Platform-owned foundational value without usage meaning.
 
-Examples include:
-
-- colour
-- spacing
-- blur
-- elevation
-- radius
-
-Primitive Tokens intentionally contain no semantic meaning.
+Primitive Tokens may define colours, dimensions, type metrics, motion curves or Material coefficients and are not consumed directly by Modules or ordinary components.
 
 ---
 
 # R
 
-## Resolution
+## Recipe
 
-The deterministic process through which a token becomes a concrete implementation value.
+A governed combination of existing Semantic Tokens and constrained inputs used to coordinate an expression.
 
-Resolution evaluates:
+A Recipe is not another token layer and cannot introduce new Primitive or Semantic Tokens.
 
-- Semantic meaning
-- Composition
-- Runtime inputs
-- Accessibility
-- Platform
+## Resolved Token
 
-before producing a renderable value.
+An immutable client-generated value expressing one Semantic Token for one complete resolution context.
 
----
+## Resolved Token Set
 
-## Runtime Token
+The complete atomic collection of Resolved Tokens published for one resolution cycle.
 
-A dynamically resolved token representing the current runtime environment.
+## Resolution Context
 
-Examples include:
+The captured set of governed inputs evaluated by Token Resolution, including Composition, mapped Module intent, Focus, theme, artwork, accessibility, capability and budget.
 
-- Atmosphere
-- Device
-- Accessibility
-- Current Focus
+## Runtime Resolver
 
-Runtime Tokens never redefine semantic meaning.
-
-They only refine implementation.
+The client-owned subsystem that transforms Platform Semantic Tokens and Resolution Context into a Resolved Token Set.
 
 ---
 
@@ -141,16 +113,9 @@ They only refine implementation.
 
 ## Semantic Token
 
-A token representing design intent independently from implementation.
+A Platform-owned token representing stable design meaning independently from implementation technology and current runtime state.
 
-Examples include:
-
-- Surface.Primary
-- Text.Secondary
-- Action.Primary
-- Border.Subtle
-
-Applications should consume Semantic Tokens rather than Primitive Tokens whenever possible.
+Semantic Tokens form the public Design System API.
 
 ---
 
@@ -158,104 +123,44 @@ Applications should consume Semantic Tokens rather than Primitive Tokens wheneve
 
 ## Theme
 
-A mapping between Semantic Tokens and Primitive Tokens.
-
-Themes alter implementation.
-
-They should never alter semantic intent.
-
----
+A governed variation in permitted Primitive or Semantic mappings that preserves Semantic Token meaning.
 
 ## Token
 
-The smallest implementation unit capable of expressing a design decision independently from implementation technology.
+A machine-readable Platform design decision with a stable identifier, type, value or reference, ownership and lifecycle metadata.
 
-Tokens communicate intent before values.
+Within Mosaic, authored Design Tokens are Primitive Tokens or Semantic Tokens.
 
----
+## Token Alias
 
-## Token Hierarchy
-
-The ordered architectural structure of the Design Token Architecture.
-
-```mermaid
-flowchart TD
-
-N1["Primitive"]
-N2["Semantic"]
-N3["Composition"]
-N4["Component"]
-N5["Runtime"]
-N6["Presentation"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-```
-
-Each layer contributes one responsibility.
-
----
-
-## Token Resolution
-
-The runtime process responsible for converting abstract tokens into platform-specific implementation values.
-
-Resolution should remain deterministic and invisible to application code.
-
----
+A type-compatible reference from one Platform token to another authoritative Platform token.
 
 ## Token Drift
 
-The gradual weakening of the Design Token Architecture through:
+The gradual loss of semantic consistency through duplication, local overrides, device forks or implementation leakage.
 
-- duplicate semantics
-- implementation leakage
-- inconsistent naming
-- incorrect layering
+## Token Resolution
 
-Token Drift is considered architectural debt.
-
----
-
-## Token Debt
-
-Accumulated architectural complexity caused by poor token design.
-
-Examples include:
-
-- duplicated tokens
-- unnecessary aliases
-- Primitive consumption
-- undocumented Runtime Tokens
-
-Token Debt should be reduced continuously.
+The deterministic client-owned process that evaluates Semantic Tokens against a governed Resolution Context and publishes an immutable Resolved Token Set.
 
 ---
 
 # Cross References
 
-| Specification | Primary Concepts |
+| Specification | Related concepts |
 |---------------|------------------|
-| [MDL-001 — Mosaic Design Language Vision](../../language/mdl-001-vision/index.md) | Product Philosophy |
-| [MDL-002 — Principles](../../language/mdl-002-principles/index.md) | Design Intent |
-| [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World, Information |
-| [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Behaviour |
-| [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Hierarchy, Composition |
-| [MDS-003 — Material System](../mds-003-material-system/index.md) | Semantic Consumption |
-| [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) | Runtime Resolution |
+| [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Composition and hierarchy |
+| [MDS-002 — Colour System](../mds-002-colour-system/index.md) | Colour semantics and runtime atmosphere |
+| [MDS-003 — Material System](../mds-003-material-system/index.md) | Material profiles and capability-driven fidelity |
+| [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) | Composition inputs and domain layout selection |
+| [MDS-008 — Component Library](../mds-008-component-library/index.md) | Resolved-value consumption |
 
 ---
 
 # Terminology Rules
 
-Future contributors should:
+Use **Platform** for the owner of Primitive and Semantic Tokens.
 
-- describe meaning before values
-- describe semantics before implementation
-- consume higher-level tokens whenever practical
-- avoid platform-specific terminology within architectural specifications
+Use **Module** for an extensibility participant providing domain intent or layout contracts.
 
-The Design Token Architecture should remain understandable independently from any implementation technology.
+Do not use Composition Token, Component Token, Runtime Token, Module Token or Platform Token as current architectural categories.

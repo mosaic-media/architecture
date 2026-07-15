@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 04
 Title: Semantic Tokens
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Semantic Tokens
@@ -41,11 +41,10 @@ Within MDS, a **Semantic Token** is defined as:
 
 Semantic Tokens deliberately avoid describing:
 
-- colour
-- spacing
-- radius
-- typography
-- blur
+- physical colour values
+- pixel geometry
+- type measurements
+- blur radii or Material coefficients
 
 Instead they describe:
 
@@ -428,7 +427,7 @@ Surface.Primary
 Border.Subtle
 ```
 
-Components consume Semantic Tokens.
+Component contracts may request Semantic Tokens, while client renderers consume their completed Resolved Token values.
 
 Semantic Tokens should never know components exist.
 
@@ -467,15 +466,19 @@ Surface.CurrentArtwork
 Correct.
 
 ```mermaid
-flowchart TD
+flowchart LR
 
 N1["Surface.Hero"]
-N2["Runtime.Atmosphere.Primary"]
+N2["Runtime Resolver"]
+N3["Resolved Surface.Hero"]
+N4["Atmosphere Context"]
 
 N1 --> N2
+N4 --> N2
+N2 --> N3
 ```
 
-Runtime adapts implementation.
+Runtime context adapts implementation through resolution.
 
 Semantic meaning remains stable.
 
@@ -614,21 +617,20 @@ Runtime concepts belong elsewhere.
 # Semantic Model
 
 ```mermaid
-flowchart TD
+flowchart LR
 
 Primitive
 Primitive --> Semantic
-Semantic --> Composition
-Composition --> Component
-Component --> Runtime
-Runtime --> Presentation
+Semantic --> Resolver
+Resolver --> Resolved
+Resolved --> Presentation
 ```
 
 Semantic Tokens introduce meaning.
 
-Everything above them should reason about that meaning.
+Composition and Module intent provide context to the resolver without becoming token layers.
 
-Everything below them should implement it.
+Resolved Tokens and renderer artefacts implement the meaning.
 
 ---
 

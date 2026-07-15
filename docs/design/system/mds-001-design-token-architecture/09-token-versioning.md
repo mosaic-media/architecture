@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 09
 Title: Token Versioning
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Token Versioning
@@ -57,7 +57,6 @@ Different layers possess different expected rates of change.
 |---------|-----------------|
 | Primitive Values | Occasionally |
 | Semantic Tokens | Rarely |
-| Composition Tokens | Very Rarely |
 | Runtime Resolution | Frequently |
 | Platform Implementation | Continuously |
 
@@ -276,7 +275,7 @@ Long-term duplication weakens the architecture.
 
 ---
 
-# Runtime Compatibility
+# Resolver Compatibility
 
 Runtime evolution should remain backwards compatible whenever practical.
 
@@ -284,7 +283,7 @@ Example.
 
 ```
 
-Runtime.Atmosphere.Primary
+Atmosphere.Primary
 ```
 
 may internally evolve from:
@@ -310,7 +309,7 @@ Consumers should remain unaware of the implementation change.
 Community modules should consume:
 
 - Semantic Tokens
-- Composition Tokens
+- governed recipes and mapped Platform semantics
 
 They should avoid consuming:
 
@@ -323,15 +322,15 @@ Doing so significantly reduces the likelihood of breaking changes.
 
 # Versioning Responsibilities
 
-| Layer | Responsibility |
-|---------|----------------|
-| Primitive | Physical compatibility |
-| Semantic | API stability |
-| Composition | Behavioural stability |
-| Runtime | Adaptive compatibility |
-| Platform | Client compatibility |
+| Artefact | Responsibility |
+|----------|----------------|
+| Primitive Token | Physical and type compatibility. |
+| Semantic Token | Public design API stability. |
+| Domain-intent mapping | Module contract compatibility. |
+| Runtime Resolver | Deterministic adaptive compatibility. |
+| Renderer adapter | Client implementation compatibility. |
 
-Every layer owns a different aspect of stability.
+Each authority owns a different aspect of stability without becoming another token layer.
 
 ---
 
@@ -400,11 +399,11 @@ Changing names without architectural justification.
 
 ---
 
-## Runtime Breaking Changes
+## Resolver Breaking Changes
 
-Changing Runtime behaviour while preserving the same semantic meaning.
+Changing resolver behaviour in a way that breaks the established semantic meaning.
 
-Runtime should evolve implementation.
+Resolution may evolve implementation.
 
 Not intent.
 
@@ -429,16 +428,16 @@ Modules become unnecessarily fragile.
 # Version Model
 
 ```mermaid
-flowchart TD
+flowchart LR
 
 Primitive
 Primitive --> Semantic
-Semantic --> Composition
-Composition --> Runtime
-Runtime --> Platform
+Semantic --> Resolver
+Resolver --> Resolved
+Resolved --> Platform
 Semantic --> Stable
 Primitive --> Evolves
-Runtime --> Adapts
+Resolved --> Adapts
 Platform --> Changes
 ```
 

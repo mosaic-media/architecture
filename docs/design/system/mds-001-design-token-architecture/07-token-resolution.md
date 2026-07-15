@@ -4,7 +4,7 @@ Document: MDS-001
 Chapter: 07
 Title: Token Resolution
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Token Resolution
@@ -13,577 +13,213 @@ Version: 0.4
 
 # Purpose
 
-Previous chapters defined the layers of the Design Token Architecture.
-
-This chapter defines **how those layers become usable design values at runtime**.
-
-Token Resolution is responsible for transforming abstract design intent into concrete values without exposing implementation complexity to components.
-
-Components should never ask:
-
-> **"Which colour should I use?"**
-
-Instead they should ask:
-
-> **"Which token represents my responsibility?"**
-
-The Design System resolves everything else.
+Token Resolution transforms stable Platform meaning into concrete client values without exposing contextual or renderer complexity to Modules and components.
 
 ---
 
-# Definition
+# Resolution Contract
 
-Within MDS, **Token Resolution** is defined as:
+Token Resolution is:
 
-> **The deterministic process by which an abstract design token is resolved into a platform-specific implementation value.**
+> **The deterministic client-owned process that evaluates Semantic Tokens against a governed resolution context and publishes an immutable Resolved Token Set.**
 
-Resolution is an implementation process.
-
-The Design Language remains unchanged throughout.
+The same token catalogue revision and equivalent context must produce an equivalent semantic result within the declared renderer precision.
 
 ---
 
-# Why Resolution Exists
-
-Consider the following component.
-
-```
-
-Hero Tile
-```
-
-Without token resolution, the component would need to understand:
-
-- theme
-- artwork
-- accessibility
-- platform
-- device
-- colour palette
-- contrast
-- motion
-
-The component becomes responsible for far too many decisions.
-
-Instead.
+# Inputs And Outputs
 
 ```mermaid
-flowchart TD
+flowchart LR
 
-N1["Hero Tile"]
-N2["Surface.Hero"]
-
-N1 --> N2
+P["Primitive Tokens"] --> S["Semantic Tokens"]
+S --> R["Runtime Resolver"]
+C["Composition Role"] --> R
+M["Mapped Module Intent"] --> R
+F["Focus And Context"] --> R
+A["Accessibility"] --> R
+B["Capability And Budget"] --> R
+T["Theme And Artwork Inputs"] --> R
+R --> O["Immutable Resolved Token Set"]
+O --> X["Renderer Adapter"]
 ```
 
-Everything else becomes the responsibility of the Design System.
+The resolver must not accept raw Module styling or renderer code as input.
 
 ---
 
-# One Direction
+# SDUI Boundary
 
-Token Resolution always flows in one direction.
+Runtime SDUI describes content, semantic roles, relationships, actions, state and permitted domain layout modes.
 
-```mermaid
-flowchart TD
+It does not normally provide:
 
-N1["Primitive"]
-N2["Semantic"]
-N3["Composition"]
-N4["Runtime"]
-N5["Platform"]
-N6["Rendering"]
+- Presentation-space `x`, `y` or `z` coordinates
+- width or height
+- padding, spacing or radius
+- font family, font size or line height
+- Material coefficients
+- Refraction parameters
 
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-```
+The client design runtime combines SDUI intent with Platform tokens, typography metrics, accessibility, capability and available space.
 
-Tokens should never resolve backwards.
+It then produces resolved geometry, typography, Material and Refraction state for the renderer.
 
-Presentation should never redefine semantic meaning.
+Coordinates may appear only when they are intrinsic domain content, such as an authored diagram or spatial canvas.
 
----
-
-# Resolution Pipeline
-
-Every token should pass through the same conceptual pipeline.
-
-```mermaid
-flowchart TD
-
-Primitive
-Primitive --> Semantic
-Semantic --> Composition
-Composition --> Runtime
-Runtime --> Platform
-Platform --> Renderer
-```
-
-Every layer contributes one responsibility.
-
-No layer duplicates another.
-
----
-
-# Resolution Inputs
-
-Resolution may evaluate:
-
-- current World
-- current Focus
-- current Context
-- artwork
-- accessibility
-- user preferences
-- device class
-- platform theme
-
-Importantly...
-
-These inputs never change the semantic meaning of a token.
-
-They only influence its implementation.
-
----
-
-# Deterministic Resolution
-
-Given identical inputs...
-
-Resolution should always produce identical outputs.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Surface.Hero"]
-N2["Current Artwork"]
-N3["Dark Theme"]
-N4["Desktop"]
-N5["Resolved Surface"]
-
-N1 --> N5
-N2 --> N5
-N3 --> N5
-N4 --> N5
-```
-
-The same request should always produce the same result.
-
-Deterministic behaviour is essential for:
-
-- predictability
-- testing
-- caching
-- accessibility
-- consistency
+The client still projects those domain coordinates into Presentation space.
 
 ---
 
 # Resolution Order
 
-The Runtime Resolver should evaluate inputs in a consistent order.
+Resolution should apply authority in this order:
 
-```mermaid
-flowchart TD
+1. validate the requested Semantic Token
+2. resolve permitted Primitive and Semantic aliases
+3. map Module domain intent to Platform semantics
+4. apply Composition role and current Context
+5. apply Light, Dark or system appearance
+6. select artwork, approved static brand or Mosaic-default atmosphere input
+7. enforce accessibility requirements
+8. apply the synced or local user fidelity maximum
+9. constrain by renderer capability
+10. constrain by current runtime budget and Presentation deadlines
+11. publish one immutable Resolved Token Set
+12. adapt the set into renderer artefacts
 
-N1["1.<br/>Primitive Values"]
-N2["2.<br/>Semantic Meaning"]
-N3["3.<br/>Composition Role"]
-N4["4.<br/>Runtime Inputs"]
-N5["5.<br/>Accessibility"]
-N6["6.<br/>Platform"]
-N7["7.<br/>Resolved Value"]
+Later steps may constrain implementation but must not reverse earlier semantic decisions.
 
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-N6 --> N7
-```
+Accessibility may override aesthetic preferences.
 
-Earlier stages establish meaning.
-
-Later stages refine implementation.
+Budget may reduce fidelity but must not remove semantic presence or readability.
 
 ---
 
-# Resolution Never Changes Intent
+# Module Intent Mapping
 
-One of the most important architectural guarantees of Mosaic is:
+A Module-specific intent must resolve through an explicit mapping such as:
 
-> **Resolution changes implementation.**
-
-> **Resolution never changes meaning.**
-
-Example.
-
+```text
+Calendar.Today
+    → Semantic.Emphasis.Current
 ```
 
-Surface.Hero
-```
+The mapping may add domain context but cannot create a Primitive or Semantic Token.
 
-Dark Mode.
+Unknown intent uses its declared Platform fallback.
 
-↓
-
-Slate Background.
-
-Light Mode.
-
-↓
-
-White Background.
-
-Artwork Mode.
-
-↓
-
-Artwork-derived Acrylic.
-
-The semantic meaning remains:
-
-```
-
-Surface.Hero
-```
-
-Meaning survives.
-
-Implementation evolves.
+Intent without a valid fallback must not become active.
 
 ---
 
-# Resolution Context
+# Capability-Driven Resolution
 
-The Runtime Resolver should understand current context.
+The resolver evaluates techniques and fidelity from measured client behaviour.
 
-Example.
+It must not assign permanent values using labels such as:
 
-```mermaid
-flowchart TD
+- mobile
+- television
+- desktop
+- tablet
+- low-end device
 
-N1["Playback"]
-N2["Surface.Hero"]
-
-N1 --> N2
-```
-
-may resolve differently from:
-
-```mermaid
-flowchart TD
-
-N1["Browsing"]
-N2["Surface.Hero"]
-
-N1 --> N2
-```
-
-because runtime atmosphere changes.
-
-The token itself remains identical.
-
-Only resolution differs.
+Platform APIs may contribute capability evidence, but their product category is not a design decision.
 
 ---
 
-# Resolution Priority
+# Determinism
 
-Multiple runtime influences may exist simultaneously.
+Determinism requires:
 
-Example.
+- a versioned token catalogue
+- explicit input precedence
+- bounded numeric operations
+- stable fallback rules
+- no dependence upon unordered maps or renderer timing
+- no component-local semantic overrides
 
-```
+Budget measurements may change between cycles.
 
-Artwork
-
-Accessibility
-
-Dark Mode
-
-Television
-```
-
-The Runtime Resolver should evaluate them using a defined priority.
-
-Recommended conceptual priority.
-
-```mermaid
-flowchart TD
-
-N1["Accessibility"]
-N2["User Preferences"]
-N3["Composition"]
-N4["Artwork"]
-N5["Device"]
-N6["Platform Defaults"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-```
-
-Accessibility should always take precedence over aesthetics.
+Each completed cycle must still be deterministic for the captured budget input.
 
 ---
 
 # Fallback Resolution
 
-Every token must possess a valid fallback.
+Fallback proceeds through declared semantic relationships rather than guessed physical values.
 
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Artwork Missing"]
-N2["Failure"]
-
-N1 --> N2
+```text
+Module domain intent fallback
+    → Platform Semantic Token fallback
+    → safe Primitive value
+    → neutral accessible Presentation
 ```
 
-Preferred.
+Examples include:
 
-```mermaid
-flowchart TD
+- unknown Module intent mapping to a declared emphasis role
+- unavailable artwork field retaining cached artwork-derived colour
+- unsupported Material refinement reducing to Essential fidelity
+- missing optional theme value using the Platform default
 
-N1["Artwork Missing"]
-N2["Brand Tokens"]
-N3["Resolved Value"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Components should never receive unresolved tokens.
-
-The Design System should always produce a meaningful result.
+Fallback must preserve accessibility and semantic hierarchy.
 
 ---
 
-# Lazy Resolution
+# Atomic Publication
 
-Resolution should occur only when required.
+Resolution may occur asynchronously.
 
-Example.
+Publication must be atomic.
 
-```mermaid
-flowchart TD
+A renderer receives either the previous complete set or the next complete set, never a partially updated combination.
 
-N1["Unused Token"]
-N2["Not Resolved"]
-
-N1 --> N2
-```
-
-The platform should avoid resolving values that will never be rendered.
-
-This improves runtime efficiency while preserving identical behaviour.
+Obsolete work should be cancelled when a newer context supersedes it.
 
 ---
 
-# Resolution Cache
+# Cache And Invalidation
 
-Runtime resolution is expected to be cacheable.
+The resolver should invalidate only values affected by a changed input.
 
-Example.
+Examples:
 
-```mermaid
-flowchart TD
+- Focus change invalidates Focus-dependent values
+- accessibility change invalidates constrained output
+- renderer budget change may alter fidelity without changing semantic identity
+- Tile movement does not invalidate unrelated artwork source tokens
 
-N1["Current Artwork"]
-N2["Atmosphere"]
-N3["Resolved Surface"]
-N4["Cache"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-As long as the runtime inputs remain unchanged, the resolved value should remain stable.
-
-Future Composition Engines may invalidate this cache when:
-
-- Focus changes
-- Context changes
-- artwork changes
-- accessibility changes
+Cache reuse must never bypass updated accessibility requirements.
 
 ---
 
-# Resolution Is Invisible
+# Renderer Adaptation
 
-Components should never know:
+Adapters translate Resolved Tokens into CSS, Flutter, SwiftUI, Compose, shader or other client-native values.
 
-- how tokens were resolved
-- where values originated
-- whether runtime adaptation occurred
+Adapters may use different implementation techniques while preserving equivalent semantics.
 
-Components consume:
+They must not:
 
-```
-
-Resolved Tokens
-```
-
-Nothing else.
-
-This dramatically simplifies component implementation.
+- invent token meaning
+- inspect Module domain concepts directly
+- weaken accessibility constraints
+- expose Primitive Tokens to ordinary component code
 
 ---
 
-# Good Examples
+# Failure Behaviour
 
-```mermaid
-flowchart TD
+Invalid requests, mappings or calculations should preserve the previous stable set or use a declared neutral fallback.
 
-N1["Surface.Hero"]
-N2["Runtime.Atmosphere"]
-N3["Resolved Acrylic Surface"]
-
-N1 --> N2
-N2 --> N3
-```
-
-```mermaid
-flowchart TD
-
-N1["Text.Primary"]
-N2["Accessibility"]
-N3["Higher Contrast"]
-
-N1 --> N2
-N2 --> N3
-```
-
-```mermaid
-flowchart TD
-
-N1["Spacing.Section"]
-N2["Television"]
-N3["Expanded Physical Spacing"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Every example preserves semantic meaning.
-
-Only implementation changes.
-
----
-
-# Anti-patterns
-
-## Component Resolution
-
-```mermaid
-flowchart TD
-
-N1["Component"]
-N2["Determine Theme"]
-N3["Determine Colours"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Resolution responsibility has leaked.
-
----
-
-## Platform Resolution
-
-```mermaid
-flowchart TD
-
-N1["Flutter"]
-N2["Invent Semantic Meaning"]
-
-N1 --> N2
-```
-
-Meaning belongs above implementation.
-
----
-
-## Runtime Mutation
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["Change Token Identity"]
-
-N1 --> N2
-```
-
-Runtime should only resolve.
-
-Never redefine.
-
----
-
-## Partial Resolution
-
-Components receiving unresolved token chains.
-
-Every rendered value should be fully resolved before presentation.
-
----
-
-# Resolution Model
-
-```mermaid
-flowchart TD
-
-Semantic
-Semantic --> Composition
-Composition --> Runtime
-Runtime --> Resolution
-Resolution --> PlatformTheme["Platform Theme"]
-PlatformTheme["Platform Theme"] --> Rendering
-```
-
-Resolution exists to remove implementation complexity from the rest of the Design System.
-
----
-
-# Relationship To Future Specifications
-
-Future specifications are expected to define:
-
-- Runtime Resolver
-- Theme Resolver
-- Atmosphere Generator
-- Accessibility Resolver
-- Platform Adapters
-
-These systems collectively implement the conceptual process defined by this chapter.
+Token Resolution must not block Presentation, cause semantic content to disappear or threaten a video Presentation deadline.
 
 ---
 
 # Summary
 
-Token Resolution is the implementation bridge between design intent and rendered interface.
+Token Resolution is the single client-owned bridge between Platform design meaning and adaptable Presentation.
 
-Its responsibility is to ensure that every component receives the correct implementation value while remaining completely unaware of:
-
-- runtime adaptation
-- artwork analysis
-- accessibility
-- platform differences
-- device capabilities
-
-The Design System owns complexity.
-
-Components consume clarity.
+It evaluates intent and context without turning either into new token layers.

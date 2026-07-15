@@ -4,379 +4,154 @@ Document: MDS-001
 Chapter: 13
 Title: Contributor Guidance
 Status: Draft
-Version: 0.4
+Version: 0.1
 -->
 
 # Contributor Guidance
 
 ---
 
-# Purpose
+# Begin With Meaning
 
-The Design Token Architecture is one of the few systems every Mosaic contributor will interact with.
+Before requesting a value, identify the stable design responsibility it serves.
 
-Designers define tokens.
+Prefer:
 
-Engineers consume tokens.
+```text
+Colour.Content.Primary
+```
 
-Tooling generates tokens.
+Avoid:
 
-Modules inherit tokens.
+```text
+Primitive.Colour.Slate.950
+```
 
-For this reason, MDS-001 establishes a common set of practices intended to preserve the long-term integrity of the Design System.
-
-The objective is simple.
-
-> **Every implementation should express the same design language without every contributor making the same design decisions repeatedly.**
+Primitive Tokens remain a Platform implementation foundation.
 
 ---
 
-# Think In Meaning
+# Do Not Turn Context Into Tokens
 
-Before creating a token, contributors should ask:
+Hero, Supporting, Focused, Calendar.Today and renderer capability may affect resolution.
 
-> **What design decision am I trying to represent?**
+They do not automatically become Design Tokens.
 
-Not:
+Use the owning contract:
 
-> What value do I need?
-
-Good.
-
-```
-
-Surface.Hero
-```
-
-Poor.
-
-```
-
-#112233
-```
-
-Values change.
-
-Meaning survives.
+- Composition role for hierarchy
+- Module intent for domain meaning
+- accessibility state for user requirements
+- capability and budget for implementation limits
 
 ---
 
-# Consume The Highest Layer
+# Components Render
 
-Always consume the highest architectural layer available.
+Components consume completed resolved values or profiles.
 
-Preferred.
+They must not:
 
-```mermaid
-flowchart TD
+- choose Primitive Tokens
+- infer their Composition role
+- inspect device category
+- remap Module domain meaning
+- override accessibility constraints
+- create component-specific token namespaces
 
-N1["Component"]
-N2["Composition Token"]
-N3["Semantic Token"]
-N4["Primitive Token"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Avoid.
-
-```mermaid
-flowchart TD
-
-N1["Component"]
-N2["Primitive Token"]
-
-N1 --> N2
-```
-
-Skipping layers weakens maintainability.
+If a component needs unresolved design logic, responsibility has leaked across the boundary.
 
 ---
 
-# Never Duplicate Meaning
+# Modules Declare Intent
 
-Before introducing a new token ask:
+Modules may declare domain facts such as:
 
-- Does this meaning already exist?
-- Could an existing Semantic Token express this?
-- Could Composition communicate this instead?
+```text
+Calendar.Today
+Sports.Live
+Music.NowPlaying
+```
 
-One concept should normally correspond to one semantic token.
+Every intent requires an explicit Platform semantic mapping and fallback.
 
-Multiple names for the same meaning create architectural drift.
+Modules may combine governed recipes and provide domain layout invariants.
+
+They may not create Design Tokens or renderer values.
 
 ---
 
-# Components Consume
+# Domain Layouts
 
-Components should consume.
+A layout extension describes relationships and valid modes rather than concrete pixels.
 
-They should not decide.
+For a calendar month view, describe weeks, days, chronology, Focus, overflow and acceptable adaptation.
 
-Good.
-
-```mermaid
-flowchart TD
-
-N1["Button"]
-N2["Action.Primary"]
-
-N1 --> N2
-```
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Button"]
-N2["Blue500"]
-
-N1 --> N2
-```
-
-The Design System owns appearance.
-
-Components own behaviour.
+Allow the Composition Engine to calculate Tile location and size.
 
 ---
 
-# Runtime Is Invisible
+# Runtime Resolution
 
-Components should never ask:
+Runtime resolution belongs to the client resolver.
 
-- Which artwork is active?
-- Which theme is loaded?
-- Which device is this?
+Use measured capability and current budget rather than mobile, television, desktop or tablet branches.
 
-Instead they consume:
+Preserve semantic presence and accessibility when fidelity reduces.
 
-```
-
-Resolved Tokens
-```
-
-Runtime adaptation is entirely the responsibility of the Runtime Resolver.
+Publish complete immutable sets and retain the previous stable set when new work fails.
 
 ---
 
-# Prefer Composition Tokens
+# Recipes
 
-When implementing UI, contributors should normally begin with Composition Tokens.
+A recipe coordinates existing Semantic Tokens and constrained inputs.
 
-Example.
+It cannot:
 
-```mermaid
-flowchart TD
+- define a new Primitive
+- redefine a Semantic Token
+- alter locked Material or motion mechanics
+- bypass accessibility
+- send renderer code through SDUI
 
-N1["Hero Tile"]
-N2["Composition.Hero"]
-
-N1 --> N2
-```
-
-rather than:
-
-```mermaid
-flowchart TD
-
-N1["Hero Tile"]
-N2["Surface.Primary"]
-N3["Text.Primary"]
-N4["Elevation.High"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The Composition Token already communicates those responsibilities.
-
-Higher layers reduce implementation complexity.
-
----
-
-# Modules
-
-Module authors should think in capabilities rather than appearance.
-
-Contribute:
-
-- Information
-- Relationships
-- Expressions
-
-Consume:
-
-- Semantic Tokens
-- Composition Tokens
-
-Avoid introducing:
-
-- colours
-- spacing systems
-- typography scales
-- material definitions
-
-The module ecosystem should inherit the Mosaic visual language automatically.
-
----
-
-# Themes
-
-Themes should never introduce new semantic meaning.
-
-Good.
-
-```mermaid
-flowchart TD
-
-N1["Surface.Primary"]
-N2["Different Primitive Values"]
-
-N1 --> N2
-```
-
-Poor.
-
-```
-
-DarkSurfacePrimary
-
-LightSurfacePrimary
-```
-
-Themes change implementation.
-
-Not architecture.
-
----
-
-# Runtime
-
-Runtime Tokens should remain implementation details.
-
-Contributors should almost never reference them directly unless working on:
-
-- runtime systems
-- theme generation
-- composition engine
-- platform adapters
-
-Application code should normally consume Semantic or Composition Tokens instead.
-
----
-
-# Naming
-
-Every token should answer one question.
-
-> **Would another contributor immediately understand why this token exists?**
-
-If explanation is required...
-
-The name should be reconsidered.
-
-Names should communicate:
-
-- purpose
-- responsibility
-- meaning
-
-Never:
-
-- colour
-- framework
-- implementation
+Recipes express governed creative combinations, not local design systems.
 
 ---
 
 # Review Questions
 
-Before introducing any token ask:
-
-- Does this represent intent or implementation?
-- Is this the correct architectural layer?
-- Could an existing token solve the same problem?
-- Will this still make sense after a redesign?
-- Would another platform consume this token unchanged?
-
-If any answer is uncertain, revisit the hierarchy before implementation.
-
----
-
-# Common Mistakes
-
-Avoid:
-
-### Primitive Consumption
-
-Components using raw colours and spacing.
+- Is this value stable Platform meaning or current context?
+- Does an existing Semantic Token already express it?
+- Is a Module proposing intent or attempting to create a token?
+- Is Composition still responsible for role and geometry?
+- Does the component receive a complete resolved value?
+- Are capability and budget measured?
+- Is the fallback deterministic and accessible?
+- Could this change fragment Mosaic across clients?
 
 ---
 
-### Semantic Leakage
+# Checklist
 
-Embedding implementation into Semantic Tokens.
-
----
-
-### Runtime Leakage
-
-Allowing Runtime concerns to appear in application code.
-
----
-
-### Component Tokens
-
-Creating tokens that exist solely because a component exists.
-
----
-
-### Platform Thinking
-
-Naming tokens after CSS, Flutter or SwiftUI concepts.
-
-The Design System should outlive implementation technology.
-
----
-
-# Design Token Checklist
-
-Every new token should satisfy the following.
-
-- [ ] Represents one responsibility.
-- [ ] Exists at the correct architectural layer.
-- [ ] Communicates semantic intent.
-- [ ] Does not duplicate existing meaning.
-- [ ] Is implementation independent.
-- [ ] Supports runtime adaptation.
-- [ ] Preserves accessibility.
-- [ ] Can be consumed across every Mosaic client.
+- [ ] Primitive and Semantic ownership remains Platform-only.
+- [ ] Runtime state remains outside the authored hierarchy.
+- [ ] Module intent is namespaced, mapped and has a fallback.
+- [ ] Components render rather than resolve.
+- [ ] Renderer artefacts contain no semantic authority.
+- [ ] Device categories do not select fidelity.
+- [ ] Accessibility remains authoritative.
+- [ ] Aliases are type-compatible and cycle-free.
+- [ ] Deprecation includes migration guidance.
 
 ---
 
 # Final Guidance
 
-The Design Token Architecture exists to remove design decisions from application code.
+Use Design Tokens for durable Platform design decisions.
 
-Application developers should spend their time building:
+Use intent and Composition contracts for current meaning.
 
-- experiences
-- capabilities
-- interactions
+Use resolution for adaptation.
 
-not repeatedly choosing:
-
-- colours
-- spacing
-- typography
-- materials
-
-If contributors find themselves repeatedly making visual decisions inside application code, they should stop and ask:
-
-> **Should this decision become a Design Token instead?**
-
-When that instinct becomes natural, the Design System has succeeded.
+Use renderer adapters for implementation.
