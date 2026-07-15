@@ -11,6 +11,14 @@ Version: 0.1
 
 # A
 
+## Authored Layout
+
+A conventional CSS or native layout constructed by a Design System consumer using public Semantic Tokens rather than Adaptive Composition geometry.
+
+Authored Layout remains governed by Mosaic typography, spacing, sizing, Material, accessibility and rendering contracts.
+
+---
+
 ## Appearance Preference
 
 The user or operating-system choice of Light, Dark or system-controlled appearance.
@@ -122,6 +130,8 @@ The client-owned subsystem that transforms Platform Semantic Tokens and Resoluti
 A Platform-owned token representing stable design meaning independently from implementation technology and current runtime state.
 
 Semantic Tokens form the public Design System API.
+
+Public layout examples include spatial relationships, typography roles and dimensional responsibilities.
 
 ---
 

@@ -69,6 +69,10 @@ Coordinates may appear only when they are intrinsic domain content, such as an a
 
 The client still projects those domain coordinates into Presentation space.
 
+This SDUI boundary does not prohibit direct Design System consumers from building Authored Layout with public Semantic Tokens.
+
+For example, a documentation site may use generated CSS values for `Space.Group`, `Type.Body` and `Size.ReadingMeasure` while the underlying Primitive values remain Platform-owned.
+
 ---
 
 # Resolution Order

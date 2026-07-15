@@ -71,6 +71,7 @@ This specification defines:
 - Token lifecycle
 - Versioning
 - Module intent interaction
+- public Semantic Tokens for Authored Layout
 
 This specification intentionally does **not** define:
 
@@ -160,7 +161,8 @@ After reading MDS-001 contributors should understand:
 - why semantic tokens exist
 - why Resolved Tokens exist
 - how components consume tokens
-- how Modules provide intent without creating tokens
+- how Adaptive Composition and Authored Layout consume the same token system
+- how Modules provide intent and consume existing Semantic Tokens without creating new tokens
 - how future token systems should evolve
 
 without discussing specific colour palettes or component implementations.

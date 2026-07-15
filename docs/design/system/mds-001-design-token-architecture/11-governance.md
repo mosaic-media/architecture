@@ -92,6 +92,10 @@ Entirely new cross-product meaning requires Platform review.
 
 Module layout extensions are governed by [MDS-006 — Composition Engine](../mds-006-composition-engine/index.md) and must preserve Platform rendering authority.
 
+A Module or application implementing Authored Layout may consume existing public Semantic Tokens.
+
+It may not create local Primitive values, redefine token meaning or publish new cross-Platform Semantic Tokens without Platform review.
+
 ---
 
 # Capability Governance

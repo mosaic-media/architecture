@@ -214,7 +214,7 @@ Clients with equivalent effective capability produce equivalent semantic fidelit
 
 ## Keep Geometry Outside The Public Token API
 
-**Status:** Accepted
+**Status:** Amended by ADR-098
 
 ### Context
 
@@ -262,6 +262,38 @@ Users gain meaningful control without manipulating blur, parallax or renderer te
 
 ---
 
+# ADR-098
+
+## Expose Governed Semantic Layout Tokens For Authored Layout
+
+**Status:** Accepted
+
+### Context
+
+Adaptive Composition correctly owns media-driven geometry, but Mosaic also supports documentation, administration, dashboards and conventional application pages authored with CSS or native layout systems.
+
+Those consumers require stable spacing, typography and sizing values without taking ownership of Primitive Tokens or Material physics.
+
+### Decision
+
+Mosaic provides public Semantic Tokens for governed spatial relationships, typography roles and dimensional responsibilities.
+
+Examples include `Space.Group`, `Type.Body`, `Type.Heading`, `Size.ControlMinimum` and `Size.ReadingMeasure`.
+
+Adaptive Composition may continue to resolve geometry automatically.
+
+Authored Layout may consume the public Semantic Tokens through CSS variables, Flutter values or equivalent renderer artefacts.
+
+SDUI continues to send semantic intent rather than raw resolved measurements.
+
+### Consequences
+
+Media and conventional application experiences share one Design System.
+
+Consumers gain practical layout tools without creating arbitrary scales, exposing private Primitive Tokens or controlling Refraction physics.
+
+---
+
 # Decision Relationships
 
 ```mermaid
@@ -274,6 +306,7 @@ A94["ADR-094 Module Intent"]
 A95["ADR-095 Capability Resolution"]
 A96["ADR-096 Composition Geometry"]
 A97["ADR-097 User Fidelity Maximum"]
+A98["ADR-098 Authored Layout Tokens"]
 A88["ADR-088 Generated Presentation"]
 
 A84 --> A85
@@ -281,6 +314,7 @@ A85 --> A93
 A93 --> A94
 A93 --> A95
 A93 --> A96
+A96 --> A98
 A95 --> A97
 A93 --> A88
 ```

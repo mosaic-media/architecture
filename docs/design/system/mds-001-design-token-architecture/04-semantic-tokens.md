@@ -111,6 +111,10 @@ Action.Primary
 Border.Subtle
 
 Status.Success
+
+Space.Group
+
+Type.Body
 ```
 
 Each communicates:
@@ -143,6 +147,9 @@ N10["Atmosphere"]
 N11["Elevation"]
 N12["Motion"]
 N13["Focus"]
+N14["Space"]
+N15["Type"]
+N16["Size"]
 
 N1 --> N2
 N1 --> N3
@@ -156,6 +163,9 @@ N1 --> N10
 N1 --> N11
 N1 --> N12
 N1 --> N13
+N1 --> N14
+N1 --> N15
+N1 --> N16
 ```
 
 Future categories should remain intentionally limited.
@@ -373,6 +383,73 @@ Atmosphere.Supporting
 Unlike Brand Tokens...
 
 Atmosphere Tokens are expected to resolve differently at runtime.
+
+---
+
+# Space
+
+Purpose.
+
+Communicate spatial relationships for conventional authored layouts.
+
+Examples.
+
+```text
+Space.Inline
+Space.Related
+Space.Group
+Space.Section
+Space.Region
+```
+
+These are public Semantic Tokens.
+
+Documentation sites, administration interfaces, dashboards, Platform components and governed Module layouts may consume them through renderer-native values.
+
+They do not expose the underlying private spatial scale or permit authors to invent arbitrary spacing steps.
+
+---
+
+# Type
+
+Purpose.
+
+Communicate semantic typography roles defined by [MDS-004 — Typography System](../mds-004-typography-system/index.md).
+
+Examples.
+
+```text
+Type.Hero
+Type.Title
+Type.Heading
+Type.Body
+Type.Label
+Type.Metadata
+```
+
+Each token resolves the complete role profile, including size, weight, line height and supported font behaviour.
+
+Consumers select the role rather than an arbitrary font size.
+
+---
+
+# Size
+
+Purpose.
+
+Communicate governed dimensional responsibilities needed by authored layouts and components.
+
+Examples.
+
+```text
+Size.ControlMinimum
+Size.ReadingMeasure
+Size.NavigationRail
+```
+
+Size Tokens describe responsibility rather than generic small, medium or large values.
+
+They do not expose final coordinates or allow a consumer to replace Adaptive Layout.
 
 ---
 

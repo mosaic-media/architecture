@@ -109,15 +109,38 @@ Their responsibility is faithful rendering.
 
 ---
 
+# Layout Consumption Modes
+
+Mosaic supports two client layout modes that consume the same Design System.
+
+| Mode | Responsibility |
+|------|----------------|
+| Adaptive Composition | The client mathematically resolves media-driven geometry from Composition, Focus, artwork, content and current constraints. |
+| Authored Layout | Documentation, administration, dashboards and conventional application pages use CSS or native layout with public Semantic Tokens. |
+
+Adaptive Composition remains the default for media experiences.
+
+Authored Layout allows a Design System consumer to construct conventional structure without inventing spacing, typography, sizing or Material values.
+
+The modes may coexist within one client.
+
+For example, a mathematically composed media Hero may sit above an authored administration region.
+
+---
+
 # Geometry And Density
 
 Composition owns the semantic constraints from which concrete Tile geometry is derived.
 
-The client-side Adaptive Layout implementation calculates final location, size, padding, spacing and density using those constraints and private Platform primitives.
+In Adaptive Composition, the client-side Adaptive Layout implementation calculates final location, size, padding, spacing and density using those constraints and private Platform primitives.
 
 Modules provide content relationships, semantic priority, domain invariants and valid presentation modes.
 
-They do not request compact, comfortable or spacious geometry and do not select radius or spacing values.
+They do not request final coordinates, Material radii or arbitrary Primitive values.
+
+In Authored Layout, consumers may select public semantic relationships such as `Space.Group`, `Type.Body` and `Size.ReadingMeasure`.
+
+The resolver maps those meanings to renderer-native values while retaining accessibility and capability adaptation.
 
 Typography and accessibility provide readability and interaction constraints, while the client design runtime remains responsible for the final solution.
 

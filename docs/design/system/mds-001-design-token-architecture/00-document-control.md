@@ -204,7 +204,8 @@ MDS-001 succeeds when:
 - token names communicate meaning rather than implementation
 - runtime adaptation becomes implementation-independent
 - contributors rarely consume primitive values directly
-- Modules extend domain intent and Composition without creating Design Tokens
+- Modules extend domain intent and Composition, consume existing Semantic Tokens and do not create new Design Tokens
+- Authored Layout receives public semantic spacing, typography and sizing values without exposing Primitive Tokens
 - capability and budget influence resolution without device classification
 - future specifications naturally build upon this architecture
 
