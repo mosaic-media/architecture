@@ -126,6 +126,22 @@ The Brand Colour probably does not belong there.
 
 Brand gains strength through consistency rather than frequency.
 
+Co-brand implementations should register approved partner colour candidates rather than authoring a complete pair.
+
+The Platform retains Mosaic Indigo, resolves one partner accent and falls back to Indigo and Cyan when no safe candidate exists.
+
+---
+
+# Request Tint Intent
+
+Content should request semantic Tint Intent.
+
+It should never select Clear, Mist, Smoke or Deep Smoke directly or provide custom tint values.
+
+The resolver selects the calibrated neutral recipe required by surface role, local luminance and accessibility.
+
+Environmental hue continues to come from artwork or Brand Illumination.
+
 ---
 
 # Think In Atmosphere

@@ -73,7 +73,9 @@ It never replaces it.
 This specification defines:
 
 - Brand Colours
+- Static Mosaic And Resolved Co-Brand Illumination
 - Semantic Colours
+- Neutral Acrylic Tint Intent
 - Runtime Atmosphere
 - Artwork Colour Extraction
 - Adaptive Colour
@@ -82,6 +84,8 @@ This specification defines:
 - Dark Mode
 - Accessibility
 - Colour Resolution
+- Adaptive Neutral Foregrounds
+- Functional Colour Isolation
 
 This specification intentionally does **not** define:
 
@@ -154,6 +158,9 @@ After reading MDS-002 contributors should understand:
 - how accessibility is preserved
 - how themes evolve
 - how clients resolve colour consistently
+- how neutral Acrylic tint intent resolves without changing Material physics
+- how co-brand colours become a governed Indigo-and-partner illumination pair
+- how foreground and functional colours remain stable under environmental light
 
 without discussing implementation.
 

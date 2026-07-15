@@ -84,7 +84,9 @@ The Colour System has clearly defined ownership.
 |--------|-------|
 | Primitive Colours | Design Systems |
 | Brand Palette | Design Systems |
+| Partner Brand Registration | Design Systems And Brand Governance |
 | Semantic Colours | Design Systems |
+| Co-Brand Pair Resolution | Runtime Platform |
 | Runtime Atmosphere | Runtime Platform |
 | Theme Resolution | Runtime Platform |
 | Client Rendering | Client Teams |
@@ -124,6 +126,25 @@ The following may evolve more frequently.
 Implementation should remain flexible.
 
 Meaning should remain stable.
+
+---
+
+# Calibration Governance
+
+The following values remain internal calibration outputs:
+
+- Clear, Mist, Smoke and Deep Smoke transmission recipes
+- Tint Intent resolution thresholds
+- adaptive foreground luminance thresholds and hysteresis margin
+- partner-candidate scoring weights
+- co-brand gamut, luminance, chroma and emitted-energy bounds
+- Mosaic-to-partner illumination energy balance
+
+Applications and Modules must not override these values.
+
+Changing them requires cross-theme, accessibility and Material validation.
+
+Partner registration may constrain eligible colours and preference order, but it cannot bypass Platform safety limits or replace Mosaic Indigo.
 
 ---
 

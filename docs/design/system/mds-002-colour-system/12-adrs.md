@@ -295,7 +295,7 @@ Permit Governed Co-Branding Without White-Labelling
 
 ### Status
 
-Accepted
+Amended by ADR-109
 
 ### Context
 
@@ -331,13 +331,105 @@ Settings, administration and dashboard experiences may have no meaningful artwor
 
 ### Decision
 
-Colour-source priority is focused artwork, Hero artwork, approved Mosaic or partner illumination pair, then the default Mosaic pair.
+Colour-source priority is focused artwork, Hero artwork, a resolved co-brand illumination pair, then the default Mosaic pair.
 
 The pair acts as a static environmental source through the Material System rather than recolouring components.
 
 ### Consequences
 
 No-artwork experiences retain Acrylic and Refraction identity with minimal continuous processing.
+
+---
+
+# ADR-108
+
+## Title
+
+Resolve Semantic Tint Intent To Neutral Acrylic Recipes
+
+### Status
+
+Accepted
+
+### Context
+
+Acrylic requires governed colour transmission without exposing Material physics or allowing brand and artwork colour to become arbitrary surface tint.
+
+### Decision
+
+The Colour System defines four internal neutral Acrylic recipes: Clear, Mist, Smoke and Deep Smoke.
+
+Content requests semantic Tint Intent.
+
+The renderer selects a recipe using intent, local luminance, accessibility and surface role.
+
+The recipes may change only neutral pigmentation and transmission; [MDS-003 — Material System](../mds-003-material-system/04-acrylic.md#tint-authority) retains authority over the fixed Acrylic profile.
+
+### Consequences
+
+Artwork and Brand Illumination remain the source of environmental hue while every Acrylic surface retains one coherent Material identity.
+
+---
+
+# ADR-109
+
+## Title
+
+Derive Co-Brand Illumination From Mosaic Indigo And Registered Partner Colours
+
+### Status
+
+Accepted
+
+### Context
+
+Mosaic cannot pre-author every future partner pair, while unrestricted partner colours would fragment the brand and produce unsafe Material illumination.
+
+### Decision
+
+A Partner Brand Registration provides one required signature colour and may provide approved alternatives, preference order and usage restrictions.
+
+The Platform preserves Mosaic Indigo and deterministically selects and normalises one registered partner accent using perceptual separation, luminance, brand fidelity, gamut and energy constraints.
+
+The resolver does not invent an unregistered hue.
+
+Colour collisions require brand review and fall back to the default Indigo and Cyan pair until approved.
+
+This decision supersedes the partner-provided complete-pair portion of ADR-106.
+
+### Consequences
+
+Normal co-brand onboarding becomes automatable while Mosaic remains visibly primary and exceptional colour collisions remain explicitly governed.
+
+---
+
+# ADR-110
+
+## Title
+
+Keep Foreground And Functional Colour Independent From Environmental Light
+
+### Status
+
+Accepted
+
+### Context
+
+Directly tinting text, icons, actions or status from artwork and co-brand illumination would weaken meaning and create flicker as the Composition moves through a light field.
+
+### Decision
+
+Text and icons resolve from calibrated neutral roles using local luminance and hysteresis.
+
+Action, focus and status colours remain fixed functional semantics independent from Runtime Atmosphere, Acrylic tint and co-brand illumination.
+
+Mosaic Cyan remains the action and focus identity in co-branded experiences.
+
+Status must also use a non-colour signal.
+
+### Consequences
+
+Foreground readability remains stable during movement, and environmental branding cannot change interaction or status meaning.
 
 ---
 
@@ -365,6 +457,9 @@ ADR104["Modules"]
 ADR105["Understanding"]
 ADR106["Co-Branding"]
 ADR107["Static Brand Illumination"]
+ADR108["Neutral Acrylic Tint"]
+ADR109["Resolved Co-Brand Pair"]
+ADR110["Stable Foreground And Function"]
 
 ADR097 --> ADR099
 ADR099 --> ADR101
@@ -377,6 +472,11 @@ ADR105 --> ADR099
 ADR097 --> ADR106
 ADR106 --> ADR107
 ADR107 --> ADR103
+ADR103 --> ADR108
+ADR106 --> ADR109
+ADR109 --> ADR107
+ADR099 --> ADR110
+ADR100 --> ADR110
 ```
 
 Together these decisions establish the architectural separation between:

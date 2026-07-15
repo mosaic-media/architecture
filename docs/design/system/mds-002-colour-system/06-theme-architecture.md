@@ -233,7 +233,9 @@ Users and Modules do not provide arbitrary accent colours or shell themes.
 
 Approved co-branding is a governed brand input rather than another theme.
 
-It may provide a partner mark in designated locations and a validated static illumination pair while preserving Mosaic identity, typography, Materials and interaction behaviour.
+It may provide a partner mark and registered illumination candidates in designated locations.
+
+The Platform deterministically resolves those candidates with Mosaic Indigo while preserving Mosaic identity, typography, Materials and interaction behaviour.
 
 ---
 

@@ -399,16 +399,96 @@ Source priority is:
 
 1. focused artwork
 2. Hero artwork
-3. approved Mosaic or partner illumination pair
+3. resolved co-brand illumination pair
 4. default Mosaic illumination pair
 
-An approved partner may provide an illumination pair and a mark for designated co-brand locations.
+The default Mosaic illumination pair is Indigo and Cyan.
+
+Indigo acts as the stable Mosaic anchor.
+
+Cyan acts as the normal Mosaic accent.
+
+The Platform owns the placement, energy balance and Material-light interpretation of both colours.
+
+---
+
+# Co-Brand Registration
+
+An approved partner may provide a mark and a small registered set of illumination candidates for designated co-brand locations.
+
+A Partner Brand Registration contains:
+
+- one required signature colour
+- optional approved alternative colours
+- candidate preference order
+- usage restrictions supplied by the partner
+
+The registration is a governed candidate set rather than permission to extract arbitrary colours from a partner logo, website or content.
+
+If the registration contains one colour, the resolver evaluates and normalises that colour.
+
+If it contains multiple colours, the resolver selects the candidate that forms the strongest safe pairing with Mosaic Indigo while respecting partner preference and restrictions.
+
+The partner does not provide or replace the complete illumination pair.
+
+---
+
+# Co-Brand Pair Resolution
+
+A co-brand emitter always resolves to:
+
+```text
+Mosaic Indigo + normalised partner accent
+```
+
+Indigo remains the broad ambient anchor.
+
+The partner accent provides the more noticeable directional contribution.
+
+This energy relationship should remain slightly Mosaic-dominant so the result communicates a partner experience within Mosaic rather than a white-labelled or equal-ownership theme.
+
+Exact energy ratios remain an alpha-calibration responsibility.
+
+The resolver should compare registered candidates in a perceptual colour space.
+
+For candidate colour `c` and Mosaic Indigo `I`, the conceptual score is:
+
+```text
+S(c) = whDh(c, I) + wpDp(c, I) + wlDl(c, I) + wbB(c) - P(c)
+```
+
+| Term | Responsibility |
+|------|----------------|
+| `Dh` | Circular hue separation from Mosaic Indigo. |
+| `Dp` | Perceptual colour difference from Mosaic Indigo. |
+| `Dl` | Useful luminance separation from Mosaic Indigo. |
+| `B` | Fidelity to the registered partner colour after normalisation. |
+| `P` | Penalty for gamut clipping, unsafe energy, weak contrast or excessive identity loss. |
+| `wh`, `wp`, `wl`, `wb` | Governed scoring weights established through calibration. |
+
+Before scoring, the resolver should gamut-map each candidate and bound its luminance, chroma and emitted energy while preserving hue as far as practical.
+
+The highest valid score becomes the partner accent.
+
+The resolver does not average Indigo with the partner colour or invent an unregistered brand hue.
+
+When every candidate collides perceptually with Indigo or cannot satisfy accessibility and Material constraints, the registration requires brand review.
+
+Until an approved result exists, the default Indigo and Cyan pair remains authoritative.
+
+---
+
+# Co-Brand Boundaries
 
 Mosaic remains visible and retains ownership of theme, typography, Material, motion and interaction behaviour.
 
 This is co-branding rather than white-labelling.
 
-Partner colours should be preserved as source identity while the resolver may bound their intensity, saturation and contrast contribution for accessibility and Material coherence.
+Partner colours influence environmental illumination only.
+
+They must not replace semantic action, focus or status colours.
+
+Mosaic Cyan therefore remains available for functional interaction even when the co-brand emitter replaces Cyan with the partner accent.
 
 ---
 

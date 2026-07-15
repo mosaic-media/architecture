@@ -133,6 +133,7 @@ N9["Selection"]
 N10["Playback"]
 N11["Navigation"]
 N12["Atmosphere"]
+N13["Acrylic Tint Intent"]
 
 N1 --> N2
 N1 --> N3
@@ -145,6 +146,7 @@ N1 --> N9
 N1 --> N10
 N1 --> N11
 N1 --> N12
+N1 --> N13
 ```
 
 Every category answers a different question.
@@ -208,6 +210,49 @@ Text.Inverse
 Text Colours should never depend upon decorative colour.
 
 Hierarchy should remain understandable even if viewed in greyscale.
+
+Foreground text and icons should resolve from calibrated neutral colours according to the luminance behind them.
+
+They must not inherit artwork, Brand Illumination or partner accent hue directly.
+
+---
+
+# Acrylic Tint Intent
+
+Acrylic Tint Intent describes the neutral transmission character requested by content without exposing physical Material coefficients.
+
+Public intent should remain semantic.
+
+Examples include:
+
+```text
+Tint.Default
+
+Tint.Quiet
+
+Tint.HighContrast
+```
+
+The resolver maps intent, local luminance, accessibility and surface role to one of four internal calibrated recipes.
+
+| Recipe | Intended Character |
+|--------|--------------------|
+| Clear | Nearly colourless Acrylic with the highest governed transmission. |
+| Mist | A faint neutral veil without frost, roughness or additional diffusion. |
+| Smoke | Darker neutral absorption that strengthens separation. |
+| Deep Smoke | The maximum approved neutral density for overlays or necessary contrast. |
+
+These recipes alter neutral pigmentation and transmission only.
+
+They must not alter apparent thickness, refraction, displacement, diffusion, edge response, Fresnel response or optical parallax.
+
+Artwork or Brand Illumination supplies environmental hue.
+
+The Acrylic tint controls how clearly or densely that light passes through the Material.
+
+Content requests intent rather than selecting an internal recipe directly.
+
+The renderer may increase density when readability requires it, and should restrict Deep Smoke to roles or accessibility conditions that justify its visual weight.
 
 ---
 
@@ -313,6 +358,10 @@ Motion.
 
 All should reinforce the same understanding.
 
+Status colours remain fixed functional semantics.
+
+Artwork, Acrylic tint and co-brand illumination must not recolour or redefine them.
+
 ---
 
 # Focus
@@ -335,6 +384,8 @@ Focus.Background
 Focus Colours reinforce the Composition Model.
 
 They should never replace it.
+
+Mosaic Cyan remains the governed action and focus identity, including within co-branded experiences.
 
 ---
 

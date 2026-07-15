@@ -218,6 +218,63 @@ N2 --> N3
 N3 --> N4
 ```
 
+---
+
+# Neutral Acrylic Tint Resolution
+
+Acrylic consumes semantic Tint Intent rather than arbitrary colour, opacity or optical coefficients.
+
+```mermaid
+flowchart TD
+
+N1["Tint Intent"]
+N2["Surface Role"]
+N3["Local Luminance"]
+N4["Accessibility"]
+N5["Clear, Mist, Smoke Or Deep Smoke"]
+N6["Fixed Acrylic Material"]
+
+N1 --> N5
+N2 --> N5
+N3 --> N5
+N4 --> N5
+N5 --> N6
+```
+
+The selected recipe controls neutral pigmentation and transmission.
+
+It does not supply environmental hue and must not change the fixed Acrylic profile defined by [MDS-003 — Material System](../mds-003-material-system/04-acrylic.md#tint-authority).
+
+Recipe values, luminance thresholds and permitted role mappings remain calibration outputs rather than authored application values.
+
+---
+
+# Adaptive Neutral Foregrounds
+
+Text and icons should resolve from calibrated neutral foreground roles rather than absorbing artwork or Brand Illumination colour.
+
+The resolver should evaluate the local resolved luminance behind each foreground region and select a readable light or dark neutral implementation for the requested semantic role.
+
+Foreground switching must include hysteresis.
+
+After selecting a light or dark implementation, the resolver should retain it until local luminance crosses the opposite threshold plus a governed stability margin.
+
+This prevents scrolling, Composition movement and Focus transitions from causing visible foreground flicker near a single contrast boundary.
+
+Contrast validation retains higher authority than the stability margin.
+
+---
+
+# Functional Colour Isolation
+
+Action, focus and status colours resolve independently from Runtime Atmosphere, Acrylic tint and co-brand illumination.
+
+Mosaic Cyan remains the functional action and focus identity.
+
+Success, warning, error and information remain fixed semantic roles with calibrated implementations.
+
+Each status must also communicate through an icon, label, hierarchy or another non-colour signal.
+
 Atmosphere subtly influences the final result.
 
 It never determines it completely.

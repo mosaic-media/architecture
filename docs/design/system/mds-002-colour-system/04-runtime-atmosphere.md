@@ -457,7 +457,7 @@ Not theme switching.
 
 # No-Artwork Atmosphere
 
-When focused and Hero artwork are both unavailable, Runtime Atmosphere should derive from the approved static Mosaic or partner illumination pair.
+When focused and Hero artwork are both unavailable, Runtime Atmosphere should derive from the approved static Mosaic pair or deterministically resolved co-brand pair.
 
 If that pair is missing or invalid, the default Mosaic illumination pair becomes authoritative.
 

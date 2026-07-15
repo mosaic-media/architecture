@@ -48,7 +48,9 @@ It should never compete with the entertainment it presents.
 MDS-002 governs:
 
 - Brand Palette
+- Brand Illumination And Co-Brand Resolution
 - Semantic Colour Mapping
+- Neutral Acrylic Tint Intent
 - Runtime Atmosphere
 - Artwork Colour Extraction
 - Theme Architecture
@@ -188,6 +190,9 @@ MDS-002 succeeds when:
 - accessibility remains uncompromised
 - runtime adaptation feels natural rather than decorative
 - colour communicates understanding before aesthetics
+- Acrylic tint remains neutral while artwork or Brand Illumination supplies environmental hue
+- co-brand illumination remains recognisably Mosaic without requiring pre-authored partner pairs
+- foreground and functional colours remain readable and stable while environmental light changes
 
 Users should remember:
 

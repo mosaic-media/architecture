@@ -26,6 +26,26 @@ For that reason, these definitions should remain stable.
 
 # A
 
+## Adaptive Neutral Foreground
+
+A light or dark calibrated neutral text or icon colour selected from local resolved luminance.
+
+The resolver uses hysteresis so Composition movement does not cause rapid switching near a contrast threshold.
+
+---
+
+## Acrylic Tint Recipe
+
+One of the internal Clear, Mist, Smoke or Deep Smoke neutral transmission recipes.
+
+Recipes change neutral pigmentation and transmission without changing Acrylic physics.
+
+---
+
+## Acrylic Tint Intent
+
+Semantic content intent that allows the Colour System to select an Acrylic Tint Recipe without exposing the recipe or Material coefficients to the consumer.
+
 ## Accessibility Colour
 
 A resolved colour that satisfies accessibility requirements while preserving semantic meaning.
@@ -78,7 +98,7 @@ They intentionally do not communicate runtime emotion.
 
 ## Brand Illumination Pair
 
-Two approved Mosaic or partner colours used as a static environmental light source when no focused or Hero artwork is available.
+The default Indigo and Cyan pair, or a resolved co-brand pair containing Mosaic Indigo and one normalised registered partner accent, used as a static environmental light source when no focused or Hero artwork is available.
 
 The pair influences Acrylic through the Material System rather than recolouring components directly.
 
@@ -91,6 +111,18 @@ The pair influences Acrylic through the Material System rather than recolouring 
 Governed partner presence through an approved mark and Brand Illumination Pair while Mosaic remains the primary product identity.
 
 Co-Branding does not permit white-labelled themes or partner-owned Design Tokens.
+
+---
+
+## Co-Brand Pair Resolver
+
+The deterministic Platform process that scores registered partner colours against Mosaic Indigo, normalises the selected accent within governed limits and produces a safe Brand Illumination Pair.
+
+---
+
+## Colour Collision
+
+A condition in which no registered partner candidate can form a perceptually distinct, accessible and Material-safe pairing with Mosaic Indigo without unacceptable brand-identity loss.
 
 ---
 
@@ -144,6 +176,12 @@ They are not authored.
 ---
 
 # P
+
+## Partner Brand Registration
+
+A governed co-brand record containing one required signature colour and optional approved alternatives, preference order and usage restrictions.
+
+It provides candidates to the Co-Brand Pair Resolver rather than a complete partner-owned theme or illumination pair.
 
 ## Primitive Colour
 
