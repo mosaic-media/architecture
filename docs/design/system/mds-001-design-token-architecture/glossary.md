@@ -81,6 +81,12 @@ A Platform-owned foundational value without usage meaning.
 
 Primitive Tokens may define colours, dimensions, type metrics, motion curves or Material coefficients and are not consumed directly by Modules or ordinary components.
 
+## Private Spatial Scale
+
+The Platform-owned sequence of internal spacing values used by client Adaptive Layout.
+
+The scale is not a public semantic API and cannot be selected by SDUI, Modules, users or ordinary components.
+
 ---
 
 # R

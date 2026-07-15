@@ -186,8 +186,16 @@ Mosaic requires internal spacing, radius and geometric coefficients to produce p
 Examples may include:
 
 ```text
+Primitive.Space.2
 Primitive.Space.4
 Primitive.Space.8
+Primitive.Space.12
+Primitive.Space.16
+Primitive.Space.24
+Primitive.Space.32
+Primitive.Space.48
+Primitive.Space.64
+Primitive.Space.96
 Primitive.Radius.8
 Primitive.Radius.16
 ```
@@ -196,11 +204,23 @@ These are Platform-owned implementation inputs.
 
 They are not public semantic choices such as `Spacing.Large`, and Modules, components, users and SDUI do not select them.
 
+The provisional private spatial scale is:
+
+```text
+2, 4, 8, 12, 16, 24, 32, 48, 64, 96
+```
+
+`4` establishes the foundational rhythm.
+
+`2` is reserved for optical correction and very small internal separation.
+
 The client-side Adaptive Layout implementation chooses and interpolates private values while calculating location, size, padding, spacing and density from content relationships, available space and governed constraints.
+
+The scale remains an alpha baseline until reference compositions validate its rhythm across viewing contexts, accessibility settings and renderer implementations.
 
 The Material System similarly consumes private radius and Material coefficients when deriving clipping and edge treatment from resolved geometry.
 
-Exact categories, values and mathematical profiles are defined only after the token contract establishes their types, units and ownership.
+Radius, Material and remaining geometric profiles are defined only after their owning contracts establish types, units and behaviour.
 
 ---
 
