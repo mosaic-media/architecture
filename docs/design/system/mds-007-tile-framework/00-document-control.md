@@ -56,6 +56,8 @@ MDS-007 governs:
 - Expression-to-Tile mapping
 - Tile lifecycle
 - Adaptive Tile behaviour
+- Capacity-Sensitive Tile Viewports
+- Stable Internal Topology
 - Tile interaction
 - Runtime Tile resolution
 - Tile orchestration
@@ -213,6 +215,7 @@ MDS-007 succeeds when:
 - components become simple rendering implementations
 - modules naturally inherit platform presentation
 - adaptive behaviour remains predictable
+- Tile resizing reveals or suppresses content without rearranging its internal meaning
 - contributors think in Tiles rather than widgets
 
 Users should never perceive Tiles directly.

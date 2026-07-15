@@ -98,6 +98,8 @@ This specification defines:
 - Expression-to-Tile Mapping
 - Tile Lifecycle
 - Adaptive Tile Behaviour
+- Capacity-Sensitive Tile Viewports
+- Stable Internal Topology
 - Tile Composition
 - Tile Interaction
 - Runtime Tile Resolution
@@ -168,6 +170,7 @@ After reading MDS-007 contributors should understand:
 - why Tiles exist
 - how Expressions become Tiles
 - how Tiles adapt across devices
+- how Tiles adapt their visible capacity without rearranging internal content
 - how Tiles participate in runtime behaviour
 - how modules naturally inherit presentation
 

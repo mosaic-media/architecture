@@ -202,6 +202,77 @@ These outputs remain independent from rendering technology.
 
 ---
 
+# Capacity-Sensitive Tile Viewports
+
+A Tile may gain or release plane-local capacity while preserving its identity.
+
+The Tile shell may therefore change width, height and aspect ratio. Mosaic does not impose one locked aspect ratio on every Tile.
+
+The content model inside the Tile remains stable:
+
+- artwork preserves its source aspect ratio
+- content orientation remains stable
+- item order remains stable
+- row dimensions remain stable
+- semantic priority remains stable
+
+Additional capacity reveals additional content. Reduced capacity suppresses the lowest-priority content that no longer fits.
+
+The Tile must not respond by inventing a different internal layout, reordering content, stretching artwork or compressing rows until they become illegible.
+
+For a vertically repeating collection such as a release schedule, the visible item count is:
+
+\[
+N_{\mathrm{visible}} =
+\operatorname{clamp}\left(
+\left\lfloor
+\frac{H_{\mathrm{content}} + g}{H_{\mathrm{row}} + g}
+\right\rfloor,
+1,
+N_{\mathrm{available}}
+\right)
+\]
+
+where:
+
+| Symbol | Meaning |
+|--------|---------|
+| \(H_{\mathrm{content}}\) | Vertical capacity available to repeating content after fixed Tile regions are resolved. |
+| \(H_{\mathrm{row}}\) | Governed row height for the Tile expression. |
+| \(g\) | Governed gap between rows. |
+| \(N_{\mathrm{available}}\) | Number of semantically available items. |
+
+A release schedule with more vertical capacity therefore shows more episodes. When capacity contracts, it shows fewer episodes while retaining at least the highest-priority scheduled episode.
+
+Thresholds, minimum dimensions and transition hysteresis require calibration in the alpha implementation. The invariant is stable topology, not any provisional numeric value.
+
+---
+
+# Stable Internal Topology
+
+Adaptive presentation changes the visible extent of one Tile expression.
+
+It does not replace that expression with a different component arrangement merely because its bounds changed.
+
+This distinction preserves perceptual continuity while the Composition Engine moves and resizes Tiles through the spatial puzzle:
+
+```mermaid
+flowchart LR
+
+N1["Stable Tile Identity"]
+N2["Plane-Local Capacity Changes"]
+N3["Stable Internal Topology"]
+N4["Visible Content Count Changes"]
+
+N1 --> N2
+N2 --> N3
+N3 --> N4
+```
+
+If a fundamentally different information relationship is required, it should be represented as a different Expression or Tile identity rather than hidden inside an arbitrary responsive breakpoint.
+
+---
+
 # Hero Adaptation
 
 Desktop.

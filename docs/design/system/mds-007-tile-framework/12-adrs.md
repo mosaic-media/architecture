@@ -265,6 +265,44 @@ Users experience one coherent presentation rather than many unrelated interface 
 
 ---
 
+# ADR-198
+
+## Title
+
+Preserve Internal Tile Topology While Visible Capacity Changes
+
+### Status
+
+Accepted
+
+### Context
+
+Plane-local Composition movement may change a Tile's available width, height and aspect ratio.
+
+Rearranging internal content at arbitrary responsive breakpoints makes the Tile appear to become a different object and weakens continuity during resizing.
+
+Locking every Tile to one aspect ratio would prevent useful capacity changes such as revealing additional release-schedule episodes when more vertical space becomes available.
+
+### Decision
+
+Tiles use Capacity-Sensitive Tile Viewports.
+
+The Tile shell may resize, but artwork aspect ratio, content orientation, item ordering, row dimensions and semantic priority remain stable.
+
+Additional capacity reveals additional semantically ordered content. Reduced capacity suppresses the lowest-priority content that no longer fits while preserving the governed minimum.
+
+A fundamentally different information relationship requires a different Expression or Tile identity rather than a hidden responsive rearrangement.
+
+### Consequences
+
+Tiles remain perceptually rigid and recognisable while participating in the spatial puzzle.
+
+Schedule and collection Tiles may expose more useful information without fragmenting their identity.
+
+Exact thresholds, minimum dimensions and hysteresis remain alpha calibration concerns.
+
+---
+
 # ADR Relationships
 
 ```mermaid
@@ -288,6 +326,8 @@ ADR175["Modules"]
 
 ADR176["Orchestration"]
 
+ADR198["Capacity-Sensitive Viewports"]
+
 ADR168 --> ADR169
 ADR169 --> ADR170
 ADR170 --> ADR171
@@ -296,6 +336,8 @@ ADR172 --> ADR174
 ADR173 --> ADR174
 ADR174 --> ADR176
 ADR174 --> ADR175
+ADR171 --> ADR198
+ADR176 --> ADR198
 ```
 
 Together these decisions establish Tiles as the stable presentation language bridging runtime understanding and visual implementation.

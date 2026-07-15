@@ -50,6 +50,12 @@ They never change:
 
 # C
 
+## Capacity-Sensitive Tile Viewport
+
+The governed visible region through which one stable Tile expression reveals as much semantically ordered content as its current plane-local capacity permits.
+
+---
+
 ## Collection Tile
 
 A Tile representing an organised behavioural group of related content.
@@ -193,6 +199,14 @@ Runtime Tile Resolution evaluates:
 - Adaptive behaviour
 
 before components are created.
+
+---
+
+# S
+
+## Stable Internal Topology
+
+The invariant semantic ordering, orientation and dimensional relationships inside a Tile while its outer bounds and visible content capacity change.
 
 ---
 
