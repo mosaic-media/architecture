@@ -36,9 +36,9 @@ Accessibility Colours are generated through Theme Resolution rather than manuall
 
 ## Atmosphere
 
-The adaptive environmental lighting generated from the user's current entertainment.
+The adaptive or static environmental lighting generated from current artwork or a governed brand illumination pair.
 
-Atmosphere is derived from artwork.
+Atmosphere is derived from artwork when artwork is available.
 
 It influences Materials.
 
@@ -48,7 +48,7 @@ It never replaces Brand or Semantic Colours.
 
 ## Atmosphere Token
 
-A Runtime Token representing environmental colour characteristics.
+A Semantic Colour whose Resolved Token value is influenced by governed environmental context.
 
 Examples include:
 
@@ -56,9 +56,7 @@ Examples include:
 - Atmosphere.Reflection
 - Atmosphere.Highlight
 
-Atmosphere Tokens are generated.
-
-They are never authored manually.
+The Semantic Colour roles are Platform-authored and their Resolved Token values are generated.
 
 ---
 
@@ -78,7 +76,23 @@ They intentionally do not communicate runtime emotion.
 
 ---
 
+## Brand Illumination Pair
+
+Two approved Mosaic or partner colours used as a static environmental light source when no focused or Hero artwork is available.
+
+The pair influences Acrylic through the Material System rather than recolouring components directly.
+
+---
+
 # C
+
+## Co-Branding
+
+Governed partner presence through an approved mark and Brand Illumination Pair while Mosaic remains the primary product identity.
+
+Co-Branding does not permit white-labelled themes or partner-owned Design Tokens.
+
+---
 
 ## Colour Resolution
 
@@ -231,7 +245,7 @@ Theme Resolution occurs before Runtime Atmosphere.
 | [MDL-003 — Mental Model](../../language/mdl-003-mental-model/index.md) | World, Focus |
 | [MDL-004 — Interaction Model](../../language/mdl-004-interaction-model/index.md) | Runtime Behaviour |
 | [MDL-005 — Composition Model](../../language/mdl-005-composition-model/index.md) | Hierarchy, Hero |
-| [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md) | Semantic Tokens, Runtime Tokens |
+| [MDS-001 — Design Token Architecture](../mds-001-design-token-architecture/index.md) | Semantic Tokens, Resolved Tokens |
 | [MDS-003 — Material System](../mds-003-material-system/index.md) | Acrylic, Refraction |
 
 ---

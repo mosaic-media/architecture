@@ -240,8 +240,8 @@ Applications simply consume the results.
 Module authors should consume:
 
 - Semantic Colours
-- Runtime Tokens
-- Composition Tokens
+- mapped Platform semantic roles
+- governed colour recipes
 
 They should never introduce:
 

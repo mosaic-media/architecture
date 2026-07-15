@@ -219,6 +219,24 @@ These remain visual interpretations rather than independent design systems.
 
 ---
 
+# Theme Authority
+
+Mosaic is not a white-labelled Design System.
+
+The Platform owns every theme and the Mosaic shell remains recognisable in every supported product.
+
+Users may select Light, Dark or follow the operating-system appearance.
+
+Accessibility preferences may further constrain colour, contrast, transparency and motion.
+
+Users and Modules do not provide arbitrary accent colours or shell themes.
+
+Approved co-branding is a governed brand input rather than another theme.
+
+It may provide a partner mark in designated locations and a validated static illumination pair while preserving Mosaic identity, typography, Materials and interaction behaviour.
+
+---
+
 # Runtime Layering
 
 Runtime Atmosphere sits above the Theme.

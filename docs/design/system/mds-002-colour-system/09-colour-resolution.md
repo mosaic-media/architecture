@@ -410,7 +410,7 @@ Modules should never resolve colours.
 Modules consume:
 
 - Semantic Colours
-- Runtime Tokens
+- mapped Platform semantic roles
 
 The platform determines final colour values.
 

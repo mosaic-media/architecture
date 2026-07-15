@@ -287,6 +287,60 @@ The interface remains understandable even with greatly reduced colour informatio
 
 ---
 
+# ADR-106
+
+## Title
+
+Permit Governed Co-Branding Without White-Labelling
+
+### Status
+
+Accepted
+
+### Context
+
+Partners may require visible identity while Mosaic must remain one coherent product and Design Language.
+
+### Decision
+
+Mosaic remains the primary product identity and does not permit white-labelled themes.
+
+Approved partners may provide a mark in designated locations and a validated static illumination colour pair.
+
+Partner input cannot replace Mosaic typography, Materials, interaction behaviour, accessibility or shell identity.
+
+### Consequences
+
+Partners gain recognisable presence without owning tokens or fragmenting the Platform theme architecture.
+
+---
+
+# ADR-107
+
+## Title
+
+Use Static Brand Illumination When Artwork Is Absent
+
+### Status
+
+Accepted
+
+### Context
+
+Settings, administration and dashboard experiences may have no meaningful artwork but must still feel like Mosaic Acrylic.
+
+### Decision
+
+Colour-source priority is focused artwork, Hero artwork, approved Mosaic or partner illumination pair, then the default Mosaic pair.
+
+The pair acts as a static environmental source through the Material System rather than recolouring components.
+
+### Consequences
+
+No-artwork experiences retain Acrylic and Refraction identity with minimal continuous processing.
+
+---
+
 # ADR Relationships
 
 ```mermaid
@@ -309,6 +363,8 @@ ADR103["Materials"]
 ADR104["Modules"]
 
 ADR105["Understanding"]
+ADR106["Co-Branding"]
+ADR107["Static Brand Illumination"]
 
 ADR097 --> ADR099
 ADR099 --> ADR101
@@ -318,6 +374,9 @@ ADR103 --> ADR102
 ADR100 --> ADR102
 ADR102 --> ADR104
 ADR105 --> ADR099
+ADR097 --> ADR106
+ADR106 --> ADR107
+ADR107 --> ADR103
 ```
 
 Together these decisions establish the architectural separation between:

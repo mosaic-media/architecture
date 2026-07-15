@@ -426,7 +426,7 @@ Modules should remain completely unaware of Light and Dark Modes.
 Modules consume:
 
 - Semantic Colours
-- Runtime Tokens
+- mapped Platform semantic roles
 
 The Theme Resolver determines final implementation.
 

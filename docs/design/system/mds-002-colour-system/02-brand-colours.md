@@ -387,6 +387,31 @@ It never replaces it.
 
 ---
 
+# Static Brand Illumination
+
+When no focused or Hero artwork is available, Acrylic may use a governed pair of Brand Colours as a static material-light source.
+
+The pair supplies environmental illumination through the Material System.
+
+It does not recolour components directly and does not change Acrylic physics.
+
+Source priority is:
+
+1. focused artwork
+2. Hero artwork
+3. approved Mosaic or partner illumination pair
+4. default Mosaic illumination pair
+
+An approved partner may provide an illumination pair and a mark for designated co-brand locations.
+
+Mosaic remains visible and retains ownership of theme, typography, Material, motion and interaction behaviour.
+
+This is co-branding rather than white-labelling.
+
+Partner colours should be preserved as source identity while the resolver may bound their intensity, saturation and contrast contribution for accessibility and Material coherence.
+
+---
+
 # Good Examples
 
 ## Splash Screen

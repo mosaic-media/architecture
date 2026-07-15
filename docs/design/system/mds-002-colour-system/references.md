@@ -122,7 +122,7 @@ Provides:
 
 - Primitive Tokens
 - Semantic Tokens
-- Runtime Tokens
+- Resolved Tokens
 - Resolution Pipeline
 
 The Colour System implements this architecture.
