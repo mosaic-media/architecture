@@ -59,6 +59,18 @@ MDS-003 governs:
 - Runtime material adaptation
 - Refraction
 - Light transport
+- Material-scoped artwork emission
+- focused-or-Hero primary source selection
+- local Acrylic backdrop participation
+- Artwork-space light fields
+- Acrylic composition and optical parallax
+- UVLightFrame lifecycle and normalisation
+- static and streamed artwork-light sources
+- Acrylic-to-Acrylic transport
+- bounded non-overlapping Acrylic proximity transport
+- Transport occlusion and energy conservation
+- Capability-driven Material quality
+- Video playback protection
 - Material resolution
 
 This specification intentionally does **not** govern:
@@ -207,7 +219,10 @@ MDS-003 succeeds when:
 - runtime atmosphere subtly influences surfaces
 - refraction strengthens immersion without distraction
 - hierarchy remains immediately understandable
-- artwork appears to illuminate the interface
+- artwork-derived light appears to travel through Acrylic without making the artwork visibly emissive
+- Material quality adapts without visible instability
+- Refraction never causes a video presentation deadline miss
+- static artwork and video share one standard artwork-light model
 - components feel like objects within one coherent environment
 
 Users should not consciously admire the materials.

@@ -24,6 +24,14 @@ Future specifications should reuse these terms consistently.
 
 # A
 
+## Adaptive Material Quality
+
+The client-owned adjustment of independent Refraction quality dimensions according to measured rendering capability and available presentation budget.
+
+Adaptation preserves Material invariants while reducing optional fidelity under pressure.
+
+---
+
 ## Acrylic
 
 The primary interactive material within the Mosaic Material System.
@@ -31,8 +39,8 @@ The primary interactive material within the Mosaic Material System.
 Acrylic is a semi-translucent material that receives:
 
 - Runtime Atmosphere
+- artwork-derived material light
 - Refraction
-- Environmental Light
 
 while preserving:
 
@@ -46,6 +54,14 @@ It possesses substance.
 
 ---
 
+## Acrylic-To-Acrylic Transport
+
+The bounded redistribution of artwork-derived light from one Acrylic object to another according to their relative relationship within the three-dimensional Composition.
+
+Acrylic redirects existing energy rather than creating a new primary source.
+
+---
+
 ## Atmosphere
 
 The environmental lighting generated from the user's current entertainment.
@@ -53,6 +69,16 @@ The environmental lighting generated from the user's current entertainment.
 Atmosphere is received by Materials.
 
 It is not applied directly to components.
+
+---
+
+# B
+
+## Backdrop Participation
+
+The receiver-local distortion and diffusion of actual Presentation rendered behind an Acrylic surface.
+
+Backdrop Participation remains separate from the hidden artwork-derived `UVLightField` and does not create another global primary source.
 
 ---
 
@@ -70,13 +96,23 @@ Canvas communicates:
 
 It receives minimal atmospheric influence.
 
+Canvas is a Material identity and should not be confused with the three-dimensional Composition Space in which artwork and Acrylic are positioned.
+
+---
+
+## Composition Space
+
+The spatial coordinate system in which two-dimensional artwork and Acrylic surfaces possess `x`, `y`, `z`, orientation, bounds and masks before projection into Presentation.
+
+Composition Space does not require mesh geometry.
+
 ---
 
 # D
 
 ## Diffusion
 
-The soft internal spreading of environmental light through a material.
+The soft internal spreading of transported artwork light through Acrylic.
 
 Diffusion reduces:
 
@@ -88,7 +124,23 @@ while increasing perceived physical realism.
 
 ---
 
+## Dynamic Material Budget
+
+The measured portion of presentation headroom currently available to Material Resolution after core presentation, interaction reserve and safety margin are considered.
+
+The budget changes with renderer performance and runtime conditions rather than device category.
+
+---
+
 # E
+
+## Energy Conservation
+
+The requirement that Acrylic transport preserve or reduce the energy supplied by the artwork primary source.
+
+Successive interactions must not amplify or recirculate light without a termination condition.
+
+---
 
 ## Edge Lighting
 
@@ -101,6 +153,33 @@ Edge Lighting communicates:
 - physical presence
 
 It should remain understated.
+
+When caused by artwork-derived light exiting an Acrylic boundary, this behaviour is described more precisely as **Edge Emission**.
+
+---
+
+## Edge Emission
+
+The restrained visible response created when artwork-derived light exits through an Acrylic boundary.
+
+Its position follows the relationship between:
+
+- artwork content,
+- artwork transform,
+- Acrylic transform,
+- Acrylic shape, mask and transform.
+
+Edge Emission belongs to Acrylic rather than the visible artwork.
+
+---
+
+# F
+
+## Focused Artwork Source
+
+The artwork associated with current Focus and therefore selected as the active global primary source for Acrylic.
+
+Hero artwork becomes the source when Focus is not associated with artwork.
 
 ---
 
@@ -118,7 +197,7 @@ Hero Material receives the strongest Runtime Atmosphere and Refraction while pre
 
 ## Light Transport
 
-The conceptual movement of environmental light through the Material System.
+The conceptual movement of material-scoped artwork light from one global primary source through a bounded network of Acrylic within the three-dimensional Composition.
 
 Light Transport describes behaviour rather than implementation.
 
@@ -139,6 +218,14 @@ Materials communicate:
 - physical presence
 
 They are not equivalent to rendering effects.
+
+---
+
+## Material-Scoped Artwork Emitter
+
+The hidden, spatially distributed role through which the current artwork acts as the global primary source exposed exclusively to Acrylic.
+
+The visible artwork remains ordinarily presented and does not glow or illuminate the wider Composition.
 
 ---
 
@@ -173,7 +260,8 @@ Material Resolution evaluates:
 
 - Runtime Atmosphere
 - Accessibility
-- Device Capability
+- Renderer Capability Profile
+- Dynamic Material Budget
 - Theme
 
 before producing renderable material properties.
@@ -181,6 +269,22 @@ before producing renderable material properties.
 ---
 
 # O
+
+## Occlusion
+
+The blocking of material-scoped artwork light by opaque Composition surfaces according to their bounds, masks and z-order.
+
+Acrylic may transmit and transform the field, while opaque surfaces prevent transport through their covered Composition region.
+
+---
+
+## Optical Parallax
+
+The bounded relative movement of sampled artwork, backdrop, diffusion and glare layers inside a stable Acrylic mask.
+
+Optical Parallax uses apparent thickness and Composition relationships to communicate physical depth without mesh geometry.
+
+---
 
 ## Overlay Material
 
@@ -209,11 +313,41 @@ rather than shadows or opacity alone.
 
 ---
 
+## Playback Protection
+
+The Refraction Engine behaviour that preserves video presentation deadlines by skipping, deferring or simplifying Material work and reusing the last stable Material state when necessary.
+
+---
+
+## Presentation Deadline
+
+The latest safe completion point for work required to present the next frame without an attributable delay or drop.
+
+Video Presentation Deadlines possess higher authority than Refraction fidelity.
+
+---
+
+## Primary Artwork Source
+
+The current artwork acting as the single global origin of energy for its Acrylic transport environment.
+
+Global applies within the Acrylic transport layer and does not make the artwork visibly emissive in ordinary Presentation.
+
+---
+
 # R
+
+## Relative Radiance
+
+The spatial relationship between artwork colour and emitted light intensity without asserting an absolute physical luminance or requiring HDR source artwork.
+
+Within a `UVLightFrame`, the magnitude of linear colour preserves relative brightness between artwork regions and across temporally related source frames.
+
+---
 
 ## Refraction
 
-The controlled transport and bending of environmental light through Mosaic materials.
+The controlled bending and transport of artwork-derived light through Mosaic Acrylic.
 
 Refraction communicates:
 
@@ -222,6 +356,22 @@ Refraction communicates:
 - environmental continuity
 
 It should never become decorative.
+
+---
+
+## Runtime Atmosphere Constraints
+
+The contextual, accessibility and visual-restraint limits applied to artwork-derived light before Acrylic transport resolves.
+
+Runtime Atmosphere governs the strength of the material response without replacing the spatial source field.
+
+---
+
+## Renderer Capability Profile
+
+The client-local understanding of available rendering features, their measured cost and current runtime headroom.
+
+It is discovered and maintained by the client renderer rather than inferred from a device category or prescribed by Runtime SDUI.
 
 ---
 
@@ -234,6 +384,14 @@ Applications consume resolved materials rather than constructing them.
 ---
 
 # S
+
+## Secondary Acrylic Transport
+
+The reduced and transformed light passed from one Acrylic object to another after an earlier direct or secondary interaction.
+
+Secondary transport depends upon relative position, distance, orientation, surface bounds, masks, visibility and remaining energy.
+
+---
 
 ## Surface
 
@@ -258,31 +416,58 @@ Thickness is communicated through:
 - refraction
 - lighting
 
-rather than explicit dimensional rendering.
+The reference Mosaic Acrylic behaves conceptually like a polished sheet approximately one centimetre thick.
+
+Thickness is an optical Material parameter rather than geometric extrusion.
+
+Runtime implementations may adapt apparent thickness while preserving diffusion, displacement, edge response and optical parallax.
 
 ---
 
 # U
 
-## UV Field
+## UVLightField
 
-The normalised environmental lighting space generated from the current Hero.
+The active, temporally reconstructed relative-radiance primary source consumed by Acrylic transport.
 
-Materials sample this shared field to produce coherent atmospheric behaviour.
+Acrylic receivers use one shared `UVLightField` through their three-dimensional relationship with the artwork and may redistribute its remaining energy to other Acrylic.
 
-The UV Field is independent of:
+The `UVLightField` is independent of:
 
 - screen resolution
 - layout
+- a particular Acrylic object
 - rendering technology
+
+---
+
+## UVLightFrame
+
+One immutable, normalised and downscaled snapshot of primary artwork light at a source state or timestamp.
+
+Static artwork normally produces one cached `UVLightFrame`.
+
+The frame preserves spatially varying mean linear colour and relative brightness, may preserve local peak luminance, and does not imply that its source artwork is HDR.
+
+Artwork-to-Acrylic direction is derived from the three-dimensional Composition rather than stored as receiver-relative frame data.
+
+The exact serialised schema is defined by [MIP-003 — UVLightFrame Protocol](../../../engineering/protocols/mip-003-uv-light-frame-protocol/index.md).
+
+---
+
+## UVLightStream
+
+An ordered sequence of timestamped `UVLightFrame` values generated from moving artwork or periodically sampled video.
+
+The renderer reconstructs an active `UVLightField` from the stream without requiring analysis of every presented video frame.
 
 ---
 
 ## UV-Indexed Refraction
 
-The conceptual lighting model through which Runtime Atmosphere is projected into normalised UV space before being sampled by Materials.
+The conceptual lighting model through which artwork-derived light is represented in normalised artwork UV space, projected into the three-dimensional Composition and propagated through a bounded network of Acrylic.
 
-This system provides one coherent environmental lighting model across every client.
+This system provides one coherent material light source across every client.
 
 ---
 
@@ -309,5 +494,7 @@ Future contributors should:
 - distinguish Acrylic from glass
 - distinguish Atmosphere from Brand
 - distinguish Refraction from blur
+- distinguish artwork Presentation from material-scoped artwork emission
+- describe Composition Space as three-dimensional
 
 Material terminology should remain independent from rendering implementation.

@@ -143,6 +143,20 @@ The Material System intentionally treats Runtime Atmosphere as environmental lig
 
 ---
 
+## [MIP-003 — UVLightFrame Protocol](../../../engineering/protocols/mip-003-uv-light-frame-protocol/index.md)
+
+Defines the machine-readable artwork-light frame, relative-radiance channels, serialised texture profile and compatibility rules consumed by Refraction.
+
+MDS-003 remains authoritative for visual meaning and Material behaviour.
+
+---
+
+## [MEG-014 — Refraction Engine](../../../engineering/guides/meg-014-refraction-engine/index.md)
+
+Explains how clients resolve focused-or-Hero artwork light, local backdrop, two-dimensional surface relationships and performance budgets into renderer-ready Acrylic state.
+
+---
+
 # Future Specifications
 
 The following specifications directly depend upon MDS-003.

@@ -199,17 +199,33 @@ Refraction should always remain:
 
 - subtle,
 - purposeful,
-- behaviourally justified.
+- behaviourally justified,
+- scoped to Acrylic,
+- spatially related to artwork within the three-dimensional Composition,
+- coherent across neighbouring Acrylic,
+- bounded by available source energy.
 
 Refraction should never become:
 
 - decorative,
 - animated for its own sake,
-- independent from Runtime Atmosphere.
+- independent from Runtime Atmosphere,
+- a source of visible artwork glow,
+- global illumination for the wider Composition.
 
-Users should feel environmental lighting.
+Users should perceive light inside Acrylic.
 
 Not visual effects.
+
+Artwork should remain visually ordinary.
+
+Its emitter role should become apparent only through Acrylic transmission, diffusion and edge emission.
+
+The artwork remains the only global primary source for the Acrylic transport environment.
+
+Acrylic may redistribute that energy to other Acrylic but must never create energy or propagate it without a termination condition.
+
+Opaque Composition surfaces should occlude the hidden transport field according to bounds, masks and z-order.
 
 ---
 
@@ -234,6 +250,35 @@ These improvements should require no changes to:
 The Material System should absorb complexity.
 
 Applications should remain simple.
+
+---
+
+# Performance Governance
+
+Material performance should be governed by measured renderer capability and available presentation budget rather than device categories.
+
+Client renderers may vary implementation quality while preserving:
+
+- artwork-relative direction,
+- three-dimensional spatial causality,
+- Acrylic-only visibility,
+- bounded secondary transport,
+- temporal continuity,
+- accessibility.
+
+Stable frame pacing possesses higher authority than Refraction fidelity.
+
+During video playback, the Refraction Engine must yield before it causes a video presentation deadline to be missed.
+
+Skipping a Material update, reusing a stable field or reducing secondary transport is acceptable.
+
+Dropping a video frame because of Refraction work is not.
+
+Quality should reduce quickly under pressure and recover gradually after sustained headroom.
+
+Static artwork and periodically sampled video should use the same `UVLightFrame` semantics.
+
+Renderers may vary sampling cadence and representation but must preserve frame compatibility, source ordering and temporal continuity.
 
 ---
 
@@ -280,6 +325,8 @@ Every Material proposal should answer:
 - Does it remain accessible?
 - Would users still recognise Mosaic?
 - Is this solving a behavioural problem or adding visual novelty?
+- Can the behaviour simplify without losing spatial causality?
+- Can it yield before threatening a video presentation deadline?
 
 If the proposal exists primarily because it "looks cool", it should be reconsidered.
 
@@ -295,6 +342,10 @@ Future tooling should validate:
 - Accessibility compliance
 - Refraction intensity
 - Platform parity
+- Material budget adherence
+- adaptive-quality stability
+- video frame drops attributable to Refraction
+- UVLightFrame compatibility and validation
 
 Automated validation should reinforce architectural review rather than replace it.
 

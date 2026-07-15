@@ -21,7 +21,7 @@ Without Refraction, Acrylic becomes translucent decoration.
 
 With Refraction, Acrylic becomes a believable physical material.
 
-Refraction transforms Runtime Atmosphere into the feeling that light is travelling through the interface itself.
+Refraction transforms a hidden artwork-derived light source into the feeling that light is travelling through Acrylic itself.
 
 It is one of the primary visual signatures of Mosaic.
 
@@ -31,7 +31,7 @@ It is one of the primary visual signatures of Mosaic.
 
 Within MDS, **Refraction** is defined as:
 
-> **The controlled transport and diffusion of environmental light through Mosaic materials in order to reinforce immersion, hierarchy and physical presence.**
+> **The controlled bending and transport of artwork-derived light through Mosaic Acrylic in order to reinforce immersion, hierarchy and physical presence.**
 
 Refraction is not:
 
@@ -44,6 +44,8 @@ Refraction is not:
 Those are rendering techniques.
 
 Refraction is a physical behaviour.
+
+Diffusion, absorption, reflection and edge emission are related Acrylic behaviours, but they remain mechanically distinct from refraction.
 
 ---
 
@@ -92,7 +94,7 @@ Refraction creates the feeling that:
 
 # Light Transport
 
-Refraction should always be thought of as light transport.
+Refraction should always be thought of as material-scoped light transport.
 
 Not colour replacement.
 
@@ -115,8 +117,8 @@ Preferred.
 flowchart TD
 
 N1["Artwork"]
-N2["Light"]
-N3["Material"]
+N2["Hidden Material-Scoped Light"]
+N3["Acrylic"]
 N4["Refraction"]
 N5["Interface"]
 
@@ -141,16 +143,24 @@ Refraction receives several conceptual inputs.
 ```mermaid
 flowchart TD
 
-N1["Runtime Atmosphere"]
-N2["Material Type"]
-N3["Material Thickness"]
-N4["Surface Orientation"]
-N5["Composition Importance"]
+N1["Active UVLightField"]
+N2["Artwork World Transform"]
+N3["Acrylic Geometry"]
+N4["Acrylic World Transform"]
+N5["Material Thickness"]
+N6["Surface Orientation"]
+N7["Runtime Atmosphere Constraints"]
+N8["Neighbouring Acrylic And Occlusion"]
+N9["Refraction Resolution"]
 
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
+N1 --> N9
+N2 --> N9
+N3 --> N9
+N4 --> N9
+N5 --> N9
+N6 --> N9
+N7 --> N9
+N8 --> N9
 ```
 
 Refraction should never depend directly upon component implementation.
@@ -159,15 +169,184 @@ It is a material behaviour.
 
 ---
 
+# Material-Scoped Artwork Emitter
+
+The current artwork acts as a spatially distributed light source for Acrylic.
+
+This role remains invisible to the user.
+
+The ordinary Presentation path displays the artwork without:
+
+- glow,
+- bloom,
+- visible emission,
+- direct illumination of surrounding components.
+
+An independent material path derives a directional light field from the same artwork.
+
+That field is the global primary source for the Acrylic transport environment.
+
+Only Acrylic may consume it directly or receive energy redistributed by other Acrylic.
+
+```mermaid
+flowchart TD
+
+N1["Artwork"]
+N2["Ordinary Artwork Presentation"]
+N3["Material-Scoped Light Field"]
+N4["Acrylic Transport"]
+N5["Visible Acrylic Response"]
+
+N1 --> N2
+N1 --> N3
+N3 --> N4
+N4 --> N5
+```
+
+Any visible illumination must appear to originate from the Acrylic response rather than from the artwork itself.
+
+---
+
+# Three-Dimensional Composition Space
+
+Refraction resolves within the three-dimensional Composition rather than screen space.
+
+Artwork and Acrylic remain two-dimensional surfaces with spatial position, orientation, bounds and masks within that Composition.
+
+Composition depth does not require three-dimensional meshes or extruded Acrylic geometry.
+
+The direction of incident light follows their three-dimensional relationship.
+
+Screen coordinates become relevant only when the resolved material is projected into Presentation.
+
+---
+
+# Global Primary Source
+
+The current artwork is the single global primary source for its Acrylic transport environment.
+
+Global means that every spatially related Acrylic object may participate in one shared transport solution.
+
+It does not mean that the artwork visibly illuminates Canvas, components or the wider Presentation.
+
+Acrylic receivers must not create independent interpretations of the artwork source.
+
+---
+
+# Primary Source Selection
+
+The artwork associated with current Focus should act as the global primary source for the active Acrylic transport environment.
+
+When Focus is not associated with artwork, the Hero artwork should act as the source.
+
+```mermaid
+flowchart TD
+
+N1{"Focused Artwork Available?"}
+N2["Focused Artwork"]
+N3["Hero Artwork"]
+N4["Active Primary Artwork Source"]
+
+N1 -->|"Yes"| N2
+N1 -->|"No"| N3
+N2 --> N4
+N3 --> N4
+```
+
+Focus changes should transition between source fields without an abrupt Material reset.
+
+The source-selection rule remains Platform-owned and must not be reinterpreted independently by components.
+
+---
+
+# Backdrop Participation
+
+Acrylic should distort and diffuse the actual Presentation rendered behind its two-dimensional bounds and mask.
+
+This local backdrop sample is distinct from the hidden artwork-derived `UVLightField`.
+
+| Input | Responsibility |
+|-------|----------------|
+| Backdrop sample | Communicates local translucency, placement and continuity with visible content behind the Acrylic. |
+| Artwork light field | Supplies primary pigmentation, intensity, edge emission and shared environmental coherence. |
+
+The renderer combines both inputs inside Acrylic without making backdrop content or visible artwork an additional global light source.
+
+Semantic foreground content must remain outside destructive distortion when readability requires it.
+
+---
+
+# Secondary Acrylic Transport
+
+Acrylic may pass transformed artwork light to other Acrylic.
+
+```mermaid
+flowchart LR
+
+N1["Artwork Primary Source"]
+N2["Acrylic A"]
+N3["Acrylic B"]
+N4["Acrylic C"]
+
+N1 --> N2
+N1 --> N3
+N2 --> N3
+N2 --> N4
+N3 --> N4
+```
+
+This knock-on behaviour depends upon:
+
+- relative position,
+- distance,
+- orientation,
+- intervening opaque surface bounds and masks,
+- entry and exit boundaries,
+- energy remaining after previous transport.
+
+Projected overlap is not required.
+
+Nearby non-overlapping Acrylic may influence one another within a bounded projected-distance radius when their z relationship and masks permit a visible transport path.
+
+Acrylic is a secondary transport contributor rather than an independent light source.
+
+It redirects existing energy.
+
+It does not create energy.
+
+---
+
+# Occlusion
+
+Opaque Composition surfaces should block material-scoped artwork light according to their bounds, masks and z-order.
+
+Acrylic may transmit and transform that light according to its material behaviour.
+
+Occlusion ensures that depth, ordering and spatial relationships remain meaningful within the three-dimensional Composition.
+
+---
+
+# Bounded Propagation
+
+Secondary transport must remain bounded.
+
+Each interaction should reduce or redistribute the available energy through refraction, absorption, diffusion and reflection.
+
+Transport should stop when the remaining contribution becomes negligible.
+
+Future implementations may approximate this using a transport-depth limit, an energy threshold or both, provided the perceived result remains coherent.
+
+---
+
 # Refraction Outputs
 
 Refraction influences:
 
-- edge lighting
-- internal diffusion
-- subtle colour transport
-- environmental glow
-- perceived depth
+- the path travelled through Acrylic,
+- the location at which light exits Acrylic,
+- subtle colour transport through the material,
+- edge emission,
+- perceived depth.
 
 It should never directly influence:
 
@@ -179,19 +358,19 @@ Understanding remains independent from refraction.
 
 ---
 
-# Refraction Strength
+# Refraction Participation
 
-Different materials receive different refraction intensity.
+Only Acrylic materials participate in artwork-derived refraction.
 
-| Material | Refraction |
-|----------|-----------:|
+| Material | Participation |
+|----------|--------------:|
 | Canvas | None |
-| Surface | Very Low |
-| Acrylic | Medium |
-| Hero | High |
-| Overlay | Low |
+| Surface | None |
+| Acrylic | Standard |
+| Hero Acrylic | Strongest |
+| Overlay Acrylic | Reduced |
 
-This hierarchy mirrors the Material Hierarchy.
+Runtime Atmosphere may influence other materials through their own behaviour, but the artwork-derived light field remains exclusive to Acrylic.
 
 Refraction reinforces physical importance.
 
@@ -201,39 +380,66 @@ It does not define it.
 
 # Directionality
 
-Refraction should possess direction.
+Refraction should possess three-dimensional direction.
 
-Light should appear to originate from:
-
-```
-
-Hero Artwork
-```
-
-rather than uniformly illuminating every surface.
+Light originates from positions across the artwork surface and travels toward Acrylic within the Composition.
 
 Conceptually.
 
 ```mermaid
 flowchart TD
 
-N1["Artwork"]
-N2["Light Direction"]
-N3["Nearby Materials"]
-N4["Environmental Falloff"]
+N1["Artwork Emitter Position"]
+N2["Three-Dimensional Light Path"]
+N3["Acrylic Entry Point"]
+N4["Acrylic Exit Point"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
 ```
 
-This creates a much stronger sense of physical coherence.
+The same artwork field may therefore produce different responses as Acrylic moves, rotates or changes depth.
+
+---
+
+# Optical Parallax Resolution
+
+Refraction should derive a bounded internal optical offset from:
+
+- the artwork-to-Acrylic relationship,
+- the Acrylic surface transform,
+- projected viewpoint or Focus change,
+- the Acrylic apparent-thickness profile.
+
+```mermaid
+flowchart LR
+
+N1["Composition Transforms"]
+N2["Apparent Thickness"]
+N3["Bounded Optical Offset"]
+N4["Acrylic Composite Layers"]
+
+N1 --> N3
+N2 --> N3
+N3 --> N4
+```
+
+The Acrylic renderer applies that offset to sampled artwork, backdrop, diffusion and glare layers inside a stable two-dimensional mask.
+
+The offset belongs to resolved Acrylic state rather than `UVLightFrame` because it depends upon a particular receiver and Composition.
+
+No mesh, ray-to-triangle intersection or volumetric scene representation is required.
+
+Parallax responds only to Composition movement, scrolling and Focus transitions.
+
+Pointer position, device tilt, gyroscope data and unrelated ambient motion must not drive Acrylic parallax.
 
 ---
 
 # Diffusion
 
-Light should soften as it travels through materials.
+Light should soften as it travels through Acrylic.
 
 Strong artwork colours should gradually become:
 
@@ -247,21 +453,26 @@ Users should perceive atmosphere rather than individual colours.
 
 ---
 
-# Edge Refraction
+# Edge Emission
 
-Edges should refract more strongly than flat surfaces.
+Artwork-derived light may exit through an Acrylic edge after travelling through its perceived internal depth.
 
-Reasons include:
+This creates a moving edge-emission response that remains spatially related to:
 
-- perceived thickness
-- physical realism
-- hierarchy
+- the bright regions of the artwork,
+- the position and orientation of the artwork,
+- the position and orientation of the Acrylic,
+- the Acrylic boundary through which light exits.
 
-Edge lighting should remain subtle.
+Edge emission should remain subtle.
 
 Users should feel depth.
 
 Not notice glowing borders.
+
+Edge emission belongs to Acrylic.
+
+It is never a glow applied around the artwork.
 
 ---
 
@@ -324,9 +535,9 @@ Preferred.
 flowchart TD
 
 N1["Artwork Changes"]
-N2["Light Shifts"]
-N3["Refraction Evolves"]
-N4["Materials Settle"]
+N2["Light Field Changes"]
+N3["Acrylic Refraction Evolves"]
+N4["Acrylic Settles"]
 
 N1 --> N2
 N2 --> N3
@@ -386,23 +597,56 @@ Accessibility always overrides visual richness.
 
 # Performance
 
-Future implementations should optimise refraction aggressively.
+Refraction quality must adapt to the measured capability and available frame budget of the active client renderer.
 
-Recommended conceptual strategies include:
+The runtime must not infer quality from device categories such as browser, television, desktop or mobile.
 
-- cached atmosphere
-- simplified edge calculations
-- temporal interpolation
-- GPU acceleration
-- shared material buffers
+Feature availability determines which techniques are possible.
 
-Users should experience premium materials without perceiving rendering cost.
+Measured runtime behaviour determines which techniques remain affordable.
+
+When the available budget decreases, the Refraction Engine should simplify in the following conceptual order:
+
+1. reduce secondary transport work,
+2. remove negligible transport relationships,
+3. simplify edge response,
+4. reduce additional transport depth,
+5. reduce direct artwork response only when necessary.
+
+All simplification must preserve:
+
+- artwork-relative direction,
+- three-dimensional spatial causality,
+- Acrylic-only visibility,
+- weaker secondary response,
+- temporal continuity.
+
+Users should experience premium materials without perceiving rendering cost or quality transitions.
+
+---
+
+# Video Playback Protection
+
+The Refraction Engine **must not** cause a video presentation deadline to be missed.
+
+Video decode and presentation possess higher runtime priority than every Refraction operation.
+
+If Refraction work cannot complete safely within the available budget, the engine must:
+
+- skip or defer the material update,
+- reuse the last stable material state,
+- reduce transport quality,
+- continue Presentation without blocking video.
+
+Dropped or delayed material updates are acceptable.
+
+Video frame drops attributable to Refraction are not.
 
 ---
 
 # Modules
 
-Modules never participate in refraction.
+Modules never implement refraction.
 
 Modules contribute:
 
@@ -415,7 +659,7 @@ The Material System determines:
 - diffusion
 - edge behaviour
 
-Every module therefore inherits identical material quality automatically.
+Every module therefore supplies artwork through the same material-scoped emitter model and inherits identical Acrylic quality automatically.
 
 ---
 
@@ -425,7 +669,7 @@ Every module therefore inherits identical material quality automatically.
 
 Cool artwork softly illuminates Hero Acrylic.
 
-Nearby materials receive subtle blue reflections.
+Nearby Acrylic receives subtle blue transmission and edge response.
 
 Typography remains perfectly readable.
 
@@ -469,11 +713,11 @@ Atmosphere becomes visual spectacle.
 
 ---
 
-## Uniform Lighting
+## Global Artwork Lighting
 
-Every material receives identical illumination.
+Artwork-derived light illuminates Canvas, typography, components or the wider Composition directly.
 
-Hierarchy disappears.
+The artwork appears visibly emissive and the Acrylic boundary disappears.
 
 ---
 
@@ -491,16 +735,24 @@ Users become distracted.
 flowchart TD
 
 Artwork
-Artwork --> RuntimeAtmosphere
-RuntimeAtmosphere --> Material
-Material --> Refraction
-Refraction --> Diffusion
-Diffusion --> Presentation
+Artwork --> Frame["UVLightFrame"]
+Frame --> Field["Active UVLightField"]
+Field --> RuntimeAtmosphere["Runtime Atmosphere Constraints"]
+RuntimeAtmosphere --> AcrylicA["Acrylic A"]
+RuntimeAtmosphere --> AcrylicB["Acrylic B"]
+AcrylicA --> SecondaryTransport["Secondary Transport"]
+SecondaryTransport --> AcrylicB
+AcrylicA --> Refraction
+AcrylicB --> Refraction
+Refraction --> Absorption
+Absorption --> Diffusion
+Diffusion --> EdgeEmission["Edge Emission"]
+EdgeEmission --> Presentation
 Presentation
 Presentation --> UserPerception
 ```
 
-Refraction transforms environmental light into believable physical materials.
+Refraction transforms hidden artwork-derived light into believable Acrylic.
 
 ---
 
@@ -508,9 +760,9 @@ Refraction transforms environmental light into believable physical materials.
 
 The following chapter expands this concept through the **UV-Indexed Refraction System**.
 
-Rather than treating materials as uniformly illuminated, Mosaic introduces spatial light transport based upon UV coordinates.
+Rather than treating Acrylic as uniformly illuminated, Mosaic introduces a reusable artwork-space light field based upon UV coordinates.
 
-This allows atmosphere to:
+This allows artwork-derived light to:
 
 - move naturally,
 - preserve hierarchy,

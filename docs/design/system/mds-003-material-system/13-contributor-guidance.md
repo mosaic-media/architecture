@@ -228,6 +228,10 @@ Refraction should always explain physical presence.
 
 It should never exist because shaders are available.
 
+The artwork should remain the only global primary source for the Acrylic transport environment.
+
+Spatially related Acrylic should preserve coherent knock-on transport without creating or indefinitely recirculating energy.
+
 Ask:
 
 > Does this strengthen perceived depth?
@@ -321,6 +325,8 @@ Perception should remain constant.
 
 Performance optimisation should preserve behaviour.
 
+Material quality should follow measured client capability and available frame budget rather than device labels.
+
 Preferred.
 
 ```mermaid
@@ -348,6 +354,20 @@ If simplification becomes necessary:
 Reduce implementation complexity.
 
 Preserve conceptual behaviour.
+
+Reduce secondary transport and negligible detail before weakening direct artwork-to-Acrylic coherence.
+
+During video playback:
+
+Preserve the video presentation deadline.
+
+Skip or defer Material work when necessary.
+
+Reuse the last stable Material state rather than blocking playback.
+
+Generate `UVLightFrame` updates independently from video presentation cadence.
+
+Do not require analysis of every presented video frame.
 
 ---
 
@@ -415,6 +435,14 @@ Every Material implementation should satisfy the following.
 - [ ] Material identity is clear.
 - [ ] Runtime Atmosphere is respected.
 - [ ] Refraction remains subtle.
+- [ ] Spatially related Acrylic resolves as one coupled transport environment.
+- [ ] Secondary transport remains energy bounded.
+- [ ] Opaque Composition surfaces occlude hidden artwork light through bounds, masks and z-order.
+- [ ] Quality follows measured renderer capability rather than device category.
+- [ ] Stable frame pacing overrides Refraction fidelity.
+- [ ] Refraction work cannot cause a video presentation deadline miss.
+- [ ] Static and moving sources use the same UVLightFrame semantics.
+- [ ] Video sampling may skip work without invalidating the active UVLightField.
 - [ ] Accessibility remains uncompromised.
 - [ ] Components remain unaware of implementation.
 - [ ] Device independence is preserved.

@@ -97,8 +97,17 @@ This specification defines:
 - Hero Material
 - Overlay Material
 - Refraction
+- Material-Scoped Artwork Emission
+- Focused-Or-Hero Artwork Source Selection
+- Local Backdrop Participation
 - UV Mapping
+- UVLightFrame, UVLightStream And UVLightField
+- Acrylic Composition And Optical Parallax
 - Light Transport
+- Acrylic-to-Acrylic Transport
+- Bounded Acrylic Proximity Transport
+- Capability-Driven Material Quality
+- Video Playback Protection
 - Material Resolution
 - Runtime Material Behaviour
 
@@ -178,7 +187,15 @@ After reading MDS-003 contributors should understand:
 - why Mosaic uses Acrylic
 - how Runtime Atmosphere interacts with materials
 - how Refraction works
-- how UV mapping supports adaptation
+- how artwork-space UV light fields enter the three-dimensional Composition
+- why artwork emission remains visible only through Acrylic response
+- how focused artwork, or Hero artwork when none is focused, selects the active source
+- how local backdrop distortion remains separate from hidden artwork light
+- how still images and periodically sampled video produce the same standard light-field model
+- how two-dimensional Acrylic composites create physical depth through bounded parallax
+- how spatially related Acrylic redistributes bounded artwork-derived light
+- how client renderers adapt Material fidelity to measured presentation headroom
+- why video presentation deadlines override Refraction fidelity
 - how surfaces establish hierarchy
 - how future rendering systems should implement these ideas
 

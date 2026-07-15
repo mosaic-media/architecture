@@ -203,9 +203,9 @@ Hero Material is the primary consumer of the Refraction System.
 
 Examples include:
 
-- environmental colour transport,
-- UV-indexed reflections,
-- soft edge lighting,
+- artwork-derived colour transport,
+- UV-indexed material light,
+- spatially related edge emission,
 - atmospheric diffusion.
 
 Future rendering systems should prioritise Hero Material quality before secondary materials.
@@ -215,6 +215,8 @@ If performance budgets become constrained:
 Supporting materials should simplify first.
 
 Hero quality should remain as high as practical.
+
+Video presentation deadlines and stable frame pacing still possess higher authority than Hero material fidelity.
 
 ---
 

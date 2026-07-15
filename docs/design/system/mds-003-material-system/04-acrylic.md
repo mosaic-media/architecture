@@ -37,7 +37,7 @@ It is one of the most recognisable characteristics of the Mosaic visual language
 
 Within MDS, **Acrylic** is defined as:
 
-> **A semi-translucent material that receives environmental light and Runtime Atmosphere while preserving hierarchy, readability and physical presence.**
+> **A semi-translucent material that receives artwork-derived, material-scoped light and transforms it through refraction, absorption and diffusion while preserving hierarchy, readability and physical presence.**
 
 Acrylic is not:
 
@@ -82,6 +82,14 @@ It possesses:
 
 The interface should communicate that same feeling.
 
+The reference Mosaic Acrylic profile behaves conceptually like a polished sheet approximately one centimetre thick.
+
+This thickness is an optical reference for Material behaviour rather than three-dimensional geometry.
+
+Acrylic remains a two-dimensional surface or layered two-dimensional composite positioned within Composition Space.
+
+Implementations may adapt apparent thickness to Composition scale, but they should preserve the diffusion, displacement, edge response and parallax associated with a substantial polished sheet.
+
 ---
 
 # Acrylic Is Present
@@ -114,11 +122,15 @@ Acrylic performs five primary responsibilities.
 
 ---
 
-## 1. Receive Atmosphere
+## 1. Receive Artwork Light
 
-Acrylic receives Runtime Atmosphere from surrounding entertainment.
+Acrylic receives a material-scoped light field derived from the current artwork.
 
-It should never generate atmosphere independently.
+The artwork remains visually ordinary within Presentation.
+
+The artwork field is global within the Acrylic transport environment.
+
+Only Acrylic consumes it, but Acrylic may pass transformed light onward to other Acrylic.
 
 ---
 
@@ -192,13 +204,21 @@ N4 --> N5
 
 The material becomes believable rather than decorative.
 
+Acrylic may distort and diffuse visible Presentation behind its bounds while independently receiving hidden artwork-derived light.
+
+Backdrop participation communicates local translucency.
+
+Artwork-derived light communicates shared pigmentation, glare and edge response.
+
 ---
 
 # Runtime Atmosphere
 
-Runtime Atmosphere provides the energy.
+Artwork provides the spatially distributed light source.
 
-Acrylic determines how that energy behaves.
+Runtime Atmosphere constrains how strongly that source may influence Acrylic within the current World.
+
+Acrylic determines how the constrained light behaves.
 
 Conceptually.
 
@@ -206,18 +226,47 @@ Conceptually.
 flowchart TD
 
 N1["Artwork"]
-N2["Runtime Atmosphere"]
-N3["Acrylic"]
-N4["Refraction"]
-N5["Presentation"]
+N2["Material-Scoped Light Field"]
+N3["Runtime Atmosphere Constraints"]
+N4["Acrylic"]
+N5["Refraction"]
+N6["Presentation"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
 N4 --> N5
+N5 --> N6
 ```
 
-Acrylic should therefore be considered an interpreter of atmosphere rather than its source.
+Acrylic should therefore be considered both a receiver and a secondary transport contributor.
+
+It may redirect existing artwork-derived energy toward other Acrylic, but it must never create additional light energy.
+
+---
+
+# Acrylic-To-Acrylic Transport
+
+Acrylic objects should influence one another when their relative position, orientation, surface bounds, mask and z-order within the three-dimensional Composition permit light transport between them.
+
+```mermaid
+flowchart TD
+
+N1["Artwork Primary Source"]
+N2["Acrylic A"]
+N3["Acrylic B"]
+N4["Acrylic C"]
+
+N1 --> N2
+N1 --> N3
+N2 --> N3
+N2 --> N4
+N3 --> N4
+```
+
+Each interaction may refract, absorb, diffuse or redirect the remaining energy.
+
+Successive responses should become weaker and softer rather than accumulating without limit.
 
 ---
 
@@ -276,9 +325,32 @@ Future implementations may communicate this through:
 - edge lighting,
 - soft gradients.
 
-Thickness should be perceived.
+Thickness should be perceived consistently with the reference Acrylic profile rather than exposed as a component-level styling value.
 
-Not measured.
+Acrylic does not require an extruded shape, mesh or volumetric scene representation to communicate this depth.
+
+---
+
+# Acrylic Parallax
+
+Acrylic should preserve the feeling that its internal response occupies a different optical depth from its outer surface.
+
+It communicates this through two related behaviours.
+
+| Behaviour | Responsibility |
+|-----------|----------------|
+| Composition parallax | Moves the complete two-dimensional Acrylic surface according to its Composition depth as the projected viewpoint or Focus relationship changes. |
+| Internal optical parallax | Shifts sampled artwork, backdrop, diffusion and glare layers within the fixed Acrylic mask by a smaller bounded amount. |
+
+The apparent-thickness profile constrains internal optical displacement.
+
+The outer surface, interaction bounds and semantic layout remain stable while internal composite layers move relative to them.
+
+Edge glare may move at a different or opposing rate to strengthen the impression of a polished physical surface.
+
+Parallax must remain restrained, must not distort readable content and must respect accessibility constraints on motion.
+
+It responds to Composition movement, scrolling and Focus transitions rather than pointer, gyroscope or device-tilt input.
 
 ---
 
@@ -292,9 +364,13 @@ They communicate:
 - precision,
 - craftsmanship.
 
-Edges should respond more strongly to Runtime Atmosphere than central surfaces.
+Edges should respond more strongly when artwork-derived light exits through an Acrylic boundary than central surfaces.
 
 This creates the feeling that light is travelling through the material rather than simply colouring it.
+
+The artwork itself must not acquire a visible glow, bloom or emission effect.
+
+Visible edge light belongs to Acrylic because Acrylic redirected the hidden incident light.
 
 ---
 
@@ -423,10 +499,14 @@ Future implementations should optimise Acrylic aggressively.
 
 Preferred techniques include:
 
-- cached atmosphere,
+- cached artwork fields,
 - GPU acceleration,
 - incremental updates,
 - shared material layers.
+
+The client renderer should adapt Acrylic fidelity to measured capability and available presentation budget.
+
+During video playback, Acrylic updates must yield before they delay video presentation.
 
 Users should experience premium materials without perceiving computational cost.
 
@@ -521,15 +601,31 @@ No additional understanding is communicated.
 ```mermaid
 flowchart TD
 
-RuntimeAtmosphere
-RuntimeAtmosphere --> Acrylic
-Acrylic --> Diffusion
-Diffusion --> Refraction
-Refraction --> MaterialDepth
-MaterialDepth --> Presentation
+Artwork["Artwork"]
+LightField["Material-Scoped Light Field"]
+Atmosphere["Runtime Atmosphere Constraints"]
+AcrylicA["Acrylic A"]
+AcrylicB["Acrylic B"]
+SecondaryTransport["Secondary Transport"]
+Refraction
+Diffusion
+EdgeEmission["Edge Emission"]
+Presentation
+
+Artwork --> LightField
+LightField --> Atmosphere
+Atmosphere --> AcrylicA
+Atmosphere --> AcrylicB
+AcrylicA --> SecondaryTransport
+SecondaryTransport --> AcrylicB
+AcrylicA --> Refraction
+AcrylicB --> Refraction
+Refraction --> Diffusion
+Diffusion --> EdgeEmission
+EdgeEmission --> Presentation
 ```
 
-Acrylic transforms environmental light into believable physical presence.
+Acrylic transforms hidden artwork-derived light into believable physical presence.
 
 ---
 

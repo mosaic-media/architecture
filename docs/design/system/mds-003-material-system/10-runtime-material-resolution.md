@@ -70,7 +70,7 @@ This dramatically reduces component complexity.
 
 # Resolution Pipeline
 
-Every material follows the same conceptual pipeline.
+Every material follows the same conceptual pipeline, with artwork-derived transport enabled only for Acrylic identities.
 
 ```mermaid
 flowchart TD
@@ -78,19 +78,24 @@ flowchart TD
 N1["Material Identity"]
 N2["Semantic Tokens"]
 N3["Runtime Atmosphere"]
-N4["UV Field"]
-N5["Light Transport"]
-N6["Accessibility"]
-N7["Device Capability"]
-N8["Resolved Material"]
+N4{"Acrylic Identity?"}
+N5["Active UVLightField"]
+N6["Global Three-Dimensional Acrylic Transport"]
+N7["Accessibility"]
+N8["Renderer Capability Profile"]
+N9["Dynamic Material Budget"]
+N10["Resolved Material"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
-N4 --> N5
+N4 -->|Yes| N5
 N5 --> N6
 N6 --> N7
+N4 -->|No| N7
 N7 --> N8
+N8 --> N9
+N9 --> N10
 ```
 
 Each stage contributes exactly one responsibility.
@@ -112,17 +117,29 @@ N5["Material Identity"]
 N6["Runtime Atmosphere"]
 N7["Accessibility"]
 N8["Theme"]
-N9["Device"]
+N9["Renderer Context"]
+N10["Active UVLightField"]
+N11["Three-Dimensional Transforms"]
+N12["Acrylic Transport Environment"]
+N13["Occluding Geometry"]
+N14["Resolved Material"]
 
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-N6 --> N7
-N7 --> N8
-N8 --> N9
+N1 --> N14
+N2 --> N14
+N3 --> N14
+N4 --> N14
+N5 --> N14
+N6 --> N14
+N7 --> N14
+N8 --> N14
+N9 --> N14
+N10 --> N14
+N11 --> N14
+N12 --> N14
+N13 --> N14
 ```
+
+Active `UVLightField`, three-dimensional transform, Acrylic transport environment and occlusion inputs apply only when resolving Acrylic.
 
 No single input should dominate.
 
@@ -141,14 +158,16 @@ N1["1.<br/>Material Identity"]
 N2["2.<br/>Composition"]
 N3["3.<br/>Runtime Atmosphere"]
 N4["4.<br/>Accessibility"]
-N5["5.<br/>Device Capability"]
-N6["6.<br/>Rendering Backend"]
+N5["5.<br/>Renderer Capability"]
+N6["6.<br/>Dynamic Material Budget"]
+N7["7.<br/>Rendering Backend"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
 N4 --> N5
 N5 --> N6
+N6 --> N7
 ```
 
 Meaning always precedes implementation.
@@ -253,33 +272,13 @@ before preserving material richness.
 
 ---
 
-# Device Resolution
+# Renderer Resolution
 
-Different devices possess different rendering capabilities.
+Different client renderers expose and execute rendering capabilities differently.
 
-Desktop.
+The resolver should choose techniques using the measured Renderer Capability Profile and current Dynamic Material Budget.
 
-↓
-
-Full Acrylic.
-
-Television.
-
-↓
-
-Enhanced depth.
-
-Phone.
-
-↓
-
-Reduced shader complexity.
-
-Low Power Device.
-
-↓
-
-Simplified diffusion.
+A renderer type, host platform or device label must not imply a fixed quality level.
 
 Despite implementation differences...
 
@@ -301,9 +300,10 @@ N2["Runtime Profile"]
 N3["Blur"]
 N4["Refraction"]
 N5["Thickness"]
-N6["Edge Behaviour"]
-N7["Lighting"]
-N8["Resolved Material"]
+N6["Optical Parallax"]
+N7["Edge Behaviour"]
+N8["Lighting"]
+N9["Resolved Material"]
 
 N1 --> N2
 N2 --> N3
@@ -312,6 +312,7 @@ N4 --> N5
 N5 --> N6
 N6 --> N7
 N7 --> N8
+N8 --> N9
 ```
 
 Components consume only the completed profile.
@@ -329,6 +330,16 @@ Typical cache invalidation events include:
 - artwork changes
 - theme changes
 - accessibility changes
+
+Static `UVLightFrame` data should remain reusable across material resolution and should not be invalidated by ordinary Acrylic movement.
+
+A new `UVLightFrame` from a moving source should update the active `UVLightField` and only the dependent transport state.
+
+Skipped or delayed streamed frames should leave the last stable `UVLightField` valid.
+
+Surface-transform, bounds or mask changes may invalidate derived Composition transport, parallax or edge-response caches without invalidating the artwork-space source field.
+
+The Runtime Material Resolver should resolve spatially related Acrylic as one coupled transport environment rather than as independent source samples.
 
 Ordinary scrolling should not invalidate material resolution.
 
@@ -391,6 +402,154 @@ Simplified Acrylic.
 Material fidelity should follow compositional importance.
 
 Rendering effort should therefore support user understanding.
+
+---
+
+# Client Rendering Boundary
+
+The Platform communicates semantic presentation intent through Runtime SDUI.
+
+Client rendering ownership is defined by [MDS-008 — Component Library](../mds-008-component-library/09-runtime-rendering.md).
+
+For Material Resolution, Runtime SDUI may communicate:
+
+- Material Identity,
+- Composition hierarchy,
+- current artwork,
+- semantic importance,
+- accessibility intent.
+
+Runtime SDUI must not prescribe:
+
+- sampling quality,
+- transport depth,
+- field resolution,
+- update frequency,
+- renderer-specific techniques.
+
+The client renderer resolves the richest stable Material behaviour supported by its current measured budget.
+
+This boundary allows browsers and native applications with different capabilities to consume the same semantic UI without requiring device-specific SDUI.
+
+---
+
+# Capability-Driven Resolution
+
+Material quality should be capability driven rather than device classified.
+
+The runtime should determine:
+
+- which rendering capabilities are available,
+- how those capabilities perform in the active renderer,
+- how much frame headroom remains during real use.
+
+Feature availability alone is insufficient.
+
+Two renderers exposing the same capability may possess materially different performance.
+
+The Runtime Material Resolver should therefore combine capability discovery with measured calibration and continuous observation.
+
+It must not assume quality from labels such as:
+
+- browser,
+- television,
+- desktop,
+- mobile,
+- native.
+
+---
+
+# Dynamic Material Budget
+
+The Material System should receive an explicit budget derived from the active presentation interval and observed runtime headroom.
+
+Conceptually.
+
+```mermaid
+flowchart TD
+
+N1["Presentation Interval"]
+N2["Core Presentation Cost"]
+N3["Interaction Reserve"]
+N4["Safety Margin"]
+N5["Available Material Budget"]
+
+N1 --> N5
+N2 --> N5
+N3 --> N5
+N4 --> N5
+```
+
+The resolver should use the richest Material behaviour that remains consistently inside that budget.
+
+Unused capability does not require maximum Refraction quality.
+
+Stable frame pacing possesses higher authority than visual fidelity.
+
+---
+
+# Adaptive Material Quality
+
+Material quality should adapt across independent dimensions rather than switch between coarse device tiers.
+
+Adaptable dimensions may include:
+
+- source-field precision,
+- direct transport sampling,
+- secondary transport depth,
+- active transport relationships,
+- secondary update frequency,
+- edge-response quality,
+- optical-parallax range and update frequency,
+- temporal reconstruction quality.
+
+When pressure increases, the resolver should simplify secondary and negligible work before weakening the direct artwork-to-Acrylic relationship.
+
+Quality reduction should occur quickly enough to protect frame pacing.
+
+Quality restoration should require sustained headroom and occur gradually enough to avoid visible oscillation or popping.
+
+Every quality state must preserve the Material System's perceptual invariants.
+
+---
+
+# Video Playback Protection
+
+The Refraction Engine must never cause a video presentation deadline to be missed.
+
+Runtime priority is:
+
+1. video decode and presentation,
+2. input and playback interaction,
+3. core UI Composition,
+4. direct Acrylic response,
+5. edge response,
+6. optical-parallax refinement,
+7. secondary Acrylic transport,
+8. additional transport depth.
+
+Before scheduling Refraction work, the renderer should determine whether that work fits safely within the remaining presentation budget.
+
+If it does not fit, the renderer must:
+
+- avoid scheduling or defer the work,
+- reuse the last stable Material state,
+- preserve temporal continuity where possible,
+- continue video presentation.
+
+Video presentation must not block on:
+
+- `UVLightFrame` generation,
+- cache retrieval,
+- transport-graph updates,
+- secondary transport,
+- edge-response generation,
+- optical-parallax refinement,
+- material-quality recovery.
+
+The invariant applies specifically to video frame drops attributable to Refraction Engine work.
+
+Playback may still encounter independent failures in decoding, delivery or the operating environment.
 
 ---
 
@@ -485,7 +644,7 @@ The Material System fragments.
 
 ---
 
-## Device Materials
+## Client-Specific Material Hierarchy
 
 Every client inventing its own material hierarchy.
 
@@ -511,6 +670,22 @@ Performance decreases.
 
 ---
 
+## Device-Class Quality
+
+Material fidelity is selected from labels such as browser, television, desktop or mobile rather than measured renderer behaviour.
+
+Capable renderers are unnecessarily restricted while weaker renderers become unstable.
+
+---
+
+## Playback Blocking
+
+Video presentation waits for artwork-field generation, transport updates, cache access or Material refinement.
+
+Refraction becomes a source of video frame drops.
+
+---
+
 # Runtime Material Model
 
 ```mermaid
@@ -521,12 +696,13 @@ MaterialIdentity --> Composition
 Composition --> RuntimeAtmosphere
 RuntimeAtmosphere --> LightTransport
 LightTransport --> Accessibility
-Accessibility --> DeviceCapability
-DeviceCapability --> ResolvedMaterial
+Accessibility --> RendererCapability["Renderer Capability Profile"]
+RendererCapability --> MaterialBudget["Dynamic Material Budget"]
+MaterialBudget --> ResolvedMaterial
 ResolvedMaterial --> Presentation
 ```
 
-Material behaviour is resolved once.
+Coupled Acrylic behaviour is resolved as one coordinated transport result.
 
 Components simply consume the result.
 
@@ -534,17 +710,16 @@ Components simply consume the result.
 
 # Relationship To Future Specifications
 
-Future specifications are expected to formalise:
+[MEG-014 — Refraction Engine](../../../engineering/guides/meg-014-refraction-engine/index.md) provides implementation guidance for:
 
 - Material Resolver
-- GPU Material Pipeline
-- Shader Profiles
+- renderer profiles
 - Material Cache
 - Acrylic Renderer
 - Refraction Engine
 - Cross-platform Material Backends
 
-These systems implement the architecture defined by this chapter.
+Future protocols may formalise a cross-process resolved-Material contract if independently developed components need to exchange that state.
 
 ---
 

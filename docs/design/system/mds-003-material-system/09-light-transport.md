@@ -15,20 +15,16 @@ Version: 0.4
 
 The previous chapters established:
 
-- Runtime Atmosphere
-- Acrylic
-- Refraction
-- UV-Indexed Refraction
+- Acrylic,
+- material-scoped artwork emission,
+- UV-Indexed Refraction,
+- three-dimensional Composition projection.
 
-This chapter defines the conceptual behaviour that connects them.
+This chapter defines how artwork-derived light moves through Acrylic.
 
-**Light Transport** describes how environmental light moves through the Mosaic Material System.
+The objective is not complete optical simulation.
 
-Unlike traditional user interfaces, which simply paint colour onto surfaces, Mosaic models the movement of light as a first-class architectural concept.
-
-The objective is not physical simulation.
-
-The objective is perceived physicality.
+The objective is a consistent physical model that produces restrained, believable Acrylic.
 
 ---
 
@@ -36,111 +32,176 @@ The objective is perceived physicality.
 
 Within MDS, **Light Transport** is defined as:
 
-> **The conceptual movement of environmental light through the Mosaic Material System in order to communicate depth, hierarchy and atmosphere.**
+> **The conceptual movement of material-scoped artwork light from one global primary source, through a bounded network of spatially related Acrylic composites and out through their surfaces or edges.**
 
 Light Transport is an architectural model.
 
-Not a rendering algorithm.
+It is not a rendering algorithm.
 
 ---
 
-# Philosophy
+# Material-Scoped Transport
 
-Imagine entering a modern gallery.
+Artwork emission exists only for Acrylic transport.
 
-Light enters the room.
-
-It reflects from paintings.
-
-Travels across polished acrylic.
-
-Softly illuminates nearby surfaces.
-
-Nothing glows independently.
-
-Everything participates in the same environment.
-
-That is the experience Mosaic attempts to recreate.
-
-The interface should feel illuminated.
-
-Not coloured.
-
----
-
-# Light Is Shared
-
-One of the most important rules within Mosaic is:
-
-> **There is only one environment.**
-
-Every material participates in that environment.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Hero"]
-N2["Own Lighting"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Environment"]
-N2["Shared Light"]
-N3["Many Materials"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Material System should feel physically coherent.
-
----
-
-# Light Origin
-
-Environmental light originates conceptually from:
-
-```mermaid
-flowchart TD
-
-N1["Current Hero"]
-N2["Runtime Atmosphere"]
-N3["Environmental Light"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Hero does not emit visible light.
-
-Instead it influences the environmental lighting field.
-
-The distinction prevents exaggerated visual effects while preserving immersion.
-
----
-
-# Transport Stages
-
-Conceptually, light moves through several stages.
+Within that transport layer, the artwork is the global primary source.
 
 ```mermaid
 flowchart TD
 
 N1["Artwork"]
-N2["Atmosphere"]
-N3["UV Field"]
-N4["Material Sampling"]
-N5["Diffusion"]
-N6["Refraction"]
-N7["Presentation"]
+N2["Material-Scoped Light Field"]
+N3["Acrylic A"]
+N4["Acrylic B"]
+N5["Visible Acrylic Responses"]
+
+N1 --> N2
+N2 --> N3
+N2 --> N4
+N3 --> N4
+N3 --> N5
+N4 --> N5
+```
+
+The field must not directly illuminate:
+
+- Canvas,
+- Surface,
+- typography,
+- icons,
+- components,
+- the wider Composition.
+
+Those systems may respond to Runtime Atmosphere through separate behaviours.
+
+They do not consume artwork-derived transport.
+
+---
+
+# Artwork Presentation
+
+The artwork has an ordinary visible Presentation path and an independent material-emitter path.
+
+```mermaid
+flowchart TD
+
+N1["Artwork"]
+N2["Visible Artwork"]
+N3["Hidden Emitter Field"]
+N4["Acrylic Only"]
+
+N1 --> N2
+N1 --> N3
+N3 --> N4
+```
+
+The visible artwork must remain free from:
+
+- bloom,
+- halo effects,
+- visible self-emission,
+- global lighting behaviour.
+
+Users should infer the source only from the Acrylic response.
+
+The response may include light received directly from the artwork or indirectly through other Acrylic.
+
+---
+
+# Reference Acrylic Volume
+
+The reference Mosaic Acrylic behaves conceptually like a polished sheet approximately one centimetre thick.
+
+This is an optical Material reference applied to a two-dimensional surface or composite rather than a geometric volume.
+
+This establishes a stable physical character for:
+
+- internal path length,
+- colour absorption,
+- diffusion,
+- face transmission,
+- edge emission.
+
+Runtime Material Resolution may adapt apparent thickness to device and Composition scale while preserving this reference behaviour.
+
+---
+
+# Transport Stages
+
+Conceptually, light moves through several distinct stages.
+
+```mermaid
+flowchart TD
+
+N1["Active UVLightField"]
+N2["Three-Dimensional Projection"]
+N3["Acrylic Entry Point"]
+N4["Refraction"]
+N5["Internal Absorption"]
+N6["Diffusion"]
+N7["Face Or Edge Exit"]
+N8{"Another Acrylic Receiver?"}
+N9["Secondary Transport"]
+N10["Presentation"]
+
+N1 --> N2
+N2 --> N3
+N3 --> N4
+N4 --> N5
+N5 --> N6
+N6 --> N7
+N7 --> N8
+N8 -->|Yes| N9
+N8 -->|No| N10
+N9 --> N10
+```
+
+Each stage has one responsibility.
+
+Refraction bends the light path.
+
+Absorption changes the energy and colour retained over that path.
+
+Diffusion spreads the transported light within the material.
+
+Exit behaviour determines where that transformed light becomes visible.
+
+It also determines whether remaining energy may continue toward another Acrylic receiver.
+
+---
+
+# Three-Dimensional Direction
+
+The direction of incident light follows the spatial relationship between the emitting artwork sample and the receiving Acrylic point.
+
+It depends upon:
+
+- the artwork position and orientation,
+- the Acrylic position and orientation,
+- the emitter position within artwork UV space,
+- the Acrylic entry point,
+- the source emission profile.
+
+The same light field can therefore produce a different response when either object moves within the Composition.
+
+This relationship must resolve before projection into screen space.
+
+---
+
+# Acrylic-To-Acrylic Transport
+
+Acrylic should have a knock-on effect upon other Acrylic when their relative three-dimensional relationship permits transport.
+
+```mermaid
+flowchart LR
+
+N1["Artwork Primary Source"]
+N2["Direct Transport"]
+N3["Acrylic A"]
+N4["Secondary Transport"]
+N5["Acrylic B"]
+N6["Further Reduced Transport"]
+N7["Acrylic C"]
 
 N1 --> N2
 N2 --> N3
@@ -150,183 +211,193 @@ N5 --> N6
 N6 --> N7
 ```
 
-Each stage contributes one responsibility.
+Each Acrylic interaction may alter:
 
-No stage duplicates another.
+- direction,
+- colour,
+- intensity,
+- spread,
+- the next reachable boundary.
+
+Secondary transport should remain visibly subordinate to direct artwork transport.
 
 ---
 
-# Material Response
+# Occlusion
 
-Different materials transport light differently.
+Opaque Composition surfaces should block material-scoped transport according to bounds, masks and z-order.
 
-| Material | Behaviour |
-|----------|-----------|
-| Canvas | Receives ambient light |
-| Surface | Receives soft diffusion |
-| Acrylic | Refracts and diffuses |
-| Hero | Highest environmental response |
-| Overlay | Controlled, readability-first response |
+Acrylic may transmit and transform it.
 
-This hierarchy mirrors the Material Hierarchy established earlier.
+Visibility between the artwork, Acrylic entry points and subsequent Acrylic receivers should therefore influence the resolved environment.
+
+This makes depth and ordering physically meaningful without exposing the hidden source to ordinary Presentation.
 
 ---
 
 # Energy Conservation
 
-Light Transport should preserve perceived energy.
+The artwork is the only primary source of energy.
 
-If one material receives stronger atmospheric influence...
+Acrylic may redistribute that energy but must not create more.
 
-Nearby materials should naturally receive less.
+Every interaction should preserve or reduce the remaining transport contribution after accounting for:
 
-The environment should feel balanced.
+- reflection,
+- refraction,
+- absorption,
+- diffusion,
+- distance and occlusion.
 
-Not uniformly illuminated.
+Further transport should stop when its contribution becomes negligible.
 
-This principle prevents visual overload while improving perceived realism.
+Implementations may enforce this through a bounded interaction depth, an energy threshold or an equivalent approximation.
+
+---
+
+# Refraction
+
+Light bends as it crosses into and out of Acrylic.
+
+The refracted path determines:
+
+- how far light travels through the material,
+- which internal regions it crosses,
+- whether it exits through a face or edge,
+- where its visible response appears.
+
+Refraction must not distort typography, icons or interaction affordances.
+
+Material expression remains subordinate to understanding.
+
+---
+
+# Absorption And Pigmentation
+
+Acrylic becomes visually pigmented by the light transported through it.
+
+The appearance should follow:
+
+- the colour and intensity of incident artwork light,
+- the distance travelled through Acrylic,
+- the material absorption profile,
+- Runtime Atmosphere constraints.
+
+Longer internal paths may create a richer colour response than shorter paths.
+
+This colour belongs within Acrylic rather than being painted onto its surface.
 
 ---
 
 # Diffusion
 
-Transported light should soften naturally.
+Transported light should soften as it travels through Acrylic.
 
 Strong local colour should gradually become:
 
-- broader
-- calmer
-- less saturated
+- broader,
+- calmer,
+- less visually noisy.
 
-Diffusion prevents materials from feeling digitally coloured.
-
-Instead they appear physically illuminated.
+Diffusion should preserve the spatial origin of the light without reproducing artwork detail inside the material.
 
 ---
 
 # Edge Transport
 
-Edges should transport light differently from flat surfaces.
-
-Conceptually.
+When an internal light path reaches an Acrylic boundary, part of the response may become visible as edge emission.
 
 ```mermaid
 flowchart TD
 
-N1["Incoming Light"]
-N2["Internal Material"]
-N3["Edge Highlight"]
-N4["Soft Exit"]
+N1["Incident Artwork Light"]
+N2["Acrylic Entry"]
+N3["Internal Path"]
+N4["Boundary Intersection"]
+N5["Edge Emission"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
+N4 --> N5
 ```
 
-Edges communicate:
+The visible position of edge emission should move consistently with:
 
-- thickness
-- craftsmanship
-- physical presence
+- artwork content,
+- artwork transform,
+- Acrylic transform,
+- Acrylic shape, mask and transform.
 
-Future renderers may implement this differently.
-
-The conceptual behaviour should remain stable.
+Edge emission is not an independently animated border.
 
 ---
 
-# Hero Influence
+# Shared Global Environment
 
-Hero Material possesses the strongest transport behaviour.
+Every Acrylic receiver associated with the current artwork should participate in the same active transport environment.
 
-Nearby Acrylic should inherit:
+Receivers interpret the global artwork source and any incoming secondary Acrylic transport through their own shape, mask, transform and Material role.
 
-- colour temperature
-- ambient luminance
-- subtle reflected highlights
+This provides one coherent energy origin without requiring independent or identical visible results.
 
-Peripheral materials should inherit significantly less.
+Hero Acrylic may resolve the richest transport.
 
-The Hero therefore becomes the environmental centre without becoming visually dominant.
+Supporting Acrylic should remain restrained.
+
+Overlay Acrylic should prioritise readability.
+
+---
+
+# Runtime Atmosphere
+
+Runtime Atmosphere constrains artwork-derived transport according to the current World.
+
+It may reduce:
+
+- intensity,
+- saturation,
+- contrast,
+- temporal change.
+
+It must not convert the material-scoped source into direct component colouring or global illumination.
 
 ---
 
 # Temporal Transport
 
-Light should evolve continuously.
+Static artwork should normally reuse a cached `UVLightFrame` as its source.
 
-Preferred.
+Moving artwork and live video should publish a sampled `UVLightStream` from which the renderer reconstructs the same active `UVLightField` while preserving continuity.
 
 ```mermaid
 flowchart TD
 
 N1["Artwork Changes"]
-N2["Atmosphere Blends"]
-N3["Light Redistributes"]
-N4["Materials Respond"]
+N2["Source Field Evolves"]
+N3["Acrylic Light Redistributes"]
+N4["Material Settles"]
 
 N1 --> N2
 N2 --> N3
 N3 --> N4
 ```
 
-Avoid.
-
-```mermaid
-flowchart TD
-
-N1["Artwork Changes"]
-N2["Entire Interface Recolours"]
-
-N1 --> N2
-```
-
-Users should perceive environmental continuity rather than colour replacement.
-
----
-
-# Composition Awareness
-
-Light Transport should respect Composition.
-
-Primary concepts receive stronger environmental participation.
-
-Peripheral concepts remain calmer.
-
-Composition therefore influences perceived physicality without components requiring knowledge of lighting behaviour.
-
----
-
-# Device Independence
-
-The conceptual transport model should remain identical across:
-
-- Desktop
-- Television
-- Mobile
-- Tablet
-
-Different devices may implement:
-
-- sampling precision
-- shader complexity
-- blur quality
-
-The perceived physical behaviour should remain recognisably Mosaic.
+Users should perceive one evolving material environment rather than repeated recolouring.
 
 ---
 
 # Accessibility
 
-Accessibility constrains Light Transport.
+Accessibility constrains the resolved Acrylic response.
 
-Examples.
+Examples include:
 
 High Contrast.
 
 ↓
 
-Reduced diffusion.
+Reduced transmission and diffusion.
 
 Reduced Motion.
 
@@ -340,123 +411,105 @@ Low Vision.
 
 Reduced atmospheric variation.
 
-The Material System should always preserve readability before physical realism.
+The source field should remain coherent while material participation adapts.
 
 ---
 
-# Performance Strategy
+# Performance
 
 Future implementations should optimise Light Transport through:
 
-- cached atmospheric fields
-- incremental updates
-- GPU acceleration
-- temporal interpolation
-- shared material buffers
+- reusable cached artwork fields,
+- reduced-resolution source data,
+- incremental live updates,
+- derived Composition transport and edge-response caches,
+- temporal interpolation,
+- shared material buffers.
 
-Light Transport should never require complete recomputation during ordinary interaction.
+These are conceptual optimisation directions rather than required implementation techniques.
 
-Only meaningful environmental changes should trigger recalculation.
+The runtime should evaluate only transport relationships capable of producing a meaningful visible contribution.
 
----
+Visibility, distance, orientation, remaining energy and Composition importance may all reduce the active transport graph.
 
-# Runtime Updates
+Direct artwork transport possesses higher fidelity priority than secondary Acrylic transport.
 
-Typical recalculation events include:
+Secondary transport should reduce in depth, precision, frequency or active relationships before direct transport loses spatial coherence.
 
-- Hero changes
-- Focus changes
-- artwork changes
-- theme changes
-- accessibility changes
+The authoritative source remains the artwork and its reproducible derived field.
 
-Scrolling, hovering or small UI interactions should generally reuse existing transport data.
+During video playback, Light Transport must operate within measured presentation headroom.
 
-This keeps the interface visually stable while remaining computationally efficient.
+If no safe headroom remains, transport should hold its last stable result rather than compete with video presentation.
 
 ---
 
-# Module Participation
+# Modules
 
 Modules contribute:
 
-- artwork
-- metadata
-- information
+- artwork,
+- metadata,
+- information.
 
-Modules never participate directly in Light Transport.
+Modules never define:
 
-The platform constructs one shared lighting model for every module.
+- material emitters,
+- light-field generation,
+- Acrylic transport,
+- edge emission.
 
-This guarantees a consistent physical language throughout the ecosystem.
-
----
-
-# Good Examples
-
-## Film
-
-Poster introduces cool environmental light.
-
-Hero Acrylic receives strongest transport.
-
-Nearby tiles inherit subtle reflected lighting.
-
-Canvas remains calm.
+The Platform owns one material model for every module.
 
 ---
 
-## Book
+# Anti-Patterns
 
-Illustrated cover creates warm environmental lighting.
+## Visible Artwork Lamp
 
-Reading controls remain largely neutral.
+Artwork glows or illuminates the wider Composition directly.
 
-Atmosphere supports reading without distraction.
-
----
-
-## Music
-
-Album artwork softly influences playback surfaces.
-
-Controls remain semantically coloured.
-
-The interface feels unified.
+The material-scoped relationship becomes a visible lighting effect.
 
 ---
 
-# Anti-patterns
+## Surface Tint
 
-## Independent Lighting
+Artwork colour is applied directly to an Acrylic face without a transport relationship.
 
-Every component calculates its own environmental response.
-
-The interface fragments.
+The material loses internal depth.
 
 ---
 
-## Static Lighting
+## Independent Acrylic Sources
 
-Materials ignore changing artwork.
+Each Acrylic object constructs a different source from the same artwork.
 
-The interface feels disconnected from entertainment.
-
----
-
-## Decorative Bloom
-
-Light exists because it looks dramatic.
-
-No additional understanding is created.
+The physical environment fragments.
 
 ---
 
-## Colour Flood
+## Missing Knock-On Transport
 
-Environmental light saturates every surface equally.
+Spatially related Acrylic objects ignore light exiting neighbouring Acrylic.
 
-Hierarchy disappears.
+The Composition loses physical continuity.
+
+---
+
+## Energy Amplification
+
+Each Acrylic interaction increases available light or propagates indefinitely.
+
+The hidden transport environment becomes unstable and visually dominant.
+
+---
+
+## Decorative Edge Glow
+
+An edge highlight moves without a corresponding source, transform or internal light path.
+
+The material behaves like an animated border.
 
 ---
 
@@ -465,37 +518,25 @@ Hierarchy disappears.
 ```mermaid
 flowchart TD
 
-HeroArtwork
-HeroArtwork --> RuntimeAtmosphere
-RuntimeAtmosphere --> UVField
-UVField --> LightTransport
-LightTransport
-LightTransport --> Canvas
-LightTransport
-LightTransport --> Surface
-LightTransport
-LightTransport --> Acrylic
-LightTransport
-LightTransport --> Hero
-LightTransport
-LightTransport --> Overlay
-Hero
-Hero --> Presentation
-Acrylic
-Acrylic --> Presentation
-Surface
-Surface --> Presentation
-Canvas
-Canvas --> Presentation
-Overlay
-Overlay --> Presentation
+Artwork
+Artwork --> Frame["UVLightFrame"]
+Frame --> Field["Active UVLightField"]
+Field --> Projection["Three-Dimensional Projection"]
+Projection --> AcrylicA["Acrylic A Entry"]
+AcrylicA --> RefractionA["Refraction"]
+RefractionA --> AbsorptionA["Absorption"]
+AbsorptionA --> ExitA["Face Or Edge Exit"]
+ExitA --> AcrylicB["Acrylic B Entry"]
+ExitA --> Presentation
+AcrylicB --> SecondaryTransport["Secondary Transport"]
+SecondaryTransport --> Presentation
 ```
 
-One shared environmental light model.
+One hidden source.
 
-Many material responses.
+One bounded three-dimensional transport environment.
 
-One coherent physical world.
+Many spatially coupled Acrylic responses.
 
 ---
 
@@ -503,31 +544,24 @@ One coherent physical world.
 
 The next chapter defines **Runtime Material Resolution**.
 
-Where Light Transport explains:
+Light Transport explains:
 
-> **How environmental light moves**
+> **How artwork-derived light moves through Acrylic.**
 
 Runtime Material Resolution explains:
 
-> **How every material resolves into concrete runtime behaviour.**
-
-It is the bridge between conceptual material behaviour and implementation.
+> **How that behaviour becomes a device-appropriate material response.**
 
 ---
 
 # Summary
 
-Light Transport is the physical behaviour that unifies every material within Mosaic.
+Light Transport connects artwork and a spatial network of Acrylic without making artwork visibly emissive.
 
-Rather than colouring individual components, the platform creates one coherent environmental lighting model that every material interprets according to its role.
+Artwork supplies a hidden, spatially distributed source.
 
-The result should feel:
+The three-dimensional Composition determines where that light meets Acrylic.
 
-- physical,
-- calm,
-- believable,
-- emotionally connected.
+Acrylic bends, absorbs, diffuses and emits the result through its faces and edges, where remaining energy may influence other Acrylic.
 
-Users should never think about light.
-
-They should simply feel that the interface naturally belongs beside the entertainment they love.
+Users see a believable material response rather than a lighting effect.
