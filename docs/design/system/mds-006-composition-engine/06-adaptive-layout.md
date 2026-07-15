@@ -222,31 +222,33 @@ Not implementation.
 
 # Density
 
-Adaptive Layout may alter density.
+Adaptive Layout resolves density continuously from available extent, viewing distance, input context, typography, accessibility and current content pressure.
 
-Examples.
+It must not select density from a device category.
 
-Desktop.
+The provisional relationship bands are:
 
-↓
+| Private values | Relationship |
+|---------------:|--------------|
+| `2–8` | Optical and internal detail |
+| `12–16` | Tightly related content |
+| `24–32` | Component groups |
+| `48–64` | Major regions |
+| `64–96` | Hero and artwork breathing space |
 
-Expanded spacing.
+These bands guide the resolver; they are not SDUI or Module controls.
 
-Phone.
+Related items must sit visibly closer together than unrelated items.
 
-↓
+Separation between groups should normally be at least twice the separation within a group.
 
-Compact spacing.
+Artwork receives more surrounding space than utility controls.
 
-Television.
+Dense administration and calendar expressions may reduce internal separation without flattening hierarchy or removing region-level breathing space.
 
-↓
+Accessibility may increase separation or restructure the Composition.
 
-Large spacing.
-
-The hierarchy remains identical.
-
-Only physical density changes.
+It must not solve pressure by squeezing content below readable or operable limits.
 
 ---
 
@@ -304,6 +306,29 @@ Television.
 Immersive Hero.
 
 The Hero should always remain immediately recognisable.
+
+---
+
+# Artwork Title Treatment
+
+Composition selects the visible media-title treatment from the available artwork role and safe placement.
+
+For landscape or backdrop artwork:
+
+1. use an HD ClearLogo when one is available and a verified negative-space region can contain it without obscuring the focal subject
+2. otherwise use the semantic Mona Sans title on an Acrylic information plane
+
+For portrait poster artwork, preserve the image without text overlays and place the semantic title and metadata below it.
+
+The ClearLogo and typographic fallback must not appear together.
+
+The semantic text title remains available for accessibility, search, voice output and asset failure even when the ClearLogo is visible.
+
+ClearLogos preserve their aspect ratio and must not be cropped, stretched or reduced below a legible presentation size.
+
+Asset aspect ratio and artwork role determine this treatment.
+
+Device category does not.
 
 ---
 

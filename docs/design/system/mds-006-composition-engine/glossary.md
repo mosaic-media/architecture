@@ -131,6 +131,14 @@ Expression Resolution bridges runtime understanding and presentation.
 
 # H
 
+## HD ClearLogo
+
+A high-resolution transparent media-identity asset intended for placement within verified negative space in landscape or backdrop artwork.
+
+An HD ClearLogo replaces the visible typographic title only while it remains legible and does not obscure the artwork focal subject.
+
+---
+
 ## Hierarchy Profile
 
 A conceptual runtime artefact representing the resolved behavioural hierarchy of the current Composition.
@@ -218,6 +226,12 @@ Snapshots improve:
 See **Composition Solver**.
 
 Within Mosaic, "Solver" always refers to runtime understanding rather than layout computation.
+
+## Spatial Rhythm
+
+The relationship created by internal, group, region and Hero separation across a resolved Composition.
+
+Adaptive Layout derives Spatial Rhythm from semantic relationships and the private spatial scale rather than equal gaps or public spacing choices.
 
 ---
 

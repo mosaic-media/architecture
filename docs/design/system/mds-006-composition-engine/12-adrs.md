@@ -294,6 +294,40 @@ Mosaic retains control of visual rhythm without exposing controls such as `Spaci
 
 ---
 
+# ADR-164
+
+## Title
+
+Select Media Title Treatment From Artwork Role And Safe Placement
+
+### Status
+
+Accepted
+
+### Context
+
+Media identity may be communicated by an HD ClearLogo or semantic typography.
+
+Overlaying titles on every asset obscures portrait poster artwork, while forcing a logo into unsuitable landscape artwork damages legibility and focal composition.
+
+### Decision
+
+Landscape and backdrop artwork uses an HD ClearLogo only when verified negative space provides safe placement.
+
+The fallback is a Mona Sans semantic title on an Acrylic information plane.
+
+Portrait poster artwork remains unobstructed and places semantic title and metadata below the image.
+
+Only one visible title treatment is presented, while semantic text remains available to accessibility and non-visual systems.
+
+### Consequences
+
+Artwork remains the primary focal point.
+
+Media identity adapts to the asset rather than a device category, and title presentation remains deterministic when artwork or ClearLogo assets are unavailable.
+
+---
+
 # ADR Relationships
 
 ```mermaid
@@ -319,6 +353,8 @@ ADR162["Modules"]
 
 ADR163["Client Geometry Resolution"]
 
+ADR164["Media Title Treatment"]
+
 ADR154 --> ADR155
 ADR155 --> ADR156
 ADR156 --> ADR157
@@ -329,6 +365,8 @@ ADR156 --> ADR159
 ADR161 --> ADR162
 ADR160 --> ADR163
 ADR162 --> ADR163
+ADR160 --> ADR164
+ADR163 --> ADR164
 ```
 
 Together these decisions establish the Composition Engine as a behavioural runtime architecture rather than a rendering framework.
