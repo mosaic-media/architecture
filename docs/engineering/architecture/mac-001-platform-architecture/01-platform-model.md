@@ -29,6 +29,8 @@ Within Mosaic, the Platform is the combination of:
 - Capability Managers
 - Event Bus
 - permissions
+- identity and session authority
+- policy decision point and permission enforcement
 - storage
 - scheduler
 - configuration
@@ -41,7 +43,7 @@ Within Mosaic, the Platform is the combination of:
 - observability surfaces
 - security and permission enforcement
 
-The Platform does not own product behaviour.
+The Platform does not own product behaviour. Its infrastructure implementations also remain behind ports: the Platform core defines the contract, while built-in infrastructure Modules provide the adapters.
 
 It owns the execution environment in which product behaviour can run together coherently.
 
@@ -123,3 +125,9 @@ The Platform should remain:
 - deterministic.
 
 Architecture should evolve far more slowly than Modules.
+
+## Infrastructure adapters
+
+The Platform core follows hexagonal architecture. Storage, event persistence, cryptography, scheduling and other infrastructure concerns are ports owned by Platform contracts; their concrete implementations are Modules compiled into the Platform binary.
+
+Some adapters are mandatory and are not user-selectable. For example, the PostgreSQL adapter is a built-in storage Module required by the first Platform distribution. It remains replaceable at the contract boundary, allowing a future compatible database adapter without allowing arbitrary runtime provider selection.

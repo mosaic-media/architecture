@@ -169,6 +169,14 @@ Authority should never be accidental.
 
 # Roles
 
+Mosaic uses a hybrid authorisation model combining Role-Based Access Control, Relationship-Based Access Control and Attribute-Based Access Control.
+
+Roles provide a small, understandable baseline. Relationships express ownership and sharing. Attributes express context that can change between requests.
+
+The Runtime MUST resolve all three through one Platform-owned Policy Decision Point.
+
+## Role-Based Access Control
+
 The Runtime MAY group permissions into roles.
 
 Examples include:
@@ -192,6 +200,91 @@ Service Account
 Roles simplify administration.
 
 Permissions remain the true source of authority.
+
+Mosaic should begin with a deliberately small role set:
+
+- Owner
+- Administrator
+- Member
+- Viewer
+- Service Account
+
+Roles are permission bundles, not the complete authorisation model.
+
+## Relationship-Based Access Control
+
+Resource relationships express authority that roles cannot describe safely.
+
+Examples include:
+
+- user owns a library,
+- user belongs to a household,
+- user is granted access to a collection,
+- device belongs to a user,
+- Module provides a capability.
+
+Relationships MUST be evaluated against the requested resource. A user’s `Library.Read` permission does not automatically grant access to every library.
+
+## Attribute-Based Access Control
+
+ABAC attributes provide request context without creating a new role for every situation.
+
+Supported attributes may include:
+
+- authentication method and strength,
+- session age,
+- registered-device state,
+- device category,
+- network or trust zone,
+- resource classification,
+- policy state and time bounds.
+
+Attributes are inputs to policy evaluation. They are not authority by themselves.
+
+## Policy Decision Point
+
+Every protected decision evaluates:
+
+```text
+Subject + Action + Resource + Context
+```
+
+For example:
+
+```yaml
+subject:
+  user: adam
+  roles: [Member]
+  relationship: library_member
+action: playback.start
+resource:
+  library: Anime
+  media: attack-on-titan
+context:
+  device: living-room-tv
+  authentication_strength: passkey
+  device_revoked: false
+```
+
+The Policy Decision Point MUST:
+
+- default to deny,
+- apply explicit deny before allow,
+- return an explainable decision,
+- emit an auditable decision record, and
+- invalidate or constrain cached decisions when relevant policy changes.
+
+Clients and Modules request decisions through Platform contracts. They must not implement parallel policy engines.
+
+## Device And Session Intersection
+
+A device session receives no more authority than the authenticated user and the device policy permit:
+
+```text
+Effective Authority = User Authority ∩ Device Policy ∩ Session State
+```
+
+Phone-assisted TV sign-in authenticates and authorises the TV session; it does not copy the phone’s unrestricted session. A revoked device or expired session immediately removes its effective authority.
 
 ---
 

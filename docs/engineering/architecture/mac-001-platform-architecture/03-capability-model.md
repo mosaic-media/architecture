@@ -103,6 +103,8 @@ The contract is the port.
 
 Modules provide adapters.
 
+The Mosaic SDK is the bridge between the port and the adapter author. It publishes the versioned Go interfaces, capability context, lifecycle hooks, permission declarations, event contracts, storage abstractions and test seams required to implement an adapter without importing Platform internals. The Platform core consumes the same contracts at runtime.
+
 Example.
 
 ```go

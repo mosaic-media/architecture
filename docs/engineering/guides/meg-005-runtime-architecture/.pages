@@ -3,5 +3,9 @@ arrange:
   - index.md
   - 00-document-control.md
   - ...
+  - 18-graphql-projection.md
+  - 19-configuration-and-secrets.md
+  - 20-observability-and-diagnostics.md
+  - 21-persistence-and-recovery.md
   - 17-references.md
   - glossary.md

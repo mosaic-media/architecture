@@ -14,7 +14,10 @@ MRM-001 plans one foundational release composed of several independently testabl
 
 Mosaic has a runnable Platform foundation responsible for the core capabilities required by the first product experience, including:
 
-- authentication and session authority,
+- Mosaic-local authentication, passkeys and session authority,
+- remote sign-in and device pairing for limited-input clients,
+- local account recovery without email, phone or external identity providers,
+- hybrid authorisation through roles, resource relationships, contextual attributes and capability permissions,
 - storage and persistence boundaries,
 - GraphQL API delivery,
 - event-bus integration,

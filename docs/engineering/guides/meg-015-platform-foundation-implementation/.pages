@@ -1,0 +1,18 @@
+title: Platform Foundation Implementation
+arrange:
+  - index.md
+  - 00-document-control.md
+  - 01-build-scope.md
+  - 02-repository-layout.md
+  - 03-platform-contracts.md
+  - 04-application-boundaries.md
+  - 05-storage-and-migrations.md
+  - 06-event-backbone.md
+  - 07-identity-policy-and-sessions.md
+  - 08-configuration-and-secrets.md
+  - 09-graphql-and-diagnostics.md
+  - 10-supervisor-handoff.md
+  - 11-test-gates.md
+  - 12-build-sequence.md
+  - references.md
+  - glossary.md

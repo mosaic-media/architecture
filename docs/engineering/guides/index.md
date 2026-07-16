@@ -26,6 +26,7 @@ The guides form a deliberate progression from code-level foundations to cross-cu
 | [MEG-009 — Security Architecture](meg-009-security-architecture/index.md) | Defines how trust, authority and protection are designed into an extensible Platform. |
 | [MEG-010 — Performance Engineering](meg-010-performance-engineering/index.md) | Defines how performance is designed, measured and protected as an architectural property. |
 | [MEG-014 — Refraction Engine](meg-014-refraction-engine/index.md) | Explains how clients resolve artwork light, local backdrop and two-dimensional Composition state into stable Acrylic rendering. |
+| [MEG-015 — Platform Foundation Implementation](meg-015-platform-foundation-implementation/index.md) | Defines the first implementation-grade build path for the Mosaic Platform foundation. |
 
 New readers should follow the guides in numerical order. Readers solving a focused problem may start with the owning guide, but should follow its references back to [MAC-001 — Platform Architecture](../architecture/mac-001-platform-architecture/index.md) and preceding guides.
 

@@ -23,7 +23,7 @@ Examples include:
 - administrators
 - service accounts
 - API clients
-- external identity providers
+- registered devices
 
 Authentication establishes:
 
@@ -142,60 +142,60 @@ Authentication remains identical.
 
 ---
 
-# Identity Providers
+# Mosaic-Local Authentication
 
-The Runtime SHOULD support multiple identity providers.
+Mosaic owns the user identity boundary. User sign-in does not depend on Apple, Google, an external identity provider or a hosted identity service.
 
-Examples include:
+The Platform MUST support:
 
-- Local Accounts
-- OpenID Connect (OIDC)
-- OAuth 2.0
-- LDAP
-- Active Directory
+- local username and password credentials,
+- passkeys through WebAuthn or native platform passkey APIs,
+- recovery codes, and
+- trusted-device or administrator-assisted account recovery.
 
-Authentication providers establish identity.
+Authentication and account recovery MUST NOT depend on email delivery, an SMTP server, a phone number or an external identity provider. Email or notification integrations may be added later as optional security conveniences, but they are never required to create, sign in to or recover a Mosaic account.
 
-The Runtime establishes authority.
+Passwords MUST be stored only as a slow, memory-hard password verifier such as Argon2id. Raw passwords, passkey private keys and recovery codes MUST never be stored by the Platform.
 
-Authentication should remain provider-independent.
+Account recovery codes MUST be displayed once during controlled setup and stored by the user offline. A recovery ceremony MUST invalidate the consumed recovery code, rotate active sessions and allow the user to register a replacement passkey or password.
 
----
+Credential validation belongs to the authentication subsystem. Capabilities and Modules must never authenticate users directly.
 
-# Local Authentication
-
-The Runtime MAY provide native authentication.
-
-Examples include:
-
-- username
-- password
-- passkeys
-- recovery codes
-
-Credential validation belongs to the authentication subsystem.
-
-Capabilities should never authenticate users directly.
+External services may still use separately managed service credentials when a Module integrates with them. Those credentials authenticate a service integration; they do not become Mosaic user identity providers.
 
 ---
 
-# Federated Authentication
+# Remote Device Sign-In
 
-External identity providers SHOULD integrate through standard protocols.
+Mosaic MUST support signing in a device that has limited input, such as a television, through a previously authenticated phone or computer.
 
-Examples include:
+The remote sign-in flow is a short-lived, one-time device-pairing ceremony:
 
-```text
-OpenID Connect
+```mermaid
+sequenceDiagram
+    participant TV as Unauthenticated TV
+    participant P as Mosaic Platform
+    participant Phone as Authenticated Phone
+
+    TV->>P: Request one-time device challenge
+    P-->>TV: Display short code and QR payload
+    Phone->>P: Authenticate with passkey or password
+    Phone->>P: Confirm target device and account
+    P-->>TV: Bind approved session to device
+    TV->>P: Exchange challenge for revocable session
+    P-->>TV: Return authenticated device session
 ```
 
-```text
-OAuth 2.0
-```
+The pairing challenge MUST:
 
-The Runtime should consume verified identity claims.
+- expire quickly,
+- be single-use,
+- be bound to the requesting device,
+- avoid exposing credentials in the QR code or short code,
+- require explicit confirmation on the authenticated device, and
+- create a visible Registered Device and revocable session.
 
-Business capabilities should remain unaware of federation details.
+The phone authenticates the user; it does not transfer its own session token to the TV. Users must be able to rename, inspect and remotely revoke the TV session from account security settings.
 
 ---
 
@@ -283,7 +283,7 @@ Examples include:
 
 - personal access tokens
 - service tokens
-- OAuth access tokens
+- signed service tokens
 
 Tokens identify:
 

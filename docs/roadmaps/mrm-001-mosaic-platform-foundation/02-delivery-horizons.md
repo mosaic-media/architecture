@@ -64,6 +64,8 @@ Deliver the minimum Mosaic Platform foundation:
 - capability registration,
 - configuration and health surfaces.
 
+Storage follows the current [MEG-007 — Storage Architecture](../../engineering/guides/meg-007-storage-architecture/index.md) direction: one Platform-owned PostgreSQL state store, logical bounded contexts, Platform-scoped repositories, a transactional event outbox and a separate blob plane. The event delivery path follows [MEG-002 — Event-Driven Runtime](../../engineering/guides/meg-002-event-driven-runtime/index.md).
+
 Exit when a local or development deployment can authenticate a user, persist state, expose a typed API and publish/consume a representative event.
 
 ## Horizon 2 — Supervisor Bootstrap

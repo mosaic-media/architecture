@@ -7,6 +7,8 @@ Version: 0.4
 
 # DuckDB
 
+> **Historical direction:** This chapter preserves the earlier analytical-storage proposal. It is not part of the current v2 Platform critical path. Current Mosaic state, projections, jobs and domain events use Platform-owned PostgreSQL; future analytics may consume scheduled exports.
+
 > *DuckDB is not the memory of the business. It is the memory of understanding.*
 
 ---

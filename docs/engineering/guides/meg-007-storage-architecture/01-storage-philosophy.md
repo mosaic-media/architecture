@@ -7,6 +7,8 @@ Version: 0.4
 
 # Storage Philosophy
 
+> **v2 decision:** The Platform uses PostgreSQL as the authoritative state store. The older polyglot-storage discussion in this chapter is historical context; Modules must use Platform storage contracts rather than selecting or owning their own database.
+
 > *Information has different lifecycles. Storage should reflect those lifecycles rather than forcing every kind of data into one database.*
 
 ---

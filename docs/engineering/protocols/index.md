@@ -18,6 +18,9 @@ This section contains MIP documents. Engineering guides should reference protoco
 | [MIP-001 — Event Protocol](mip-001-event-protocol/index.md) | Defines the canonical event envelope, ownership, naming, versioning and compatibility contract. |
 | [MIP-002 — Module Manifest Protocol](mip-002-module-manifest-protocol/index.md) | Defines the manifest contract used to identify, validate and admit Modules safely. |
 | [MIP-003 — UVLightFrame Protocol](mip-003-uv-light-frame-protocol/index.md) | Defines the canonical artwork-light frame exchanged between analysis, MOS Cache and client renderers. |
+| [MIP-004 — Platform–SDK Contract Protocol](mip-004-platform-sdk-contract-protocol/index.md) | Defines the generated SDK contract published from Platform ports. |
+| [MIP-005 — Module Adapter Contract Protocol](mip-005-module-adapter-contract-protocol/index.md) | Defines how optional and built-in Modules implement Platform ports. |
+| [MIP-006 — Generation Composition Protocol](mip-006-generation-composition-protocol/index.md) | Defines Generation contents, validation, atomic activation and rollback. |
 
 Read [MEG-002 — Event-Driven Runtime](../guides/meg-002-event-driven-runtime/index.md) for event-driven implementation guidance and [MEG-006 — Module Platform](../guides/meg-006-module-platform/index.md) for Module implementation guidance.
 

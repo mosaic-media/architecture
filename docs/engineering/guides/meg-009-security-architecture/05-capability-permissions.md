@@ -64,6 +64,10 @@ Authority is granted only because:
 - it is approved
 - it is required
 
+Capability permissions are separate from user authorisation. A user permitted to perform an operation does not grant the executing Module unrestricted Platform access, and a Module permission does not grant a user authority.
+
+The Platform evaluates user and device authority through the Policy Decision Point described by [04 — Authorisation](04-authorisation.md), then separately constructs the capability environment from the Module manifest and approved capability permissions.
+
 ---
 
 # Permission Hierarchy

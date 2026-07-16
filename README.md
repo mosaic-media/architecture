@@ -69,6 +69,8 @@ The current imported specification set lives in:
 
 [MEG-014](docs/engineering/guides/meg-014-refraction-engine/index.md) defines how CSS, Flutter and two-dimensional shader clients resolve that source into stable Acrylic rendering without mesh geometry.
 
+[MEG-015](docs/engineering/guides/meg-015-platform-foundation-implementation/index.md) defines the implementation-grade first build path for the Mosaic Platform foundation before SDK extraction.
+
 ## Document Types
 
 The structure is intended to support these document families without another major reorganisation:

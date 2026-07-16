@@ -9,6 +9,8 @@ Version: 0.4
 
 > *Software should not ask what happened. It should be told.*
 
+> **Current v2 direction:** The event backbone is defined by [20 — v2 Event Backbone](20-v2-event-backbone.md) and the envelope/ownership rules in [MIP-001 — Event Protocol](../../protocols/mip-001-event-protocol/index.md).
+
 ---
 
 # Purpose
@@ -80,6 +82,7 @@ This specification defines:
 - Backpressure
 - Observability
 - Runtime resilience
+- PostgreSQL transactional outbox and dispatcher wake-up
 
 This specification intentionally does **not** define:
 
@@ -216,6 +219,8 @@ engineering/
         18-adrs.md
 
         19-contributor-guidance.md
+
+        20-v2-event-backbone.md
 
         references.md
 

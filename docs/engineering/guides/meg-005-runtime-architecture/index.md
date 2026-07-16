@@ -104,6 +104,10 @@ This specification defines:
 - Shutdown architecture
 - Runtime state
 - Runtime extensibility
+- GraphQL projection and schema composition
+- Platform-owned configuration and secrets lifecycle
+- observability, diagnostics and component health
+- persistence, migrations, portability and recovery
 
 This specification intentionally does **not** define:
 
@@ -249,6 +253,8 @@ engineering/
         15-adrs.md
 
         16-contributor-guidance.md
+
+        18-graphql-projection.md
 
         17-references.md
 

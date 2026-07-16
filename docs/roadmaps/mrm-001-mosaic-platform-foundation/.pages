@@ -6,5 +6,7 @@ arrange:
   - 02-delivery-horizons.md
   - 03-dependency-sequence.md
   - 04-completion-evidence.md
+  - 05-platform-implementation-plan.md
+  - 06-sdk-implementation-plan.md
   - references.md
   - glossary.md

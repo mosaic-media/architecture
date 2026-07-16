@@ -7,6 +7,8 @@ Version: 0.4
 
 # PostgreSQL
 
+> **v2 decision:** PostgreSQL is the single authoritative state store for Mosaic. Logical bounded contexts share the Platform database through scoped repositories; they do not create separate Module databases.
+
 > *PostgreSQL is the permanent memory of the Mosaic platform. If the business cannot afford to lose it, it belongs here.*
 
 ---

@@ -21,7 +21,7 @@ They participate in the same Platform architecture as every other capability.
 
 # Definition
 
-A module is a package of capability contribution.
+A module is a package of capability contribution or infrastructure adaptation.
 
 It may provide:
 
@@ -38,6 +38,12 @@ The Platform admits modules through manifest-driven discovery and validation bef
 The initial runtime model statically links selected Go Modules into the Platform binary through a Supervisor-orchestrated Build Pipeline.
 
 The Platform does not scan arbitrary directories at runtime.
+
+## Built-in infrastructure Modules
+
+Infrastructure adapters use the same port-and-adapter boundary as product Modules. A built-in Module is compiled into the Platform binary and may be mandatory for a valid generation; it is not therefore an optional user-selected provider.
+
+The PostgreSQL storage adapter is the first example. Platform services depend on storage interfaces, while the PostgreSQL Module implements those interfaces and owns database-specific behaviour. Replacing it requires another adapter that satisfies the same contract, migration and consistency guarantees.
 
 ---
 
@@ -137,6 +143,8 @@ Module cooperation occurs through:
 - Capability Managers,
 - Event Bus messages,
 - published Platform contracts.
+
+The SDK is the supported authoring surface for all Modules, including built-in infrastructure adapters. An adapter author implements SDK interfaces and declares its manifest, capabilities and permissions; it must not import private Platform packages or depend on another Module's implementation details.
 
 ---
 

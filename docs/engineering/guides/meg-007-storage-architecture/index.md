@@ -9,6 +9,8 @@ Version: 0.4
 
 > *Storage should preserve information. It should never dictate architecture.*
 
+> **Current v2 direction:** Mosaic uses one Platform-owned PostgreSQL state store. Modules use scoped storage contracts and logical bounded contexts; they do not own independent databases. See [15 — v2 Storage Architecture](15-v2-storage-architecture.md).
+
 ---
 
 # Purpose
@@ -103,7 +105,7 @@ This specification defines:
 - Storage taxonomy
 - Persistence boundaries
 - PostgreSQL architecture
-- DuckDB architecture
+- analytical export guidance
 - Blob Storage architecture
 - MOS archive format
 - MOS cache format
@@ -192,7 +194,7 @@ N3 --> N4
 N4 --> N5
 ```
 
-Each storage system owns one responsibility.
+The Platform owns one authoritative state boundary, with specialised blob and derived-asset planes where justified.
 
 ---
 
@@ -200,7 +202,7 @@ Each storage system owns one responsibility.
 
 After reading MEG-007 contributors should understand:
 
-- why Mosaic uses multiple storage engines
+- why the Platform owns one shared storage authority
 - which information belongs in each storage system
 - where repositories persist data
 - how storage integrates with the Runtime

@@ -13,6 +13,12 @@ MRM-001 is complete only when the following evidence exists and is linked from t
 ## Platform Evidence
 
 - an authenticated session can be established and revoked,
+- local username/password and passkey sign-in work without email, phone or an external identity provider,
+- recovery codes and trusted-device or administrator-assisted recovery are tested,
+- a television or other limited-input client can complete one-time phone-assisted sign-in,
+- paired devices can be renamed, inspected and remotely revoked,
+- policy decisions combine user authority, resource relationships, device policy and session state,
+- denied decisions are explainable and auditable,
 - representative state persists and can be retrieved,
 - GraphQL contracts are exercised by a client,
 - a representative event is published, consumed and observed,

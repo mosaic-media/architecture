@@ -4,3 +4,6 @@ arrange:
   - mip-001-event-protocol
   - mip-002-module-manifest-protocol
   - mip-003-uv-light-frame-protocol
+  - mip-004-platform-sdk-contract-protocol
+  - mip-005-module-adapter-contract-protocol
+  - mip-006-generation-composition-protocol

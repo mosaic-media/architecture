@@ -59,3 +59,5 @@ The Supervisor is intentionally established before the first Module reaches comp
 - Read [02 — Delivery Horizons](02-delivery-horizons.md) for the proposed sequence and parallel work.
 - Read [03 — Dependency Sequence](03-dependency-sequence.md) for ordering constraints.
 - Read [04 — Completion Evidence](04-completion-evidence.md) for the evidence required to close the roadmap.
+- Read [05 — Platform Implementation Plan](05-platform-implementation-plan.md) for the build order and Platform definition of done.
+- Read [06 — SDK Implementation Plan](06-sdk-implementation-plan.md) for the generated-first SDK strategy and Module authoring boundary.

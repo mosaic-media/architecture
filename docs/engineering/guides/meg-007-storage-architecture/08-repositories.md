@@ -7,6 +7,8 @@ Version: 0.4
 
 # Repositories
 
+> **v2 ownership rule:** Repositories are Platform-owned storage contracts. Modules consume scoped repositories and must not create independent databases, bypass access policy or query another context's tables directly.
+
 > *Repositories protect the Domain from storage. They should never expose where information is persisted.*
 
 ---
