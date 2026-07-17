@@ -42,6 +42,8 @@ The first contract set is a starting point, not a ceiling. A later slice may rev
 
 Contracts should pass Platform value types, not database rows.
 
+Store access is uniform. A transaction scope must not enumerate a fixed list of stores. Every store — Core Platform or capability — is resolved the same way, so nothing is privileged by being named on the transaction handle and adding a store never edits it.
+
 Example shape:
 
 ```go
@@ -49,17 +51,33 @@ type UnitOfWork interface {
     WithinTx(ctx context.Context, fn func(ctx context.Context, tx Tx) error) error
 }
 
+// Tx marks a transaction scope. It intentionally exposes no fixed accessor
+// list: Core Platform stores and capability stores are resolved identically,
+// so adding a store never edits this interface.
 type Tx interface {
-    Users() UserStore
-    Sessions() SessionStore
-    Credentials() CredentialStore
-    Permissions() PermissionStore
-    Config() ConfigStore
-    Outbox() EventOutbox
+    // sealed: carries the live transaction handle, no store accessors
+    transaction()
 }
+
+// Store resolves a store contract bound to tx. The type parameter keeps the
+// call site fully typed with no assertion. It is a package function rather
+// than a Tx method because Go methods cannot take type parameters.
+func Store[T any](tx Tx) (T, error)
 ```
 
-This shape keeps application services independent from PostgreSQL while still making transaction ownership explicit.
+A command that would previously have called `tx.Users()` obtains the same contract with `Store[UserStore](tx)`, and the outbox with `Store[EventOutbox](tx)` — fully typed, no assertion.
+
+Storage itself is a port. A `StorageAdapter` provides the `UnitOfWork` and binds each resolved store to the live transaction, so the built-in PostgreSQL adapter can be replaced — for example by SQLite — without changing a call site. This keeps application services independent from any single engine, makes transaction ownership explicit, and lets the store set grow as new Platform bounded contexts appear without a central interface becoming a closed list that every addition must edit.
+
+---
+
+# Storage Extensibility Boundary
+
+Uniform resolution is not an invitation for capabilities to own private schema.
+
+Capabilities persist through Platform-owned storage contracts exposed by the SDK. They do not define their own tables, modify Core Platform schema or open parallel databases, per [MIP-005 — Module Adapter Contract Protocol](../../protocols/mip-005-module-adapter-contract-protocol/index.md). The Platform owns a deliberately content-agnostic object model, so a new content capability maps onto existing storage rather than extending it.
+
+Store resolution stays uniform so that Core Platform bounded contexts and first-party capabilities participate in a transaction identically — not so that external Modules can inject storage. This preserves the architectural equality of built-in and Module-delivered capabilities required by [MEG-006 — Module Platform](../meg-006-module-platform/index.md) without granting any store a private path into the transaction boundary.
 
 ---
 

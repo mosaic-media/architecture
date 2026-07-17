@@ -59,6 +59,8 @@ It still requires implementation feedback before technical review, especially ar
 
 Implementation feedback from `mosaic-platform` through the Transactional outbox slice has been incorporated: the repository layout is now the three-tier Core Platform / built-in module / external module model ([02 — Repository Layout](02-repository-layout.md)); the first contract set gained `CredentialStore` ([03 — Platform Contracts](03-platform-contracts.md)); the event envelope's `redaction_class` is now enumerated ([06 — Event Backbone](06-event-backbone.md)); and the session model gained `revoked_at` ([07 — Identity, Policy and Sessions](07-identity-policy-and-sessions.md)). Migration tooling remains an open question — the first implementation used an in-house deterministic migrator rather than an existing tool; this guide does not yet mandate one either way.
 
+A design correction from the Reference capability slice has also been incorporated: the transaction contract has moved from a closed `Tx` interface of named Core Platform stores to uniform, port-based store resolution behind a replaceable storage adapter ([03 — Platform Contracts](03-platform-contracts.md)). The closed shape gave a capability no way to participate in a transaction without editing Core Platform on its behalf, contradicting the extensibility principle of [MEG-006 — Module Platform](../meg-006-module-platform/index.md) and this guide's own built-in-module-equality stance in [02 — Repository Layout](02-repository-layout.md). Core Platform and capability stores are now resolved identically, and the store set can grow without editing a central interface.
+
 ---
 
 # Required Reading

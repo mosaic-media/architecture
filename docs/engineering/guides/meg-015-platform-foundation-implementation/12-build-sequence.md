@@ -61,8 +61,26 @@ flowchart TD
 | GraphQL | Auth, config, health and jobs surfaces call application services |
 | Diagnostics | Component health and redacted support bundle exist |
 | Supervisor handoff | Readiness, liveness, shutdown and metadata are available |
-| Reference capability | One non-media capability proves registration path |
-| SDK readiness | Candidate public contracts are isolated under `contracts/platform/v1` |
+| Reference capability | Proven contracts are promoted into `contracts/platform/v1`, then one non-media capability proves the registration path using only those packages |
+| SDK readiness | Import boundaries are enforced and the promoted `contracts/platform/v1` surface is confirmed to expose no private Platform internals |
+
+---
+
+# Contract Promotion Within Slice 13
+
+Promoting the proven contracts into `contracts/platform/v1` is the first step of the Reference capability slice, not a later one.
+
+The Stop Point below requires the reference capability to build against candidate contract packages only. Those packages must therefore exist before the reference capability is written, so `contracts/platform/v1` is populated at the start of this slice. SDK readiness then verifies isolation and import boundaries rather than populating the surface for the first time.
+
+---
+
+# Storage Contract Correction
+
+The Reference capability slice was initially blocked by the transaction contract shape in [03 — Platform Contracts](03-platform-contracts.md).
+
+A closed `Tx` interface enumerating Core Platform stores gave a capability no way to participate in a transaction without editing Core Platform on its behalf, contradicting [MEG-006 — Module Platform](../meg-006-module-platform/index.md)'s principle that the Runtime require no modification to support new capabilities, and the equality of built-in and Module-delivered capabilities in [MAC-001 — Platform Architecture](../../architecture/mac-001-platform-architecture/index.md).
+
+It is unblocked by moving to uniform, port-based store resolution ([03 — Platform Contracts](03-platform-contracts.md)): Core Platform and capability stores are resolved identically, and the storage adapter is a replaceable port. The promoted `contracts/platform/v1` surface therefore includes the storage port the reference capability depends on.
 
 ---
 
