@@ -20,9 +20,13 @@ The Design System progressively transforms Design Language intent into rendered 
 | [MDS-004 — Typography System](mds-004-typography-system/index.md) | Defines typography as a consistent voice and information hierarchy. |
 | [MDS-005 — Motion System](mds-005-motion-system/index.md) | Defines motion as the expression of behavioural continuity and change. |
 | [MDS-008 — Component Library](mds-008-component-library/index.md) | Defines the v1 client-side Web component library and semantic SDUI rendering boundary. |
+| [MDS-006 — Composition Engine](mds-006-composition-engine/index.md) | Superseded. The identifier is retired; its content moved to [MDS-008 — Component Library](mds-008-component-library/index.md) and the deferred [MDP-001 — Adaptive Composition Runtime](../../engineering/architecture/mdp-001-adaptive-composition-runtime/index.md). |
+| [MDS-007 — Tile Framework](mds-007-tile-framework/index.md) | Superseded. The identifier is retired; its content moved to [MDS-008 — Component Library](mds-008-component-library/index.md) and the deferred [MDP-002 — Tile Framework](../../engineering/architecture/mdp-002-tile-framework/index.md). |
 
 For Mosaic v1 implementation, read [MDS-001 — Design Token Architecture](mds-001-design-token-architecture/index.md) through [MDS-005 — Motion System](mds-005-motion-system/index.md) for Tokens, Colour, Materials, Typography and Motion, then use [MDS-008 — Component Library](mds-008-component-library/index.md) as the component and SDUI rendering authority.
 
-The mathematical solver, adaptive Tile model and normalised spatial runtime are preserved outside the active Design System as the deferred [MDP-001 — Adaptive Composition Runtime](../../engineering/architecture/mdp-001-adaptive-composition-runtime/index.md).
+The mathematical solver and normalised spatial runtime are preserved outside the active Design System as the deferred [MDP-001 — Adaptive Composition Runtime](../../engineering/architecture/mdp-001-adaptive-composition-runtime/index.md), and the behavioural Tile model as the deferred [MDP-002 — Tile Framework](../../engineering/architecture/mdp-002-tile-framework/index.md).
+
+[MDS-006](mds-006-composition-engine/index.md) and [MDS-007](mds-007-tile-framework/index.md) are retired identifiers. They carry Superseded records rather than specifications, so that references written against them still resolve to an explanation.
 
 For focused implementation work, start with the owning specification and follow its dependencies. The linked MDS specifications remain authoritative.

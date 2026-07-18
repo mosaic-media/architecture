@@ -18,3 +18,27 @@
 # renumber it.
 
 # No chapter numbers have been retired.
+
+# ---------------------------------------------------------------------------
+# Retired document identifiers.
+#
+# A retired identifier is never reissued: references written against it must keep
+# resolving to the same subject. Each one carries a Superseded record at its original
+# location rather than disappearing.
+# ---------------------------------------------------------------------------
+#
+# MDS-006 — Composition Engine
+#   Retired 18 July 2026. Withdrawn from the Design System.
+#   Authoritative replacement: MDS-008 — Component Library.
+#   Preserved research: MDP-001 — Adaptive Composition Runtime.
+#   Governing decisions: ADR-204 and ADR-205, recorded in MDS-008.
+#   Superseded record: docs/design/system/mds-006-composition-engine/
+#
+# MDS-007 — Tile Framework
+#   Retired 18 July 2026. Withdrawn from the Design System.
+#   Authoritative replacement: MDS-008 — Component Library.
+#   Preserved research: MDP-002 — Tile Framework.
+#   Governing decisions: ADR-204 and ADR-205, recorded in MDS-008.
+#   Superseded record: docs/design/system/mds-007-tile-framework/
+#
+# The generated PDFs for both identifiers were deleted when the records were created.

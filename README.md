@@ -152,7 +152,9 @@ References should appear near the end of a specification and glossary should rem
 
 Every authored Markdown page begins with exactly three metadata fields: `File`, `Document`, and `Status`. The schema is defined by [MDG-001 — Documentation Authority Guide](docs/engineering/documentation/mdg-001-documentation-authority-guide/07-repository-organisation.md).
 
-`Status` is one of `Draft`, `Review`, `Active`, `Deprecated`, or `Superseded`, with `Deferred`, `Accepted`, `Rejected`, and `Withdrawn` additionally available to MDP proposals. Prose documents carry no version number; only the contracts defined by MIP documents carry a major compatibility version such as `Event Protocol v1`, declared in the document body. Specifications still carrying a legacy `Version` field are tolerated by tooling until they are migrated.
+`Status` is one of `Draft`, `Review`, `Active`, `Deprecated`, or `Superseded`, with `Deferred`, `Accepted`, `Rejected`, and `Withdrawn` additionally available to MDP proposals. Prose documents carry no version number; only the contracts defined by MIP documents carry a major compatibility version such as `Event Protocol v1`, declared in the document body.
+
+A document identifier is never reused. When a specification is withdrawn, its identifier keeps a Superseded record at the original location naming the authoritative replacement, so references written against it still resolve. Retired identifiers are listed in `chapter-registry.yml`.
 
 Source pages do not carry review-status summaries or manual previous/next links; document authority comes from `Status` and page transitions come from MkDocs.
 

@@ -8,7 +8,7 @@ Status: Draft
 
 Architecture documentation contains accepted Mosaic platform structure and clearly separated proposals for architecture that is not yet authoritative.
 
-MAC documents are authoritative Architecture Canon. MAD documents record accepted architecture decisions and their reasoning. MDP documents preserve proposals and must be read according to their recorded Disposition.
+MAC documents are authoritative Architecture Canon. MAD documents record accepted architecture decisions and their reasoning. MDP documents preserve proposals and must be read according to their recorded Status.
 
 ## Architecture Canon in Brief
 
@@ -25,10 +25,11 @@ MAC documents are authoritative Architecture Canon. MAD documents record accepte
 
 ## Deferred Proposals
 
-| Proposal | Disposition | In one sentence |
+| Proposal | Status | In one sentence |
 |----------|-------------|-----------------|
-| [MDP-001 — Adaptive Composition Runtime](mdp-001-adaptive-composition-runtime/index.md) | Deferred | Preserves the post-v1 mathematical composition solver, adaptive Tile model and calibration questions without making them current architecture. |
+| [MDP-001 — Adaptive Composition Runtime](mdp-001-adaptive-composition-runtime/index.md) | Deferred | Preserves the post-v1 mathematical composition solver, normalised spatial model and calibration questions without making them current architecture. |
+| [MDP-002 — Tile Framework](mdp-002-tile-framework/index.md) | Deferred | Preserves the post-v1 behavioural Tile model, its resolution pipeline and lifecycle. The authoritative v1 Tile is a governed Container Component owned by [MDS-008 — Component Library](../../design/system/mds-008-component-library/index.md). |
 
 Begin here when you need to understand what Mosaic is. Continue to [Engineering Guides](../guides/index.md) for implementation practice, [Protocols](../protocols/index.md) for interoperability contracts and [Operations](../operations/index.md) for operational expectations.
 
-The Architecture Canon is authoritative. Deferred proposals are non-authoritative and unscheduled until a later decision changes their Disposition. This catalogue provides orientation only.
+The Architecture Canon is authoritative. Deferred proposals are non-authoritative and unscheduled until a later decision changes their Status. This catalogue provides orientation only.

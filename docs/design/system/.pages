@@ -6,4 +6,6 @@ arrange:
   - mds-003-material-system
   - mds-004-typography-system
   - mds-005-motion-system
+  - mds-006-composition-engine
+  - mds-007-tile-framework
   - mds-008-component-library
