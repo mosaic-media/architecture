@@ -1,10 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/06-sdk-implementation-plan.md
 Document: MRM-001
-Chapter: 06
-Title: SDK Implementation Plan
 Status: Draft
-Version: 0.1
 -->
 
 # SDK Implementation Plan

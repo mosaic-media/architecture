@@ -1,9 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/02-delivery-horizons.md
 Document: MRM-001
-Chapter: 02
 Status: Draft
-Version: 0.1
 -->
 
 # 02 — Delivery Horizons

@@ -1,9 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/01-release-outcomes.md
 Document: MRM-001
-Chapter: 01
 Status: Draft
-Version: 0.1
 -->
 
 # 01 — Release Outcomes

@@ -2,7 +2,6 @@
 File: docs/roadmaps/index.md
 Document: Roadmaps
 Status: Draft
-Version: 0.1
 -->
 
 # Roadmaps

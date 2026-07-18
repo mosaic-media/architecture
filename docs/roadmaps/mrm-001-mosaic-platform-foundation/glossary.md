@@ -1,9 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/glossary.md
 Document: MRM-001
-Title: Glossary
 Status: Draft
-Version: 0.1
 -->
 
 # Glossary

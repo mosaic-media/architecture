@@ -1,9 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/03-dependency-sequence.md
 Document: MRM-001
-Chapter: 03
 Status: Draft
-Version: 0.1
 -->
 
 # 03 — Dependency Sequence

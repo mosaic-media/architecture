@@ -1,10 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/05-platform-implementation-plan.md
 Document: MRM-001
-Chapter: 05
-Title: Platform Implementation Plan
 Status: Draft
-Version: 0.1
 -->
 
 # Platform Implementation Plan

@@ -1,9 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/04-completion-evidence.md
 Document: MRM-001
-Chapter: 04
 Status: Draft
-Version: 0.1
 -->
 
 # 04 — Completion Evidence

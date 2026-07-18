@@ -2,7 +2,6 @@
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/00-document-control.md
 Document: MRM-001
 Status: Draft
-Version: 0.1
 -->
 
 # 00 — Document Control
@@ -15,7 +14,6 @@ Version: 0.1
 | Title | Mosaic Platform Foundation |
 | Classification | Mosaic Roadmap |
 | Status | Draft |
-| Version | 0.1 |
 | Owner | AdamNi-7080 |
 | Planning Horizon | First Mosaic platform release |
 | Repository | `docs/roadmaps/mrm-001-mosaic-platform-foundation/` |

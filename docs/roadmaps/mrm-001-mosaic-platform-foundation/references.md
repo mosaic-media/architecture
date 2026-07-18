@@ -1,9 +1,7 @@
 <!--
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/references.md
 Document: MRM-001
-Title: References
 Status: Draft
-Version: 0.1
 -->
 
 # References

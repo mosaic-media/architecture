@@ -2,7 +2,6 @@
 File: docs/roadmaps/mrm-001-mosaic-platform-foundation/index.md
 Document: MRM-001
 Status: Draft
-Version: 0.1
 -->
 
 # MRM-001 — Mosaic Platform Foundation
