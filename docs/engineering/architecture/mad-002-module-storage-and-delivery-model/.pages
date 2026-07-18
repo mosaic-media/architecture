@@ -1,0 +1,11 @@
+title: Module Storage and Delivery Model
+arrange:
+  - index.md
+  - 00-document-control.md
+  - 01-context.md
+  - 02-decision.md
+  - 03-alternatives-considered.md
+  - 04-consequences.md
+  - 05-implementation-implications.md
+  - references.md
+  - glossary.md

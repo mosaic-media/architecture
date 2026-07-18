@@ -3,4 +3,5 @@ arrange:
   - index.md
   - mac-001-platform-architecture
   - mad-001-transactional-store-extensibility
+  - mad-002-module-storage-and-delivery-model
   - mdp-001-adaptive-composition-runtime

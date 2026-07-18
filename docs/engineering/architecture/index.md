@@ -22,6 +22,7 @@ MAC documents are authoritative Architecture Canon. MAD documents record accepte
 | Decision | Status | In one sentence |
 |----------|--------|-----------------|
 | [MAD-001 — Transactional Store Extensibility](mad-001-transactional-store-extensibility/index.md) | Accepted | Records why the Platform transaction boundary resolves stores through a uniform port instead of a closed interface of named Core Platform stores. |
+| [MAD-002 — Module Storage and Delivery Model](mad-002-module-storage-and-delivery-model/index.md) | Accepted | Records that Modules are Go libraries compiled into the binary, never own storage or schema, differ only in delivery, and that analytical processing is a port rather than a mandated engine. |
 
 ## Deferred Proposals
 
