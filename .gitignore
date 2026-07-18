@@ -10,3 +10,6 @@ package-lock.json
 
 # lychee link-check cache.
 .lycheecache
+
+# JetBrains IDE state. Per-developer, not project content.
+.idea/
