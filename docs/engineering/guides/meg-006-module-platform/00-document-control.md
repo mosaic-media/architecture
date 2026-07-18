@@ -23,11 +23,9 @@ Status: Draft
 
 # Purpose
 
-This document establishes the governance, authority and lifecycle of the Mosaic Module Platform specification.
+This document establishes the governance, authority and lifecycle of the Mosaic Module Platform specification. MEG-006 defines how independently developed capabilities become part of the Mosaic platform, which makes it the mechanism through which the platform evolves without modifying the Platform.
 
-MEG-006 defines how independently developed capabilities become part of the Mosaic platform.
-
-Unlike Runtime Architecture, which defines **how capabilities execute**, this specification defines:
+Unlike Runtime Architecture, which defines **how capabilities execute**, this specification defines the path a capability travels before it ever runs:
 
 - how capabilities are discovered
 - how they are described
@@ -35,17 +33,13 @@ Unlike Runtime Architecture, which defines **how capabilities execute**, this sp
 - how they are composed into Platform packages
 - how they become operational
 
-The Module Platform is the mechanism through which the platform evolves without modifying the Platform.
-
 Version 0.8 defines the Test Harness as a deterministic suite of development-only Modules, records event-simulation ownership and defers versioned Scenario Profiles pending a protocol decision.
 
 ---
 
 # Authority
 
-MEG-006 is the authoritative specification governing module development throughout the Mosaic ecosystem.
-
-This specification applies to:
+MEG-006 is the authoritative specification governing module development throughout the Mosaic ecosystem, and its authority extends to every route by which a capability reaches the platform rather than only to externally authored ones. It therefore applies to:
 
 - Built-In Capabilities
 - First-party Modules
@@ -60,13 +54,13 @@ This specification applies to:
 - deferred Scenario Profiles
 - Marketplace Integration
 
-Every capability intended to execute within the Mosaic Runtime SHOULD comply with this specification.
+Every capability intended to execute within the Mosaic Runtime should comply with this specification, whether it ships with the Platform or arrives from a third party. That breadth follows from the principle that built-in and third-party capabilities are architectural equals: a rule that applied only to external Modules would reintroduce the distinction the Module Platform exists to remove.
 
 ---
 
 # Relationship to Other Specifications
 
-MEG specifications intentionally build upon one another.
+MEG specifications intentionally build upon one another, so each one assumes the vocabulary the previous ones established.
 
 ```mermaid
 flowchart TD
@@ -89,7 +83,7 @@ N6 --> N7
 N7 --> N8
 ```
 
-Specifically:
+Each guide in that chain settles one question before the next one is asked:
 
 - **[MEG-001](../meg-001-go-engineering-standards/index.md)** defines engineering.
 - **[MEG-002](../meg-002-event-driven-runtime/index.md)** defines runtime behaviour.
@@ -98,13 +92,13 @@ Specifically:
 - **[MEG-005](../meg-005-runtime-architecture/index.md)** defines the Capability Runtime.
 - **MEG-006** defines how capabilities join that Runtime.
 
-Together they establish the complete lifecycle of a Mosaic capability.
+Together they establish the complete lifecycle of a Mosaic capability, from the way its code is written to the way it joins a running platform. MEG-006 is the last link in that chain, so it assumes the preceding definitions rather than restating them.
 
 ---
 
 # Normative Language
 
-Unless explicitly stated otherwise, the following keywords are interpreted according to RFC 2119.
+Unless explicitly stated otherwise, the following keywords are interpreted according to RFC 2119. This table defines them, so it retains the uppercase convention; elsewhere in MEG-006 the same terms carry the same meaning in ordinary capitalisation.
 
 | Keyword | Meaning |
 |----------|---------|
@@ -114,13 +108,13 @@ Unless explicitly stated otherwise, the following keywords are interpreted accor
 | **SHOULD NOT** | Discouraged except where clearly justified. |
 | **MAY** | Optional behaviour based upon engineering judgement. |
 
-Examples and diagrams are informative unless explicitly identified as normative.
+Examples and diagrams are informative unless explicitly identified as normative, so an illustration in a later chapter never widens or narrows a requirement stated in prose.
 
 ---
 
 # Module Principles
 
-The Mosaic Module Platform is built upon several foundational principles.
+The Mosaic Module Platform is built upon several foundational principles, and the rest of this specification is largely an elaboration of them:
 
 - Everything beyond the Runtime is a capability.
 - Every capability is described by a manifest.
@@ -133,15 +127,13 @@ The Mosaic Module Platform is built upon several foundational principles.
 - Built-in and third-party capabilities are architectural equals.
 - Modules evolve the platform without modifying the Runtime.
 
-Every subsequent chapter expands one or more of these principles.
+Every subsequent chapter expands one or more of these principles rather than introducing new ones, which makes this list the shortest complete statement of what the Module Platform is.
 
 ---
 
 # Document Lifecycle
 
-MEG specifications evolve alongside the platform.
-
-Each document progresses through the following lifecycle.
+MEG specifications evolve alongside the platform, so each document progresses through a defined lifecycle rather than being published once and left alone.
 
 ```mermaid
 flowchart TD
@@ -160,17 +152,13 @@ N4 --> N5
 N5 --> N6
 ```
 
-Accepted specifications become part of the canonical Mosaic architecture.
-
-Historical revisions SHOULD remain available for future reference.
+Accepted specifications become part of the canonical Mosaic architecture, which is why historical revisions should remain available for future reference: a decision that has been superseded still explains why the current one was made.
 
 ---
 
 # Platform Evolution
 
-The Module Platform is expected to evolve.
-
-However, changes affecting:
+The Module Platform is expected to evolve. However, because a module ecosystem depends on contracts that outlive any single release, changes affecting:
 
 - capability manifests
 - registration
@@ -185,30 +173,26 @@ However, changes affecting:
 - local development composition
 - testing and publication workflow ownership
 
-SHOULD be accompanied by an Architectural Decision Record (ADR).
-
-Platform evolution should remain deliberate and predictable.
+should be accompanied by an Architectural Decision Record (ADR), so that platform evolution remains deliberate and predictable rather than arriving as a surprise to the capabilities already built against those contracts.
 
 ---
 
 # Compliance
 
-All modules intended for the Mosaic Runtime SHOULD comply with MEG-006.
-
-Where deviation becomes necessary, module authors SHOULD document:
+All modules intended for the Mosaic Runtime should comply with MEG-006. Where deviation becomes necessary, module authors should document:
 
 - architectural reason
 - compatibility impact
 - migration strategy
 - operational implications
 
-The Runtime should remain capable of validating compliance before activation.
+The Runtime should remain capable of validating compliance before activation, because a deviation discovered only once a capability is executing has already cost the platform the guarantee that validation precedes activation.
 
 ---
 
 # Design Philosophy
 
-MEG-006 intentionally favours:
+Every preference recorded here serves a single objective, which is that the Runtime should understand a module completely before executing it. MEG-006 therefore intentionally favours:
 
 - manifest-driven discovery
 - explicit capability contracts
@@ -218,23 +202,17 @@ MEG-006 intentionally favours:
 - version compatibility
 - operational transparency
 
-The Runtime should understand a module completely before executing it.
-
-A machine-readable manifest describing identity, dependencies, permissions and capabilities has become the dominant approach for modern module ecosystems because it enables validation and discovery before code execution.  [Chrome for Developers](https://developer.chrome.com/modules/manifest)
+That preference is not unique to Mosaic. A machine-readable manifest describing identity, dependencies, permissions and capabilities has become the dominant approach for modern module ecosystems because it enables validation and discovery before code execution.  [Chrome for Developers](https://developer.chrome.com/modules/manifest)
 
 ---
 
 # Scope of Authority
 
-MEG-006 governs the Module Platform.
-
-It does **not** define:
+MEG-006 governs the Module Platform, and it does **not** define:
 
 - business modelling
 - runtime execution
 - storage architecture
 - deployment topology
 
-Those concerns belong to other MEG specifications.
-
-Keeping module concerns separate from runtime concerns allows both to evolve independently.
+Those concerns belong to other MEG specifications, because keeping module concerns separate from runtime concerns allows both to evolve independently.

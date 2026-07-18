@@ -12,26 +12,9 @@ Status: Draft
 
 # Purpose
 
-Discovery locates Module manifests.
+Discovery locates Module manifests, but registration has two distinct meanings in Mosaic. Before build, manifest admission determines whether a selected Module may enter the Build Pipeline; at Runtime startup, Go initialisation calls the Module's registration function and admits it into the SDK registry. Between them, registration establishes identity, ownership, Runtime visibility and lifecycle participation.
 
-Registration has two distinct meanings in Mosaic.
-
-Before build, manifest admission determines whether a selected Module may enter the Build Pipeline.
-
-At Runtime startup, Go initialisation calls the Module's registration function and admits it into the SDK registry.
-
-Registration establishes:
-
-- identity
-- ownership
-- Runtime visibility
-- lifecycle participation
-
-These phases must not be confused.
-
-Manifest admission is metadata only.
-
-Runtime registration is code registration only.
+These phases must not be confused, because manifest admission is metadata only whereas Runtime registration is code registration only.
 
 ---
 
@@ -41,11 +24,7 @@ Within Mosaic:
 
 > **Modules register through the SDK. Registration must never perform work.**
 
-Registration should establish the Module's metadata and capability declarations.
-
-It should never execute capability logic, start work or perform I/O.
-
-The Platform should complete registration before activating capability behaviour.
+Registration should establish the Module's metadata and capability declarations, and it should never execute capability logic, start work or perform I/O. The Platform should complete registration before activating capability behaviour.
 
 ---
 
@@ -70,27 +49,20 @@ N4 --> N5
 N5 --> N6
 ```
 
-Executable code has still not run.
-
-The Supervisor now knows whether the Module may participate in the Build Pipeline.
+Executable code has still not run, so all the Supervisor now knows is whether the Module may participate in the Build Pipeline.
 
 ---
 
 # Runtime Registration Pipeline
 
-The Platform Binary contains the selected Modules as statically linked Go libraries.
-
-Go only includes packages that are imported.
-
-The Build Pipeline therefore generates a single imports file.
+The Platform Binary contains the selected Modules as statically linked Go libraries, and because Go only includes packages that are imported, the Build Pipeline generates a single imports file.
 
 ```text
 generated/
-
     imports.go
 ```
 
-Conceptually.
+Conceptually:
 
 ```go
 package generated
@@ -102,9 +74,7 @@ import (
 )
 ```
 
-Blank imports trigger each Module package's `init()`.
-
-Each Module registers itself with the SDK.
+Blank imports trigger each Module package's `init()`, and each Module registers itself with the SDK.
 
 ```go
 func init() {
@@ -112,11 +82,7 @@ func init() {
 }
 ```
 
-The only permitted responsibility of `init()` is registration.
-
-The Module definition should expose metadata and capability declarations.
-
-Example.
+The only permitted responsibility of `init()` is registration. The Module definition should expose metadata and capability declarations, for example:
 
 ```go
 func NewModule() sdk.Module {
@@ -127,11 +93,7 @@ func NewModule() sdk.Module {
 }
 ```
 
-The SDK stores this definition in its runtime registry.
-
-The definition should describe the Module.
-
-It should not activate the Module.
+The SDK stores this definition in its runtime registry, where the definition should describe the Module rather than activate it.
 
 ---
 
@@ -141,13 +103,10 @@ The Build Pipeline should generate exactly one Go integration file.
 
 ```text
 generated/
-
     imports.go
 ```
 
-That file exists only to blank-import selected Modules so Go package initialisation can register them.
-
-The Build Pipeline should not generate:
+That file exists only to blank-import selected Modules so Go package initialisation can register them. The Build Pipeline should not generate:
 
 - Module adapters
 - Capability Manager code
@@ -179,73 +138,33 @@ N3 --> N4
 N4 --> N5
 ```
 
-A registered Module may still fail:
-
-- dependency resolution
-- permission validation
-- compatibility checks
-
-Registration simply makes the Module visible to the SDK registry.
+A registered Module may still fail dependency resolution, permission validation or compatibility checks, because registration simply makes the Module visible to the SDK registry.
 
 ---
 
 # Runtime Admission
 
-Runtime registration admits the Module into the SDK registry.
-
-Conceptually.
-
-```mermaid
-flowchart TD
-
-N1["Go init()"]
-N2["sdk.Register(...)"]
-N3["SDK Registry"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Once registered, the Platform may reason about:
-
-- dependencies
-- contracts
-- lifecycle
-- compatibility
-
-without executing the capability.
+Runtime registration admits the Module into the SDK registry: Go `init()` calls `sdk.Register(...)`, and the SDK Registry holds the result. Once registered, the Platform may reason about dependencies, contracts, lifecycle and compatibility without executing the capability.
 
 ---
 
 # Identity Registration
 
-Every registered capability MUST possess:
-
-- unique identifier
-- version
-- manifest version
-
-Example.
+Every registered capability must possess a unique identifier, a version and a manifest version.
 
 ```yaml
 id: metadata
-
 version: 2.1.0
-
 manifest: 1
 ```
 
-Registration should fail immediately if identity conflicts exist.
-
-Identity becomes immutable after registration.
+Registration should fail immediately if identity conflicts exist, and identity becomes immutable once registration succeeds.
 
 ---
 
 # Registry Population
 
-Registration populates the Capability Registry.
-
-Typical information includes:
+Registration populates the Capability Registry. Typical information includes:
 
 - identity
 - metadata
@@ -256,15 +175,13 @@ Typical information includes:
 - provided contracts
 - consumed contracts
 
-The Registry becomes the Runtime's authoritative source of capability information.
+The Registry becomes the Runtime's authoritative source of capability information, which is why capability information must not be maintained anywhere else.
 
 ---
 
 # Init Is Registration Only
 
-Module `init()` functions MUST remain registration only.
-
-They MUST NOT:
+Module `init()` functions must remain registration only. They must not:
 
 - start goroutines
 - make HTTP requests
@@ -273,40 +190,19 @@ They MUST NOT:
 - perform network I/O
 - start background work
 
-They SHOULD only call SDK registration APIs.
-
-Activation remains a separate Platform-controlled lifecycle phase.
+They should only call SDK registration APIs, because activation remains a separate Platform-controlled lifecycle phase.
 
 ---
 
 # Duplicate Registration
 
-The Runtime MUST reject duplicate capability identifiers.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["metadata"]
-N2["metadata"]
-
-N1 --> N2
-```
-
-Only one capability may own one identifier.
-
-Version does not change identity.
-
-Identifiers remain globally unique.
+The Runtime must reject duplicate capability identifiers, because only one capability may own one identifier and two capabilities both registering `metadata` would leave that ownership undecided. Version does not change identity, so identifiers remain globally unique.
 
 ---
 
 # Runtime Visibility
 
-Once registered, the capability becomes visible to Runtime Services.
-
-Examples include:
+Once registered, the capability becomes visible to Runtime Services. Examples include:
 
 ```mermaid
 flowchart TD
@@ -321,9 +217,7 @@ N2 --> N3
 N3 --> N4
 ```
 
-Visibility does not imply availability.
-
-Activation has not yet occurred.
+Visibility does not imply availability, because activation has not yet occurred.
 
 ---
 
@@ -344,9 +238,7 @@ N2 --> N3
 N3 --> N4
 ```
 
-The Capability Registry should expose this state.
-
-Operators should understand precisely where each capability currently resides.
+The Capability Registry should expose this state so that operators understand precisely where each capability currently resides.
 
 ---
 
@@ -354,182 +246,98 @@ Operators should understand precisely where each capability currently resides.
 
 Registration records dependency information.
 
-Example.
-
 ```yaml
 dependencies:
-
   - playback
-
   - library
 ```
 
-The Runtime stores these declarations.
-
-Resolution occurs later.
-
-Registration records.
-
-Resolution evaluates.
-
-Responsibilities remain intentionally separate.
+The Runtime stores these declarations and resolution occurs later: registration records, resolution evaluates, and the two responsibilities remain intentionally separate.
 
 ---
 
 # Contract Registration
 
-Capabilities SHOULD register the contracts they provide.
-
-Example.
+Capabilities should register the contracts they provide, and likewise the contracts they consume.
 
 ```yaml
 provides:
-
   - MetadataProvider
-
   - ArtworkProvider
 ```
 
-Likewise.
-
 ```yaml
 consumes:
-
   - BlobStore
-
   - Scheduler
 ```
 
-The Runtime now understands:
-
-- provided services
-- required services
-
-before activation begins.
+The Runtime now understands both provided services and required services before activation begins.
 
 ---
 
 # Event Registration
 
-Capabilities SHOULD register Runtime event metadata.
-
-Example.
+Capabilities should register Runtime event metadata, declaring both what they publish and what they subscribe to.
 
 ```yaml
 publishes:
-
   - MetadataFetched
 ```
 
 ```yaml
 subscribes:
-
   - MediaImported
 ```
 
-Registration records these relationships.
-
-The Runtime later builds:
-
-- subscription graphs
-- diagnostics
-- architecture visualisations
-
-No executable code is required.
+Registration records these relationships, and the Runtime later builds subscription graphs, diagnostics and architecture visualisations from them. No executable code is required.
 
 ---
 
 # Permission Registration
 
-Requested permissions SHOULD be recorded.
-
-Example.
+Requested permissions should be recorded.
 
 ```yaml
 permissions:
-
   - blob.read
-
   - scheduler.use
 ```
 
-Permission approval occurs later.
-
-Registration simply records requested capabilities.
-
-This separation keeps admission distinct from authorisation.
+Permission approval occurs later, so registration simply records requested capabilities. This separation keeps admission distinct from authorisation.
 
 ---
 
 # Configuration Registration
 
-Configuration schemas SHOULD be registered.
-
-Example.
+Configuration schemas should be registered.
 
 ```yaml
 configuration:
-
   refreshInterval:
-
     type: duration
 ```
 
-Tooling may immediately use these schemas to:
-
-- validate configuration
-- generate user interfaces
-- produce documentation
-
-Again:
-
-No executable code is required.
+Tooling may immediately use these schemas to validate configuration, generate user interfaces and produce documentation. Again, no executable code is required.
 
 ---
 
 # Registration Events
 
-The Runtime MAY publish Runtime Events describing registration.
-
-Examples include:
-
-```
-
-CapabilityRegistered
-```
-
-```
-
-CapabilityRejected
-```
-
-```
-
-CapabilityUpdated
-```
-
-These remain Runtime Events.
-
-They do not represent business behaviour.
+The Runtime may publish Runtime Events describing registration, such as `CapabilityRegistered`, `CapabilityRejected` and `CapabilityUpdated`. These remain Runtime Events and do not represent business behaviour.
 
 ---
 
 # Registration Persistence
 
-The Runtime MAY persist registration metadata.
-
-Persisted information might include:
+The Runtime may persist registration metadata. Persisted information might include:
 
 - capability inventory
 - versions
 - dependency graph
 - manifest hashes
 
-Persisted registration accelerates diagnostics and upgrade planning.
-
-It should never replace manifest validation.
-
-The manifest remains authoritative.
+Persisted registration accelerates diagnostics and upgrade planning, but it should never replace manifest validation, because the manifest remains authoritative.
 
 ---
 
@@ -543,44 +351,19 @@ Operators should be able to answer:
 - Which version?
 - Which dependencies?
 
-Registration should remain fully observable.
-
-Hidden registration behaviour complicates platform operations.
+Registration should therefore remain fully observable, because hidden registration behaviour complicates platform operations.
 
 ---
 
 # Registration Independence
 
-Registration should remain independent from:
-
-- dependency resolution
-- activation
-- execution
-- lifecycle callbacks
-
-Each stage owns one concern.
-
-Combining them increases Runtime complexity unnecessarily.
+Registration should remain independent from dependency resolution, activation, execution and lifecycle callbacks. Each stage owns one concern, and combining them increases Runtime complexity unnecessarily.
 
 ---
 
 # Security
 
-Registration should assume:
-
-Every capability remains untrusted.
-
-Registration records metadata.
-
-It does not grant execution rights.
-
-Execution should occur only after:
-
-- dependency validation
-- compatibility checks
-- permission evaluation
-
-complete successfully.
+Registration should assume that every capability remains untrusted. Registration records metadata; it does not grant execution rights. Execution should occur only after dependency validation, compatibility checks and permission evaluation complete successfully.
 
 ---
 
@@ -590,43 +373,37 @@ The following practices are prohibited.
 
 ## Executable Registration
 
-Running capability code during registration.
+Running capability code during registration. Registration must never perform work, so no capability logic may run before activation.
 
 ---
 
 ## Implicit Registration
 
-Automatically registering capabilities without validation.
+Automatically registering capabilities without validation. A registered Module may still fail dependency resolution, permission validation or compatibility checks.
 
 ---
 
 ## Registration Side Effects
 
-Registration modifying Runtime behaviour immediately.
+Registration modifying Runtime behaviour immediately. Registration records metadata and does not grant execution rights.
 
 ---
 
 ## Duplicate Registries
 
-Maintaining capability information outside the Capability Registry.
+Maintaining capability information outside the Capability Registry, which is the Runtime's authoritative source of capability information.
 
 ---
 
 ## Runtime Mutation
 
-Registration changing Runtime Services directly.
+Registration changing Runtime Services directly. Registration should establish metadata and capability declarations, never perform I/O or start work.
 
 ---
 
 ## Coupled Registration
 
-Combining:
-
-- registration
-- activation
-- execution
-
-into one Runtime phase.
+Combining registration, activation and execution into one Runtime phase. Each stage owns one concern, and combining them increases Runtime complexity unnecessarily.
 
 ---
 
@@ -634,14 +411,14 @@ into one Runtime phase.
 
 Within Mosaic:
 
-- Registration MUST remain metadata driven.
-- Registration MUST populate the Capability Registry.
-- Registration MUST NOT execute capability code.
-- Capability identifiers MUST remain globally unique.
-- Registration SHOULD record dependencies, permissions and contracts.
-- Registration SHOULD remain observable.
-- Registration MUST precede activation.
-- Registration MUST treat capabilities as untrusted until later validation stages.
+- Registration must remain metadata driven.
+- Registration must populate the Capability Registry.
+- Registration must not execute capability code.
+- Capability identifiers must remain globally unique.
+- Registration should record dependencies, permissions and contracts.
+- Registration should remain observable.
+- Registration must precede activation.
+- Registration must treat capabilities as untrusted until later validation stages.
 
 ---
 
@@ -661,16 +438,4 @@ The next chapter introduces **Dependency Resolution**, where the Runtime transfo
 
 # Summary
 
-Registration is the Runtime's admission process.
-
-It transforms discovered metadata into recognised Runtime participants without executing a single line of capability code.
-
-By separating:
-
-- discovery
-- registration
-- dependency resolution
-- activation
-- execution
-
-the Mosaic Runtime gains a predictable, observable and secure capability lifecycle that scales naturally as the platform grows.
+Registration is the Runtime's admission process, and it transforms discovered metadata into recognised Runtime participants without executing a single line of capability code. By separating discovery, registration, dependency resolution, activation and execution, the Mosaic Runtime gains a predictable, observable and secure capability lifecycle that scales naturally as the platform grows.

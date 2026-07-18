@@ -12,23 +12,7 @@ Status: Draft
 
 # Purpose
 
-A module does not merely exist.
-
-Throughout its lifetime it is:
-
-- discovered
-- registered
-- activated
-- executed
-- upgraded
-- deactivated
-- removed
-
-The Runtime must coordinate these transitions consistently.
-
-Every module, whether supplied by the Platform distribution or by a third party, should follow exactly the same lifecycle.
-
-This document defines the canonical Module Lifecycle within the Mosaic platform.
+A module does not merely exist. Throughout its lifetime it is discovered, registered, activated, executed, upgraded, deactivated and removed, and the Runtime must coordinate those transitions consistently. Every module, whether supplied by the Platform distribution or by a third party, should follow exactly the same lifecycle, because a capability whose lifecycle depends on its origin cannot be operated predictably. This document defines the canonical Module Lifecycle within the Mosaic platform.
 
 ---
 
@@ -38,22 +22,13 @@ Within Mosaic:
 
 > **Modules participate in the Runtime. They never control it.**
 
-The Runtime owns:
-
-- lifecycle
-- ordering
-- activation
-- deactivation
-
-Modules respond.
-
-They never initiate lifecycle transitions themselves.
+The Runtime owns lifecycle, ordering, activation and deactivation. Modules respond to those decisions, and they never initiate lifecycle transitions themselves.
 
 ---
 
 # Module Lifecycle States
 
-Every module progresses through the same lifecycle.
+Every module progresses through the same lifecycle, and every stage within it carries exactly one responsibility.
 
 ```mermaid
 flowchart TD
@@ -80,25 +55,13 @@ N8 --> N9
 N9 --> N10
 ```
 
-Every stage has exactly one responsibility.
-
-The Runtime should never invent module-specific lifecycle stages.
+Because the set of stages is fixed, the Runtime should never invent module-specific lifecycle stages.
 
 ---
 
 # Discovery
 
-The Supervisor discovers:
-
-- manifests
-- metadata
-- contracts
-
-No executable code has been included in a Platform package.
-
-The module remains unknown except for its manifest.
-
-Discovery answers:
+The Supervisor discovers manifests, metadata and contracts. No executable code has been included in a Platform package at this point, so the module remains unknown except for its manifest. Discovery therefore answers a single question:
 
 > **What exists?**
 
@@ -106,19 +69,7 @@ Discovery answers:
 
 # Registration
 
-Registration admits the statically linked module into the SDK registry.
-
-The Platform now knows:
-
-- identity
-- version
-- dependencies
-- permissions
-- contracts
-
-The module still performs no work.
-
-Registration answers:
+Registration admits the statically linked module into the SDK registry, after which the Platform knows its identity, version, dependencies, permissions and contracts. The module still performs no work, because registration decides membership rather than execution:
 
 > **Should this capability become part of this Runtime?**
 
@@ -126,17 +77,7 @@ Registration answers:
 
 # Resolution
 
-Dependency Resolution validates:
-
-- required capabilities
-- optional capabilities
-- contracts
-- versions
-- dependency graph
-
-Only modules with fully satisfied requirements may proceed.
-
-Resolution answers:
+Dependency Resolution validates required capabilities, optional capabilities, contracts, versions and the dependency graph, and only modules whose requirements are fully satisfied may proceed. Resolution answers:
 
 > **Can this capability execute safely?**
 
@@ -144,264 +85,73 @@ Resolution answers:
 
 # Activation
 
-Activation constructs the module.
-
-Examples include:
-
-- dependency injection
-- Runtime contracts
-- configuration
-- lifecycle callbacks
-
-Activation prepares the module.
-
-It does not yet process Runtime work.
+Activation constructs the module through dependency injection, Runtime contracts, configuration and lifecycle callbacks. It prepares the module, but it does not yet process Runtime work.
 
 ---
 
 # Ready
 
-A Ready module has completed:
-
-- construction
-- initialisation
-- dependency injection
-
-The Runtime may now dispatch work.
-
-Readiness is intentionally distinct from activation.
-
-A module may activate successfully yet still require asynchronous preparation before becoming operational.
-
-Separating activation from readiness is a common lifecycle pattern in extensible platforms because it prevents work from being dispatched before initialisation has completed.  [Visual Studio Code](https://code.visualstudio.com/api/references/activation-events)
+A Ready module has completed construction, initialisation and dependency injection, which means the Runtime may now dispatch work to it. Readiness is intentionally distinct from activation, because a module may activate successfully yet still require asynchronous preparation before becoming operational. Separating activation from readiness is a common lifecycle pattern in extensible platforms because it prevents work from being dispatched before initialisation has completed.  [Visual Studio Code](https://code.visualstudio.com/api/references/activation-events)
 
 ---
 
 # Running
 
-Running is the steady operational state.
-
-The module now:
-
-- receives Runtime Events
-- executes capability operations
-- participates in scheduling
-- exposes health
-- publishes metrics
-
-Most modules remain in this state for the majority of their lifetime.
+Running is the steady operational state, in which the module receives Runtime Events, executes capability operations, participates in scheduling, exposes health and publishes metrics. Most modules remain in this state for the majority of their lifetime.
 
 ---
 
 # Suspension
 
-The Runtime MAY support suspension.
-
-Conceptually.
-
-```mermaid
-flowchart TD
-
-N1["Running"]
-N2["Suspended"]
-N3["Running"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Suspension differs from deactivation.
-
-The module remains:
-
-- registered
-- activated
-
-but temporarily receives no Runtime work.
-
-Possible reasons include:
-
-- administrator action
-- maintenance
-- resource conservation
-- dependency degradation
-
-Suspension should remain reversible.
+The Runtime may support suspension, moving a module out of Running into a Suspended state and later back to Running again. Suspension differs from deactivation: the module remains registered and activated, but temporarily receives no Runtime work. Possible reasons include administrator action, maintenance, resource conservation and dependency degradation. Because registration and activation both survive it, suspension should remain reversible.
 
 ---
 
 # Stopping
 
-Stopping begins graceful shutdown.
-
-The Runtime notifies the module that:
-
-```mermaid
-flowchart TD
-
-N1["No New Work"]
-N2["Finish Existing Work"]
-
-N1 --> N2
-```
-
-Modules should:
-
-- release temporary resources
-- complete active work
-- stop accepting new Runtime requests
-
-Business correctness should remain the highest priority.
+Stopping begins graceful shutdown, and the Runtime notifies the module that it should take no new work and finish the work it already holds. Modules should therefore release temporary resources, complete active work and stop accepting new Runtime requests. Business correctness should remain the highest priority throughout.
 
 ---
 
 # Deactivation
 
-Once all work has completed:
-
-```mermaid
-flowchart TD
-
-N1["Running"]
-N2["Deactivated"]
-
-N1 --> N2
-```
-
-The Runtime:
-
-- removes Runtime contracts
-- unregisters handlers
-- disposes internal resources
-
-The module should no longer participate in execution.
+Once all work has completed the module moves from Running to Deactivated, and the Runtime removes Runtime contracts, unregisters handlers and disposes internal resources. From that point the module should no longer participate in execution.
 
 ---
 
 # Removal
 
-Removal occurs only after deactivation.
-
-```mermaid
-flowchart TD
-
-N1["Deactivated"]
-N2["Removed"]
-
-N1 --> N2
-```
-
-Removal deletes the module from the Runtime.
-
-The Capability Registry should update accordingly.
-
-Removed modules no longer participate in:
-
-- discovery
-- execution
-- scheduling
-
-Future participation requires rediscovery.
+Removal occurs only after deactivation, taking the module from Deactivated to Removed and deleting it from the Runtime, and the Capability Registry should update accordingly. Removed modules no longer participate in discovery, execution or scheduling, so future participation requires rediscovery.
 
 ---
 
 # Runtime Ownership
 
-The Runtime owns every lifecycle transition.
-
-Modules should never:
-
-- activate themselves
-- suspend themselves
-- remove themselves
-- restart themselves
-
-The Runtime remains the sole lifecycle authority.
+The Runtime owns every lifecycle transition, which means modules should never activate themselves, suspend themselves, remove themselves or restart themselves. The Runtime remains the sole lifecycle authority.
 
 ---
 
 # Lifecycle Events
 
-The Runtime MAY publish lifecycle events.
-
-Examples include:
-
-```
-
-ModuleActivated
-```
-
-```
-
-ModuleReady
-```
-
-```
-
-ModuleSuspended
-```
-
-```
-
-ModuleStopped
-```
-
-```
-
-ModuleRemoved
-```
-
-These are Runtime Events.
-
-They improve observability.
-
-They do not represent business behaviour.
+The Runtime may publish lifecycle events such as `ModuleActivated`, `ModuleReady`, `ModuleSuspended`, `ModuleStopped` and `ModuleRemoved`. These are Runtime Events: they improve observability, but they do not represent business behaviour.
 
 ---
 
 # Runtime Visibility
 
-Operators should always understand:
-
-- current lifecycle stage
-- activation duration
-- readiness status
-- shutdown progress
-- failure reason
-
-Lifecycle should remain fully observable.
-
-Hidden lifecycle transitions complicate platform operations.
+Operators should always be able to determine the current lifecycle stage, activation duration, readiness status, shutdown progress and failure reason. Lifecycle should therefore remain fully observable, because hidden lifecycle transitions complicate platform operations.
 
 ---
 
 # Activation Failure
 
-Suppose activation fails.
-
-```mermaid
-flowchart TD
-
-N1["Activation"]
-N2["Failure"]
-
-N1 --> N2
-```
-
-The Runtime should:
-
-- dispose partially constructed state
-- release resources
-- mark module unavailable
-- report diagnostics
-
-Partial activation must never remain inside the Runtime.
+Suppose activation fails. The Runtime should then dispose partially constructed state, release resources, mark the module unavailable and report diagnostics, because partial activation must never remain inside the Runtime.
 
 ---
 
 # Runtime Restart
 
-Following Runtime restart:
+Following a Runtime restart the sequence replays in full from the beginning.
 
 ```mermaid
 flowchart TD
@@ -418,19 +168,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Modules should never assume:
-
-- previous process state
-- cached objects
-- surviving goroutines
-
-Every Runtime start should produce a clean lifecycle.
+Modules should therefore never assume previous process state, cached objects or surviving goroutines, because every Runtime start should produce a clean lifecycle.
 
 ---
 
 # Upgrade Lifecycle
 
-Capability upgrades should remain lifecycle driven.
+Capability upgrades should remain lifecycle driven, which means the running capability is stopped, deactivated and removed before its replacement is discovered, registered, resolved and activated in turn.
 
 ```mermaid
 flowchart TD
@@ -455,79 +199,25 @@ N7 --> N8
 N8 --> N9
 ```
 
-The Runtime should never hot-swap executable capability code inside a running capability instance.
-
-Replacing a capability should always occur through a controlled lifecycle transition.
+The Runtime should never hot-swap executable capability code inside a running capability instance, so replacing a capability should always occur through a controlled lifecycle transition.
 
 ---
 
 # Failure Isolation
 
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Metadata Module"]
-N2["Failure"]
-
-N1 --> N2
-```
-
-The Runtime should ensure:
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Running"]
-
-N1 --> N2
-```
-
-Module lifecycle failures should never destabilise unrelated capabilities.
-
-Isolation remains a Runtime responsibility.
+Suppose the Metadata Module reaches a failure state. The Runtime should ensure that Playback carries on Running regardless, because module lifecycle failures should never destabilise unrelated capabilities. Isolation therefore remains a Runtime responsibility rather than a module one.
 
 ---
 
 # Resource Ownership
 
-Modules own:
-
-- internal resources
-- temporary allocations
-- internal caches
-
-The Runtime owns:
-
-- lifecycle
-- execution
-- scheduling
-- workers
-
-Ownership determines cleanup responsibility.
+Modules own their internal resources, temporary allocations and internal caches, whereas the Runtime owns lifecycle, execution, scheduling and workers. Ownership determines cleanup responsibility.
 
 ---
 
 # Testing
 
-Module lifecycle behaviour SHOULD be tested.
-
-Examples include:
-
-- activation
-- readiness
-- suspension
-- shutdown
-- restart
-- removal
-
-Lifecycle behaviour should remain deterministic.
-
-Testing should verify transitions.
-
-Not implementation.
+Module lifecycle behaviour should be tested across activation, readiness, suspension, shutdown, restart and removal. Lifecycle behaviour should remain deterministic, so testing should verify transitions rather than implementation.
 
 ---
 
@@ -537,13 +227,13 @@ The following practices are prohibited.
 
 ## Self Activation
 
-Modules activating themselves.
+Modules activating themselves, taking lifecycle authority from the Runtime.
 
 ---
 
 ## Background Startup
 
-Beginning Runtime work before Ready.
+Beginning Runtime work before Ready, and therefore before initialisation has completed.
 
 ---
 
@@ -555,7 +245,7 @@ Continuing execution after Stopping.
 
 ## Partial Removal
 
-Leaving Runtime registrations after removal.
+Leaving Runtime registrations after removal, so the Capability Registry no longer reflects what the Runtime contains.
 
 ---
 
@@ -575,15 +265,15 @@ Executing business workflows before the Runtime declares the module Ready.
 
 Within Mosaic:
 
-- Every module MUST follow the canonical lifecycle.
-- The Runtime MUST own lifecycle transitions.
-- Activation MUST precede readiness.
-- Readiness MUST precede execution.
-- Suspension SHOULD remain reversible.
-- Shutdown MUST remain graceful.
-- Removal MUST follow deactivation.
-- Lifecycle MUST remain observable.
-- Module failures MUST remain isolated.
+- Every module must follow the canonical lifecycle.
+- The Runtime must own lifecycle transitions.
+- Activation must precede readiness.
+- Readiness must precede execution.
+- Suspension should remain reversible.
+- Shutdown must remain graceful.
+- Removal must follow deactivation.
+- Lifecycle must remain observable.
+- Module failures must remain isolated.
 
 ---
 
@@ -607,8 +297,4 @@ A module should never simply:
 
 > **Load.**
 
-It should become a recognised participant within the Runtime through a deterministic lifecycle owned entirely by the platform.
-
-Within Mosaic, lifecycle consistency ensures that every capability, regardless of its origin, behaves predictably throughout installation, execution, upgrade and removal.
-
-That consistency is one of the defining characteristics of a mature capability platform.
+It should instead become a recognised participant within the Runtime through a deterministic lifecycle owned entirely by the platform. Within Mosaic, lifecycle consistency ensures that every capability, regardless of its origin, behaves predictably throughout installation, execution, upgrade and removal, and that consistency is one of the defining characteristics of a mature capability platform.

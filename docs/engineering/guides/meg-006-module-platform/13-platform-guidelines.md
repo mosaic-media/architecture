@@ -12,23 +12,7 @@ Status: Draft
 
 # Purpose
 
-The previous chapters introduced the building blocks of the Module Platform:
-
-- Capability Manifests
-- Discovery
-- Registration
-- Dependency Resolution
-- Activation
-- Lifecycle
-- SDK
-- Permissions
-- Configuration
-- Versioning
-- Isolation
-
-This document brings those concepts together into practical engineering guidance.
-
-Its purpose is to answer one question.
+The previous chapters introduced the building blocks of the Module Platform: Capability Manifests, Discovery, Registration, Dependency Resolution, Activation, Lifecycle, SDK, Permissions, Configuration, Versioning and Isolation. This chapter brings those concepts together into practical engineering guidance, and everything that follows exists to answer one question.
 
 > **"How should I design a new capability for the Mosaic platform?"**
 
@@ -40,130 +24,44 @@ Within Mosaic:
 
 > **Think like a platform engineer, not an application developer.**
 
-Capabilities should be designed as:
-
-- independent
-- replaceable
-- discoverable
-- observable
-
-The Runtime should require no modification to support them.
+Capabilities should be designed to be independent, replaceable, discoverable and observable, which means the Runtime should require no modification to support them.
 
 ---
 
 # Start With The Capability
 
-Before writing code ask:
+Before writing code, establish what the capability is for by asking:
 
 - What business capability exists?
 - What problem does it solve?
 - Does this belong in an existing capability?
 - Should this become a new capability?
 
-Avoid creating capabilities around:
-
-- technical implementation
-- frameworks
-- storage technologies
-
-Capabilities should model business value.
-
-Not infrastructure.
+Capabilities should model business value rather than infrastructure, so avoid creating capabilities around technical implementation, frameworks or storage technologies.
 
 ---
 
 # Design Around Contracts
 
-Every capability should expose:
-
-- contracts
-- events
-- configuration
-- permissions
-
-before implementation begins.
-
-The Runtime should understand:
-
-> **What the capability is**
-
-before understanding:
-
-> **How it is implemented**
+Every capability should expose its contracts, events, configuration and permissions before implementation begins, because the Runtime should understand what the capability is before it understands how the capability is implemented.
 
 ---
 
 # Manifest First
 
-Every capability begins with:
-
-```
-
-capability.yaml
-```
-
-Before implementation ask:
-
-- What permissions are required?
-- Which contracts are provided?
-- Which contracts are consumed?
-- Which Runtime services are needed?
-
-If the manifest cannot describe the capability clearly:
-
-The design probably requires refinement.
+Every capability begins with a `capability.yaml` manifest, so before implementation ask which permissions are required, which contracts are provided, which contracts are consumed and which Runtime services are needed. If the manifest cannot describe the capability clearly, the design probably requires refinement.
 
 ---
 
 # Prefer Small Capabilities
 
-Good.
-
-```
-
-Metadata
-```
-
-```
-
-Books
-```
-
-```
-
-Playback
-```
-
-Poor.
-
-```
-
-MediaEverythingCapability
-```
-
-Capabilities should own one coherent business concern.
-
-Large capabilities become miniature monoliths.
+Capabilities should own one coherent business concern, which makes `Metadata`, `Books` and `Playback` good capability boundaries and a `MediaEverythingCapability` a poor one. Large capabilities become miniature monoliths.
 
 ---
 
 # Avoid Runtime Knowledge
 
-Capabilities should never know:
-
-- worker count
-- scheduler implementation
-- dependency graph
-- execution engine
-- Runtime Kernel
-
-They should know only:
-
-- SDK
-- contracts
-- business behaviour
-
-The Runtime exists to hide operational complexity.
+Capabilities should never know the worker count, the scheduler implementation, the dependency graph, the execution engine or the Runtime Kernel. They should know only the SDK, the contracts and the business behaviour, because the Runtime exists to hide operational complexity.
 
 ---
 
@@ -173,96 +71,36 @@ When consuming Runtime functionality ask:
 
 > **Does a Runtime contract already exist?**
 
-Avoid introducing new Runtime APIs unnecessarily.
-
-The SDK should remain:
-
-- small
-- stable
-- expressive
-
-The Runtime should evolve underneath it.
+Avoid introducing new Runtime APIs unnecessarily. The SDK should remain small, stable and expressive, and the Runtime should evolve underneath it.
 
 ---
 
 # Events Before Coupling
 
-Suppose one capability needs another.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Recommendation Implementation"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["Runtime"]
-N3["Recommendations"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Capabilities should collaborate through:
-
-- contracts
-- events
-
-Never implementation.
+Suppose one capability needs another. Wiring `Playback` directly to a `Recommendation Implementation` is poor, whereas the preferred shape has Playback emit `PlaybackCompleted` and lets the Runtime carry it to `Recommendations`. Capabilities should collaborate through contracts and events, never through implementation.
 
 ---
 
 # Configuration
 
-Capabilities should declare:
-
-- configuration schema
-- defaults
-- validation requirements
-
-They should never:
-
-- read files
-- parse YAML
-- inspect environment variables
-
-Configuration belongs to the Runtime.
+Capabilities should declare their configuration schema, defaults and validation requirements, but they should never read files, parse YAML or inspect environment variables, because configuration belongs to the Runtime.
 
 ---
 
 # Permissions
 
-Capabilities should request:
-
-only
-
-the permissions they require.
-
-Avoid.
+Capabilities should request only the permissions they require. Avoid a broad grant:
 
 ```yaml
 permissions:
-
   - runtime.*
 ```
 
-Prefer.
+Prefer narrow ones:
 
 ```yaml
 permissions:
-
   - scheduler.use
-
   - blob.read
 ```
 
@@ -272,32 +110,13 @@ The principle of least privilege should guide every capability.
 
 # Versioning
 
-Before releasing a capability ask:
-
-- Has a Runtime contract changed?
-- Has configuration changed?
-- Has behaviour changed?
-- Is this backwards compatible?
-
-Version numbers communicate compatibility.
-
-Not development effort.
+Before releasing a capability, ask whether a Runtime contract has changed, whether configuration has changed, whether behaviour has changed and whether the result is backwards compatible. Version numbers communicate compatibility, not development effort.
 
 ---
 
 # Dependencies
 
-Declare every dependency explicitly.
-
-Never assume:
-
-- Platform capability exists
-- SDK feature exists
-- Runtime contract exists
-
-The Runtime validates dependency graphs.
-
-Capabilities should not discover missing dependencies during execution.
+Declare every dependency explicitly, and never assume that a Platform capability, an SDK feature or a Runtime contract exists. The Runtime validates dependency graphs, so capabilities should not discover missing dependencies during execution.
 
 ---
 
@@ -307,103 +126,39 @@ Ask:
 
 > **Could another capability replace this one?**
 
-Examples.
-
-```
-
-TMDB Metadata
-```
-
-↓
-
-```
-
-AniList Metadata
-```
-
-The Runtime should require only:
-
-- different manifest
-- different capability
-
-Everything else should remain unchanged.
-
-Replaceability is one of the defining characteristics of a healthy capability platform.
+Substituting `AniList Metadata` for `TMDB Metadata` should require only a different manifest and a different capability, with everything else remaining unchanged. Replaceability is one of the defining characteristics of a healthy capability platform.
 
 ---
 
 # Build For Discovery
 
-Capabilities should be understandable through their manifest.
-
-Operators should be able to answer:
-
-- What does this capability provide?
-- Which permissions does it require?
-- Which contracts does it expose?
-- Which events does it publish?
-
-without reading source code.
-
-Discovery should become a platform feature.
-
-Not a documentation exercise.
+Capabilities should be understandable through their manifest, so an operator should be able to answer what the capability provides, which permissions it requires, which contracts it exposes and which events it publishes, all without reading source code. Discovery should become a platform feature rather than a documentation exercise.
 
 ---
 
 # Design For Tooling
 
-Remember:
-
-The Runtime is not the only consumer of manifests.
-
-Tooling may use manifests for:
-
-- marketplace listings
-- dependency graphs
-- architecture diagrams
-- configuration UIs
-- compatibility reports
-
-The manifest should remain sufficiently rich to support these tools.
+The Runtime is not the only consumer of manifests. Tooling may use them for marketplace listings, dependency graphs, architecture diagrams, configuration UIs and compatibility reports, so the manifest should remain sufficiently rich to support these tools.
 
 ---
 
 # Design For Testing
 
-Every capability should be testable using:
+Every capability should be testable using a fake Runtime context, fake contracts and fake configuration, because the full Runtime should not be required and capabilities should remain independently testable.
 
-- fake Runtime context
-- fake contracts
-- fake configuration
-
-The full Runtime should not be required.
-
-Capabilities should remain independently testable.
-
-Development tooling should also support testing against a real development Platform.
-
-The Development Supervisor may orchestrate automatic compilation of a local Module into a temporary development Platform through the Build Pipeline.
-
-This gives Module authors integration feedback without changing the production build model.
+Development tooling should also support testing against a real development Platform. The Development Supervisor may orchestrate automatic compilation of a local Module into a temporary development Platform through the Build Pipeline, which gives Module authors integration feedback without changing the production build model.
 
 ---
 
 # Development Workflow
 
-The Mosaic CLI should make Module development routine.
-
-Typical workflow.
+The Mosaic CLI should make Module development routine, and a typical workflow runs:
 
 ```text
 mosaic new module anilist
-
 mosaic dev
-
 mosaic test
-
 mosaic build
-
 mosaic publish
 ```
 
@@ -416,37 +171,13 @@ During development, the CLI and Development Supervisor should:
 - compile the local Module into a development Platform,
 - expose diagnostics from discovery, registration and activation.
 
-Development convenience must not introduce a separate runtime plugin model.
-
-Local development should exercise the same static composition architecture used by production builds.
-
-The CLI owns workflow.
-
-The SDK owns contracts.
-
-Chapter 14 defines the authoritative Developer Platform architecture for this workflow.
+Development convenience must not introduce a separate runtime plugin model, so local development should exercise the same static composition architecture used by production builds. The CLI owns workflow and the SDK owns contracts, and Chapter 14 defines the authoritative Developer Platform architecture for this workflow.
 
 ---
 
 # Test Harness Modules
 
-Development environments may install Test Harness Modules automatically.
-
-Test Harness Modules provide fake implementations of common capabilities.
-
-Examples include:
-
-- Metadata
-- Media
-- Artwork
-- Authentication
-- Events
-
-Module tests should prefer a real Platform with test providers over bespoke mocking frameworks.
-
-The test harness should remain explicit and replaceable.
-
-It should not become hidden production behaviour.
+Development environments may install Test Harness Modules automatically, and those Modules provide fake implementations of common capabilities such as Metadata, Media, Artwork, Authentication and Events. Module tests should therefore prefer a real Platform with test providers over bespoke mocking frameworks. The test harness should remain explicit and replaceable, and it should not become hidden production behaviour.
 
 ---
 
@@ -456,37 +187,13 @@ Ask:
 
 > **If this capability fails, what else fails?**
 
-The ideal answer is:
-
-```
-
-Nothing
-```
-
-Failures should remain local.
-
-Capability isolation should always outweigh implementation convenience.
+The ideal answer is nothing, because failures should remain local and capability isolation should always outweigh implementation convenience.
 
 ---
 
 # Platform Evolution Boundary
 
-New providers should not require Runtime modification.
-
-A genuinely new capability may require Platform and SDK evolution because the Platform owns capability contracts.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["New Metadata Provider"]
-N2["Modify Runtime"]
-
-N1 --> N2
-```
-
-Preferred.
+New providers should not require Runtime modification, whereas a genuinely new capability may require Platform and SDK evolution because the Platform owns capability contracts. A design in which a New Metadata Provider forces someone to modify the Runtime is therefore poor, and the preferred path leads from the provider through its manifest into contracts the Runtime already understands:
 
 ```mermaid
 flowchart TD
@@ -501,27 +208,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Provider growth should occur through Module addition.
-
-Capability growth should occur deliberately through Platform and SDK design.
-
-Do not hide a new architectural capability inside a Module-specific contract.
+Provider growth should occur through Module addition, whereas capability growth should occur deliberately through Platform and SDK design. Do not hide a new architectural capability inside a Module-specific contract.
 
 ---
 
 # Marketplace Readiness
 
-A capability should be installable by someone who has never seen its source code.
-
-That requires:
-
-- good manifest
-- documentation
-- configuration schema
-- permissions
-- compatibility information
-
-Marketplace readiness should become a natural consequence of good platform design.
+A capability should be installable by someone who has never seen its source code, which requires a good manifest, documentation, a configuration schema, permissions and compatibility information. Marketplace readiness should become a natural consequence of good platform design.
 
 ---
 
@@ -547,7 +240,7 @@ Before implementing a capability confirm:
 
 # Common Platform Mistakes
 
-Avoid:
+The following decisions usually weaken the platform long before they become visible, and should be avoided:
 
 - extending the Runtime for business features
 - hidden dependencies
@@ -557,72 +250,32 @@ Avoid:
 - undocumented contracts
 - implicit configuration
 
-These decisions usually weaken the platform long before they become visible.
-
 ---
 
 # Mosaic Guidelines
 
 Within Mosaic:
 
-- Every new feature SHOULD begin as a capability.
-- New providers SHOULD NOT require Runtime modification.
-- New capability contracts SHOULD require deliberate Platform and SDK review.
-- Development tooling SHOULD compile local Modules through the same static composition model as production.
-- Test Harness Modules SHOULD provide fake providers for integration testing.
-- Capabilities MUST remain independently deployable.
-- Runtime contracts SHOULD remain explicit.
-- Platform growth SHOULD occur through composition.
-- Manifests SHOULD remain the primary architectural contract.
-- Capability isolation SHOULD remain a design priority.
-- Platform simplicity SHOULD always outweigh convenience.
+- Every new feature should begin as a capability.
+- New providers should not require Runtime modification.
+- New capability contracts should require deliberate Platform and SDK review.
+- Development tooling should compile local Modules through the same static composition model as production.
+- Test Harness Modules should provide fake providers for integration testing.
+- Capabilities must remain independently deployable.
+- Runtime contracts should remain explicit.
+- Platform growth should occur through composition.
+- Manifests should remain the primary architectural contract.
+- Capability isolation should remain a design priority.
+- Platform simplicity should always outweigh convenience.
 
 ---
 
 # Relationship to MEG
 
-This chapter completes the practical implementation guidance of MEG-006.
-
-The remaining documents describe:
-
-- architectural reasoning (ADRs)
-- contributor expectations
-- terminology
-- references
-
-Together, [MEG-001](../meg-001-go-engineering-standards/index.md) through MEG-006 now define:
-
-- engineering
-- execution
-- business modelling
-- architecture
-- runtime
-- platform evolution
-
-The remaining MEGs build upon these foundations rather than redefining them.
+This chapter completes the practical implementation guidance of MEG-006, and the remaining documents describe architectural reasoning (ADRs), contributor expectations, terminology and references. Together, [MEG-001](../meg-001-go-engineering-standards/index.md) through MEG-006 now define engineering, execution, business modelling, architecture, runtime and platform evolution, so the remaining MEGs build upon these foundations rather than redefining them.
 
 ---
 
 # Summary
 
-The Module Platform succeeds when new capabilities feel ordinary.
-
-Installing:
-
-- Books
-- Music
-- Anime
-- Comics
-- IPTV
-
-should require no Runtime redesign.
-
-Only:
-
-- discovery
-- registration
-- activation
-
-Within Mosaic, the Runtime should remain stable for years while capabilities continue to evolve indefinitely.
-
-That is the defining characteristic of a true platform.
+The Module Platform succeeds when new capabilities feel ordinary. Installing Books, Music, Anime, Comics or IPTV should require no Runtime redesign, only discovery, registration and activation. Within Mosaic, the Runtime should remain stable for years while capabilities continue to evolve indefinitely, and that is the defining characteristic of a true platform.

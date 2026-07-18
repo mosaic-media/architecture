@@ -12,7 +12,7 @@ Status: Draft
 
 # Purpose
 
-The previous engineering specifications established:
+The previous engineering specifications established everything a capability needs in order to exist:
 
 - how software is written
 - how the Runtime executes
@@ -20,7 +20,7 @@ The previous engineering specifications established:
 - how the Domain is protected
 - how the Runtime itself is structured
 
-MEG-006 answers the final architectural question.
+None of them explain how a capability written later joins a platform that already exists, and MEG-006 answers that final architectural question.
 
 > **How does the Platform evolve without modifying the Runtime?**
 
@@ -34,13 +34,9 @@ The Mosaic Module Platform allows new capabilities to be:
 - upgraded
 - removed
 
-without changing the Runtime itself.
+without changing the Runtime itself. That last clause is the whole of it, because a platform that must be modified in order to accept a new capability is simply an application being extended.
 
-Unlike traditional module systems, modules are not an afterthought.
-
-They are a first-class architectural concept.
-
-The Runtime is intentionally designed to grow through build-time Module composition rather than through continual modification of the Platform foundation.
+Unlike traditional module systems, modules are not an afterthought bolted onto a finished application; they are a first-class architectural concept, and the Runtime is intentionally designed to grow through build-time Module composition rather than through continual modification of the Platform foundation.
 
 ---
 
@@ -75,7 +71,7 @@ N10 --> N11
 N11 --> N12
 ```
 
-[MEG-005](../meg-005-runtime-architecture/index.md) defines:
+[MEG-005](../meg-005-runtime-architecture/index.md) is the closest relative in that chain, because the two guides divide one subject between them. It defines:
 
 > **How the Runtime executes capabilities.**
 
@@ -87,41 +83,9 @@ MEG-006 defines:
 
 # Scope
 
-This specification defines:
+This specification defines the whole path from a capability's description to its presence in a running binary: Module philosophy, Module lifecycle, the Module manifest, Capability manifests, Discovery, Registration, Activation, Dependency resolution, Module contracts, Module permissions, Configuration, Versioning, Compatibility, Isolation, SDK architecture, Build-time composition, Generated imports, Developer Platform architecture, Mosaic CLI workflow ownership, Development Supervisor and Development Platform boundaries, Test Harness Modules, deterministic Test Harness data and event simulation, and local Module composition.
 
-- Module philosophy
-- Module lifecycle
-- Module manifest
-- Capability manifests
-- Discovery
-- Registration
-- Activation
-- Dependency resolution
-- Module contracts
-- Module permissions
-- Configuration
-- Versioning
-- Compatibility
-- Isolation
-- SDK architecture
-- Build-time composition
-- Generated imports
-- Developer Platform architecture
-- Mosaic CLI workflow ownership
-- Development Supervisor and Development Platform boundaries
-- Test Harness Modules
-- deterministic Test Harness data and event simulation
-- local Module composition
-
-This specification intentionally does **not** define:
-
-- business domains
-- runtime internals
-- storage architecture
-- deployment topology
-- Supervisor generation activation
-
-Those concerns belong to previous or future MEG specifications.
+It intentionally does **not** define business domains, runtime internals, storage architecture, deployment topology or Supervisor generation activation. Those concerns belong to previous or future MEG specifications, and MEG-006 depends on their answers without restating them.
 
 ---
 
@@ -139,29 +103,15 @@ Within Mosaic:
 
 > **Everything beyond the Runtime is a capability. Every capability may be delivered as a module.**
 
-Platform capabilities.
+Platform capabilities, third-party capabilities, enterprise capabilities and experimental capabilities are all the same kind of thing to the Runtime, which should treat them identically. The only distinction should be **how they are delivered**, not **how they execute**.
 
-Third-party capabilities.
-
-Enterprise capabilities.
-
-Experimental capabilities.
-
-The Runtime should treat them identically.
-
-The only distinction should be **how they are delivered**, not **how they execute**.
-
-Mosaic Modules are compile-time composition units.
-
-They are not runtime plugins.
-
-The finished product is always one statically linked Go executable.
+Mosaic Modules are therefore compile-time composition units rather than runtime plugins, and the finished product is always one statically linked Go executable.
 
 ---
 
 # Module Architecture
 
-Mosaic Module Architecture follows this shape.
+Mosaic Module Architecture follows this shape, which traces one capability from the developer who writes it through to the binary that runs it.
 
 ```mermaid
 flowchart TD
@@ -182,17 +132,13 @@ N5 --> N6
 N6 --> N7
 ```
 
-The Supervisor assembles the runtime from declarative manifests and Go modules.
-
-The Build Pipeline performs build mechanics.
-
-The Platform discovers registered Modules through the SDK registry at startup.
+Responsibility is divided along that path. The Supervisor assembles the runtime from declarative manifests and Go modules while the Build Pipeline performs build mechanics, and the Platform discovers registered Modules through the SDK registry at startup.
 
 ---
 
 # Platform Hierarchy
 
-The Mosaic platform intentionally separates concerns into architectural layers.
+The Mosaic platform intentionally separates concerns into architectural layers, so that a change to business behaviour and a change to execution machinery land in different places.
 
 ```mermaid
 flowchart TD
@@ -215,85 +161,42 @@ N6 --> N7
 N7 --> N8
 ```
 
-Notice:
-
-The Platform does not load runtime plugins.
-
-It grows by composing selected Modules into a statically linked Platform Binary.
+Notice that the Platform does not load runtime plugins. It grows instead by composing selected Modules into a statically linked Platform Binary, which is why the composition decision belongs to the Supervisor at the top of this hierarchy rather than to the Runtime Kernel beneath it.
 
 ---
 
 # Expected Outcome
 
-After reading MEG-006 contributors should understand:
-
-- how modules are discovered
-- how capabilities register
-- how manifests define platform contracts
-- how dependencies are validated
-- how Modules are composed into a Platform Binary
-- how generated imports trigger registration
-- why `imports.go` is the only generated integration source
-- how local development compiles Modules through the Development Supervisor
-- how Test Harness Modules support integration testing
-- how permissions are enforced
-- how modules evolve safely
-- how built-in and third-party capabilities coexist
-
-without modifying the Runtime itself.
+After reading MEG-006 contributors should understand how modules are discovered, how capabilities register, how manifests define platform contracts, how dependencies are validated, how Modules are composed into a Platform Binary, how generated imports trigger registration, why `imports.go` is the only generated integration source, how local development compiles Modules through the Development Supervisor, how Test Harness Modules support integration testing, how permissions are enforced, how modules evolve safely, and how built-in and third-party capabilities coexist — all without modifying the Runtime itself. Each of those mechanisms is the subject of a later chapter, and the chapters are ordered to follow a capability's own progress from manifest through to execution.
 
 ---
 
 # Repository Structure
 
-```
-
+```text
 engineering/
-
 └── meg/
-
     └── MEG-006 Module Platform/
-
         README.md
-
         00-document-control.md
-
         01-module-philosophy.md
-
         02-module-manifest.md
-
         03-discovery.md
-
         04-registration.md
-
         05-dependency-resolution.md
-
         06-activation.md
-
         07-module-lifecycle.md
-
         08-module-sdk.md
-
         09-permissions.md
-
         10-configuration.md
-
         11-versioning.md
-
         12-isolation.md
-
         13-platform-guidelines.md
-
         14-developer-platform.md
-
         15-test-harness.md
-
         16-adrs.md
-
         17-contributor-guidance.md
-
         references.md
-
         glossary.md
 ```
 
@@ -330,6 +233,4 @@ The Module Platform is intended to produce a platform that is:
 - Replaceable
 - Operationally predictable
 
-Every module should feel like a natural part of the platform rather than an external add-on.
-
-Manifest-driven discovery and registration allow capabilities to be discovered and validated before a Platform package is produced.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)
+Taken together these goals describe a single quality: every module should feel like a natural part of the platform rather than an external add-on. Manifest-driven discovery and registration are what make that possible, because they allow capabilities to be discovered and validated before a Platform package is produced.  [zylos.ai](https://zylos.ai/research/2026-02-21-ai-agent-plugin-extension-architecture/)

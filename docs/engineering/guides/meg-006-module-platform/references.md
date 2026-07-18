@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-This document records the primary references that influenced the Module Platform described throughout MEG-006.
-
-Unlike a traditional module system, the Mosaic Module Platform combines ideas from:
+This document records the primary references that influenced the Module Platform described throughout MEG-006. Unlike a traditional module system, the Mosaic Module Platform combines ideas from several distinct traditions into a single platform model:
 
 - Module Architecture
 - Microkernel Architecture
@@ -23,11 +21,7 @@ Unlike a traditional module system, the Mosaic Module Platform combines ideas fr
 - SDK Design
 - Runtime Composition
 
-into a single platform model.
-
-The objective is not to imitate existing systems.
-
-It is to adapt proven architectural principles into a platform capable of evolving for many years.
+The objective is not to imitate existing systems, but to adapt proven architectural principles into a platform capable of evolving for many years.
 
 ---
 
@@ -35,9 +29,7 @@ It is to adapt proven architectural principles into a platform capable of evolvi
 
 ## Eclipse Module Architecture
 
-The Eclipse Platform remains one of the most influential module architectures ever developed.
-
-Relevant concepts include:
+The Eclipse Platform remains one of the most influential module architectures ever developed, and several of its concepts carry directly into MEG-006:
 
 - module manifests
 - module boundaries
@@ -51,20 +43,14 @@ Many architectural ideas behind capability discovery and registration align clos
 
 ## Microkernel Architecture
 
-Microkernel architecture strongly influenced:
+Microkernel architecture strongly influenced several parts of the Mosaic design:
 
 - Runtime Kernel
 - Runtime Services
 - Module isolation
 - build-time capability composition
 
-Within Mosaic:
-
-The Runtime remains intentionally small.
-
-Capabilities provide platform functionality.
-
-This mirrors the architectural philosophy of microkernel operating systems while adapting it to an application platform.  [arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture)
+Within Mosaic the Runtime remains intentionally small and capabilities provide platform functionality, which mirrors the architectural philosophy of microkernel operating systems while adapting it to an application platform.  [arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture)
 
 ---
 
@@ -72,29 +58,20 @@ This mirrors the architectural philosophy of microkernel operating systems while
 
 ## Manifest-First Discovery
 
-Modern module platforms increasingly separate:
+Modern module platforms increasingly use machine-readable manifests to separate the stages of bringing a module into a running system:
 
 - discovery
 - validation
 - activation
 - execution
 
-through machine-readable manifests.
-
-This strongly influenced:
-
-- Capability Manifest
-- Discovery
-- Registration
-- Dependency Resolution
-
-Within Mosaic, manifests are intentionally treated as architectural contracts rather than implementation details.  [OpenClaw](https://docs.openclaw.ai/modules/architecture-internals)
+That separation strongly influenced the Capability Manifest, Discovery, Registration and Dependency Resolution as MEG-006 defines them. Within Mosaic, manifests are therefore treated as architectural contracts rather than implementation details.  [OpenClaw](https://docs.openclaw.ai/modules/architecture-internals)
 
 ---
 
 ## Module Manifests
 
-Modern browser module ecosystems demonstrate the value of:
+Modern browser module ecosystems demonstrate the value of declaring a module's intentions before any of its code runs:
 
 - explicit permissions
 - declarative metadata
@@ -107,39 +84,33 @@ Many permission and manifest concepts within MEG-006 were inspired by these appr
 
 # SDK Design
 
-The Module SDK intentionally follows long-established SDK principles.
-
-Relevant concepts include:
+The Module SDK intentionally follows long-established SDK principles:
 
 - stable contracts
 - implementation hiding
 - backwards compatibility
 - explicit versioning
 
-The SDK should remain considerably more stable than the Runtime implementation beneath it.
-
-This separation protects module authors from internal Runtime evolution.
+Together these mean the SDK should remain considerably more stable than the Runtime implementation beneath it, and that separation is what protects module authors from internal Runtime evolution.
 
 ---
 
 # Dependency Management
 
-Dependency Resolution within Mosaic draws inspiration from module systems that:
+Dependency Resolution within Mosaic draws inspiration from module systems that treat the dependency graph as something to be checked rather than discovered at runtime:
 
 - validate dependency graphs
 - detect cycles
 - resolve versions
 - construct activation order
 
-The Runtime intentionally performs these operations before executing capability code.  [GitHub](https://ithub.global.ssl.fastly.net/open-gsd/gsd-core/blob/next/docs/reference/capability-manifest.md)
+The Runtime intentionally performs all of these operations before executing capability code.  [GitHub](https://ithub.global.ssl.fastly.net/open-gsd/gsd-core/blob/next/docs/reference/capability-manifest.md)
 
 ---
 
 # Capability-Oriented Design
 
-Although "Capability-Oriented Architecture" is not yet a widely standardised software architecture term, several modern platforms have independently converged upon similar ideas.
-
-Common themes include:
+Although "Capability-Oriented Architecture" is not yet a widely standardised software architecture term, several modern platforms have independently converged upon similar ideas. Common themes include:
 
 - capability discovery
 - capability registries
@@ -159,15 +130,13 @@ Mosaic extends these ideas into a unified Runtime Architecture centred around in
 
 Eric Evans
 
-The Module Platform deliberately preserves the Domain boundaries defined in [MEG-003](../meg-003-domain-driven-design/index.md).
-
-Capabilities own:
+The Module Platform deliberately preserves the Domain boundaries defined in [MEG-003](../meg-003-domain-driven-design/index.md), so capabilities own:
 
 - business behaviour
 - business language
 - business state
 
-The Runtime owns execution.
+The Runtime owns execution and nothing more, which is what keeps a capability's business meaning independent of the mechanism that runs it.
 
 ---
 
@@ -184,9 +153,7 @@ The Module Platform builds directly upon:
 - dependency inversion
 - infrastructure isolation
 
-Modules communicate exclusively through Runtime contracts.
-
-Runtime implementation remains hidden.
+Modules therefore communicate exclusively through Runtime contracts, and Runtime implementation remains hidden behind them.
 
 ---
 
@@ -196,7 +163,7 @@ Runtime implementation remains hidden.
 
 Robert C. Martin
 
-Referenced primarily for:
+Referenced primarily for its treatment of:
 
 - dependency direction
 - policy vs implementation
@@ -208,13 +175,11 @@ Many Runtime contracts intentionally reinforce these architectural principles.
 
 # Go References
 
-The Module SDK intentionally embraces idiomatic Go.
-
-Recommended references include:
+The Module SDK intentionally embraces idiomatic Go, so the following references apply to SDK and Module code alike.
 
 ## Effective Go
 
-Topics include:
+Relevant topics include:
 
 - interfaces
 - package design
@@ -227,7 +192,7 @@ https://go.dev/doc/effective_go
 
 ## Go Code Review Comments
 
-Topics include:
+Relevant topics include:
 
 - interface ownership
 - dependency management
@@ -239,7 +204,7 @@ https://go.dev/wiki/CodeReviewComments
 
 # Internal Mosaic Specifications
 
-The following specifications complement MEG-006.
+The following specifications complement MEG-006, and where they overlap with it their own definitions are authoritative.
 
 ## Engineering
 
@@ -285,9 +250,7 @@ The following specifications complement MEG-006.
 
 # Platform Principles
 
-The Module Platform established throughout MEG-006 intentionally builds upon several enduring architectural principles.
-
-These include:
+The Module Platform established throughout MEG-006 intentionally builds upon several enduring architectural principles, which the references above informed but do not by themselves determine:
 
 - The Runtime remains small.
 - Capabilities provide business value.
@@ -306,29 +269,19 @@ These principles should remain considerably more stable than the implementation 
 
 # Keeping References Current
 
-Module platforms continue to evolve.
-
-Marketplace ecosystems continue to mature.
-
-Manifest standards continue to improve.
-
-This reference list SHOULD therefore be reviewed periodically to ensure:
+Module platforms continue to evolve, marketplace ecosystems continue to mature and manifest standards continue to improve. This reference list should therefore be reviewed periodically to ensure:
 
 - architectural guidance remains relevant
 - obsolete practices are removed
 - better ecosystem patterns are incorporated
 
-The platform philosophy should remain stable even as module technology evolves.
+The platform philosophy should nevertheless remain stable even as module technology evolves, because the principles recorded above outlast the systems that first demonstrated them.
 
 ---
 
 # Closing Statement
 
-MEG-006 intentionally does not describe a traditional module framework.
-
-Instead, it describes an ecosystem architecture built around independently evolving capabilities.
-
-The resulting Module Platform intentionally emphasises:
+MEG-006 intentionally does not describe a traditional module framework. It describes an ecosystem architecture built around independently evolving capabilities, and the resulting Module Platform therefore emphasises:
 
 - capability-oriented design
 - manifest-first discovery
@@ -337,10 +290,4 @@ The resulting Module Platform intentionally emphasises:
 - explicit permissions
 - long-term ecosystem evolution
 
-Every future capability should integrate into the platform by satisfying Runtime contracts rather than modifying Runtime implementation.
-
-The Runtime provides execution.
-
-Capabilities provide value.
-
-The platform exists so that those capabilities can continue evolving long after the Runtime itself has stabilised.
+Every future capability should integrate into the platform by satisfying Runtime contracts rather than modifying Runtime implementation, because the Runtime provides execution while capabilities provide value. The platform exists so that those capabilities can continue evolving long after the Runtime itself has stabilised.

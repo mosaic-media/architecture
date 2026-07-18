@@ -24,15 +24,14 @@ A small non-zero `RFC` count can be legitimate: a Normative Language table that 
 
 ## Summary
 
-- **12 of 39 specifications meet the prose standard**
-- 22,214 of 191,408 lines done (11%)
-- 169,194 lines remaining across 27 specifications
+- **13 of 39 specifications meet the prose standard**
+- 29,256 of 186,986 lines done (15%)
+- 157,730 lines remaining across 26 specifications
 
 ## Needs rewriting
 
 | Document | Lines | Single-sentence | RFC | Bare | Diagrams | Folder |
 |----------|------:|----------------:|----:|-----:|---------:|--------|
-| MEG-006 | 11,464 | 100% | 223 | 79 | 126 | `engineering/guides/meg-006-module-platform` |
 | MEG-002 | 10,312 | 99% | 196 | 94 | 192 | `engineering/guides/meg-002-event-driven-runtime` |
 | MDP-001 | 10,209 | 99% | 0 | 17 | 136 | `engineering/architecture/mdp-001-adaptive-composition-runtime` |
 | MDS-008 | 10,136 | 99% | 0 | 3 | 126 | `design/system/mds-008-component-library` |
@@ -70,9 +69,10 @@ Includes both specifications rewritten by this migration and short documents tha
 | MAD-002 | 359 | 38% | 0 | 0 | 1 | 51a5b6e 2026-07-18 |
 | MDS-006 | 174 | 50% | 0 | 0 | 0 | a8f07bd 2026-07-18 |
 | MDS-007 | 174 | 50% | 0 | 0 | 0 | c0fa640 2026-07-18 |
-| MEG-003 | 6,532 | 68% | 5 | 0 | 77 | 51a5b6e 2026-07-18 |
+| MEG-003 | 6,532 | 68% | 5 | 0 | 77 | eedb5c2 2026-07-18 |
 | MEG-004 | 5,014 | 64% | 5 | 0 | 95 | 161d10b 2026-07-18 |
 | MEG-005 | 7,751 | 68% | 5 | 0 | 79 | 84e02aa 2026-07-18 |
+| MEG-006 | 7,042 | 67% | 5 | 0 | 46 | 51a5b6e 2026-07-18 |
 | MEG-015 | 1,133 | 69% | 0 | 0 | 8 | 1d1f92e 2026-07-18 |
 | MIP-004 | 48 | 33% | 3 | 0 | 0 | 51a5b6e 2026-07-18 |
 | MIP-005 | 48 | 33% | 2 | 0 | 0 | 51a5b6e 2026-07-18 |

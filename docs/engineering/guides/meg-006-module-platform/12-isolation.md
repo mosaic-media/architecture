@@ -25,22 +25,7 @@ Examples include:
 - Anime
 - IPTV
 
-Each capability should remain independently:
-
-- developed
-- deployed
-- upgraded
-- tested
-- replaced
-
-Without effective isolation:
-
-- failures propagate
-- upgrades become risky
-- Runtime stability degrades
-- platform evolution slows
-
-Isolation is therefore one of the defining architectural principles of the Module Platform.
+Each of these should remain independently developed, deployed, upgraded, tested and replaced. Without effective isolation none of that holds: failures propagate, upgrades become risky, Runtime stability degrades and platform evolution slows as a result. Isolation is therefore one of the defining architectural principles of the Module Platform.
 
 ---
 
@@ -50,19 +35,13 @@ Within Mosaic:
 
 > **Capabilities may communicate. They must never become coupled.**
 
-Isolation does **not** mean capabilities never interact.
-
-It means:
-
-Interactions occur only through Runtime contracts.
-
-Implementation remains private.
+Isolation does **not** mean capabilities never interact. It means that interactions occur only through Runtime contracts, and that implementation remains private.
 
 ---
 
 # Isolation Layers
 
-Capability isolation exists across several dimensions.
+Capability isolation exists across several dimensions, each of which protects one aspect of platform independence.
 
 ```mermaid
 flowchart TD
@@ -83,98 +62,25 @@ N5 --> N6
 N6 --> N7
 ```
 
-Each layer protects one aspect of platform independence.
+The sections that follow take each layer in turn.
 
 ---
 
 # Lifecycle Isolation
 
-Every capability owns its own lifecycle.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Activated"]
-
-N1 --> N2
-```
-
-does not imply:
-
-```mermaid
-flowchart TD
-
-N1["Recommendations"]
-N2["Activated"]
-
-N1 --> N2
-```
-
-The Runtime coordinates lifecycle.
-
-Capabilities participate independently.
-
-One capability should never activate another.
+Every capability owns its own lifecycle, which means Metadata reaching Activated does not imply that Recommendations has been activated too. The Runtime coordinates lifecycle while capabilities participate in it independently, so one capability should never activate another.
 
 ---
 
 # Execution Isolation
 
-Every capability executes independently.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Worker A"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Worker B"]
-
-N1 --> N2
-```
-
-Execution failure within one capability should not directly affect unrelated capability execution.
-
-The Worker Manager and Execution Engine cooperate to preserve this separation.
+Every capability executes independently, so Metadata may run on Worker A while Playback runs on Worker B. Execution failure within one capability should not directly affect unrelated capability execution, and the Worker Manager and Execution Engine cooperate to preserve this separation.
 
 ---
 
 # Failure Isolation
 
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Metadata Capability"]
-N2["Failure"]
-
-N1 --> N2
-```
-
-The Runtime should ensure:
-
-- Playback continues.
-- Library continues.
-- Authentication continues.
-
-Failure should remain local.
-
-System-wide failure should be exceptional.
-
-This principle of fault isolation is a cornerstone of resilient module and microkernel architectures. ([docs.aws.amazon.com](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/bulkhead.html))
+Suppose the Metadata Capability experiences a failure. The Runtime should ensure that Playback continues, that Library continues and that Authentication continues; failure should remain local, and system-wide failure should be exceptional. This principle of fault isolation is a cornerstone of resilient module and microkernel architectures. ([docs.aws.amazon.com](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/bulkhead.html))
 
 ---
 
@@ -193,393 +99,97 @@ They should never depend upon:
 - private APIs
 - other Module packages
 
-Dependencies should remain explicit and manifest-driven.
-
-Modules never communicate directly with one another.
-
-They register capabilities.
-
-The Platform owns capability orchestration.
+Dependencies should remain explicit and manifest-driven. Modules never communicate directly with one another; they register capabilities, and the Platform owns capability orchestration.
 
 ---
 
 # Contract Isolation
 
-Capabilities communicate through contracts.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata Capability"]
-N2["MetadataProvider"]
-N3["Playback Capability"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Playback depends upon:
-
-```
-
-MetadataProvider
-```
-
-It does not depend upon:
-
-```
-
-TMDB Implementation
-```
-
-Contract isolation allows implementations to evolve independently.
+Capabilities communicate through contracts, so the Playback Capability depends upon the `MetadataProvider` contract exposed by the Metadata Capability rather than upon the `TMDB Implementation` sitting behind it. Contract isolation allows implementations to evolve independently.
 
 ---
 
 # Event Isolation
 
-Events reinforce capability isolation.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["Runtime"]
-N3["Recommendation Capability"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Playback does not know:
-
-- who subscribed
-- what happened afterwards
-
-Events communicate business facts.
-
-The Runtime provides delivery.
-
-Capabilities remain autonomous.
+Events reinforce capability isolation, because a capability raising `PlaybackCompleted` hands it to the Runtime without learning that a Recommendation Capability consumed it. Playback knows neither who subscribed nor what happened afterwards. Events communicate business facts, the Runtime provides delivery, and capabilities remain autonomous.
 
 ---
 
 # State Isolation
 
-Each capability owns its own business state.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Watch Progress"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Artwork"]
-
-N1 --> N2
-```
-
-Playback should never modify Metadata storage directly.
-
-Communication occurs through:
-
-- contracts
-- events
-
-Never shared persistence.
-
-This aligns with the ownership principles established in [MEG-003](../meg-003-domain-driven-design/index.md).
+Each capability owns its own business state: Playback owns Watch Progress, while Metadata owns Artwork. Playback should therefore never modify Metadata storage directly, since communication occurs through contracts and events rather than shared persistence. This aligns with the ownership principles established in [MEG-003](../meg-003-domain-driven-design/index.md).
 
 ---
 
 # Storage Isolation
 
-Capabilities should not share persistence implementation.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Update Metadata Table"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["Runtime"]
-N3["Metadata Reacts"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Storage ownership follows capability ownership.
+Capabilities should not share persistence implementation. It is poor practice for Playback to update the Metadata table itself; instead Playback raises `PlaybackCompleted`, the Runtime delivers it, and Metadata reacts. Storage ownership follows capability ownership.
 
 ---
 
 # Configuration Isolation
 
-Capabilities consume only their own configuration.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Reads Playback Configuration"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Own Configuration"]
-
-N1 --> N2
-```
-
-Shared configuration creates hidden dependencies.
-
-The Runtime should inject configuration independently.
+Capabilities consume only their own configuration. It is poor practice for Metadata to read Playback configuration, and preferable for Metadata to read its own, because shared configuration creates hidden dependencies. The Runtime should inject configuration independently.
 
 ---
 
 # Permission Isolation
 
-Permissions are capability specific.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["blob.read"]
-
-N1 --> N2
-```
-
-does not imply:
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["blob.read"]
-
-N1 --> N2
-```
-
-Authority should remain local to the capability requesting it.
-
-Permission isolation complements execution isolation.
+Permissions are capability specific, so granting Metadata the `blob.read` permission does not imply that Playback also holds `blob.read`. Authority should remain local to the capability requesting it, which makes permission isolation a complement to execution isolation.
 
 ---
 
 # Runtime Isolation
 
-Capabilities should remain unaware of:
-
-- worker identity
-- scheduler implementation
-- queue topology
-- execution engine
-
-The Runtime remains infrastructure.
-
-Capabilities consume Runtime services.
-
-They never manage them.
+Capabilities should remain unaware of worker identity, scheduler implementation, queue topology and the execution engine. The Runtime remains infrastructure: capabilities consume Runtime services, and they never manage them.
 
 ---
 
 # SDK Isolation
 
-Modules interact only with the SDK.
-
-They should never import:
-
-- Runtime internals
-- Kernel implementation
-- Runtime Services
-
-The SDK forms the isolation boundary between Runtime evolution and module stability.
+Modules interact only with the SDK, and should never import Runtime internals, Kernel implementation or Runtime Services. The SDK forms the isolation boundary between Runtime evolution and module stability.
 
 ---
 
 # Resource Isolation
 
-Capabilities consume Runtime resources.
-
-They do not own them.
-
-Examples include:
-
-- workers
-- memory
-- scheduling
-- connections
-
-The Runtime may:
-
-- limit
-- prioritise
-- reclaim
-
-resources independently of capability implementation.
-
-No capability should monopolise shared Runtime resources.
+Capabilities consume Runtime resources such as workers, memory, scheduling and connections, but they do not own them. The Runtime may limit, prioritise or reclaim those resources independently of capability implementation, so no capability should monopolise shared Runtime resources.
 
 ---
 
 # Upgrade Isolation
 
-Capabilities should upgrade independently.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Version 2.1"]
-
-N1 --> N2
-```
-
-should not require:
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Upgrade"]
-
-N1 --> N2
-```
-
-unless an explicit dependency requires it.
-
-Version coupling should remain intentional.
-
-Not accidental.
+Capabilities should upgrade independently, which means moving Metadata to Version 2.1 should not require Playback to upgrade unless an explicit dependency requires it. Version coupling should remain intentional rather than accidental.
 
 ---
 
 # Module Isolation
 
-Third-party modules should remain isolated from:
-
-- Platform implementation
-- other modules
-- Runtime internals
-
-Architecturally.
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["SDK"]
-N3["Module"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Modules communicate with the platform.
-
-Never with one another's private implementation.
+Third-party modules should remain isolated from Platform implementation, from other modules and from Runtime internals. Architecturally the Runtime exposes the SDK and the Module consumes it, so modules communicate with the platform and never with one another's private implementation.
 
 ---
 
 # Security Isolation
 
-Isolation contributes directly to Runtime security.
-
-Even if a module behaves incorrectly:
-
-It should remain constrained by:
-
-- permissions
-- contracts
-- Runtime boundaries
-
-Isolation reduces both accidental and malicious platform impact.
+Isolation contributes directly to Runtime security. Even if a module behaves incorrectly it should remain constrained by permissions, by contracts and by Runtime boundaries, which reduces both accidental and malicious platform impact.
 
 ---
 
 # Operational Isolation
 
-Operational behaviour should also remain isolated.
-
-Examples include:
-
-- logging
-- metrics
-- tracing
-- health
-
-Each capability reports independently.
-
-The Runtime aggregates operational information without coupling implementations.
+Operational behaviour should also remain isolated, including logging, metrics, tracing and health. Each capability reports independently, and the Runtime aggregates operational information without coupling implementations.
 
 ---
 
 # Marketplace Isolation
 
-Marketplace installation should preserve isolation.
-
-Installing:
-
-```
-
-Books Capability
-```
-
-should not modify:
-
-```
-
-Playback Capability
-```
-
-Existing capabilities remain unchanged.
-
-The platform simply gains additional functionality.
-
-This is one of the defining characteristics of a capability-oriented platform.
+Marketplace installation should preserve isolation, so installing a Books Capability should not modify an existing Playback Capability. Existing capabilities remain unchanged and the platform simply gains additional functionality, which is one of the defining characteristics of a capability-oriented platform.
 
 ---
 
 # Diagnostics
 
-The Runtime SHOULD expose:
+The Runtime should expose:
 
 - capability dependencies
 - resource consumption
@@ -639,14 +249,14 @@ Capabilities activating, stopping or restarting one another.
 
 Within Mosaic:
 
-- Capabilities MUST remain operationally isolated.
-- Business state MUST remain capability owned.
-- Communication MUST occur through Runtime contracts or events.
-- Runtime Services MUST preserve execution isolation.
-- Permissions MUST remain capability specific.
-- Configuration MUST remain capability specific.
-- Modules MUST remain independent of Runtime implementation.
-- Failure SHOULD remain local wherever practical.
+- Capabilities must remain operationally isolated.
+- Business state must remain capability owned.
+- Communication must occur through Runtime contracts or events.
+- Runtime Services must preserve execution isolation.
+- Permissions must remain capability specific.
+- Configuration must remain capability specific.
+- Modules must remain independent of Runtime implementation.
+- Failure should remain local wherever practical.
 
 ---
 
@@ -666,23 +276,4 @@ The next chapter introduces **Platform Guidelines**, bringing together the princ
 
 # Summary
 
-Isolation is one of the defining architectural properties of the Mosaic platform.
-
-It allows:
-
-- Platform capabilities
-- first-party modules
-- third-party modules
-
-to coexist within one Runtime while remaining independently evolvable.
-
-By isolating:
-
-- lifecycle
-- execution
-- state
-- permissions
-- configuration
-- failures
-
-the Runtime becomes a stable platform rather than a tightly coupled application.
+Isolation is one of the defining architectural properties of the Mosaic platform, because it allows Platform capabilities, first-party modules and third-party modules to coexist within one Runtime while remaining independently evolvable. By isolating lifecycle, execution, state, permissions, configuration and failures, the Runtime becomes a stable platform rather than a tightly coupled application.

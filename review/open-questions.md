@@ -176,6 +176,114 @@ Whether `Runtime` is deliberately Value-Object-only matters, because [MEG-004](.
 
 **Resolution:**
 
+## Q-060 — Who grants a permission, and at which stage?
+
+**Status:** `Open`
+**Where:** [MEG-006 ch09](../docs/engineering/guides/meg-006-module-platform/09-permissions.md), [ch06](../docs/engineering/guides/meg-006-module-platform/06-activation.md), [ch02](../docs/engineering/guides/meg-006-module-platform/02-module-manifest.md)
+**Also:** [MEG-009 ch05](../docs/engineering/guides/meg-009-security-architecture/05-capability-permissions.md)
+
+Three chapters place the grant at three different points. Chapter 09 says the Runtime grants permissions *during* activation, after the manifest is read and validated. Chapter 06 lists "permissions approved" as an activation *prerequisite* and states that if any prerequisite fails "activation must not begin at all". Chapter 09's own guideline list says permissions must be granted *before execution*, which is a third boundary. Chapter 02 requires "permission review before activation" without saying by whom.
+
+The grantor is never named. Chapter 09 mentions human involvement only for *changes* — an added permission requires operator approval — and nothing states whether a first install requires operator consent or whether the Runtime grants declared permissions automatically. MEG-009 chapter 05 draws an explicit `Approval` stage between Validation and Activation that MEG-006 has no counterpart for.
+
+Whether the security model has a human consent gate, and at which stage authority is conferred, is a design fact. Either reading invents the platform's consent model.
+
+**Resolution:**
+
+## Q-061 — What happens when a permission is denied, and can one be revoked?
+
+**Status:** `Open`
+**Where:** [MEG-006 ch09](../docs/engineering/guides/meg-006-module-platform/09-permissions.md), *Permission Enforcement*, *Permission Denial*, *Optional Permissions*
+**Also:** [MEG-009 ch05](../docs/engineering/guides/meg-009-security-architecture/05-capability-permissions.md)
+
+Chapter 09 says that without `blob.read` "the SDK rejects the request", and that the Runtime should provide diagnostics and operator visibility. It never says whether the SDK returns an error the capability can handle, panics, or deactivates the capability. MEG-009 describes a materially different model in which unavailable authority simply does not exist, so the contract is never injected and `ctx.BlobStore()` cannot be called at all.
+
+The activation-time case is equally open: if a manifest declares a permission that is not granted, nothing says whether activation fails or the capability activates with reduced authority. Reduced-authority operation is described only for *optional* dependencies and *optional* permissions.
+
+MEG-006 never mentions **revocation**, while MEG-009 requires it to be immediate and emits `PermissionRevoked` telemetry. Whether a running capability's authority can be withdrawn at all is therefore undecided.
+
+Denial semantics and revocability are runtime behaviour with security consequences and cannot be inferred from the prose.
+
+**Resolution:**
+
+## Q-062 — Three chapters give three different capability lifecycle orders
+
+**Status:** `Open`
+**Where:** [MEG-006 ch03](../docs/engineering/guides/meg-006-module-platform/03-discovery.md), [ch04](../docs/engineering/guides/meg-006-module-platform/04-registration.md), [ch05](../docs/engineering/guides/meg-006-module-platform/05-dependency-resolution.md), [ch06](../docs/engineering/guides/meg-006-module-platform/06-activation.md)
+
+- ch03 *Discovery Before Execution*: Discovery → Validation → Registration → Activation → Execution, with dependency resolution absent entirely.
+- ch03 *Discovery Pipeline* places the Dependency Resolver **inside** discovery, before the build workspace.
+- ch04 *Registration Before Activation*: resolution **after** registration.
+- ch06 *Purpose*: resolution **before** registration. ch05 agrees with ch06, which makes ch04 the outlier.
+
+Chapter 04 itself distinguishes two registrations — build-time manifest admission and Runtime `sdk.Register` — which sit on opposite sides of the build, so ordering resolution against "registration" requires knowing which one each diagram means.
+
+**Resolution:**
+
+## Q-063 — Does Discovery or Registration populate the Capability Registry, and is the SDK Registry the same store?
+
+**Status:** `Open`
+**Where:** [MEG-006 ch03](../docs/engineering/guides/meg-006-module-platform/03-discovery.md), [ch04](../docs/engineering/guides/meg-006-module-platform/04-registration.md)
+
+Chapter 03 says the resulting Capability Registry should be identical regardless of discovery order, and its anti-pattern forbids discovery from modifying Runtime state "beyond the Capability Registry" — implying discovery writes to it — while its *Implicit Registration* anti-pattern simultaneously forbids discovery from registering anything. Chapter 04 states flatly that registration populates the Capability Registry.
+
+Chapter 04 then names two registries. *Runtime Admission* says registration admits the Module into the **SDK registry**, which "holds the result"; *Registry Population* says registration populates the **Capability Registry**, "the Runtime's authoritative source of capability information"; and *Duplicate Registries* prohibits holding capability information anywhere else, which the SDK registry appears to do.
+
+Whether these are one store, two stores, or one feeding the other is an architecture fact — MAC-001 and MEG-005 chapter 14 both use "SDK Registry" — and the "authoritative source" prohibition makes it load-bearing.
+
+**Resolution:**
+
+## Q-064 — The permission manifest has three shapes, one contradicting MIP-002
+
+**Status:** `Open`
+**Where:** [MEG-006 ch09](../docs/engineering/guides/meg-006-module-platform/09-permissions.md), [ch02](../docs/engineering/guides/meg-006-module-platform/02-module-manifest.md), [ch04](../docs/engineering/guides/meg-006-module-platform/04-registration.md)
+**Also:** [MIP-002](../docs/engineering/protocols/mip-002-module-manifest-protocol/index.md)
+
+MIP-002 — which chapter 02 declares authoritative — and chapter 02's own example use a **nested** form (`permissions: network: - graphql.anilist.co`). Chapter 09 uses a **flat string list** plus `network.outbound` as a permission name plus a separate top-level `network: hosts:` block. MEG-009 chapter 05 uses a third form again.
+
+Chapter 09 also introduces `optionalPermissions`, and chapter 05 introduces `optionalDependencies` and `conflicts`, none of which appear in MIP-002. Chapter 02 states that MEG-006 does not restate the manifest contract, yet its example already diverges from MIP-002 by dropping the `events.publishes.public/private` split.
+
+Manifest field shape is MIP-002's contract, so choosing one requires knowing which the parser implements.
+
+**Resolution:**
+
+## Q-065 — Configuration ownership contradicts MEG-005
+
+**Status:** `Open`
+**Where:** [MEG-006 ch10](../docs/engineering/guides/meg-006-module-platform/10-configuration.md), *Live Configuration* and *Configuration Sources*
+**Also:** [MEG-005 ch18](../docs/engineering/guides/meg-005-runtime-architecture/18-configuration-and-secrets.md)
+
+Two incompatible models are described for the same subject:
+
+- **Who decides warm-apply versus restart.** MEG-006 says capabilities should decide whether configuration can be applied dynamically. MEG-005 says the Runtime classifies changes and the Supervisor warms a new generation and switches, with restart as the fallback when a transition is unsafe. This is the direct answer to Q-034's undefined *unsafe* criterion — MEG-006 contradicts it rather than answering it, and supplies no criterion of its own.
+- **Precedence.** MEG-005 gives five levels ending in "explicitly permitted runtime overrides". MEG-006 gives six differently named sources and then says "the Runtime owns precedence between them", which contradicts MEG-005's fixed documented order. MEG-006's "administrative overrides" carries the same defect Q-034 records: no statement of who holds the authority or what may be overridden.
+
+**Resolution:**
+
+## Q-066 — Isolation is guaranteed without a mechanism, inside a single statically linked binary
+
+**Status:** `Open`
+**Where:** [MEG-006 ch12](../docs/engineering/guides/meg-006-module-platform/12-isolation.md), [ch13](../docs/engineering/guides/meg-006-module-platform/13-platform-guidelines.md), [ch16 ADR-001](../docs/engineering/guides/meg-006-module-platform/16-adrs.md)
+
+Chapter 12 asserts that an execution failure in one capability should not affect unrelated capabilities, that the Runtime should ensure Playback continues, and that a misbehaving module remains constrained by permissions, contracts and Runtime boundaries. No mechanism is named anywhere — no panic recovery, goroutine supervision, worker boundary or resource quota. The only support offered is a citation to the AWS bulkhead pattern, which describes pool or process partitioning.
+
+This sits directly against MEG-006's own ADR-001, which makes the product one statically linked Go executable in which Platform code and Module code are both ordinary Go code, with no RPC or process boundary. Either a containment mechanism exists and is unwritten, or these guarantees are weaker than stated.
+
+This is the most consequential entry recorded against MEG-006: the isolation claims are what make third-party modules safe to install.
+
+**Resolution:**
+
+## Q-067 — `CapabilityContext` is declared as fields and used as methods
+
+**Status:** `Open`
+**Where:** [MEG-006 ch08](../docs/engineering/guides/meg-006-module-platform/08-module-sdk.md), *Capability Context* and *Permissions*
+
+The struct embeds `Logger`, `Scheduler`, `Configuration`, `Events` and `Health` as bare type names, but the chapter then accesses them as methods — `ctx.Configuration()`, `ctx.Scheduler()`, `ctx.Events()`, `ctx.Logger()`, `ctx.Health()` — which embedded fields would not provide. The struct and the call sites cannot both be right; both were preserved exactly.
+
+Separately, `ctx.BlobStore()` is used as the worked permissions example but is not among the SDK's listed contracts, models or context members, and `blob.read` is the chapter's only permission string.
+
+**Resolution:**
+
 ---
 
 # Duplication and Ownership
@@ -311,6 +419,67 @@ The same question applies to the glossary, which carries full definitions of Agg
 The chapter defines when to create a decision record and names seven decision areas — Library Is The Core Aggregate, Playback As Independent Context, Metadata Ownership, Continue Watching Model, Recommendation Domain, Media Identity Strategy, Collection Ownership — but contains no decision records, and no `ADR-nnn` identifier appears anywhere in MEG-003. The chapter is 49 lines and was confirmed as a genuine stub rather than padded.
 
 Either these seven decisions were never recorded, or they live somewhere the chapter does not point to. Two of the seven — Continue Watching Model and Recommendation Domain — have no corresponding chapter in MEG-003 modelling them at all, so it is not clear whether they are forward-looking placeholders or references to modelling that was dropped.
+
+MEG-006's equivalent chapter is *not* a stub — it carries four complete records — but has the same shortfall at larger scale: see Q-072.
+
+**Resolution:**
+
+## Q-068 — MEG-006 and MEG-009 both define the capability permission model
+
+**Status:** `Open`
+**Where:** [MEG-006 ch09](../docs/engineering/guides/meg-006-module-platform/09-permissions.md), [MEG-009 ch05](../docs/engineering/guides/meg-009-security-architecture/05-capability-permissions.md)
+
+The two chapters share the epigraph, the least-privilege `blob.read` / `blob.*` example, the `ctx.BlobStore()` enforcement example, the Marketplace justification section, the Permission Evolution triple, the Runtime Visibility question and most anti-patterns. MEG-006 chapter 09 contains no link to MEG-009, and MEG-006's index lists MEG-009 under *future companion specifications* although it is present and Draft.
+
+Where they diverge they diverge substantively — see Q-060, Q-061 and Q-080 — and MEG-009 additionally owns Secrets and Revocation that MEG-006 omits. Deduplicating therefore changes rules rather than wording, and deciding whether a guide chapter or the security architecture owns the model is an authority decision.
+
+**Resolution:**
+
+## Q-069 — MEG-006 chapter 07 restates chapters 03 to 06, and 08 overlaps 14
+
+**Status:** `Open`
+**Where:** [MEG-006 ch07](../docs/engineering/guides/meg-006-module-platform/07-module-lifecycle.md), [ch08](../docs/engineering/guides/meg-006-module-platform/08-module-sdk.md), [ch14](../docs/engineering/guides/meg-006-module-platform/14-developer-platform.md), [ch15](../docs/engineering/guides/meg-006-module-platform/15-test-harness.md)
+
+Chapter 07's Discovery, Registration, Resolution and Activation sections restate chapters 03, 04, 05 and 06 almost stage for stage, framing as lifecycle stages what those chapters own as processes. Its *Upgrade Lifecycle* overlaps chapter 11.
+
+Chapters 08 and 14 duplicate the nine-line `mosaic ...` command list verbatim and both carry a *Manifest Generation* section making related but non-identical claims, with neither deferring to the other. Their prose pointers are mutually consistent — 08 says chapter 14 defines the Developer Platform, 14 says the SDK is one component within it — so the overlap is in the material, not the framing. Chapter 14 also enumerates the harness capability list before correctly deferring to chapter 15.
+
+The same lifecycle stages recur in MEG-005's Supervisor and startup chapters, so the ownership question spans two documents.
+
+**Resolution:**
+
+## Q-070 — MEG-006 cites no MIP at all, while depending on two
+
+**Status:** `Open`
+**Where:** [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md), [references](../docs/engineering/guides/meg-006-module-platform/references.md), [ch02](../docs/engineering/guides/meg-006-module-platform/02-module-manifest.md)
+
+Chapter 02 states that the authoritative manifest contract is [MIP-002](../docs/engineering/protocols/mip-002-module-manifest-protocol/index.md). The index lists only MEG-001 to MEG-005 as required reading, and `references.md` contains no MIP entry whatsoever.
+
+MIP-005 — the Module Adapter Contract Protocol these chapters presuppose — is referenced nowhere in MEG-006 and is itself a published stub with no chapters (Q-019). The adapter contract MEG-006 is built on is therefore both uncited and unwritten.
+
+**Resolution:**
+
+## Q-071 — Two incompatible ADR numbering schemes coexist across the corpus
+
+**Status:** `Open`
+**Where:** [MEG-006 ch16](../docs/engineering/guides/meg-006-module-platform/16-adrs.md), [ch15](../docs/engineering/guides/meg-006-module-platform/15-test-harness.md), MAC-001, MEG-002, MDL-001, MDS-001, MDP-002
+
+MEG-006 uses document-scoped identifiers (`MEG-006 ADR-001` to `ADR-004`), as do MAC-001 and MEG-002. MDL-001 owns a **global** ADR-001 to ADR-004, MDS-001 owns ADR-084 onwards, and MDP-002 owns ADR-163 to ADR-176. MEG-006's four identifiers therefore duplicate MDL-001's numerically.
+
+MEG-006 chapter 15 cites a bare "ADR-004", which under the global scheme resolves to MDL-001's record rather than MEG-006's — so the ambiguity is already producing a wrong reference.
+
+Q-024 records a narrower numbering conflict within the deferred proposals; this entry is the corpus-wide version, and both should be settled together.
+
+**Resolution:**
+
+## Q-072 — Sixteen of MEG-006's twenty decision areas have no record
+
+**Status:** `Open`
+**Where:** [MEG-006 ch16](../docs/engineering/guides/meg-006-module-platform/16-adrs.md), *Decision Areas*
+
+The chapter contains four complete decision records with Context, Decision, Alternatives, Consequences and Implementation Implications, so unlike MEG-003's equivalent it is genuine content. But it lists twenty decision areas and records only four. Manifest-Driven Platform, Permission Model, Capability Lifecycle, Dependency Resolution Strategy, Marketplace Compatibility, Module Isolation and ten others have no record anywhere in the repository.
+
+Several of those unrecorded areas are exactly the subjects this rewrite found to be contradictory or unspecified — Permission Model (Q-060, Q-061), Module Isolation (Q-066), Capability Lifecycle (Q-062) — which suggests the missing records are the reason those chapters disagree.
 
 **Resolution:**
 
@@ -557,6 +726,82 @@ Separately, ch15 *Raise Domain Events* says "That question belongs to the runtim
 
 **Resolution:**
 
+## Q-073 — The manifest has three filenames and two scopes
+
+**Status:** `Open`
+**Where:** [MEG-006 ch02](../docs/engineering/guides/meg-006-module-platform/02-module-manifest.md), [ch03](../docs/engineering/guides/meg-006-module-platform/03-discovery.md), [ch08](../docs/engineering/guides/meg-006-module-platform/08-module-sdk.md), [ch13](../docs/engineering/guides/meg-006-module-platform/13-platform-guidelines.md), [ch14](../docs/engineering/guides/meg-006-module-platform/14-developer-platform.md), [glossary](../docs/engineering/guides/meg-006-module-platform/glossary.md)
+
+Chapter 02 is titled *Module Manifest*, its example is Module-scoped (`id: anilist`), and the glossary makes *Module Manifest* the artefact the Supervisor consumes. But chapters 03 and 13 say every **capability** carries a `capability.yaml`, while chapters 08 and 14 say tooling generates `module.yaml`. "Capability Manifest" is used across six MEG-006 files — including as the first node of chapter 10's normative *Configuration Model* diagram and inside the glossary's own *Capability Descriptor* entry — yet the glossary defines *Manifest* and *Module Manifest* and never *Capability Manifest*.
+
+Whether the declared unit is the Go Module or the capability determines discovery, dependency resolution and the entire composition model. MIP-002 is named as the protocol authority without resolving it, and this cannot be settled editorially.
+
+**Resolution:**
+
+## Q-074 — MEG-006 terms used once in normative text and defined nowhere
+
+**Status:** `Open`
+**Where:** MEG-006 chapters 03, 05, 06, 08, 15
+
+The MEG-006 counterpart to Q-052. Each was confirmed by grep to appear only where cited:
+
+- **capability criticality** — [ch06](../docs/engineering/guides/meg-006-module-platform/06-activation.md) *Partial Platform Activation* says criticality "should be declared within the manifest" so the Runtime can distinguish optional from critical failures. No such field exists in MIP-002. This is the sole mechanism deciding whether an activation failure aborts platform startup.
+- **Registered Module Capability** — ch06 *Purpose* defines activation as the transition from this to an Operational Capability. Neither term is defined for Module capabilities; "Operational Capability" is defined in MEG-005's glossary for Runtime Services.
+- **Composition Root** — ch06 *Capability Construction* has the Runtime construct capabilities "through the Composition Root", used once, unlinked. MEG-004's Composition Root is a whole-application assembly concept, not a per-capability constructor.
+- **Marketplace Cache, Enterprise Repository, Development Workspace** — [ch03](../docs/engineering/guides/meg-006-module-platform/03-discovery.md) *Discovery Sources*, each appearing exactly once in the repository. The chapter says the Module Catalogue derives from "configured discovery sources" without saying who configures them. Whether a Supervisor must implement four source types or one is undecided.
+- **`machine-learning`, `FanArt`, `Local Artwork`, `Local Metadata`** — [ch05](../docs/engineering/guides/meg-006-module-platform/05-dependency-resolution.md), used as concrete capability identifiers in optional-dependency and grouping examples.
+- **TorBox** — [ch15](../docs/engineering/guides/meg-006-module-platform/15-test-harness.md) *Media*, listed beside Jellyfin as a production integration; appears once in the entire repository.
+- **Runtime SDUI** — ch15, listed as a real Platform component that stays real under test. Defined only in MEG-005's glossary and MDS-001/MDS-003; `SDUI` is never expanded anywhere in MEG-006.
+
+**Resolution:**
+
+## Q-075 — Chapter 11 versions five artefacts, none of which is a MIP contract
+
+**Status:** `Open`
+**Where:** [MEG-006 ch11](../docs/engineering/guides/meg-006-module-platform/11-versioning.md)
+
+The chapter mandates a per-capability `version`, a `manifestVersion`, an SDK version constraint, a Runtime version, per-contract versions, and a Runtime/SDK/manifest compatibility matrix. The repository rule, from [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md), is that only the contract a MIP defines carries a version.
+
+Manifest and SDK versions arguably belong to MIP-002 and MIP-004, but chapter 11 never says so and neither MIP declares them. Capability version and Runtime version have no MIP behind them at all. Someone must decide which of these are MIP contract versions, to be declared in the owning MIP, and which are artefact versions outside the rule.
+
+**Resolution:**
+
+## Q-076 — MEG-006's SDK examples carry no real signatures, and MIP-004 is a stub
+
+**Status:** `Open`
+**Where:** [MEG-006 ch08](../docs/engineering/guides/meg-006-module-platform/08-module-sdk.md), throughout
+
+Every SDK call is elided — `Schedule(...)`, `Publish(...)`, `Subscribe(...)`, `Info(...)`, `FindCapability(...)`, `Assert(...)`. This is the same defect Q-015 records for MEG-004, and it has the same cause and a worse consequence here: chapter 08 never cites [MIP-004](../docs/engineering/protocols/mip-004-platform-sdk-contract-protocol/index.md) or MEG-015 at all, and MIP-004 is itself a published stub with no content chapters (Q-019).
+
+The contract this chapter describes therefore has no published owner to defer to. Filling in the signatures requires the actual SDK contract; adding the cross-reference requires deciding that MIP-004 owns it.
+
+**Resolution:**
+
+## Q-077 — The Developer Platform describes tooling with no evidence it exists
+
+**Status:** `Open`
+**Where:** [MEG-006 ch14](../docs/engineering/guides/meg-006-module-platform/14-developer-platform.md)
+
+The chapter alternates between settled-fact phrasing and hedges for the same subject — "The Mosaic CLI **is** the primary developer interface", "The Development Supervisor **owns** the local development lifecycle", against "the exact command syntax may evolve". A reader cannot tell whether `mosaic dev` is runnable today or is being commissioned. Tense was deliberately left unchanged, because changing it changes what the document claims is built.
+
+Three further gaps in the same chapter:
+
+- **Development Supervisor** is called "a development-only Supervisor implementation" while being required to share production orchestration, validation, build invocation, health-check and activation behaviour "wherever practical", and the Anti-Patterns section prohibits a Development Runtime Fork. Whether that means one codebase with a development mode or two implementations kept in sync is the difference between a config flag and a maintenance burden.
+- **"Wherever practical"** is the load-bearing hedge in a must-not-fork chapter, while *Production Fidelity* supplies a precise five-item list of permitted differences. Either the list is exhaustive and the hedge should go, or the hedge is real and the list is illustrative.
+- **`mosaic package` and `mosaic publish`** commit to a six-stage pipeline including Sign And Upload, and to package reproducibility and provenance, while no repository document defines a signing model, a package format or a Module Catalogue protocol. The chapter says as much itself.
+
+**Resolution:**
+
+## Q-078 — Contract exposure and compatibility declaration have no named owner
+
+**Status:** `Open`
+**Where:** [MEG-006 ch17](../docs/engineering/guides/meg-006-module-platform/17-contributor-guidance.md), *Before Exposing Contracts*, *Before Releasing*, *Marketplace Readiness*
+
+The chapter says public Runtime contracts become "long-lived commitments" but never says who approves a capability exposing a new public contract, or where that approval is recorded. *Before Editing The Runtime* names "architectural review" for Runtime changes; whether the same body governs contract exposure is unstated across MEG-006.
+
+Separately, two checklists require compatibility to be "declared". Chapter 11 defines an SDK version, a manifest version and a compatibility matrix, but nothing states which of those a capability author must declare at release and which the Runtime derives. Resolving it would mean inventing a release contract.
+
+**Resolution:**
+
 ---
 
 # Factual and naming defects
@@ -575,24 +820,24 @@ Used once as `ArtworkProvider`; every other mention across the guide is `Artwork
 ## Q-021 — Stale repository trees describing a layout that no longer exists
 
 **Status:** `Open`
-**Where:** [MEG-004 index](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md), [MEG-005 index](../docs/engineering/guides/meg-005-runtime-architecture/index.md), both *Repository Structure*
+**Where:** [MEG-004 index](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md), [MEG-005 index](../docs/engineering/guides/meg-005-runtime-architecture/index.md), [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md), [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md), all *Repository Structure*
 
 The tree names `README.md` as the folder's landing file; the real file is `index.md`. The folder path shown, `engineering/meg/MEG-004 Hexagonal Architecture/`, does not match the real `docs/engineering/guides/meg-004-hexagonal-architecture/`.
 
 Preserved verbatim under the no-invention rule. Other specifications may carry the same stale tree.
 
-MEG-005 and MEG-003 confirm this is a pattern rather than a one-off. Each shows `engineering/meg/<Document Title>/` containing `README.md`, with the same two defects, while the chapter filenames they list are correct. Only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
+MEG-005, MEG-003 and MEG-006 confirm this is a pattern rather than a one-off. Each shows `engineering/meg/<Document Title>/` containing `README.md`, with the same two defects, while the chapter filenames they list are correct. Only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
 
 **Resolution:**
 
 ## Q-022 — MDP-001 listed twice with an identical label
 
 **Status:** `Open`
-**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md), [MEG-003 references](../docs/engineering/guides/meg-003-domain-driven-design/references.md)
+**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md), [MEG-003 references](../docs/engineering/guides/meg-003-domain-driven-design/references.md), [MEG-006 references](../docs/engineering/guides/meg-006-module-platform/references.md)
 
 Listed once pointing at `index.md` and once at `14-adaptive-tile-model.md`, both labelled "MDP-001 — Adaptive Composition Runtime". The second entry needs a distinguishing label.
 
-All three guides carry the identical pair, so the fix should be applied to each. All three also file MDP-001 under a *Mosaic Design Specifications* heading although it lives under `docs/engineering/architecture/` — see Q-040, which records that alongside the MEG-005 glossary defects.
+All four guides carry the identical pair, so the fix should be applied to each. All three also file MDP-001 under a *Mosaic Design Specifications* heading although it lives under `docs/engineering/architecture/` — see Q-040, which records that alongside the MEG-005 glossary defects.
 
 **Resolution:**
 
@@ -682,7 +927,7 @@ All were preserved verbatim. Someone should confirm each source is real and cita
 
 Four small defects, each changing meaning rather than wording, so none were fixed:
 
-- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`. MEG-003 and MEG-004 file it the same way, so this is a corpus-wide misfiling rather than a MEG-005 slip.
+- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`. MEG-003, MEG-004 and MEG-006 file it the same way, so this is a corpus-wide misfiling rather than a MEG-005 slip. MEG-006's list also omits MDS-006 and MDS-007, which exist on disk, while including MDS-008.
 - MDS-006 and MDS-007 exist in the repository but are absent from that list, while MDS-008 is present.
 - The glossary defines both *Kernel* and *Runtime Kernel* for what appears to be the same component, with overlapping but non-identical content — the *Kernel* entry carries the microkernel comparison and its citation, the *Runtime Kernel* entry carries the small, stable and business-agnostic list. Merging them would drop or relocate a citation.
 - *Recovery UI* refers to "the embedded recovery renderer" in lower case, while Embedded Recovery Renderer is defined elsewhere as a capitalised proper noun.
@@ -691,14 +936,16 @@ See also Q-022, which covers the duplicated MDP-001 entry in the same file.
 
 **Resolution:**
 
-## Q-041 — "Version 0.4" refers to a version MEG-005 does not declare
+## Q-041 — Unanchored version numbers in Document Control
 
 **Status:** `Open`
-**Where:** [MEG-005 ch00](../docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md), *Purpose*
+**Where:** [MEG-005 ch00](../docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md), [MEG-006 ch00](../docs/engineering/guides/meg-006-module-platform/00-document-control.md), both *Purpose*
 
 "Version 0.4 records the Supervisor Build Pipeline as an isolated runtime composition and activation flow." MEG-005 declares no version anywhere, and CLAUDE.md forbids a `Version:` metadata field, so the number refers to nothing. Under [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) only the contract a MIP defines carries a version.
 
-The sentence is presumably a leftover from a versioned draft, but deleting it would remove a statement about what the document covers.
+MEG-006 carries the identical construction — "Version 0.8 defines the Test Harness as a deterministic suite of development-only Modules" — so this is a pattern rather than a slip.
+
+The sentences are presumably leftovers from versioned drafts, but deleting them would remove the only statement of what each revision covers.
 
 **Resolution:**
 
@@ -730,14 +977,16 @@ Each of these is small, each changes meaning, and none were normalised:
 
 **Resolution:**
 
-## Q-058 — MEG-003 misstates the publication state of MEG-004
+## Q-058 — Published specifications listed as planned or future
 
 **Status:** `Open`
-**Where:** [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md), *Dependencies*; [references](../docs/engineering/guides/meg-003-domain-driven-design/references.md), *Planned Engineering Specifications*
+**Where:** [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md) and [references](../docs/engineering/guides/meg-003-domain-driven-design/references.md); [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md) and [references](../docs/engineering/guides/meg-006-module-platform/references.md)
 
 Both lists describe MEG-004 as future or planned. [MEG-004](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md) is published, and is the calibration reference this rewrite is measured against. The index also lists MEG-006 before MEG-005.
 
-Correcting it means knowing the real Status of every MEG in the list, which is a lifecycle question governed by [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) rather than an editorial one.
+MEG-006 has the same defect at larger scale: MEG-007, MEG-008, MEG-009 and MEG-010 are each full multi-chapter specifications on disk with `Status: Draft`, yet `references.md` lists all four as planned, while the index lists three as future and omits MEG-010 entirely. MEG-006 chapter 09 depends on MEG-009 in substance (Q-068) while its index calls MEG-009 future.
+
+Correcting it means knowing the real Status of every MEG in each list, which is a lifecycle question governed by [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) rather than an editorial one.
 
 **Resolution:**
 
@@ -750,9 +999,50 @@ The aggregate-root article is cited with the link text "Baeldung on Kotlin", whi
 
 **Resolution:**
 
----
+## Q-079 — MEG-006 diagrams contradict the prose beside them
 
-# Resolved
+**Status:** `Open`
+**Where:** MEG-006 chapters 03, 04, 05, 06, 08, 12, index, 00
+
+The MEG-006 counterpart to Q-017, Q-037 and Q-056, and the largest instance so far:
+
+- [ch05](../docs/engineering/guides/meg-006-module-platform/05-dependency-resolution.md) *Capability Graph* draws `Library → Metadata → Playback → Recommendations` directly beneath prose stating that Recommendations depends on Playback and Playback on Metadata — the exact opposite — and inserts Library, which no prose claims. [ch06](../docs/engineering/guides/meg-006-module-platform/06-activation.md) *Activation Order* reuses the identical chain and reads it as execution sequence, so the two chapters use one diagram for two incompatible relations. MEG-006 never states its own arrow convention, although MEG-005 chapter 05 states one explicitly (Q-026). ch05's *Multiple Providers* and *Capability Groups* use arrows for a third relation again.
+- [ch08](../docs/engineering/guides/meg-006-module-platform/08-module-sdk.md) *Dependency Direction* drew `Modules → Mosaic SDK → Platform` beneath prose saying both depend on the SDK and neither on the other. The diagram was deleted under the two-and-three-node rule, which incidentally removed the contradiction; if the intended shape is a fan-in it should be reinstated deliberately.
+- [ch04](../docs/engineering/guides/meg-006-module-platform/04-registration.md) *Runtime Visibility* introduces a fan-out with "Examples include:" and then draws the four Runtime Services as one dependency chain.
+- [ch03](../docs/engineering/guides/meg-006-module-platform/03-discovery.md) *Capability Descriptor* draws a composition as a sequence.
+- [ch12](../docs/engineering/guides/meg-006-module-platform/12-isolation.md) *Isolation Layers* draws seven independent dimensions as a linear pipeline, directly beneath prose calling them independent.
+- The index and ch00 both draw one chain alternating document identifiers with concept names, as MEG-004 and MEG-005 do (Q-023, Q-037). The ch00 variant additionally asserts `MDL → MDS → MEG-001`, a dependency of the Go standards on the Design System that nothing records.
+
+**Resolution:**
+
+## Q-080 — Naming inconsistencies within MEG-006
+
+**Status:** `Open`
+**Where:** MEG-006 chapters 01, 03, 04, 09, 11, 14, glossary
+
+- **Module Descriptor / Capability Descriptor** — ch03's section heading, body text, diagram node and guideline use both for one artefact. The glossary defines only *Capability Descriptor*; "Module Descriptor" is defined nowhere.
+- **`logging.write` / `logs.write`** and **`trace.write` / `traces.create`** — ch09 uses the first of each pair, MEG-009 the second. `logging.write` appears nowhere else in the repository. Permission strings are an enforced identifier space. ch09's category set also differs from MEG-009's by one category each way, with neither document mentioning the other.
+- **Platform Contract / Runtime Contract** — the glossary defines both, nothing distinguishes them, and the chapters use them interchangeably. *Manifest* and *Module Manifest* overlap the same way (see Q-073).
+- **Runtime / Platform Binary** — ch01 says the Platform Binary changes while the Runtime foundation does not, then says the final Runtime is a single statically linked executable, which makes them the same object.
+- **Web Shell / Shell** — ch14 uses both with no cross-reference to an owning document and no glossary entry.
+- **"Capabilities remain independently deployable"** — ch01 *Mosaic Principles*, against the same chapter's statements that Modules are statically linked and that adding a capability requires a new Platform package. The principle may mean independently *composable*.
+
+**Resolution:**
+
+## Q-081 — MEG-006 citations are mangled or point at unrelated projects
+
+**Status:** `Open`
+**Where:** [MEG-006 ch09](../docs/engineering/guides/meg-006-module-platform/09-permissions.md), [ch05](../docs/engineering/guides/meg-006-module-platform/05-dependency-resolution.md), [ch06](../docs/engineering/guides/meg-006-module-platform/06-activation.md), [ch00](../docs/engineering/guides/meg-006-module-platform/00-document-control.md), [index](../docs/engineering/guides/meg-006-module-platform/index.md), [references](../docs/engineering/guides/meg-006-module-platform/references.md)
+
+Two distinct defects, both affecting load-bearing claims.
+
+**URLs mangled by the Extension → Module terminology mapping.** Two Chrome citations point at `developer.chrome.com/docs/modules/...` and `developer.chrome.com/modules/manifest`. The real path is `extensions`, so both links are probably dead. The MDN citation in the same chapter still contains `WebExtensions`, so the substitution was applied inconsistently. This is Q-038's defect applied to external URLs, and raises the same question: does the terminology mapping apply to external terms of art?
+
+**Sources that are not recognisable authorities.** Three separate normative claims in ch05 — topological sort with cycle detection, conflict validation before load order, and incremental resolution — all cite the same URL, the API documentation of an Elixir terminal-UI library's plugin resolver. ch06's readiness/initialisation separation cites a generated wiki page for a personal VS Code extension. `references.md` further carries a "GitHub" label pointing at a non-GitHub domain, an "arc42 Quality Model" label pointing at a plugin-architecture page, and four citations to domains corresponding to no recognisable standards body, vendor or textbook — unlike the `semver.org`, `go.dev` and `docs.aws.amazon.com` citations used elsewhere in the same chapters. None appear in `references.md`.
+
+Same class as Q-039; each should be confirmed real and citable or substituted.
+
+**Resolution:**
 
 Entries move here once applied, with their original number.
 

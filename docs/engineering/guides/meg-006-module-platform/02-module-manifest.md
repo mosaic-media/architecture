@@ -12,11 +12,7 @@ Status: Draft
 
 # Purpose
 
-MEG-006 explains how engineers build the Module Platform.
-
-The authoritative manifest contract is defined by **[MIP-002 — Module Manifest Protocol](../../protocols/mip-002-module-manifest-protocol/index.md)**.
-
-This chapter describes the engineering implications of that protocol.
+MEG-006 explains how engineers build the Module Platform, and that work begins with the manifest. The authoritative manifest contract is defined by **[MIP-002 — Module Manifest Protocol](../../protocols/mip-002-module-manifest-protocol/index.md)**, so this chapter does not restate it and instead describes the engineering implications of that protocol.
 
 ---
 
@@ -43,17 +39,9 @@ N5 --> N6
 N6 --> N7
 ```
 
-The Supervisor should not execute or analyse Go source to discover identity, dependencies, permissions or contracts.
+The Supervisor should not execute or analyse Go source to discover identity, dependencies, permissions or contracts, because the manifest is the Supervisor's primary source of truth.
 
-The manifest is the Supervisor's primary source of truth.
-
-SDK or CLI tooling may generate the manifest from Go Module definitions during development.
-
-Once generated, the manifest remains the build-time contract consumed by the Supervisor.
-
-Generated manifests must be validated the same way as hand-authored manifests.
-
-Tooling convenience must not turn executable Module code into the Supervisor's discovery source.
+SDK or CLI tooling may generate the manifest from Go Module definitions during development, but once generated the manifest remains the build-time contract consumed by the Supervisor. Generated manifests must therefore be validated the same way as hand-authored manifests, because tooling convenience must not turn executable Module code into the Supervisor's discovery source.
 
 ---
 

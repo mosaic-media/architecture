@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-This glossary defines the terminology used throughout the Mosaic Module Platform.
-
-These definitions establish the canonical vocabulary for:
+This glossary defines the terminology used throughout the Mosaic Module Platform. These definitions establish the canonical vocabulary for:
 
 - Runtime documentation
 - SDK documentation
@@ -41,9 +39,7 @@ Activation occurs only after:
 - permission validation
 - configuration validation
 
-Activation is owned by the Runtime.
-
-Not the capability.
+Activation is owned by the Runtime, not by the capability.
 
 ---
 
@@ -53,9 +49,7 @@ Not the capability.
 
 The process responsible for producing Platform packages from the Platform foundation, selected Modules, SDK contracts and validated configuration.
 
-The Supervisor invokes the Build Pipeline.
-
-The Build Pipeline updates the temporary `go.mod`, generates imports and builds the Platform Binary.
+The Supervisor invokes the Build Pipeline, which updates the temporary `go.mod`, generates imports and builds the Platform Binary.
 
 ---
 
@@ -86,21 +80,13 @@ Examples include:
 - Artwork Manager
 - Search Manager
 
-Capability Managers discover providers, build routing tables, apply policies, merge responses, cache results and perform fallback.
-
-Modules provide implementations.
-
-The Platform owns orchestration.
+Capability Managers discover providers, build routing tables, apply policies, merge responses, cache results and perform fallback. Modules provide implementations; the Platform owns orchestration.
 
 ---
 
 ## Capability Descriptor
 
-The Runtime's internal representation of a capability.
-
-A Capability Descriptor is created from the Capability Manifest during discovery.
-
-It contains:
+The Runtime's internal representation of a capability, created from the Capability Manifest during discovery. It contains:
 
 - identity
 - metadata
@@ -114,9 +100,7 @@ The Supervisor uses descriptors during manifest admission and dependency resolut
 
 ## Module Manifest
 
-The machine-readable contract describing what a Module contributes to Mosaic.
-
-The manifest declares:
+The machine-readable contract describing what a Module contributes to Mosaic. The manifest declares:
 
 - identity
 - version
@@ -128,9 +112,7 @@ The manifest declares:
 - contracts
 - events
 
-The Supervisor consumes Module manifests before the Build Pipeline includes Module code in a Platform package.
-
-Manifest-driven platforms separate metadata from implementation, enabling validation before activation.  [chromium.googlesource.com](https://chromium.googlesource.com/chromium/src/%2B/HEAD/modules/docs/overview.md)
+The Supervisor consumes Module manifests before the Build Pipeline includes Module code in a Platform package, because manifest-driven platforms separate metadata from implementation and so enable validation before activation.  [chromium.googlesource.com](https://chromium.googlesource.com/chromium/src/%2B/HEAD/modules/docs/overview.md)
 
 ---
 
@@ -141,9 +123,7 @@ A stable interface exposed by either:
 - the Runtime
 - another capability
 
-Capabilities depend upon contracts.
-
-Never implementations.
+Capabilities depend upon contracts, never upon implementations.
 
 ---
 
@@ -153,17 +133,13 @@ Never implementations.
 
 The complete Mosaic ecosystem for creating, running, testing, validating, packaging and publishing Modules.
 
-The Developer Platform includes the Mosaic SDK, Mosaic CLI, Development Supervisor, Development Platform, Test Harness Modules and related tooling.
-
-The SDK is one component of the Developer Platform.
+The Developer Platform includes the Mosaic SDK, Mosaic CLI, Development Supervisor, Development Platform, Test Harness Modules and related tooling, so the SDK is one component of the Developer Platform rather than a synonym for it.
 
 ---
 
 ## Development Platform
 
-The real Mosaic Platform running in a development configuration with local Modules, development diagnostics and optional Test Harness Modules.
-
-It is not a mock or fork of the production Platform.
+The real Mosaic Platform running in a development configuration with local Modules, development diagnostics and optional Test Harness Modules. It is not a mock or fork of the production Platform.
 
 ---
 
@@ -171,11 +147,7 @@ It is not a mock or fork of the production Platform.
 
 A development-only Supervisor implementation that watches local sources and orchestrates temporary development Platform builds using the same static composition model as production.
 
-It exists for local feedback.
-
-It must not introduce runtime plugin loading.
-
-It should reuse production Supervisor orchestration and activation behaviour wherever practical.
+It exists for local feedback and must not introduce runtime plugin loading, and it should reuse production Supervisor orchestration and activation behaviour wherever practical.
 
 ---
 
@@ -194,11 +166,7 @@ Dependency Resolution produces the Capability Graph used for activation.
 
 ## Discovery
 
-The Supervisor process responsible for locating Module manifests.
-
-Discovery operates entirely upon metadata.
-
-No executable code should run during discovery.
+The Supervisor process responsible for locating Module manifests. Discovery operates entirely upon metadata, so no executable code should run during discovery.
 
 ---
 
@@ -206,13 +174,7 @@ No executable code should run during discovery.
 
 ## Generated Imports
 
-The single Go file generated by the Build Pipeline to blank-import selected Modules.
-
-Generated imports trigger each Module package's `init()` registration.
-
-No other generated integration code should be required.
-
-Generated Imports must not define Capability Managers, routing policy, event handlers, GraphQL resolvers or business logic.
+The single Go file generated by the Build Pipeline to blank-import selected Modules. Generated imports trigger each Module package's `init()` registration, and no other generated integration code should be required. Generated Imports must not define Capability Managers, routing policy, event handlers, GraphQL resolvers or business logic.
 
 ---
 
@@ -220,13 +182,7 @@ Generated Imports must not define Capability Managers, routing policy, event han
 
 A normal Go library that implements the Mosaic SDK and contributes one or more capabilities.
 
-Within Mosaic:
-
-Platform capabilities and third-party modules are architecturally equivalent.
-
-Modules are statically linked into the Platform Binary.
-
-They are not:
+Within Mosaic, Platform capabilities and third-party modules are architecturally equivalent, and Modules are statically linked into the Platform Binary. They are not:
 
 - runtime plugins
 - dynamic libraries
@@ -275,11 +231,7 @@ Isolation applies to:
 
 ## Local Module
 
-A Module under active development that is included in an isolated development build from a local filesystem path.
-
-Local Modules do not require remote catalogue publication for development.
-
-They are still statically composed into the Development Platform.
+A Module under active development that is included in an isolated development build from a local filesystem path. Local Modules do not require remote catalogue publication for development, but they are still statically composed into the Development Platform.
 
 ---
 
@@ -287,33 +239,19 @@ They are still statically composed into the Development Platform.
 
 ## Manifest
 
-A machine-readable metadata document describing a module or capability.
-
-Within Mosaic, the Module Manifest is the authoritative source of Module metadata.
-
-The Supervisor validates manifests before invoking the Build Pipeline.
+A machine-readable metadata document describing a module or capability. Within Mosaic the Module Manifest is the authoritative source of Module metadata, and the Supervisor validates manifests before invoking the Build Pipeline.
 
 ---
 
 ## Manifest Generation
 
-SDK or CLI tooling that derives a Module manifest from Go Module definitions.
-
-Manifest generation improves developer ergonomics and reduces metadata drift.
-
-The generated manifest remains the artefact consumed and validated by the Supervisor.
+SDK or CLI tooling that derives a Module manifest from Go Module definitions. Manifest generation improves developer ergonomics and reduces metadata drift, and the generated manifest remains the artefact consumed and validated by the Supervisor.
 
 ---
 
 ## Module Catalogue
 
-The metadata-only view of Modules available from configured discovery sources.
-
-The Supervisor queries the Module Catalogue to generate onboarding choices from Module manifests.
-
-Catalogue presence means a Module is discoverable.
-
-It does not mean the Module has passed admission, dependency resolution, compatibility validation or activation.
+The metadata-only view of Modules available from configured discovery sources. The Supervisor queries the Module Catalogue to generate onboarding choices from Module manifests. Catalogue presence means a Module is discoverable; it does not mean the Module has passed admission, dependency resolution, compatibility validation or activation.
 
 ---
 
@@ -334,9 +272,7 @@ Marketplace behaviour should follow Runtime architecture rather than redefine it
 
 The primary developer tool that scaffolds, develops, validates, builds, tests, packages, publishes and documents Modules around the SDK contract.
 
-The CLI owns developer workflow.
-
-The SDK owns developer contract.
+The CLI owns developer workflow; the SDK owns developer contract.
 
 ---
 
@@ -344,40 +280,13 @@ The SDK owns developer contract.
 
 ## Permission
 
-An explicitly declared authority granted to a capability.
-
-Examples include:
-
-```
-
-blob.read
-```
-
-```
-
-scheduler.use
-```
-
-```
-
-network.outbound
-```
-
-Permissions are:
-
-- declared
-- validated
-- granted
-
-They are never assumed.
+An explicitly declared authority granted to a capability, such as `blob.read`, `scheduler.use` or `network.outbound`. Permissions are declared, validated and granted; they are never assumed.
 
 ---
 
 ## Platform Contract
 
-A stable Runtime API exposed through the SDK.
-
-Platform contracts evolve more slowly than Runtime implementation.
+A stable Runtime API exposed through the SDK. Platform contracts evolve more slowly than Runtime implementation.
 
 ---
 
@@ -385,11 +294,7 @@ Platform contracts evolve more slowly than Runtime implementation.
 
 ## Registration
 
-The Runtime startup process that admits a statically linked Module into the SDK registry.
-
-Registration records Module metadata and capability declarations.
-
-It must not start work, perform I/O or activate executable behaviour.
+The Runtime startup process that admits a statically linked Module into the SDK registry. Registration records Module metadata and capability declarations, but it must not start work, perform I/O or activate executable behaviour.
 
 ---
 
@@ -404,9 +309,7 @@ Examples include:
 - Events
 - Logging
 
-Capabilities consume Runtime contracts.
-
-They do not consume Runtime implementation.
+Capabilities consume Runtime contracts, not Runtime implementation.
 
 ---
 
@@ -419,15 +322,9 @@ The official programming interface between:
 - Runtime
 - capabilities
 
-The SDK is the public contract language between the Platform and Modules.
+The SDK is the public contract language between the Platform and Modules. It exposes stable contracts while hiding Runtime implementation, which is why Module authors should depend only upon the SDK.
 
-The SDK exposes stable contracts while hiding Runtime implementation.
-
-Module authors should depend only upon the SDK.
-
-The SDK includes interfaces, models, event contracts, registration APIs, helper utilities and a testing framework.
-
-The SDK is not the Platform and should not contain business logic or Platform implementation.
+The SDK includes interfaces, models, event contracts, registration APIs, helper utilities and a testing framework. It is not the Platform, and should not contain business logic or Platform implementation.
 
 ---
 
@@ -435,15 +332,13 @@ The SDK is not the Platform and should not contain business logic or Platform im
 
 A public interface, model, event envelope, registration API or permission contract exposed by the SDK.
 
-The Platform implements SDK contracts.
+The Platform implements SDK contracts; Modules satisfy them.
 
-Modules satisfy SDK contracts.
+---
 
 ## Scenario Profile
 
-A proposed versioned selection of Test Harness datasets, personas, provider states, deterministic failures and event schedules.
-
-Scenario Profiles are deferred until a scenario schema and compatibility policy are specified.
+A proposed versioned selection of Test Harness datasets, personas, provider states, deterministic failures and event schedules. Scenario Profiles are deferred until a scenario schema and compatibility policy are specified.
 
 ---
 
@@ -451,15 +346,9 @@ Scenario Profiles are deferred until a scenario schema and compatibility policy 
 
 ## Test Harness Module
 
-A development-only Module that provides deterministic implementations of common Platform capabilities through normal SDK contracts.
+A development-only Module that provides deterministic implementations of common Platform capabilities through normal SDK contracts, such as Metadata, Media, Artwork, Authentication and Events. Test Harness Modules support integration testing against a real development Platform, but they should not become hidden production behaviour.
 
-Examples include Metadata, Media, Artwork, Authentication and Events.
-
-Test Harness Modules support integration testing against a real development Platform.
-
-They should not become hidden production behaviour.
-
-They participate in normal manifest discovery, static composition, registration, lifecycle, routing and permission enforcement.
+Because they are ordinary Modules, they participate in normal manifest discovery, static composition, registration, lifecycle, routing and permission enforcement.
 
 ---
 
@@ -494,9 +383,7 @@ Compatibility is determined before activation.
 
 # Relationship to MEG-006
 
-This glossary supports every document within the Module Platform specification.
-
-Definitions should remain consistent across:
+This glossary supports every document within the Module Platform specification, so definitions should remain consistent across:
 
 - Runtime documentation
 - SDK documentation
@@ -504,4 +391,4 @@ Definitions should remain consistent across:
 - Capability manifests
 - Architecture specifications
 
-Whenever platform terminology evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
+Whenever platform terminology evolves, this glossary should be updated before introducing new terminology elsewhere.

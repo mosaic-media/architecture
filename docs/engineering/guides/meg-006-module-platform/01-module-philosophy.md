@@ -12,26 +12,7 @@ Status: Draft
 
 # Purpose
 
-Traditional software grows by modifying the Platform foundation.
-
-Every new feature requires:
-
-- new services
-- new modules
-- new dependencies
-- new deployment
-
-Over time, the Platform foundation becomes increasingly complex.
-
-Mosaic intentionally rejects this approach.
-
-Instead:
-
-The Runtime remains small.
-
-The platform grows by adding capabilities.
-
-This document establishes the architectural philosophy behind the Mosaic Module Platform.
+Traditional software grows by modifying the Platform foundation. Every new feature requires new services, new modules, new dependencies and new deployment, so the foundation becomes increasingly complex as the product succeeds. Mosaic intentionally rejects this approach: the Runtime remains small, and the platform grows by adding capabilities rather than by enlarging the thing that runs them. This document establishes the architectural philosophy behind the Mosaic Module Platform.
 
 ---
 
@@ -41,38 +22,15 @@ Within Mosaic:
 
 > **The Platform evolves through build-time capability composition, not through Runtime plugin loading.**
 
-Every new business feature should ideally be introduced by:
+Every new business feature should ideally be introduced by adding a capability, registering it and allowing the Runtime to execute it, rather than by modifying the Runtime itself. The Runtime should therefore become increasingly capable without becoming increasingly complicated.
 
-- adding a capability
-- registering it
-- allowing the Runtime to execute it
-
-Rather than modifying the Runtime itself.
-
-The Runtime should become increasingly capable without becoming increasingly complicated.
-
-Mosaic does not support runtime plugins.
-
-Modules are ordinary Go libraries that are statically linked into a Platform Binary.
-
-Mosaic also does not use RPC between local Modules.
-
-Local Module collaboration occurs through Platform capabilities, Capability Managers and the Event Bus.
+Mosaic consequently does not support runtime plugins, because Modules are ordinary Go libraries that are statically linked into a Platform Binary. Nor does Mosaic use RPC between local Modules, since local Module collaboration occurs through Platform capabilities, Capability Managers and the Event Bus.
 
 ---
 
 # Why Modules Exist
 
-Consider adding support for:
-
-- Books
-- Comics
-- Audiobooks
-- Music
-- Podcasts
-- IPTV
-
-Traditional architecture.
+Consider adding support for Books, Comics, Audiobooks, Music, Podcasts and IPTV. Traditional architecture absorbs each of these into the base application.
 
 ```mermaid
 flowchart TD
@@ -89,11 +47,7 @@ N3 --> N4
 N4 --> N5
 ```
 
-Eventually:
-
-The base application owns every business concept.
-
-Instead.
+Eventually the base application owns every business concept, which means each new media type enlarges the very thing every other media type depends upon. Mosaic instead treats each of them as a capability hosted by the Runtime.
 
 ```mermaid
 flowchart TD
@@ -110,39 +64,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-The Runtime remains unchanged.
-
-Only capabilities increase.
+The Runtime remains unchanged, and only capabilities increase.
 
 ---
 
 # Capabilities Before Features
 
-Within Mosaic:
-
-Features are not architectural units.
-
-Capabilities are.
-
-Example.
-
-Poor.
-
-```
-
-Add Podcast Feature
-```
-
-Preferred.
-
-```
-
-Podcast Capability
-```
-
-The distinction matters.
-
-Capabilities possess:
+Within Mosaic, features are not architectural units — capabilities are. Naming the work *Add Podcast Feature* is the poor formulation and *Podcast Capability* is preferred, and the distinction matters because capabilities possess:
 
 - lifecycle
 - dependencies
@@ -156,22 +84,9 @@ Features do not.
 
 # The Runtime Is Complete
 
-One of the most important ideas within Mosaic is:
+One of the most important ideas within Mosaic is that the Runtime should already contain everything required to execute future capabilities. Adding a capability should **not** require Runtime modification or Runtime redesign, although it does require producing a new Platform package for the selected Generation. The stable Runtime foundation remains unchanged while the composed Platform Binary changes.
 
-The Runtime should already contain everything required to execute future capabilities.
-
-Adding a capability should **not** require:
-
-- Runtime modification
-- Runtime redesign
-
-It does require producing a new Platform package for the selected Generation.
-
-The stable Runtime foundation remains unchanged.
-
-The composed Platform Binary changes.
-
-The composition flow is:
+The composition flow therefore runs from the capability itself through to the binary that hosts it:
 
 ```mermaid
 flowchart TD
@@ -194,20 +109,7 @@ The Runtime should recognise statically registered capabilities at startup.
 
 # No Runtime Plugins
 
-Mosaic intentionally avoids runtime plugin mechanisms.
-
-Modules are not:
-
-- plugin framework artefacts
-- dynamic libraries
-- DLLs
-- RPC services
-- reflection-discovered packages
-- runtime-loaded extensions
-
-They are normal Go libraries.
-
-Example.
+Mosaic intentionally avoids runtime plugin mechanisms, so Modules are not plugin framework artefacts, dynamic libraries, DLLs, RPC services, reflection-discovered packages or runtime-loaded extensions. They are normal Go libraries, laid out like any other Go project.
 
 ```text
 module-anilist/
@@ -218,19 +120,13 @@ module-anilist/
     artwork.go
 ```
 
-The final Runtime is a single statically linked Go executable.
-
-To the finished binary, there is no meaningful distinction between Platform code and Module code.
-
-There is only Go code selected for the current Platform package.
+The final Runtime is a single statically linked Go executable, which means that to the finished binary there is no meaningful distinction between Platform code and Module code. There is only Go code selected for the current Platform package.
 
 ---
 
 # What Is A Module?
 
-A Module is a normal Go project.
-
-Example.
+A Module is a normal Go project, structured exactly as its authors would structure any other library.
 
 ```text
 module-anilist/
@@ -242,21 +138,13 @@ module-anilist/
     graphql.go
 ```
 
-There is no special runtime container, DLL boundary, reflection registration layer or RPC sidecar.
-
-The Module depends on the Mosaic SDK.
-
-The Module implements Platform-owned contracts.
-
-The Module is compiled into the selected Platform Binary.
+There is no special runtime container, DLL boundary, reflection registration layer or RPC sidecar. The Module depends on the Mosaic SDK, implements Platform-owned contracts, and is compiled into the selected Platform Binary.
 
 ---
 
 # Module Responsibilities
 
-A Module may contribute one or more Platform capabilities.
-
-Examples include:
+A Module may contribute one or more Platform capabilities, and the range of contribution is deliberately wide:
 
 - Metadata Provider
 - Artwork Provider
@@ -267,46 +155,13 @@ Examples include:
 - Event Handlers
 - Scheduled Jobs
 
-A Module never modifies the Platform.
-
-It contributes implementations for Platform-owned contracts.
+A Module never modifies the Platform; it contributes implementations for Platform-owned contracts.
 
 ---
 
 # Built-In Capabilities Are Not Special
 
-Architecturally:
-
-Platform capabilities should be treated exactly like module capabilities.
-
-Example.
-
-```
-
-Playback
-```
-
-```
-
-Metadata
-```
-
-```
-
-Library
-```
-
-All are capabilities.
-
-The only distinction is:
-
-Delivery.
-
-Platform capabilities ship with the Runtime.
-
-Modules ship independently.
-
-Execution should remain identical.
+Architecturally, Platform capabilities should be treated exactly like module capabilities. Playback, Metadata and Library are all capabilities, and the only distinction between them and anything a Module delivers is delivery itself: Platform capabilities ship with the Runtime, whereas Modules ship independently. Execution should remain identical.
 
 This module-first philosophy keeps the Platform foundation small and stable by giving built-in and module-delivered capabilities the same architectural model.  [Bifrost](https://docs.getbifrost.ai/architecture/platform/plugins)
 
@@ -314,63 +169,19 @@ This module-first philosophy keeps the Platform foundation small and stable by g
 
 # Runtime Neutrality
 
-The Runtime should remain neutral.
-
-It should not know:
-
-- Anime
-- Movies
-- Books
-- Jellyfin
-- Stremio
-- TMDB
-
-It should know only:
-
-```
-
-Capability
-```
-
-Everything else belongs to the capability itself.
+The Runtime should remain neutral, which means it should not know about Anime, Movies, Books, Jellyfin, Stremio or TMDB. It should know only that something is a Capability, because everything else belongs to the capability itself.
 
 ---
 
 # Platform Growth
 
-The preferred growth model is:
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["New Capability"]
-
-N1 --> N2
-```
-
-Not:
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["Modify Runtime"]
-N3["Add Feature"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The platform grows by composition.
-
-Not accumulation.
+The preferred growth model adds a New Capability alongside an unchanged Runtime, rather than requiring the platform to Modify Runtime before it can Add Feature. The platform therefore grows by composition, not by accumulation.
 
 ---
 
 # Discovery Before Execution
 
-One of the defining characteristics of the Module Platform is:
+One of the defining characteristics of the Module Platform is that every capability passes through a fixed sequence before any of its code runs:
 
 ```mermaid
 flowchart TD
@@ -387,199 +198,55 @@ N3 --> N4
 N4 --> N5
 ```
 
-The Runtime should completely understand a capability before executing any of its code.
-
-Discovery should be metadata driven.
-
-Execution should come later.
-
-Mosaic separates **manifest resolution** from **build-time composition**, allowing validation before executable code becomes part of an activated Generation.
+The Runtime should completely understand a capability before executing any of its code, so discovery should be metadata driven and execution should come later. Mosaic separates **manifest resolution** from **build-time composition**, allowing validation before executable code becomes part of an activated Generation.
 
 ---
 
 # Manifest First
 
-Every capability begins with a manifest.
-
-The manifest describes:
-
-- identity
-- dependencies
-- permissions
-- contracts
-- configuration
-- capabilities
-
-The Supervisor and Build Pipeline should understand the manifest before the implementation becomes part of a Platform package.
-
-The manifest becomes the Supervisor's primary source of truth for Module composition.
+Every capability begins with a manifest, which describes its identity, dependencies, permissions, contracts, configuration and capabilities. The Supervisor and Build Pipeline should understand that manifest before the implementation becomes part of a Platform package, which is why the manifest becomes the Supervisor's primary source of truth for Module composition.
 
 ---
 
 # Capabilities Are Products
 
-Capabilities should be developed as independently evolving products.
-
-Each capability owns:
-
-- business behaviour
-- documentation
-- lifecycle
-- testing
-- versioning
-
-Capabilities should not depend upon private Runtime implementation.
-
-The Runtime provides the platform.
-
-Capabilities provide value.
+Capabilities should be developed as independently evolving products, and each capability owns its own business behaviour, documentation, lifecycle, testing and versioning. Capabilities should not depend upon private Runtime implementation, because the Runtime provides the platform and capabilities provide value.
 
 ---
 
 # Runtime Contracts
 
-Every interaction with the Runtime should occur through stable contracts.
-
-Examples include:
-
-- lifecycle
-- execution
-- configuration
-- scheduling
-- permissions
-
-Capabilities should never depend upon Runtime internals.
-
-This allows the Runtime to evolve independently.
+Every interaction with the Runtime should occur through stable contracts, covering lifecycle, execution, configuration, scheduling and permissions. Capabilities should never depend upon Runtime internals, which is what allows the Runtime to evolve independently.
 
 ---
 
 # Replaceability
 
-Capabilities should remain replaceable.
-
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Metadata Capability"]
-N2["Version 2"]
-
-N1 --> N2
-```
-
-The Runtime should require:
-
-```mermaid
-flowchart TD
-
-N1["Manifest Validation"]
-N2["Activation"]
-N3["Ready"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Nothing else.
-
-Capabilities should be interchangeable wherever practical.
+Capabilities should remain replaceable. Suppose a Metadata Capability is superseded by a Version 2: the Runtime should require Manifest Validation, then Activation, and the replacement is Ready — nothing else. Capabilities should be interchangeable wherever practical.
 
 ---
 
 # Capability Isolation
 
-Every capability should execute independently.
-
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Recommendation Capability"]
-N2["Failure"]
-
-N1 --> N2
-```
-
-The Runtime should ensure:
-
-```mermaid
-flowchart TD
-
-N1["Playback Capability"]
-N2["Unaffected"]
-
-N1 --> N2
-```
-
-Capability failures should never destabilise the platform.
-
-Isolation is one of the defining responsibilities of the Runtime.
+Every capability should execute independently. Suppose a Recommendation Capability reaches Failure; the Runtime should ensure that the Playback Capability is Unaffected, because capability failures should never destabilise the platform. Isolation is one of the defining responsibilities of the Runtime.
 
 ---
 
 # Runtime Evolution
 
-The Runtime evolves by improving execution.
-
-Capabilities evolve by improving business behaviour.
-
-These concerns should remain independent.
-
-Examples.
-
-Runtime.
-
-- faster scheduler
-- improved worker pools
-- better observability
-
-Capabilities.
-
-- better metadata
-- improved playback
-- smarter recommendations
-
-Neither should require modifying the other.
+The Runtime evolves by improving execution, whereas capabilities evolve by improving business behaviour, and these concerns should remain independent. Runtime improvement looks like a faster scheduler, improved worker pools and better observability; capability improvement looks like better metadata, improved playback and smarter recommendations. Neither should require modifying the other.
 
 ---
 
 # Module Equality
 
-The Runtime should never distinguish between:
-
-- Platform capabilities
-- First-party
-- Third-party
-
-Every capability should satisfy the same Runtime contracts.
-
-Every capability should participate in:
-
-- lifecycle
-- discovery
-- execution
-- observability
-
-Architectural equality greatly simplifies the platform.
+The Runtime should never distinguish between Platform capabilities, First-party capabilities and Third-party capabilities. Every capability should satisfy the same Runtime contracts and participate equally in lifecycle, discovery, execution and observability, because architectural equality greatly simplifies the platform.
 
 ---
 
 # Marketplace Thinking
 
-The Runtime should eventually support an ecosystem.
-
-That ecosystem depends upon:
-
-- predictable contracts
-- stable manifests
-- manifest resolution
-- build-time composition
-- version compatibility
-
-The Runtime should therefore be designed for capabilities that have not yet been written.
+The Runtime should eventually support an ecosystem, and that ecosystem depends upon predictable contracts, stable manifests, manifest resolution, build-time composition and version compatibility. The Runtime should therefore be designed for capabilities that have not yet been written.
 
 Platform ecosystems thrive when the host defines stable module boundaries and capabilities register through manifests rather than bespoke integration code.  [arc42 Quality Model](https://quality.arc42.org/approaches/plugin-architecture)
 
@@ -587,9 +254,7 @@ Platform ecosystems thrive when the host defines stable module boundaries and ca
 
 # Simplicity
 
-The Module Platform should remain conceptually simple.
-
-Everything reduces to one sentence.
+The Module Platform should remain conceptually simple, and everything reduces to one sentence:
 
 ```mermaid
 flowchart TD
@@ -645,8 +310,4 @@ The Module Platform exists for one purpose.
 
 > **Allow the platform to grow forever without growing the Runtime.**
 
-The Runtime should become increasingly powerful by hosting more capabilities.
-
-Not by accumulating more business behaviour.
-
-That distinction is what transforms Mosaic from an application into a platform.
+The Runtime should become increasingly powerful by hosting more capabilities, not by accumulating more business behaviour, and that distinction is what transforms Mosaic from an application into a platform.

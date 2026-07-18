@@ -12,22 +12,7 @@ Status: Draft
 
 # Purpose
 
-The Module Manifest defines **what** a Module contributes.
-
-Discovery defines **how** the Supervisor finds it before build-time composition.
-
-The Discovery process is responsible for locating every selected Module before the Build Pipeline creates a Platform package.
-
-Discovery is intentionally separated from:
-
-- registration
-- dependency resolution
-- activation
-- execution
-
-A discovered Module is not yet trusted.
-
-It is merely known.
+The Module Manifest defines **what** a Module contributes, whereas Discovery defines **how** the Supervisor finds it before build-time composition. The Discovery process is responsible for locating every selected Module before the Build Pipeline creates a Platform package, and it is deliberately kept separate from registration, dependency resolution, activation and execution. A discovered Module is not yet trusted; it is merely known.
 
 ---
 
@@ -37,16 +22,7 @@ Within Mosaic:
 
 > **Discovery identifies Modules. It never executes them.**
 
-The Supervisor should discover:
-
-- manifests
-- metadata
-- dependencies
-- contracts
-
-without loading any executable code.
-
-A Module should be completely understood before the Build Pipeline is invoked.
+The Supervisor should discover manifests, metadata, dependencies and contracts without loading any executable code, so that a Module is completely understood before the Build Pipeline is invoked.
 
 ---
 
@@ -71,15 +47,13 @@ N4 --> N5
 N5 --> N6
 ```
 
-Execution has not yet begun.
-
-Only metadata has been processed.
+Execution has not begun at any point along that path, because only metadata has been processed.
 
 ---
 
 # Discovery Before Execution
 
-One of the most important Runtime guarantees is:
+One of the most important Runtime guarantees is the fixed order in which a capability advances towards execution.
 
 ```mermaid
 flowchart TD
@@ -96,194 +70,102 @@ N3 --> N4
 N4 --> N5
 ```
 
-A capability should never execute simply because it exists on disk.
-
-The Supervisor must first determine:
-
-- what it is
-- whether it is valid
-- whether it is compatible
+A capability should never execute simply because it exists on disk. The Supervisor must first determine what it is, whether it is valid and whether it is compatible.
 
 ---
 
 # Discovery Sources
 
-Modules MAY be discovered from multiple sources.
+Modules may be discovered from multiple sources. Examples include:
 
-Examples include:
+- Platform Capability
+- Modules Directory
+- Marketplace Cache
+- Enterprise Repository
+- Development Workspace
 
-```
-
-Platform Capability
-```
-
-```
-
-Modules Directory
-```
-
-```
-
-Marketplace Cache
-```
-
-```
-
-Enterprise Repository
-```
-
-```
-
-Development Workspace
-```
-
-Regardless of origin:
-
-Every selected Module enters the Build Pipeline through the same discovery process.
+Regardless of origin, every selected Module enters the Build Pipeline through the same discovery process.
 
 ---
 
 # Manifest Source Discovery
 
-The default discovery mechanism is manifest resolution from configured sources.
+The default discovery mechanism is manifest resolution from configured sources, which conceptually looks like this:
 
-Conceptually.
-
-```
-
+```text
 module-index/
-
     anilist.yaml
-
     jellyfin.yaml
-
     tmdb.yaml
 ```
 
-The Supervisor reads manifests from selected Module sources.
-
-It should not inspect executable code during discovery.
-
-Manifest parsing separates selection and validation from build-time composition.
+The Supervisor reads manifests from selected Module sources and should not inspect executable code during discovery, because manifest parsing is what separates selection and validation from build-time composition.
 
 ---
 
 # Module Catalogue
 
-The Module Catalogue is the metadata-only view of Modules available from configured discovery sources.
+The Module Catalogue is the metadata-only view of Modules available from configured discovery sources. The Supervisor queries the Module Catalogue during onboarding so the Shell can present current feature, provider and optional Module choices, and because catalogue entries are derived from Module manifests, the Shell must not maintain a separate hardcoded list of available Modules. Adding a manifest to a configured discovery source should therefore make that Module available as a selection candidate without requiring a Shell release.
 
-The Supervisor queries the Module Catalogue during onboarding so the Shell can present current feature, provider and optional Module choices.
-
-Catalogue entries are derived from Module manifests.
-
-The Shell must not maintain a separate hardcoded list of available Modules.
-
-Adding a manifest to a configured discovery source should make that Module available as a selection candidate without requiring a Shell release.
-
-Catalogue presence does not establish compatibility.
-
-Catalogue discovery does not:
+Catalogue presence does not establish compatibility, and catalogue discovery does not:
 
 - download or execute Module code
 - register Modules with the Platform
 - activate capabilities
 - guarantee that a selected Module is compatible
 
-Selection creates desired composition input.
-
-Manifest admission, dependency resolution and SDK compatibility validation still occur before the Build Pipeline is invoked.
+Selection creates desired composition input, but manifest admission, dependency resolution and SDK compatibility validation still occur before the Build Pipeline is invoked.
 
 ---
 
 # Build Workspace Preparation
 
-After discovery and dependency resolution, the Supervisor invokes the Build Pipeline to prepare a temporary build workspace.
-
-Conceptually.
+After discovery and dependency resolution, the Supervisor invokes the Build Pipeline to prepare a temporary build workspace, conceptually:
 
 ```text
 workspace/
-
     platform/
     sdk/
     modules/
     generated/
 ```
 
-The Supervisor must ensure that composition does not modify the Platform source repository or Module source repositories.
-
-The Build Pipeline uses the temporary workspace to:
+The Supervisor must ensure that composition does not modify the Platform source repository or Module source repositories. The Build Pipeline uses the temporary workspace to:
 
 1. resolve selected Go modules,
 2. update the temporary `go.mod`,
 3. generate `imports.go`,
 4. build the Platform Binary.
 
-The workspace is an assembly area.
-
-It is not a new source of architectural truth.
+The workspace is an assembly area, not a new source of architectural truth.
 
 ---
 
 # Built-In Capability Discovery
 
-Platform capabilities participate in discovery exactly like modules.
+Platform capabilities participate in discovery exactly like modules, carrying their own `capability.yaml` alongside the Platform source.
 
-Example.
-
-```
-
+```text
 platform/
-
     playback/
-
         capability.yaml
-
     metadata/
-
         capability.yaml
 ```
 
-The Supervisor should not maintain a special discovery path for built-in capabilities.
-
-Built-in capabilities differ only in delivery.
-
-Architecturally, it remains another capability.
+The Supervisor should not maintain a special discovery path for built-in capabilities, because built-in capabilities differ only in delivery. Architecturally, it remains another capability.
 
 ---
 
 # Manifest Discovery
 
-Discovery operates entirely on manifests.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Capability"]
-N2["capability.yaml"]
-N3["Runtime"]
-
-N1 --> N2
-N2 --> N3
-```
-
-No Go code should execute.
-
-No modules should load.
-
-No lifecycle methods should run.
-
-Discovery should remain metadata driven.
+Discovery operates entirely on manifests: a Capability reaches the Runtime through its `capability.yaml` and through nothing else. No Go code should execute, no modules should load and no lifecycle methods should run, because discovery should remain metadata driven.
 
 ---
 
 # Capability Descriptor
 
-Following successful discovery, the Supervisor constructs a Module Descriptor.
-
-Conceptually.
+Following successful discovery, the Supervisor constructs a Module Descriptor, which conceptually carries the following.
 
 ```mermaid
 flowchart TD
@@ -302,17 +184,13 @@ N4 --> N5
 N5 --> N6
 ```
 
-The Descriptor becomes the Supervisor's internal representation of the Module during composition.
-
-The manifest itself is no longer required for most Runtime operations.
+The Descriptor becomes the Supervisor's internal representation of the Module during composition, which means the manifest itself is no longer required for most Runtime operations.
 
 ---
 
 # Discovery Validation
 
-Discovery performs structural validation only.
-
-Examples include:
+Discovery performs structural validation only. Examples include:
 
 - manifest exists
 - schema valid
@@ -320,44 +198,19 @@ Examples include:
 - identifier valid
 - version valid
 
-Discovery should **not** validate:
-
-- dependency compatibility
-- permission approval
-- Runtime contracts
-
-Those occur during later stages.
-
-Each phase should own one responsibility.
+Discovery should **not** validate dependency compatibility, permission approval or Runtime contracts. Those occur during later stages, because each phase should own one responsibility.
 
 ---
 
 # Duplicate Detection
 
-Discovery MUST detect duplicate capability identifiers.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["metadata"]
-N2["metadata"]
-
-N1 --> N2
-```
-
-The Runtime should reject ambiguous capability identities.
-
-Identifiers must remain globally unique within one Runtime instance.
+Discovery must detect duplicate capability identifiers, because two capabilities both claiming `metadata` leave the Runtime with no way to say which one owns the name. The Runtime should reject ambiguous capability identities, so identifiers must remain globally unique within one Runtime instance.
 
 ---
 
 # Discovery Errors
 
-Discovery failures should be explicit.
-
-Examples include:
+Discovery failures should be explicit. Examples include:
 
 - missing manifest
 - malformed manifest
@@ -370,41 +223,13 @@ Capabilities failing discovery should never progress further into the Runtime li
 
 # Discovery Order
 
-Discovery order should not matter.
-
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Metadata"]
-
-N1 --> N2
-```
-
-or
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Playback"]
-
-N1 --> N2
-```
-
-The resulting Capability Registry should be identical.
-
-Ordering should become relevant only during dependency resolution.
+Discovery order should not matter: whether Playback is discovered before Metadata or Metadata before Playback, the resulting Capability Registry should be identical. Ordering should become relevant only during dependency resolution.
 
 ---
 
 # Lazy Discovery
 
-The Supervisor MAY support lazy manifest retrieval for specialised deployment models.
-
-Example.
+The Supervisor may support lazy manifest retrieval for specialised deployment models, where a manifest is discovered from a Marketplace and the capability downloaded before registration.
 
 ```mermaid
 flowchart TD
@@ -419,93 +244,38 @@ N2 --> N3
 N3 --> N4
 ```
 
-However:
-
-Platform package preparation should generally prefer discovering every selected Module before the Build Pipeline begins.
-
-Predictability outweighs marginal startup optimisation.
+Platform package preparation should nevertheless prefer discovering every selected Module before the Build Pipeline begins, because predictability outweighs marginal startup optimisation.
 
 ---
 
 # Discovery Metadata
 
-Discovery SHOULD record:
+Discovery should record:
 
 - source
 - manifest version
 - discovery timestamp
 - capability location
 
-This metadata improves:
-
-- diagnostics
-- auditing
-- marketplace tooling
-
-It should not influence business behaviour.
+This metadata improves diagnostics, auditing and marketplace tooling, but it should not influence business behaviour.
 
 ---
 
 # Discovery Events
 
-The Supervisor MAY record events describing discovery for diagnostics.
-
-Examples include:
-
-```
-
-CapabilityDiscovered
-```
-
-```
-
-CapabilityRejected
-```
-
-```
-
-ManifestValidated
-```
-
-These are operational events.
-
-Not Domain Events.
+The Supervisor may record events describing discovery for diagnostics, such as `CapabilityDiscovered`, `CapabilityRejected` and `ManifestValidated`. These are operational events, not Domain Events.
 
 ---
 
 # Discovery Performance
 
-Discovery should remain inexpensive.
-
-The Runtime should parse:
-
-- manifests
-- metadata
-
-It should avoid:
-
-- reflection
-- package loading
-- dependency injection
-- executable inspection
-
-Build preparation performance depends heavily upon efficient discovery.
+Discovery should remain inexpensive. The Runtime should parse manifests and metadata while avoiding reflection, package loading, dependency injection and executable inspection, because build preparation performance depends heavily upon efficient discovery.
 
 ---
 
 # Discovery Caching
 
-The Supervisor MAY cache discovery results.
-
-Examples include:
-
-- manifest hashes
-- parsed descriptors
-- schema validation
-
-Caching should never bypass validation after a manifest changes.
-
-Correctness always outweighs startup speed.
+The Supervisor may cache discovery results such as manifest hashes, parsed descriptors and schema validation. Caching should never bypass validation after a manifest changes, because correctness always outweighs startup speed.
 
 ---
 
@@ -518,29 +288,13 @@ Operators should be able to answer:
 - Why were they rejected?
 - Where were they found?
 
-Discovery should remain fully observable.
-
-Hidden discovery behaviour inevitably complicates debugging.
+Discovery should therefore remain fully observable, because hidden discovery behaviour inevitably complicates debugging.
 
 ---
 
 # Security
 
-Discovery should treat every capability as untrusted.
-
-Until:
-
-- validation
-- dependency resolution
-- permission evaluation
-
-complete successfully,
-
-the Runtime should assume the capability cannot execute.
-
-Trust should be earned.
-
-Not assumed.
+Discovery should treat every capability as untrusted. Until validation, dependency resolution and permission evaluation complete successfully, the Runtime should assume the capability cannot execute. Trust should be earned, not assumed.
 
 ---
 
@@ -550,39 +304,37 @@ The following practices are prohibited.
 
 ## Executing During Discovery
 
-Loading Go code merely to inspect a capability.
+Loading Go code merely to inspect a capability. This defeats the guarantee that discovery identifies Modules without ever executing them.
 
 ---
 
 ## Reflection-Based Discovery
 
-Requiring executable inspection to determine metadata.
+Requiring executable inspection to determine metadata. Discovery should remain metadata driven, and reflection sits among the operations the Runtime is expected to avoid.
 
 ---
 
 ## Implicit Registration
 
-Automatically registering discovered capabilities without validation.
+Automatically registering discovered capabilities without validation. Discovery and registration are separate phases, and a discovered Module is not yet trusted.
 
 ---
 
 ## Runtime Side Effects
 
-Discovery modifying Runtime state beyond the Capability Registry.
+Discovery modifying Runtime state beyond the Capability Registry. Discovery exists to answer what capabilities are available and nothing more.
 
 ---
 
 ## Discovery Ordering Dependencies
 
-Assuming discovery sequence determines execution behaviour.
+Assuming discovery sequence determines execution behaviour. Discovery order should not matter, and ordering becomes relevant only during dependency resolution.
 
 ---
 
 ## Multiple Discovery Mechanisms
 
-Different capability types using fundamentally different discovery pipelines.
-
-Every capability should follow one canonical process.
+Different capability types using fundamentally different discovery pipelines. Every capability should follow one canonical process, because built-in and module-delivered capabilities differ only in delivery.
 
 ---
 
@@ -590,14 +342,14 @@ Every capability should follow one canonical process.
 
 Within Mosaic:
 
-- Discovery MUST occur before execution.
-- Discovery MUST operate on manifests rather than executable code.
-- Every capability MUST produce a Capability Descriptor.
-- Duplicate identifiers MUST be rejected.
-- Discovery SHOULD remain deterministic.
-- Discovery SHOULD remain observable.
-- Built-in and module-delivered capabilities MUST use the same discovery pipeline.
-- Discovery MUST treat capabilities as untrusted until later validation stages.
+- Discovery must occur before execution.
+- Discovery must operate on manifests rather than executable code.
+- Every capability must produce a Capability Descriptor.
+- Duplicate identifiers must be rejected.
+- Discovery should remain deterministic.
+- Discovery should remain observable.
+- Built-in and module-delivered capabilities must use the same discovery pipeline.
+- Discovery must treat capabilities as untrusted until later validation stages.
 
 ---
 
@@ -617,12 +369,8 @@ The next chapter introduces **Registration**, where successfully discovered capa
 
 # Summary
 
-Discovery is the Runtime's first interaction with every capability.
-
-It should answer one question:
+Discovery is the Runtime's first interaction with every capability, and it should answer one question:
 
 > **What capabilities are available to this Runtime?**
 
-Nothing more.
-
-By separating discovery from validation, activation and execution, the Mosaic Runtime remains predictable, observable and secure while allowing the platform to grow through independently developed capabilities.
+Nothing more. By separating discovery from validation, activation and execution, the Mosaic Runtime remains predictable, observable and secure while allowing the platform to grow through independently developed capabilities.
