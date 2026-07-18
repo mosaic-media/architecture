@@ -47,6 +47,34 @@ The PostgreSQL storage adapter is the first example. Platform services depend on
 
 ---
 
+# Module Delivery Models
+
+Community Modules and essential Modules are architecturally identical. Both are Go libraries that use the SDK and Platform contracts, both are compiled into the Platform binary by the Supervisor, and both are admitted the same way. They differ only in delivery and selectability.
+
+| | Essential Module | Community Module |
+|---|------------------|------------------|
+| Repository | Ships in the Platform repository | Its own independent repository |
+| Acquisition | Pulled with the Platform when a new Platform version is pulled | Selected by the user; fetched by the Supervisor |
+| Selectability | Required; cannot be deselected | Optional; included in a generation only if selected |
+| Composition | Compiled into the binary by the Supervisor | Compiled into the binary by the Supervisor |
+| Architecture | Identical | Identical |
+
+The PostgreSQL storage adapter is the first essential Module. A product capability such as anime support is a representative community Module. Nothing in registration, contract resolution or execution distinguishes them. "Essential" governs distribution and admission, not architecture — it does not create a private path, per [MIP-005](../../protocols/mip-005-module-adapter-contract-protocol/index.md).
+
+[MAD-002 — Module Storage and Delivery Model](../mad-002-module-storage-and-delivery-model/index.md) records this decision.
+
+---
+
+# Modules And Storage
+
+Modules do not own storage or schema. The Platform owns the storage authority — schema, migrations, transactions, access policy and backup — and exposes persistence only through Platform-owned storage contracts. Modules persist what they need through those contracts.
+
+The Platform's schema is deliberately content-agnostic, so Modules map their data onto existing structure rather than defining their own tables. Adding a new content capability is new data, not new schema. A genuinely new data-owning domain is Platform and SDK evolution, decided deliberately through the [Capability Model](03-capability-model.md), not something a Module introduces on its own.
+
+[MEG-007 — Storage Architecture](../../guides/meg-007-storage-architecture/index.md) defines the storage model this rule depends on.
+
+---
+
 # Module Responsibilities
 
 Modules own the implementation they contribute.

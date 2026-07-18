@@ -128,6 +128,6 @@ Architecture should evolve far more slowly than Modules.
 
 ## Infrastructure adapters
 
-The Platform core follows hexagonal architecture. Storage, event persistence, cryptography, scheduling and other infrastructure concerns are ports owned by Platform contracts; their concrete implementations are Modules compiled into the Platform binary.
+The Platform core follows hexagonal architecture. Storage, analytical processing, event persistence, cryptography, scheduling and other infrastructure concerns are ports owned by Platform contracts; their concrete implementations are Modules compiled into the Platform binary. Because these are ports, the Platform mandates the capability rather than the engine that provides it — analytical processing, for example, is satisfied by the storage engine today and may gain a dedicated engine as a further essential Module without changing the contract.
 
 Some adapters are mandatory and are not user-selectable. For example, the PostgreSQL adapter is a built-in storage Module required by the first Platform distribution. It remains replaceable at the contract boundary, allowing a future compatible database adapter without allowing arbitrary runtime provider selection.
