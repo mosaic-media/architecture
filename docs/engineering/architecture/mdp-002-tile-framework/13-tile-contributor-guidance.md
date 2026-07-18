@@ -1,7 +1,7 @@
 <!--
-File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/29-tile-contributor-guidance.md
-Document: MDP-001
-Status: Draft
+File: docs/engineering/architecture/mdp-002-tile-framework/13-tile-contributor-guidance.md
+Document: MDP-002
+Status: Deferred
 -->
 
 # Contributor Guidance

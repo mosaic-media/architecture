@@ -1,7 +1,7 @@
 <!--
-File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/28-tile-decision-history.md
-Document: MDP-001
-Status: Draft
+File: docs/engineering/architecture/mdp-002-tile-framework/12-tile-decision-history.md
+Document: MDP-002
+Status: Deferred
 -->
 
 # Tile Decision History
@@ -14,7 +14,7 @@ Status: Draft
 
 This chapter preserves historical decision inputs from the former Tile Framework specification.
 
-Their recorded `Accepted` status describes the outcome inside that earlier draft. It does not make MDP-001 authoritative, scheduled or accepted architecture. The current v1 boundary and deferral are governed by ADR-204 and ADR-205 in [MDS-008 — Component Library](../../../design/system/mds-008-component-library/12-adrs.md).
+Their recorded `Accepted` status describes the outcome inside that earlier draft. It does not make MDP-002 authoritative, scheduled or accepted architecture. The current v1 boundary and deferral are governed by ADR-204 and ADR-205 in [MDS-008 — Component Library](../../../design/system/mds-008-component-library/12-adrs.md).
 
 Every previous specification established:
 
@@ -23,7 +23,7 @@ Every previous specification established:
 - Composition
 - Expressions
 
-MDP-001 establishes how those runtime concepts become reusable presentation primitives.
+MDP-002 proposes how those runtime concepts would become reusable presentation primitives.
 
 These ADRs explain why Mosaic deliberately separates:
 
@@ -358,7 +358,7 @@ Future Tile Framework ADRs are expected to formalise:
 - Adaptive Accessibility Tiles
 - Runtime Tile Virtualisation
 
-These intentionally remain outside the scope of MDP-001 Version 0.1.
+These intentionally remain outside the scope of this proposal.
 
 ---
 
@@ -379,7 +379,7 @@ Tiles should remain recognisably Mosaic regardless of implementation.
 
 # Summary
 
-The ADRs contained within MDP-001 define the presentation identity of Mosaic.
+The ADRs contained within MDP-002 record the presentation identity proposed for a future adaptive runtime.
 
 Expressions communicate understanding.
 
