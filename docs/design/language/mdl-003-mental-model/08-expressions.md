@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/08-expressions.md
 Document: MDL-003
-Chapter: 08
-Title: Expressions
 Status: Draft
-Version: 0.4
 -->
 
 # Expressions

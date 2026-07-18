@@ -1,11 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/09-principle-07-be-a-companion.md
 Document: MDL-002
-Chapter: 09
-Principle: 07
-Title: Be A Companion
 Status: Draft
-Version: 0.4
 -->
 
 # Principle 07 — Be A Companion

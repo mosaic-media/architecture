@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/references.md
 Document: MDL-001
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

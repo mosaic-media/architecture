@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/02-motion-hierarchy.md
 Document: MDS-005
-Chapter: 02
-Title: Motion Hierarchy
 Status: Draft
-Version: 0.4
 -->
 
 # Motion Hierarchy

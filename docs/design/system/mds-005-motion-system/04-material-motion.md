@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/04-material-motion.md
 Document: MDS-005
-Chapter: 04
-Title: Material Motion
 Status: Draft
-Version: 0.4
 -->
 
 # Material Motion

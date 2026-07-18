@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/07-density.md
 Document: MDL-005
-Chapter: 07
-Title: Density
 Status: Draft
-Version: 0.4
 -->
 
 # Density

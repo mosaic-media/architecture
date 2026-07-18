@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/04-goals.md
 Document: MDL-001
-Chapter: 04
-Title: Goals
 Status: Draft
-Version: 0.4
 -->
 
 # Goals

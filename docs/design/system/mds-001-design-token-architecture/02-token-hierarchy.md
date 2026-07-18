@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/02-token-hierarchy.md
 Document: MDS-001
-Chapter: 02
-Title: Token Hierarchy
 Status: Draft
-Version: 0.1
 -->
 
 # Token Hierarchy

@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/references.md
 Document: MDS-003
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/10-module-intent.md
 Document: MDS-001
-Chapter: 10
-Title: Module Intent
 Status: Draft
-Version: 0.1
 -->
 
 # Module Intent

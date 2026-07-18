@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/02-the-world.md
 Document: MDL-003
-Chapter: 02
-Title: The World
 Status: Draft
-Version: 0.4
 -->
 
 # The World

@@ -2,7 +2,6 @@
 File: docs/design/system/mds-005-motion-system/index.md
 Document: MDS-005
 Status: Draft
-Version: 0.4
 -->
 
 # MDS-005 — Motion System

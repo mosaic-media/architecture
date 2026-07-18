@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/10-platform-motion.md
 Document: MDS-005
-Chapter: 10
-Title: Platform Motion
 Status: Draft
-Version: 0.4
 -->
 
 # Platform Motion

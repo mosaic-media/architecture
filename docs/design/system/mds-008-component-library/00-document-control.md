@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/00-document-control.md
 Document: MDS-008
-Title: Component Library
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.4
 | Title | Mosaic Design System — Component Library |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md), [MDS-001](../mds-001-design-token-architecture/index.md) → [MDS-005](../mds-005-motion-system/index.md) |
 | Repository | `/design/mds/MDS-008 Component Library/` |

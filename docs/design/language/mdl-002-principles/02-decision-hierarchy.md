@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/02-decision-hierarchy.md
 Document: MDL-002
-Chapter: 02
-Title: Decision Hierarchy
 Status: Draft
-Version: 0.4
 -->
 
 # Decision Hierarchy

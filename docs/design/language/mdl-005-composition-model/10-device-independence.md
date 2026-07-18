@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/10-device-independence.md
 Document: MDL-005
-Chapter: 10
-Title: Device Independence
 Status: Draft
-Version: 0.4
 -->
 
 # Device Independence

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/07-accessibility.md
 Document: MDS-004
-Chapter: 07
-Title: Accessibility
 Status: Draft
-Version: 0.4
 -->
 
 # Accessibility

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/03-component-contracts.md
 Document: MDS-008
-Chapter: 03
-Title: Component Contracts
 Status: Draft
-Version: 0.4
 -->
 
 # Component Contracts

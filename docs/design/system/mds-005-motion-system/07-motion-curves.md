@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/07-motion-curves.md
 Document: MDS-005
-Chapter: 07
-Title: Motion Curves
 Status: Draft
-Version: 0.4
 -->
 
 # Motion Curves

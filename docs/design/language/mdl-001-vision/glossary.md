@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/glossary.md
 Document: MDL-001
-Title: Glossary
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

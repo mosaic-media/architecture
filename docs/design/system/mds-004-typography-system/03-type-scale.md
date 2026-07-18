@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/03-type-scale.md
 Document: MDS-004
-Chapter: 03
-Title: Type Scale
 Status: Draft
-Version: 0.4
 -->
 
 # Type Scale

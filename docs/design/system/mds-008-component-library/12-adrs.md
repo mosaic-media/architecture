@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/12-adrs.md
 Document: MDS-008
-Chapter: 12
-Title: Architectural Decision Records
 Status: Draft
-Version: 0.4
 -->
 
 # Architectural Decision Records

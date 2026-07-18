@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/08-breathing-space.md
 Document: MDL-005
-Chapter: 08
-Title: Breathing Space
 Status: Draft
-Version: 0.4
 -->
 
 # Breathing Space

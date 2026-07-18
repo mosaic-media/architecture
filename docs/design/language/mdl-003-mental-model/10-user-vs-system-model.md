@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/10-user-vs-system-model.md
 Document: MDL-003
-Chapter: 10
-Title: User Model vs System Model
 Status: Draft
-Version: 0.4
 -->
 
 # User Model vs System Model

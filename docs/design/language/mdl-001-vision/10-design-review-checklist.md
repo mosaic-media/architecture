@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/10-design-review-checklist.md
 Document: MDL-001
-Chapter: 10
-Title: Design Review Checklist
 Status: Draft
-Version: 0.4
 -->
 
 # Design Review Checklist

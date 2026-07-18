@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/00-document-control.md
 Document: MDS-001
-Title: Design Token Architecture
 Status: Draft
-Version: 0.1
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.1
 | Title | Mosaic Design System — Design Token Architecture |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md) |
 | Repository | `/design/mds/MDS-001 Design Token Architecture/` |

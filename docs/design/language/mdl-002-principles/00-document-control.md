@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/00-document-control.md
 Document: MDL-002
-Title: Design Principles
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.4
 | Title | Mosaic Design Language — Principles |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Parent Specification | [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md) |
 | Repository | `/design/mdl/MDL-002 Principles/` |

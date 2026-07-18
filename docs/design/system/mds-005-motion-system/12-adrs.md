@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/12-adrs.md
 Document: MDS-005
-Chapter: 12
-Title: Architectural Decision Records
 Status: Draft
-Version: 0.4
 -->
 
 # Architectural Decision Records

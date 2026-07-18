@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/00-document-control.md
 Document: MDS-005
-Title: Motion System
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.4
 | Title | Mosaic Design System — Motion System |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md), [MDS-001](../mds-001-design-token-architecture/index.md) → [MDS-004](../mds-004-typography-system/index.md) |
 | Repository | `/design/mds/MDS-005 Motion System/` |

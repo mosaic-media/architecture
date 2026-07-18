@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/04-context.md
 Document: MDL-003
-Chapter: 04
-Title: Context
 Status: Draft
-Version: 0.4
 -->
 
 # Context

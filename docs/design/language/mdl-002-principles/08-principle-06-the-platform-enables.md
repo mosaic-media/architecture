@@ -1,11 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/08-principle-06-the-platform-enables.md
 Document: MDL-002
-Chapter: 08
-Principle: 06
-Title: The Platform Enables
 Status: Draft
-Version: 0.4
 -->
 
 # Principle 06 — The Platform Enables

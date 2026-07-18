@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/01-material-philosophy.md
 Document: MDS-003
-Chapter: 01
-Title: Material Philosophy
 Status: Draft
-Version: 0.4
 -->
 
 # Material Philosophy

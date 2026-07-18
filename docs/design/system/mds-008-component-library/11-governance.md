@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/11-governance.md
 Document: MDS-008
-Chapter: 11
-Title: Component Library Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Component Library Governance

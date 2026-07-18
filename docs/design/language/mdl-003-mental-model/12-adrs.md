@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/12-adrs.md
 Document: MDL-003
-Chapter: 12
-Title: Architectural Decision Records
 Status: Draft
-Version: 0.4
 -->
 
 # Architectural Decision Records

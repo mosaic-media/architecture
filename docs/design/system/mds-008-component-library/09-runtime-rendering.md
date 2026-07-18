@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/09-runtime-rendering.md
 Document: MDS-008
-Chapter: 09
-Title: Runtime Rendering
 Status: Draft
-Version: 0.4
 -->
 
 # Runtime Rendering

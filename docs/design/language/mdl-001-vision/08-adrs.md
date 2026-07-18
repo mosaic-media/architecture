@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/08-adrs.md
 Document: MDL-001
-Chapter: 08
-Title: Architectural Decision Records
 Status: Draft
-Version: 0.4
 -->
 
 # Architectural Decision Records

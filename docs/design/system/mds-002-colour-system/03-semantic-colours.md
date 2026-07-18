@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/03-semantic-colours.md
 Document: MDS-002
-Chapter: 03
-Title: Semantic Colours
 Status: Draft
-Version: 0.4
 -->
 
 # Semantic Colours

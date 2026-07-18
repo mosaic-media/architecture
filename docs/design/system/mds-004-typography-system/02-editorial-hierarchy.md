@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/02-editorial-hierarchy.md
 Document: MDS-004
-Chapter: 02
-Title: Editorial Hierarchy
 Status: Draft
-Version: 0.4
 -->
 
 # Editorial Hierarchy

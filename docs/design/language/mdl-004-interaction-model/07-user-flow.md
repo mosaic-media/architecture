@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/07-user-flow.md
 Document: MDL-004
-Chapter: 07
-Title: User Flow
 Status: Draft
-Version: 0.4
 -->
 
 # User Flow

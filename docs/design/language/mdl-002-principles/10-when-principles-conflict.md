@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/10-when-principles-conflict.md
 Document: MDL-002
-Chapter: 10
-Title: When Principles Conflict
 Status: Draft
-Version: 0.4
 -->
 
 # When Principles Conflict

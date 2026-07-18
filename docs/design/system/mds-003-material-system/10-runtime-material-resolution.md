@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/10-runtime-material-resolution.md
 Document: MDS-003
-Chapter: 10
-Title: Runtime Material Resolution
 Status: Draft
-Version: 0.4
 -->
 
 # Runtime Material Resolution

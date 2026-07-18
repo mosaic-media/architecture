@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/05-component-composition.md
 Document: MDS-008
-Chapter: 05
-Title: Component Composition
 Status: Draft
-Version: 0.4
 -->
 
 # Component Composition

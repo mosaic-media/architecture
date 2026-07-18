@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/index.md
 Document: MDL-001
-Title: Mosaic Design Language Vision
 Status: Draft
-Version: 0.4
 -->
 
 # MDL-001 — Mosaic Design Language Vision

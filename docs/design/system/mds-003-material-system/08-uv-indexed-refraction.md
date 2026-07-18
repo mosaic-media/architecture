@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/08-uv-indexed-refraction.md
 Document: MDS-003
-Chapter: 08
-Title: UV-Indexed Refraction
 Status: Draft
-Version: 0.4
 -->
 
 # UV-Indexed Refraction

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/13-contributor-guidance.md
 Document: MDS-001
-Chapter: 13
-Title: Contributor Guidance
 Status: Draft
-Version: 0.1
 -->
 
 # Contributor Guidance

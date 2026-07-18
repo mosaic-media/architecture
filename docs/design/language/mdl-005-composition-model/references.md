@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/references.md
 Document: MDL-005
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

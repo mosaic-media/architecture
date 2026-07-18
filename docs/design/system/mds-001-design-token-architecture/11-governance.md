@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/11-governance.md
 Document: MDS-001
-Chapter: 11
-Title: Token Governance
 Status: Draft
-Version: 0.1
 -->
 
 # Token Governance

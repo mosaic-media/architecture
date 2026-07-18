@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/02-component-taxonomy.md
 Document: MDS-008
-Chapter: 02
-Title: Component Taxonomy
 Status: Draft
-Version: 0.4
 -->
 
 # Component Taxonomy

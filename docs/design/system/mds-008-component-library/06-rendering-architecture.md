@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/06-rendering-architecture.md
 Document: MDS-008
-Chapter: 06
-Title: Rendering Architecture
 Status: Draft
-Version: 0.4
 -->
 
 # Rendering Architecture

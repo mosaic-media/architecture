@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/05-composition-inputs.md
 Document: MDS-001
-Chapter: 05
-Title: Composition Inputs
 Status: Draft
-Version: 0.1
 -->
 
 # Composition Inputs

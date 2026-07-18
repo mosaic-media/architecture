@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/glossary.md
 Document: MDS-003
-Title: Glossary
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

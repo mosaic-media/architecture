@@ -2,7 +2,6 @@
 File: docs/design/language/mdl-002-principles/index.md
 Document: MDL-002
 Status: Draft
-Version: 0.4
 -->
 
 # MDL-002 — Principles

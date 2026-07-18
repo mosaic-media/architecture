@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/09-interaction-states.md
 Document: MDL-004
-Chapter: 09
-Title: Interaction States
 Status: Draft
-Version: 0.4
 -->
 
 # Interaction States

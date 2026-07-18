@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/11-governance.md
 Document: MDS-002
-Chapter: 11
-Title: Colour System Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Colour System Governance

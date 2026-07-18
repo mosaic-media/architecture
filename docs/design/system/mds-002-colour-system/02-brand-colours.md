@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/02-brand-colours.md
 Document: MDS-002
-Chapter: 02
-Title: Brand Colours
 Status: Draft
-Version: 0.4
 -->
 
 # Brand Colours

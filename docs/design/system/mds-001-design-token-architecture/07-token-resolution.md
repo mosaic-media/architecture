@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/07-token-resolution.md
 Document: MDS-001
-Chapter: 07
-Title: Token Resolution
 Status: Draft
-Version: 0.1
 -->
 
 # Token Resolution

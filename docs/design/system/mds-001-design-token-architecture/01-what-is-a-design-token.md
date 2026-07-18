@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/01-what-is-a-design-token.md
 Document: MDS-001
-Chapter: 01
-Title: What Is A Design Token?
 Status: Draft
-Version: 0.1
 -->
 
 # What Is A Design Token?

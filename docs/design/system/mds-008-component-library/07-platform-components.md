@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/07-platform-components.md
 Document: MDS-008
-Chapter: 07
-Title: Platform Components
 Status: Draft
-Version: 0.4
 -->
 
 # Platform Components

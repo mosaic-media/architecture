@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/07-governance.md
 Document: MDL-001
-Chapter: 07
-Title: Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Governance

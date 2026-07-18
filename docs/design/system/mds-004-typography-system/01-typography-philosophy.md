@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/01-typography-philosophy.md
 Document: MDS-004
-Chapter: 01
-Title: Typography Philosophy
 Status: Draft
-Version: 0.4
 -->
 
 # Typography Philosophy

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/11-governance.md
 Document: MDL-004
-Chapter: 11
-Title: Interaction Model Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Interaction Model Governance

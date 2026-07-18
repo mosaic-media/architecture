@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/11-governance.md
 Document: MDS-004
-Chapter: 11
-Title: Typography System Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Typography System Governance

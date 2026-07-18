@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/00-document-control.md
 Document: MDL-003
-Title: Mental Model
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.4
 | Title | Mosaic Design Language — Mental Model |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md), [MDL-002 — Principles](../mdl-002-principles/index.md) |
 | Repository | `/design/mdl/MDL-003 Mental Model/` |

@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/glossary.md
 Document: MDS-004
-Title: Glossary
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

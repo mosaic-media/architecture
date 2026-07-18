@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/11-governance.md
 Document: MDS-005
-Chapter: 11
-Title: Motion System Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Motion System Governance

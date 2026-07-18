@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/01-colour-philosophy.md
 Document: MDS-002
-Chapter: 01
-Title: Colour Philosophy
 Status: Draft
-Version: 0.4
 -->
 
 # Colour Philosophy

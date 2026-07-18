@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/06-resolved-tokens.md
 Document: MDS-001
-Chapter: 06
-Title: Resolved Tokens
 Status: Draft
-Version: 0.1
 -->
 
 # Resolved Tokens

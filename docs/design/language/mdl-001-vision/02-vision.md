@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/02-vision.md
 Document: MDL-001
-Chapter: 02
-Title: Vision
 Status: Draft
-Version: 0.4
 -->
 
 # Vision

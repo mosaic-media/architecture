@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/glossary.md
 Document: MDL-005
-Title: Glossary
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

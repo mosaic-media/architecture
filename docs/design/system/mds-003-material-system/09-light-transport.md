@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/09-light-transport.md
 Document: MDS-003
-Chapter: 09
-Title: Light Transport
 Status: Draft
-Version: 0.4
 -->
 
 # Light Transport

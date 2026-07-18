@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/03-primitive-tokens.md
 Document: MDS-001
-Chapter: 03
-Title: Primitive Tokens
 Status: Draft
-Version: 0.1
 -->
 
 # Primitive Tokens

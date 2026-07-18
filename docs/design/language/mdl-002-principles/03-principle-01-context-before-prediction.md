@@ -1,11 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/03-principle-01-context-before-prediction.md
 Document: MDL-002
-Chapter: 03
-Principle: 01
-Title: Context Before Prediction
 Status: Draft
-Version: 0.4
 -->
 
 # Principle 01 — Context Before Prediction

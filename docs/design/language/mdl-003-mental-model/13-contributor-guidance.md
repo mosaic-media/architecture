@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/13-contributor-guidance.md
 Document: MDL-003
-Chapter: 13
-Title: Contributor Guidance
 Status: Draft
-Version: 0.4
 -->
 
 # Contributor Guidance

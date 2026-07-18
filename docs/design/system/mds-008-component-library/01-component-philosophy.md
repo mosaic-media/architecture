@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/01-component-philosophy.md
 Document: MDS-008
-Chapter: 01
-Title: Component Philosophy
 Status: Draft
-Version: 0.4
 -->
 
 # Component Philosophy

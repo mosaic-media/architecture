@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/06-responsive-typography.md
 Document: MDS-004
-Chapter: 06
-Title: Responsive Typography
 Status: Draft
-Version: 0.4
 -->
 
 # Responsive Typography

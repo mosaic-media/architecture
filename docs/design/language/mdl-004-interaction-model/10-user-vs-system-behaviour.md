@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/10-user-vs-system-behaviour.md
 Document: MDL-004
-Chapter: 10
-Title: User Behaviour vs System Behaviour
 Status: Draft
-Version: 0.4
 -->
 
 # User Behaviour vs System Behaviour

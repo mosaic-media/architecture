@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/13-contributor-guidance.md
 Document: MDL-002
-Chapter: 13
-Title: Contributor Guidance
 Status: Draft
-Version: 0.4
 -->
 
 # Contributor Guidance

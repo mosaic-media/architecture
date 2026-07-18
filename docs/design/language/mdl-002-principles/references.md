@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/references.md
 Document: MDL-002
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/08-token-inheritance.md
 Document: MDS-001
-Chapter: 08
-Title: Token Inheritance
 Status: Draft
-Version: 0.1
 -->
 
 # Token Inheritance

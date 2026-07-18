@@ -2,7 +2,6 @@
 File: docs/design/language/mdl-001-vision/00-document-control.md
 Document: MDL-001
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +17,6 @@ Version: 0.4
 | Type | Foundational Specification |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Repository | `/design/mdl/MDL-001 Vision/` |
 | Parent Standard | DSS-001 Documentation Standard |
@@ -134,7 +132,6 @@ Must not be used as the basis for future implementation.
 
 MDL specifications follow semantic document versioning.
 
-| Version | Meaning |
 |---------|---------|
 | 0.x | Draft specification |
 | 1.x | Initial approved specification |
@@ -151,10 +148,10 @@ This approach keeps design intent stable while allowing documentation to evolve 
 
 # Revision History
 
-| Version | Date | Author | Summary |
-|----------|------|--------|---------|
-| 0.1 | July 2026 | Lead Design Systems Architect | Initial document created following founder discovery workshops. |
-| 0.4 | July 2026 | AdamNi-7080 | Editorial, structural and cross-reference review completed. |
+| Date | Author | Summary |
+|------|--------|---------|
+| July 2026 | Lead Design Systems Architect | Initial document created following founder discovery workshops. |
+| July 2026 | AdamNi-7080 | Editorial, structural and cross-reference review completed. |
 
 ---
 

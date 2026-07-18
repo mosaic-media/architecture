@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/references.md
 Document: MDL-003
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

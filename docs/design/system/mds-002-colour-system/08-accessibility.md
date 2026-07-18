@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/08-accessibility.md
 Document: MDS-002
-Chapter: 08
-Title: Accessibility
 Status: Draft
-Version: 0.4
 -->
 
 # Accessibility

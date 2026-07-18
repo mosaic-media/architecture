@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/references.md
 Document: MDS-002
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/08-temporal-behaviour.md
 Document: MDL-004
-Chapter: 08
-Title: Temporal Behaviour
 Status: Draft
-Version: 0.4
 -->
 
 # Temporal Behaviour

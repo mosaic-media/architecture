@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/03-focus.md
 Document: MDL-003
-Chapter: 03
-Title: Focus
 Status: Draft
-Version: 0.4
 -->
 
 # Focus

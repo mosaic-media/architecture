@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/11-governance.md
 Document: MDS-003
-Chapter: 11
-Title: Material System Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Material System Governance

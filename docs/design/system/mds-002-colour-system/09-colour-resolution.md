@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/09-colour-resolution.md
 Document: MDS-002
-Chapter: 09
-Title: Colour Resolution
 Status: Draft
-Version: 0.4
 -->
 
 # Colour Resolution

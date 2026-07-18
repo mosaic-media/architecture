@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/references.md
 Document: MDS-004
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

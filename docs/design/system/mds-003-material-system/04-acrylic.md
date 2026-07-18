@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/04-acrylic.md
 Document: MDS-003
-Chapter: 04
-Title: Acrylic
 Status: Draft
-Version: 0.4
 -->
 
 # Acrylic

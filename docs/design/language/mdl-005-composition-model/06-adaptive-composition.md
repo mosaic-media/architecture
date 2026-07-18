@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/06-adaptive-composition.md
 Document: MDL-005
-Chapter: 06
-Title: Adaptive Composition
 Status: Draft
-Version: 0.4
 -->
 
 # Adaptive Composition

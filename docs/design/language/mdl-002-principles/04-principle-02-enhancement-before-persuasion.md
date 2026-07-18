@@ -1,11 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/04-principle-02-enhancement-before-persuasion.md
 Document: MDL-002
-Chapter: 04
-Principle: 02
-Title: Enhancement Before Persuasion
 Status: Draft
-Version: 0.4
 -->
 
 # Principle 02 — Enhancement Before Persuasion

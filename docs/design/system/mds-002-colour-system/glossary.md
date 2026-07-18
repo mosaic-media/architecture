@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/glossary.md
 Document: MDS-002
-Title: Glossary
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

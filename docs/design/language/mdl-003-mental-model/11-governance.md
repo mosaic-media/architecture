@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/11-governance.md
 Document: MDL-003
-Chapter: 11
-Title: Mental Model Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Mental Model Governance

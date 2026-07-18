@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/03-behavioural-motion.md
 Document: MDS-005
-Chapter: 03
-Title: Behavioural Motion
 Status: Draft
-Version: 0.4
 -->
 
 # Behavioural Motion

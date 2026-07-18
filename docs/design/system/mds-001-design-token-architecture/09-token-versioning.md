@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/09-token-versioning.md
 Document: MDS-001
-Chapter: 09
-Title: Token Versioning
 Status: Draft
-Version: 0.1
 -->
 
 # Token Versioning

@@ -2,7 +2,6 @@
 File: docs/design/system/mds-003-material-system/index.md
 Document: MDS-003
 Status: Draft
-Version: 0.4
 -->
 
 # MDS-003 — Material System

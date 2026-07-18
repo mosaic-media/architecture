@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/04-runtime-atmosphere.md
 Document: MDS-002
-Chapter: 04
-Title: Runtime Atmosphere
 Status: Draft
-Version: 0.4
 -->
 
 # Runtime Atmosphere

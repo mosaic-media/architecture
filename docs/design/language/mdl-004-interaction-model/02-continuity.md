@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/02-continuity.md
 Document: MDL-004
-Chapter: 02
-Title: Continuity
 Status: Draft
-Version: 0.4
 -->
 
 # Continuity

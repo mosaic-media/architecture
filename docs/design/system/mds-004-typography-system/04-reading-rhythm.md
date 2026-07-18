@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/04-reading-rhythm.md
 Document: MDS-004
-Chapter: 04
-Title: Reading Rhythm
 Status: Draft
-Version: 0.4
 -->
 
 # Reading Rhythm

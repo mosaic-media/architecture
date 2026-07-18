@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/00-document-control.md
 Document: MDS-003
-Title: Material System
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.4
 | Title | Mosaic Design System — Material System |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001](../../language/mdl-001-vision/index.md) → [MDL-005](../../language/mdl-005-composition-model/index.md), [MDS-001](../mds-001-design-token-architecture/index.md), [MDS-002](../mds-002-colour-system/index.md) |
 | Repository | `/design/mds/MDS-003 Material System/` |

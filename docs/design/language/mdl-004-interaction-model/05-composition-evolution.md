@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/05-composition-evolution.md
 Document: MDL-004
-Chapter: 05
-Title: Composition Evolution
 Status: Draft
-Version: 0.4
 -->
 
 # Composition Evolution

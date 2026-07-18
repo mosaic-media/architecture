@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/04-hero.md
 Document: MDL-005
-Chapter: 04
-Title: Hero
 Status: Draft
-Version: 0.4
 -->
 
 # Hero

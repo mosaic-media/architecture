@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/02-material-hierarchy.md
 Document: MDS-003
-Chapter: 02
-Title: Material Hierarchy
 Status: Draft
-Version: 0.4
 -->
 
 # Material Hierarchy

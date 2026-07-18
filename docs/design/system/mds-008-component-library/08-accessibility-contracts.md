@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/08-accessibility-contracts.md
 Document: MDS-008
-Chapter: 08
-Title: Accessibility Contracts
 Status: Draft
-Version: 0.4
 -->
 
 # Accessibility Contracts

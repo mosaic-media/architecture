@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/07-light-and-dark.md
 Document: MDS-002
-Chapter: 07
-Title: Light and Dark
 Status: Draft
-Version: 0.4
 -->
 
 # Light and Dark

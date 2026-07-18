@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/glossary.md
 Document: MDS-005
-Title: Glossary
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

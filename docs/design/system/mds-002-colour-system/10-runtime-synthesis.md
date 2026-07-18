@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-002-colour-system/10-runtime-synthesis.md
 Document: MDS-002
-Chapter: 10
-Title: Runtime Synthesis
 Status: Draft
-Version: 0.4
 -->
 
 # Runtime Synthesis

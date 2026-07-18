@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/05-non-goals.md
 Document: MDL-001
-Chapter: 05
-Title: Non-Goals
 Status: Draft
-Version: 0.4
 -->
 
 # Non-Goals

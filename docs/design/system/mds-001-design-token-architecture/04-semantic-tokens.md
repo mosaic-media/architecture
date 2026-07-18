@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/04-semantic-tokens.md
 Document: MDS-001
-Chapter: 04
-Title: Semantic Tokens
 Status: Draft
-Version: 0.1
 -->
 
 # Semantic Tokens

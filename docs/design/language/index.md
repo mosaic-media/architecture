@@ -2,7 +2,6 @@
 File: docs/design/language/index.md
 Document: Language
 Status: Draft
-Version: 0.2
 -->
 
 # Language

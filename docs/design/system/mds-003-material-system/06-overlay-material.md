@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/06-overlay-material.md
 Document: MDS-003
-Chapter: 06
-Title: Overlay Material
 Status: Draft
-Version: 0.4
 -->
 
 # Overlay Material

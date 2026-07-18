@@ -2,7 +2,6 @@
 File: docs/design/system/index.md
 Document: System
 Status: Draft
-Version: 0.2
 -->
 
 # System

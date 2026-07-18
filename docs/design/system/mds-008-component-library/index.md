@@ -2,7 +2,6 @@
 File: docs/design/system/mds-008-component-library/index.md
 Document: MDS-008
 Status: Draft
-Version: 0.4
 -->
 
 # MDS-008 — Component Library

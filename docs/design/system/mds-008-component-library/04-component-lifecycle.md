@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/04-component-lifecycle.md
 Document: MDS-008
-Chapter: 04
-Title: Component Lifecycle
 Status: Draft
-Version: 0.4
 -->
 
 # Component Lifecycle

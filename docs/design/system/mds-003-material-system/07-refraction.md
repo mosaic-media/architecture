@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/07-refraction.md
 Document: MDS-003
-Chapter: 07
-Title: Refraction
 Status: Draft
-Version: 0.4
 -->
 
 # Refraction

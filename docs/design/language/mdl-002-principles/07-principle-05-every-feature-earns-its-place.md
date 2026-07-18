@@ -1,11 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/07-principle-05-every-feature-earns-its-place.md
 Document: MDL-002
-Chapter: 07
-Principle: 05
-Title: Every Feature Earns Its Place
 Status: Draft
-Version: 0.4
 -->
 
 # Principle 05 — Every Feature Earns Its Place

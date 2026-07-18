@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-003-material-system/03-canvas.md
 Document: MDS-003
-Chapter: 03
-Title: Canvas
 Status: Draft
-Version: 0.4
 -->
 
 # Canvas

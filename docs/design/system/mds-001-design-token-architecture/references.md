@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/references.md
 Document: MDS-001
-Title: References
 Status: Draft
-Version: 0.1
 -->
 
 # References

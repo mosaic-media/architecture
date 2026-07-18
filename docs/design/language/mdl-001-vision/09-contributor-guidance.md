@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/09-contributor-guidance.md
 Document: MDL-001
-Chapter: 09
-Title: Contributor Guidance
 Status: Draft
-Version: 0.4
 -->
 
 # Contributor Guidance

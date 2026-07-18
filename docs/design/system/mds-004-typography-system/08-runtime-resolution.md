@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-004-typography-system/08-runtime-resolution.md
 Document: MDS-004
-Chapter: 08
-Title: Runtime Typography Resolution
 Status: Draft
-Version: 0.4
 -->
 
 # Runtime Typography Resolution

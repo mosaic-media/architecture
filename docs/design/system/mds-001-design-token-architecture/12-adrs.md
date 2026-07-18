@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-001-design-token-architecture/12-adrs.md
 Document: MDS-001
-Chapter: 12
-Title: Architectural Decision Records
 Status: Draft
-Version: 0.1
 -->
 
 # Architectural Decision Records

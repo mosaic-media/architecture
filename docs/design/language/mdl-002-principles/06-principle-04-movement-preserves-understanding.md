@@ -1,11 +1,7 @@
 <!--
 File: docs/design/language/mdl-002-principles/06-principle-04-movement-preserves-understanding.md
 Document: MDL-002
-Chapter: 06
-Principle: 04
-Title: Movement Preserves Understanding
 Status: Draft
-Version: 0.4
 -->
 
 # Principle 04 — Movement Preserves Understanding

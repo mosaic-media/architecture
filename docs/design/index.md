@@ -2,7 +2,6 @@
 File: docs/design/index.md
 Document: Design
 Status: Draft
-Version: 0.2
 -->
 
 # Design

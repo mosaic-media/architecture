@@ -1,9 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/references.md
 Document: MDS-005
-Title: References
 Status: Draft
-Version: 0.4
 -->
 
 # References

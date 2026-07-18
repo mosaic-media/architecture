@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/01-motion-philosophy.md
 Document: MDS-005
-Chapter: 01
-Title: Motion Philosophy
 Status: Draft
-Version: 0.4
 -->
 
 # Motion Philosophy

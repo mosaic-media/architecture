@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/09-composition-solving.md
 Document: MDL-005
-Chapter: 09
-Title: Composition Solving
 Status: Draft
-Version: 0.4
 -->
 
 # Composition Solving

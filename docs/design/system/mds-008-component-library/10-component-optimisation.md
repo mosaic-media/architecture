@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-008-component-library/10-component-optimisation.md
 Document: MDS-008
-Chapter: 10
-Title: Component Optimisation
 Status: Draft
-Version: 0.4
 -->
 
 # Component Optimisation

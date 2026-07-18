@@ -2,7 +2,6 @@
 File: docs/design/language/mdl-004-interaction-model/index.md
 Document: MDL-004
 Status: Draft
-Version: 0.4
 -->
 
 # MDL-004 — Interaction Model

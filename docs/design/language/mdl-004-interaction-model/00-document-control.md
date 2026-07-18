@@ -1,9 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/00-document-control.md
 Document: MDL-004
-Title: Interaction Model
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -18,7 +16,6 @@ Version: 0.4
 | Title | Mosaic Design Language — Interaction Model |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Parent Specifications | [MDL-001 — Mosaic Design Language Vision](../mdl-001-vision/index.md), [MDL-002 — Principles](../mdl-002-principles/index.md), [MDL-003 — Mental Model](../mdl-003-mental-model/index.md) |
 | Repository | `/design/mdl/MDL-004 Interaction Model/` |

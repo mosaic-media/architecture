@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/01-what-is-an-interaction-model.md
 Document: MDL-004
-Chapter: 01
-Title: What Is An Interaction Model?
 Status: Draft
-Version: 0.4
 -->
 
 # What Is An Interaction Model?

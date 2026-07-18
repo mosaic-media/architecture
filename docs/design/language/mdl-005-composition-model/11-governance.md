@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-005-composition-model/11-governance.md
 Document: MDL-005
-Chapter: 11
-Title: Composition Model Governance
 Status: Draft
-Version: 0.4
 -->
 
 # Composition Model Governance

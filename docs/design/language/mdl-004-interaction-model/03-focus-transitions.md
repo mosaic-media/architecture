@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/03-focus-transitions.md
 Document: MDL-004
-Chapter: 03
-Title: Focus Transitions
 Status: Draft
-Version: 0.4
 -->
 
 # Focus Transitions

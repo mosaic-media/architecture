@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/06-temporal-continuity.md
 Document: MDS-005
-Chapter: 06
-Title: Temporal Continuity
 Status: Draft
-Version: 0.4
 -->
 
 # Temporal Continuity

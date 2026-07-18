@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/13-contributor-guidance.md
 Document: MDS-005
-Chapter: 13
-Title: Contributor Guidance
 Status: Draft
-Version: 0.4
 -->
 
 # Contributor Guidance

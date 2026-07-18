@@ -1,10 +1,7 @@
 <!--
 File: docs/design/system/mds-005-motion-system/08-accessibility.md
 Document: MDS-005
-Chapter: 08
-Title: Motion Accessibility
 Status: Draft
-Version: 0.4
 -->
 
 # Motion Accessibility

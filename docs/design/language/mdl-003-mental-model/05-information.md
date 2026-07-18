@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-003-mental-model/05-information.md
 Document: MDL-003
-Chapter: 05
-Title: Information
 Status: Draft
-Version: 0.4
 -->
 
 # Information

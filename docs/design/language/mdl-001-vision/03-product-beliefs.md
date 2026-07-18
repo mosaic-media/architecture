@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-001-vision/03-product-beliefs.md
 Document: MDL-001
-Chapter: 03
-Title: Product Beliefs
 Status: Draft
-Version: 0.4
 -->
 
 # Product Beliefs

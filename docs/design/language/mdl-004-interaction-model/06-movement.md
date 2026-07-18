@@ -1,10 +1,7 @@
 <!--
 File: docs/design/language/mdl-004-interaction-model/06-movement.md
 Document: MDL-004
-Chapter: 06
-Title: Movement
 Status: Draft
-Version: 0.4
 -->
 
 # Movement
