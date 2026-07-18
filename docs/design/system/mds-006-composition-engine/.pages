@@ -1,0 +1,7 @@
+title: Composition Engine (Superseded)
+arrange:
+  - index.md
+  - 00-document-control.md
+  - ...
+  - references.md
+  - glossary.md
