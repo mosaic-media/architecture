@@ -12,21 +12,7 @@ Status: Draft
 
 # Purpose
 
-Distributed systems naturally introduce uncertainty.
-
-Events may be:
-
-- delayed
-- duplicated
-- replayed
-- processed concurrently
-- delivered out of chronological order
-
-The Mosaic Runtime intentionally avoids guaranteeing global event ordering because doing so significantly reduces scalability and increases coupling.
-
-Instead, capabilities are engineered to converge upon correct business state regardless of delivery order wherever practical.
-
-This document defines the ordering guarantees provided by the Mosaic Runtime and the responsibilities of capabilities consuming events.
+Distributed systems naturally introduce uncertainty, and events may be delayed, duplicated, replayed, processed concurrently or delivered out of chronological order. The Mosaic Runtime intentionally avoids guaranteeing global event ordering because doing so significantly reduces scalability and increases coupling. Instead, capabilities are engineered to converge upon correct business state regardless of delivery order wherever practical. This document defines the ordering guarantees provided by the Mosaic Runtime and the responsibilities of capabilities consuming events.
 
 ---
 
@@ -36,82 +22,19 @@ Within Mosaic:
 
 > **Ordering is a business concern, not a transport guarantee.**
 
-The runtime transports events.
-
-Business capabilities determine whether order is significant.
-
-When ordering is required, it should be modelled explicitly rather than assumed implicitly.
+The runtime transports events, whereas business capabilities determine whether order is significant. When ordering is required, it should be modelled explicitly rather than assumed implicitly.
 
 ---
 
 # Why Ordering Is Difficult
 
-Consider two events.
-
-```mermaid
-flowchart TD
-
-N1["playback.started"]
-N2["PlaybackCompleted"]
-
-N1 --> N2
-```
-
-Business chronology is obvious.
-
-Runtime chronology is not.
-
-A temporary network delay may produce:
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["playback.started"]
-
-N1 --> N2
-```
-
-Both events are valid.
-
-Only their arrival differs.
-
-Subscribers must therefore distinguish between:
-
-- event occurrence
-- event delivery
-
-These are different concepts.
+Consider two events, `playback.started` followed by PlaybackCompleted. Business chronology is obvious, but runtime chronology is not: a temporary network delay may deliver PlaybackCompleted before `playback.started`. Both events are valid and only their arrival differs, so subscribers must distinguish between event occurrence and event delivery, which are different concepts.
 
 ---
 
 # Occurrence vs Delivery
 
-Every event has two timelines.
-
-```mermaid
-flowchart TD
-
-N1["Business Timeline"]
-N2["Occurred"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Runtime Timeline"]
-N2["Delivered"]
-
-N1 --> N2
-```
-
-The runtime preserves occurrence metadata.
-
-It does not guarantee delivery order.
-
-Subscribers should therefore reason about business time rather than arrival time.
+Every event has two timelines: a business timeline on which it occurred, and a runtime timeline on which it was delivered. The runtime preserves occurrence metadata but does not guarantee delivery order, so subscribers should reason about business time rather than arrival time.
 
 ---
 
@@ -130,15 +53,13 @@ The runtime does **not** guarantee:
 - cross-capability ordering
 - simultaneous delivery
 
-These guarantees intentionally remain minimal.
+These guarantees intentionally remain minimal, because guaranteeing more would reintroduce the coupling the runtime exists to avoid.
 
 ---
 
 # Ordering Domains
 
-Ordering is meaningful only within a bounded business context.
-
-Example.
+Ordering is meaningful only within a bounded business context. Within Playback, for example, ordering matters.
 
 ```mermaid
 flowchart TD
@@ -153,60 +74,19 @@ N2 --> N3
 N3 --> N4
 ```
 
-Ordering matters.
-
-However:
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["MetadataFetched"]
-
-N1 --> N2
-```
-
-There is usually no meaningful ordering relationship.
-
-Capabilities should define ordering only where the business genuinely requires it.
+Between PlaybackCompleted and MetadataFetched, however, there is usually no meaningful ordering relationship. Capabilities should therefore define ordering only where the business genuinely requires it.
 
 ---
 
 # Global Ordering
 
-Global ordering is prohibited.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Every Event"]
-N2["Single Global Queue"]
-N3["One Worker"]
-
-N1 --> N2
-N2 --> N3
-```
-
-While simple, this approach:
-
-- limits throughput
-- increases latency
-- couples unrelated capabilities
-- reduces resilience
-
-The runtime intentionally avoids this architecture.
-
-Independent work should remain independent.
+Global ordering is prohibited. Passing every event through a single global queue served by one worker would produce it, and while that approach is simple it limits throughput, increases latency, couples unrelated capabilities and reduces resilience. The runtime intentionally avoids this architecture, because independent work should remain independent.
 
 ---
 
 # Per-Entity Ordering
 
-Where ordering is required, it SHOULD generally be scoped to a business entity.
-
-Example.
+Where ordering is required, it should generally be scoped to a business entity.
 
 ```mermaid
 flowchart TD
@@ -221,244 +101,61 @@ N2 --> N3
 N3 --> N4
 ```
 
-Ordering exists because all events concern the same media item.
-
-This provides deterministic behaviour without requiring global coordination.
+Ordering exists here because all of these events concern the same media item, which provides deterministic behaviour without requiring global coordination.
 
 ---
 
 # Subscriber Expectations
 
-Subscribers MUST assume:
-
-- duplicate delivery
-- delayed delivery
-- reordered delivery
-
-Subscribers SHOULD NOT assume:
-
-```mermaid
-flowchart TD
-
-N1["Receive"]
-N2["Chronological"]
-
-N1 --> N2
-```
-
-Instead they should validate current business state before performing work.
+Subscribers must assume duplicate delivery, delayed delivery and reordered delivery, and they should not assume that what they receive arrives in chronological order. Instead they should validate current business state before performing work.
 
 ---
 
 # State Validation
 
-Suppose:
-
-```
-
-PlaybackCompleted
-```
-
-arrives first.
-
-The subscriber should ask:
-
-```
-
-Current Playback State?
-```
-
-Rather than:
-
-```
-
-Did playback.started arrive?
-```
-
-Business state is authoritative.
-
-Event order is informative.
+Suppose PlaybackCompleted arrives first. The subscriber should ask what the current playback state is, rather than whether `playback.started` arrived, because business state is authoritative and event order is only informative.
 
 ---
 
 # Sequence Numbers
 
-Some event families benefit from sequence numbers.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Sequence 1"]
-N3["Sequence 2"]
-N4["Sequence 3"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Sequence numbers allow subscribers to detect:
-
-- missing events
-- duplicates
-- stale events
-
-They should be introduced only where ordering genuinely matters.
-
-Most events do not require them.
+Some event families benefit from sequence numbers, which number the events of a single entity — sequence 1, sequence 2, sequence 3 — so that subscribers can detect missing events, duplicates and stale events. They should be introduced only where ordering genuinely matters, and most events do not require them.
 
 ---
 
 # Version vs Sequence
 
-Do not confuse:
-
-```
-
-Version
-```
-
-with
-
-```
-
-Sequence
-```
-
-Version identifies:
-
-```
-
-Schema
-```
-
-Sequence identifies:
-
-```
-
-Business chronology
-```
-
-They solve entirely different problems.
+Do not confuse version with sequence. Version identifies the schema, whereas sequence identifies business chronology, so they solve entirely different problems.
 
 ---
 
 # Concurrent Events
 
-Independent capabilities may legitimately publish events simultaneously.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["media.imported"]
-N2["MetadataFetched"]
-N3["ArtworkDownloaded"]
-
-N1 --> N2
-N2 --> N3
-```
-
-and
-
-```mermaid
-flowchart TD
-
-N1["media.imported"]
-N2["SearchIndexed"]
-
-N1 --> N2
-```
-
-Neither workflow depends upon the other.
-
-The runtime should allow maximum concurrency.
-
-Artificial ordering reduces scalability.
+Independent capabilities may legitimately publish events simultaneously. A `media.imported` event may lead to MetadataFetched and then ArtworkDownloaded in one workflow while separately leading to SearchIndexed in another, and neither workflow depends upon the other. The runtime should allow maximum concurrency, because artificial ordering reduces scalability.
 
 ---
 
 # Ordering Through Events
 
-When business ordering genuinely exists, model it explicitly.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["MetadataFetched"]
-N2["ArtworkRequested"]
-N3["ArtworkDownloaded"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Each event naturally establishes the next business step.
-
-Ordering emerges through business facts rather than runtime configuration.
+When business ordering genuinely exists, model it explicitly: MetadataFetched leads to ArtworkRequested, which in turn leads to ArtworkDownloaded. Each event naturally establishes the next business step, so ordering emerges through business facts rather than runtime configuration.
 
 ---
 
 # Replay Ordering
 
-Replay SHOULD preserve original occurrence order where practical.
-
-However:
-
-Subscribers must still remain resilient to duplicate processing and partial replay.
-
-Replay correctness should never depend solely upon transport order.
-
-Business state remains authoritative.
+Replay should preserve original occurrence order where practical. Subscribers must nevertheless remain resilient to duplicate processing and partial replay, because replay correctness should never depend solely upon transport order. Business state remains authoritative.
 
 ---
 
 # Event Timestamps
 
-Subscribers SHOULD use:
-
-```
-
-Occurred At
-```
-
-when chronological reasoning is required.
-
-Subscribers SHOULD NOT use:
-
-```
-
-Received At
-```
-
-Delivery time reflects runtime behaviour.
-
-Occurrence time reflects business reality.
+Subscribers should use Occurred At when chronological reasoning is required, and should not use Received At. Delivery time reflects runtime behaviour, whereas occurrence time reflects business reality.
 
 ---
 
 # Missing Events
 
-Subscribers should tolerate missing events gracefully.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["playback.started Missing"]
-
-N1 --> N2
-```
-
-Possible responses include:
+Subscribers should tolerate missing events gracefully. Where PlaybackCompleted arrives and `playback.started` is missing, possible responses include:
 
 - query current state
 - ignore stale event
@@ -471,63 +168,19 @@ Subscribers should never enter undefined behaviour because one expected event fa
 
 # Stale Events
 
-Events may become stale.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["MetadataFetched"]
-N2["Several Hours Later"]
-N3["MetadataCorrected"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Receiving the older event later should not overwrite newer business state.
-
-Subscribers should compare:
-
-- timestamps
-- versions
-- current state
-
-before applying changes.
+Events may become stale. MetadataFetched may arrive several hours after MetadataCorrected has already been applied, and receiving the older event later should not overwrite newer business state. Subscribers should therefore compare timestamps, versions and current state before applying changes.
 
 ---
 
 # Causal Ordering
 
-Where business causality matters, subscribers SHOULD use:
-
-- Correlation ID
-- Causation ID
-
-rather than delivery order.
-
-These identifiers describe business relationships.
-
-Transport order does not.
+Where business causality matters, subscribers should use Correlation ID and Causation ID rather than delivery order, because these identifiers describe business relationships and transport order does not.
 
 ---
 
 # Runtime Behaviour
 
-The runtime intentionally avoids reordering events.
-
-It delivers events as they become available.
-
-Capabilities determine whether ordering is relevant.
-
-This keeps the runtime:
-
-- simple
-- scalable
-- transport agnostic
-
-Business semantics remain outside runtime infrastructure.
+The runtime intentionally avoids reordering events and delivers them as they become available, leaving capabilities to determine whether ordering is relevant. This keeps the runtime simple, scalable and transport agnostic, with business semantics remaining outside runtime infrastructure.
 
 ---
 
@@ -537,16 +190,7 @@ The following practices are prohibited.
 
 ## Assuming FIFO Globally
 
-```mermaid
-flowchart TD
-
-N1["Event A"]
-N2["Event B"]
-N3["Always Delivered In Order"]
-
-N1 --> N2
-N2 --> N3
-```
+Expecting that Event A and Event B are always delivered in order.
 
 ---
 
@@ -558,19 +202,7 @@ Assuming subscriber execution order has business meaning.
 
 ## Delivery Time As Business Time
 
-Using:
-
-```
-
-Received At
-```
-
-instead of:
-
-```
-
-Occurred At
-```
+Using Received At instead of Occurred At.
 
 ---
 
@@ -582,20 +214,7 @@ Preventing independent capabilities from progressing while waiting for ordered p
 
 ## Runtime-Owned Business Ordering
 
-The runtime should never determine:
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Metadata"]
-N3["Search"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Business ordering belongs to capabilities.
+The runtime should never determine that Playback precedes Metadata, which in turn precedes Search. Business ordering belongs to capabilities.
 
 ---
 
@@ -603,22 +222,20 @@ Business ordering belongs to capabilities.
 
 Within Mosaic:
 
-- Global ordering MUST NOT be assumed.
-- Subscribers MUST tolerate out-of-order delivery.
-- Business state MUST remain authoritative.
-- Ordering SHOULD be scoped to business entities where required.
-- Sequence numbers SHOULD only be introduced when justified.
-- Event timestamps SHOULD represent business occurrence.
-- Correlation and causation SHOULD express business relationships.
-- Runtime delivery MUST remain independent of business semantics.
+- Global ordering must not be assumed.
+- Subscribers must tolerate out-of-order delivery.
+- Business state must remain authoritative.
+- Ordering should be scoped to business entities where required.
+- Sequence numbers should only be introduced when justified.
+- Event timestamps should represent business occurrence.
+- Correlation and causation should express business relationships.
+- Runtime delivery must remain independent of business semantics.
 
 ---
 
 # Relationship to the Runtime
 
-Relaxing ordering guarantees is one of the key architectural decisions enabling Mosaic's scalability.
-
-Because the runtime does not attempt to globally sequence every event:
+Relaxing ordering guarantees is one of the key architectural decisions enabling Mosaic's scalability. Because the runtime does not attempt to globally sequence every event:
 
 - worker pools remain highly parallel
 - modules remain independent
@@ -626,20 +243,10 @@ Because the runtime does not attempt to globally sequence every event:
 - throughput scales naturally
 - capabilities evolve independently
 
-Where ordering matters, business capabilities model it explicitly.
-
-Where it does not, the runtime remains free to optimise for concurrency.
+Where ordering matters, business capabilities model it explicitly, and where it does not, the runtime remains free to optimise for concurrency.
 
 ---
 
 # Summary
 
-Perfect ordering is an attractive illusion.
-
-In distributed systems it often comes at the expense of scalability, resilience and simplicity.
-
-Within Mosaic, the runtime delivers immutable business facts.
-
-Capabilities determine how those facts should influence business state.
-
-By treating ordering as a business concern rather than a runtime guarantee, the platform remains both highly concurrent and architecturally simple.
+Perfect ordering is an attractive illusion, and in distributed systems it often comes at the expense of scalability, resilience and simplicity. Within Mosaic the runtime delivers immutable business facts, and capabilities determine how those facts should influence business state. By treating ordering as a business concern rather than a runtime guarantee, the platform remains both highly concurrent and architecturally simple.

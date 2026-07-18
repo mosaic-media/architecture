@@ -23,32 +23,15 @@ Status: Draft
 
 # Purpose
 
-This document establishes the governance, authority and lifecycle of the Mosaic Event-Driven Runtime specification.
+This document establishes the governance, authority and lifecycle of the Mosaic Event-Driven Runtime specification. Version 0.3 aligns implementation guidance with [MIP-001](../../protocols/mip-001-event-protocol/index.md) event ownership, namespaced events and public/private Module event contracts.
 
-Version 0.3 aligns implementation guidance with [MIP-001](../../protocols/mip-001-event-protocol/index.md) event ownership, namespaced events and public/private Module event contracts.
-
-MEG-002 defines the architectural standards governing how independently developed capabilities communicate and coordinate work within the Mosaic Runtime.
-
-Unlike implementation documentation, this specification defines **runtime behaviour**, not implementation detail.
+MEG-002 defines the architectural standards governing how independently developed capabilities communicate and coordinate work within the Mosaic Runtime. Unlike implementation documentation, this specification defines **runtime behaviour**, not implementation detail.
 
 ---
 
 # Authority
 
-MEG-002 is the authoritative specification governing event-driven behaviour throughout the Mosaic ecosystem.
-
-This specification applies to:
-
-- Mosaic Platform
-- First-party Modules
-- Third-party Modules
-- Background Workers
-- Schedulers
-- Event Publishers
-- Event Subscribers
-- Runtime Infrastructure
-
-Every component participating in the Mosaic Runtime MUST comply with the standards defined within this specification.
+MEG-002 is the authoritative specification governing event-driven behaviour throughout the Mosaic ecosystem. It applies to the Mosaic Platform, to first-party and third-party Modules, to Background Workers and Schedulers, to Event Publishers and Event Subscribers, and to Runtime Infrastructure. Every component participating in the Mosaic Runtime must comply with the standards defined within this specification.
 
 ---
 
@@ -69,7 +52,7 @@ N2 --> N3
 N3 --> N4
 ```
 
-Specifically:
+Each layer of that chain settles a different question:
 
 - **MDL** defines product philosophy.
 - **MDS** defines presentation.
@@ -115,9 +98,7 @@ Every subsequent chapter expands one or more of these principles.
 
 # Document Lifecycle
 
-MEG specifications evolve alongside the platform.
-
-Each document progresses through the following lifecycle.
+MEG specifications evolve alongside the platform, and each document progresses through the following lifecycle.
 
 ```mermaid
 flowchart TD
@@ -136,61 +117,25 @@ N4 --> N5
 N5 --> N6
 ```
 
-Accepted specifications become part of the canonical Mosaic architecture.
-
-Historical versions SHOULD remain available for future reference.
+Accepted specifications become part of the canonical Mosaic architecture, and historical versions should remain available for future reference.
 
 ---
 
 # Runtime Evolution
 
-The runtime is expected to evolve.
-
-However, architectural evolution should occur deliberately.
-
-Changes affecting:
-
-- event contracts
-- event delivery guarantees
-- runtime semantics
-- lifecycle behaviour
-- module interaction
-
-SHOULD be accompanied by an Architectural Decision Record (ADR).
-
-This ensures architectural intent remains discoverable long after implementation changes.
+The runtime is expected to evolve, but architectural evolution should occur deliberately. Changes affecting event contracts, event delivery guarantees, runtime semantics, lifecycle behaviour or module interaction should therefore be accompanied by an Architectural Decision Record (ADR), which ensures architectural intent remains discoverable long after implementation changes.
 
 ---
 
 # Compliance
 
-All runtime components SHOULD comply with MEG-002.
-
-Where deviation becomes necessary, the repository SHOULD document:
-
-- the reason
-- expected impact
-- migration strategy
-- compatibility implications
-
-Temporary deviations should eventually be removed.
-
-Permanent deviations should generally result in updates to the specification.
+All runtime components should comply with MEG-002. Where deviation becomes necessary, the repository should document the reason, the expected impact, the migration strategy and the compatibility implications. Temporary deviations should eventually be removed, whereas permanent deviations should generally result in updates to the specification.
 
 ---
 
 # Design Philosophy
 
-MEG-002 intentionally favours:
-
-- deterministic behaviour
-- loose coupling
-- eventual consistency
-- explicit ownership
-- bounded complexity
-- observable execution
-
-The runtime should encourage independent capability evolution without sacrificing operational clarity.
+MEG-002 intentionally favours deterministic behaviour, loose coupling, eventual consistency, explicit ownership, bounded complexity and observable execution, because the runtime should encourage independent capability evolution without sacrificing operational clarity.
 
 This reflects established practice in mature event-driven systems, where idempotency, observability, ordering guarantees and bounded failure handling are treated as first-class architectural concerns rather than implementation details.  [Encore Framework](https://encore.dev/articles/event-driven-architecture)
 
@@ -198,16 +143,4 @@ This reflects established practice in mature event-driven systems, where idempot
 
 # Scope of Authority
 
-MEG-002 governs runtime behaviour.
-
-It does **not** define:
-
-- business domains
-- storage technologies
-- transport protocols
-- module packaging
-- deployment architecture
-
-Those concerns belong to other MEG specifications.
-
-This separation keeps runtime concerns independent from implementation concerns.
+MEG-002 governs runtime behaviour. It does **not** define business domains, storage technologies, transport protocols, module packaging or deployment architecture; those concerns belong to other MEG specifications, and the separation keeps runtime concerns independent from implementation concerns.

@@ -14,22 +14,7 @@ Status: Draft
 
 # Purpose
 
-The Mosaic Runtime is built upon an event-driven architecture.
-
-Rather than components communicating directly through tightly coupled service calls, the runtime is composed of autonomous capabilities that communicate through events.
-
-This approach enables:
-
-- Loose coupling
-- High cohesion
-- Horizontal scalability
-- Module interoperability
-- Background processing
-- Reactive workflows
-- Independent deployment
-- Progressive capability growth
-
-Unlike traditional request-driven architectures, the Mosaic Runtime treats events as the primary mechanism through which the platform coordinates work.
+The Mosaic Runtime is built upon an event-driven architecture. Rather than components communicating directly through tightly coupled service calls, the runtime is composed of autonomous capabilities that communicate through events, and that indirection is what enables loose coupling, high cohesion, horizontal scalability, module interoperability, background processing, reactive workflows, independent deployment and progressive capability growth. Unlike traditional request-driven architectures, the Mosaic Runtime therefore treats events as the primary mechanism through which the platform coordinates work.
 
 ---
 
@@ -52,47 +37,15 @@ N4 --> N5
 N5 --> N6
 ```
 
-[MEG-001](../meg-001-go-engineering-standards/index.md) defines **how software is engineered.**
-
-MEG-002 defines **how software behaves once it is running.**
-
-Together they establish the engineering foundation of the Mosaic platform.
+[MEG-001](../meg-001-go-engineering-standards/index.md) defines **how software is engineered**, whereas MEG-002 defines **how software behaves once it is running**. Together they establish the engineering foundation of the Mosaic platform.
 
 ---
 
 # Scope
 
-This specification defines:
+This specification defines event philosophy, runtime lifecycle, event contracts, event naming, event versioning, publishers, subscribers, the event bus, worker lifecycle, scheduling, retry strategy, idempotency, event ordering, correlation IDs, backpressure, observability, runtime resilience, and the PostgreSQL transactional outbox and dispatcher wake-up.
 
-- Event philosophy
-- Runtime lifecycle
-- Event contracts
-- Event naming
-- Event versioning
-- Publishers
-- Subscribers
-- Event bus
-- Worker lifecycle
-- Scheduling
-- Retry strategy
-- Idempotency
-- Event ordering
-- Correlation IDs
-- Backpressure
-- Observability
-- Runtime resilience
-- PostgreSQL transactional outbox and dispatcher wake-up
-
-This specification intentionally does **not** define:
-
-- Business domains
-- HTTP APIs
-- Storage architecture
-- Module SDK
-- Deployment
-- Infrastructure
-
-These concerns are defined by later MEG specifications.
+It intentionally does **not** define business domains, HTTP APIs, storage architecture, the Module SDK, deployment or infrastructure. These concerns are defined by later MEG specifications.
 
 ---
 
@@ -110,14 +63,7 @@ Within Mosaic:
 
 > **Capabilities publish facts. Other capabilities decide whether they care.**
 
-A capability should never need to know:
-
-- who consumes an event
-- how many consumers exist
-- what work those consumers perform
-- whether any consumer exists at all
-
-This separation allows the platform to evolve without creating unnecessary coupling between capabilities.
+A capability should never need to know who consumes an event, how many consumers exist, what work those consumers perform, or whether any consumer exists at all. This separation allows the platform to evolve without creating unnecessary coupling between capabilities.
 
 ---
 
@@ -144,85 +90,45 @@ N5 --> N6
 N6 --> N7
 ```
 
-Every layer owns exactly one responsibility.
-
-Future chapters define each layer in detail.
+Every layer owns exactly one responsibility, and future chapters define each layer in detail.
 
 ---
 
 # Expected Outcome
 
-After reading MEG-002 contributors should understand:
-
-- why Mosaic is event-driven
-- when events should be published
-- how events are named
-- how subscribers behave
-- how retries work
-- how failures are handled
-- how background workers integrate with the runtime
-- how independent modules cooperate without direct dependencies
-
-without discussing any individual business domain.
+After reading MEG-002 contributors should understand why Mosaic is event-driven, when events should be published, how events are named, how subscribers behave, how retries work, how failures are handled, how background workers integrate with the runtime, and how independent modules cooperate without direct dependencies — all without discussing any individual business domain.
 
 ---
 
 # Repository Structure
 
-```
-
+```text
 engineering/
-
 └── meg/
-
     └── MEG-002 Event-Driven Runtime/
-
         README.md
-
         00-document-control.md
-
         01-runtime-philosophy.md
-
         02-why-events.md
-
         03-event-model.md
-
         04-event-naming.md
-
         05-event-schema.md
-
         06-event-versioning.md
-
         07-event-bus.md
-
         08-publishers.md
-
         09-subscribers.md
-
         10-worker-lifecycle.md
-
         11-scheduling.md
-
         12-idempotency.md
-
         13-retry-strategy.md
-
         14-event-ordering.md
-
         15-backpressure.md
-
         16-correlation-and-observability.md
-
         17-runtime-shutdown.md
-
         18-adrs.md
-
         19-contributor-guidance.md
-
         20-v2-event-backbone.md
-
         references.md
-
         glossary.md
 ```
 
@@ -247,16 +153,4 @@ Future companion specifications:
 
 # Design Goals
 
-The Event-Driven Runtime is intended to produce a platform that is:
-
-- Reactive
-- Decoupled
-- Observable
-- Resilient
-- Extensible
-- Scalable
-- Testable
-- Deterministic
-- Fault tolerant
-
-The runtime should encourage independent capability evolution while preserving architectural consistency across the entire Mosaic ecosystem.
+The Event-Driven Runtime is intended to produce a platform that is reactive, decoupled, observable, resilient, extensible, scalable, testable, deterministic and fault tolerant. The runtime should encourage independent capability evolution while preserving architectural consistency across the entire Mosaic ecosystem.

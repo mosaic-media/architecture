@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-Every long-running system must eventually stop.
-
-Shutdown may occur because of:
+Every long-running system must eventually stop, and within the Mosaic Runtime shutdown is treated as a first-class architectural concern rather than as the interruption of one. Shutdown may occur because of:
 
 - deployment
 - upgrades
@@ -24,16 +22,7 @@ Shutdown may occur because of:
 - operating system signals
 - unexpected failures
 
-Within the Mosaic Runtime, shutdown is considered a first-class architectural concern.
-
-Stopping the platform should never:
-
-- lose events
-- corrupt state
-- abandon work
-- leave resources allocated
-
-This document defines how the Mosaic Runtime performs graceful shutdown.
+That list spans routine operations and unexpected failure alike, which is precisely why stopping the platform should never lose events, corrupt state, abandon work or leave resources allocated. This document defines how the Mosaic Runtime performs graceful shutdown.
 
 ---
 
@@ -43,11 +32,7 @@ Within Mosaic:
 
 > **The runtime should stop accepting new work before stopping existing work.**
 
-Graceful shutdown is the process of allowing in-flight operations to complete while preventing additional work from entering the system.
-
-The objective is deterministic behaviour.
-
-Not immediate termination.
+Graceful shutdown is the process of allowing in-flight operations to complete while preventing additional work from entering the system. The objective is deterministic behaviour, not immediate termination.
 
 ---
 
@@ -62,9 +47,7 @@ Every shutdown should satisfy the following principles.
 - Runtime state remains consistent.
 - Shutdown remains observable.
 
-Every component participates.
-
-No component should define its own shutdown semantics.
+Every component participates, and no component should define its own shutdown semantics.
 
 ---
 
@@ -85,11 +68,7 @@ N2 --> N3
 N3 --> N4
 ```
 
-Only the runtime transitions between lifecycle states.
-
-Capabilities react to transitions.
-
-They do not control them.
+Only the runtime transitions between lifecycle states. Capabilities react to transitions; they do not control them.
 
 ---
 
@@ -118,17 +97,13 @@ N6 --> N7
 N7 --> N8
 ```
 
-The order is deliberate.
-
-Changing it risks inconsistent behaviour.
+The order is deliberate, and changing it risks inconsistent behaviour.
 
 ---
 
 # Initiating Shutdown
 
-Shutdown begins when the runtime receives a termination request.
-
-Examples include:
+Shutdown begins when the runtime receives a termination request. Examples include:
 
 - SIGTERM
 - SIGINT
@@ -136,82 +111,38 @@ Examples include:
 - orchestrator termination
 - controlled restart
 
-The runtime immediately transitions into:
-
-```
-
-Stopping
-```
-
-No additional work should be accepted after this point.
+The runtime immediately transitions into Stopping, and no additional work should be accepted after this point.
 
 ---
 
 # Stop Accepting New Work
 
-The first responsibility of shutdown is preventing new work.
-
-Examples include:
+The first responsibility of shutdown is preventing new work. Examples include:
 
 - HTTP listeners stop accepting requests
 - event publishers reject new publications
 - schedulers stop creating future work
 - module loading stops
 
-Existing work continues.
-
-New work does not begin.
+Existing work continues, but new work does not begin.
 
 ---
 
 # Scheduler Behaviour
 
-During shutdown the scheduler SHOULD:
-
-```mermaid
-flowchart TD
-
-N1["Stop Scheduling"]
-N2["Cancel Future Timers"]
-N3["Persist Outstanding Schedules"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Recurring schedules should not continue creating work once shutdown begins.
-
-Long-lived schedules may be restored after restart.
+During shutdown the scheduler should stop scheduling, cancel future timers and persist outstanding schedules. Recurring schedules should not continue creating work once shutdown begins, whereas long-lived schedules may be restored after restart, which is why persistence forms part of shutdown rather than being left to chance.
 
 ---
 
 # Queue Draining
 
-Existing queues should drain naturally.
-
-```mermaid
-flowchart TD
-
-N1["Queue"]
-N2["Workers Continue"]
-N3["Queue Empty"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Workers should continue processing available tasks until:
-
-- queues empty
-- cancellation deadline reached
-
-Queue draining reduces unnecessary retries after restart.
+Existing queues should drain naturally, with workers continuing to process available tasks until either the queues empty or the cancellation deadline is reached. Queue draining reduces unnecessary retries after restart, because work that completes before the process stops does not need attempting again afterwards.
 
 ---
 
 # Worker Shutdown
 
-Workers receive cancellation through context.
+Workers receive cancellation through context rather than through direct termination, which gives each worker an opportunity to leave its work in a defined state.
 
 ```mermaid
 flowchart TD
@@ -226,14 +157,14 @@ N2 --> N3
 N3 --> N4
 ```
 
-Workers should:
+On cancellation, workers should:
 
 - finish current work where practical
 - acknowledge completed work
 - release resources
 - terminate promptly
 
-Workers should never ignore cancellation indefinitely.
+Workers should never ignore cancellation indefinitely, because graceful shutdown is bounded by a deadline that such a worker would exhaust.
 
 ---
 
@@ -245,36 +176,19 @@ Long-running tasks should periodically check:
 ctx.Done()
 ```
 
-If cancellation occurs they should:
-
-- clean up
-- return a meaningful status
-- avoid partial state where practical
-
-Business correctness should always take precedence over speed of shutdown.
+If cancellation occurs they should clean up, return a meaningful status and avoid partial state where practical. Business correctness should always take precedence over speed of shutdown.
 
 ---
 
 # Event Delivery
 
-Events already accepted by the Event Bus should continue through the delivery pipeline where practical.
-
-The runtime SHOULD avoid abandoning accepted events.
-
-If completion is impossible:
-
-- work should remain durable
-- processing should resume after restart
-
-Shutdown should never silently lose accepted work.
+Events already accepted by the Event Bus should continue through the delivery pipeline where practical, and the runtime should avoid abandoning accepted events. Where completion is impossible the work should remain durable and processing should resume after restart, so that shutdown never silently loses accepted work.
 
 ---
 
 # Retry Queue
 
-Pending retries SHOULD be persisted.
-
-Example.
+Pending retries should be persisted, so that a retry scheduled before shutdown is written to durable storage and continues once the runtime restarts.
 
 ```mermaid
 flowchart TD
@@ -291,17 +205,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Retries should survive controlled restarts.
-
-Business correctness depends upon eventual execution.
+Retries should survive controlled restarts, because business correctness depends upon eventual execution.
 
 ---
 
 # Module Shutdown
 
-Modules participate in runtime shutdown exactly like Platform capabilities.
-
-Lifecycle.
+Modules participate in runtime shutdown exactly like Platform capabilities, and they follow the same lifecycle.
 
 ```mermaid
 flowchart TD
@@ -316,17 +226,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Modules should never require special shutdown handling.
-
-The runtime should treat all capabilities equally.
+Modules should never require special shutdown handling, because the runtime should treat all capabilities equally.
 
 ---
 
 # Resource Cleanup
 
-Every runtime component is responsible for releasing owned resources.
-
-Examples include:
+Every runtime component is responsible for releasing owned resources. Examples include:
 
 - database connections
 - file handles
@@ -335,17 +241,13 @@ Examples include:
 - worker pools
 - subscriptions
 
-Ownership determines cleanup responsibility.
-
-Resources should never be released by unrelated components.
+Ownership determines cleanup responsibility, so resources should never be released by unrelated components.
 
 ---
 
 # Timeouts
 
-Graceful shutdown should remain bounded.
-
-Example.
+Graceful shutdown should remain bounded, because draining that waits indefinitely cannot be distinguished from draining that has stalled.
 
 ```mermaid
 flowchart TD
@@ -360,116 +262,39 @@ N2 --> N3
 N3 --> N4
 ```
 
-The runtime should not wait indefinitely.
-
-Eventually the platform must terminate.
-
-The timeout should be configurable.
+The runtime should not wait indefinitely, because eventually the platform must terminate. The timeout should be configurable.
 
 ---
 
 # Forced Shutdown
 
-If graceful shutdown exceeds its deadline:
-
-```mermaid
-flowchart TD
-
-N1["Timeout"]
-N2["Force Termination"]
-
-N1 --> N2
-```
-
-Forced shutdown is a last resort.
-
-It may:
-
-- interrupt work
-- require retries
-- delay eventual consistency
-
-The runtime should make every reasonable attempt to avoid this outcome.
+If graceful shutdown exceeds its deadline, the timeout triggers forced termination. Forced shutdown is a last resort because it may interrupt work, require retries and delay eventual consistency, so the runtime should make every reasonable attempt to avoid this outcome.
 
 ---
 
 # Observability
 
-Shutdown should be fully observable.
+Shutdown should be fully observable. Useful events include:
 
-Useful events include:
+- RuntimeStopping
+- QueueDrained
+- WorkerStopped
+- ModuleStopped
+- RuntimeStopped
 
-```
-
-RuntimeStopping
-```
-
-```
-
-QueueDrained
-```
-
-```
-
-WorkerStopped
-```
-
-```
-
-ModuleStopped
-```
-
-```
-
-RuntimeStopped
-```
-
-Operators should understand:
-
-- how long shutdown required
-- whether work completed
-- whether work was abandoned
-- whether retries were persisted
-
-Shutdown should never appear mysterious.
+From these, operators should understand how long shutdown required, whether work completed, whether work was abandoned and whether retries were persisted. Shutdown should never appear mysterious.
 
 ---
 
 # Health During Shutdown
 
-During graceful shutdown:
-
-Health should report:
-
-```
-
-Not Ready
-```
-
-before:
-
-```
-
-Stopped
-```
-
-This allows:
-
-- load balancers
-- orchestrators
-- service discovery
-
-to stop routing new work before termination.
-
-The runtime remains alive.
-
-It simply stops accepting additional work.
+During graceful shutdown, health should report Not Ready before Stopped, which allows load balancers, orchestrators and service discovery to stop routing new work before termination. The runtime remains alive throughout; it simply stops accepting additional work.
 
 ---
 
 # Startup Symmetry
 
-Startup and shutdown should mirror one another.
+Startup and shutdown should mirror one another. Startup initialises, registers and starts each component until the runtime is ready.
 
 ```mermaid
 flowchart TD
@@ -485,6 +310,8 @@ N2 --> N3
 N3 --> N4
 N4 --> N5
 ```
+
+Shutdown reverses that progression, closing admission before draining and cleaning up.
 
 ```mermaid
 flowchart TD
@@ -507,9 +334,7 @@ Symmetrical lifecycle management simplifies reasoning about the runtime.
 
 # Crash Recovery
 
-Unexpected crashes differ from graceful shutdown.
-
-After restart:
+Unexpected crashes differ from graceful shutdown, so recovery cannot assume that any shutdown sequence ran at all. After restart the runtime recovers through a defined sequence.
 
 ```mermaid
 flowchart TD
@@ -526,17 +351,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Business correctness should depend upon durability.
-
-Not graceful shutdown always succeeding.
+Business correctness should therefore depend upon durability rather than upon graceful shutdown always succeeding.
 
 ---
 
 # Testing Shutdown
 
-Graceful shutdown SHOULD be tested.
-
-Examples include:
+Graceful shutdown should be tested. Examples include:
 
 - worker cancellation
 - queue draining
@@ -544,9 +365,7 @@ Examples include:
 - module cleanup
 - scheduler shutdown
 
-Shutdown is part of normal runtime behaviour.
-
-It deserves the same engineering attention as startup.
+Shutdown is part of normal runtime behaviour, so it deserves the same engineering attention as startup.
 
 ---
 
@@ -556,35 +375,25 @@ The following practices are prohibited.
 
 ## Immediate Process Exit
 
-```mermaid
-flowchart TD
+Calling:
 
-N1["Shutdown"]
-N2["os.Exit()"]
-
-N1 --> N2
+```go
+os.Exit()
 ```
 
-without cleanup.
+without cleanup. Nothing drains, and nothing releases what it holds.
 
 ---
 
 ## Ignoring Cancellation
 
-Workers continuing indefinitely after shutdown begins.
+Workers continuing indefinitely after shutdown begins, when such a worker is precisely what exhausts the graceful deadline.
 
 ---
 
 ## Accepting New Work During Shutdown
 
-```mermaid
-flowchart TD
-
-N1["Shutdown"]
-N2["Continue Accepting Events"]
-
-N1 --> N2
-```
+Continuing to accept events once shutdown has begun, when preventing new work is the first responsibility of shutdown.
 
 ---
 
@@ -601,15 +410,13 @@ Failing to close:
 
 ## Silent Shutdown
 
-Stopping without exposing runtime events or metrics.
+Stopping without exposing runtime events or metrics, which leaves operators unable to establish whether work completed or was abandoned.
 
 ---
 
 ## Capability-Owned Shutdown
 
-Business capabilities deciding when the runtime should terminate.
-
-Lifecycle belongs to the runtime.
+Business capabilities deciding when the runtime should terminate, when lifecycle belongs to the runtime.
 
 ---
 
@@ -617,48 +424,27 @@ Lifecycle belongs to the runtime.
 
 Within Mosaic:
 
-- Shutdown MUST be graceful.
-- New work MUST stop before existing work.
-- Workers MUST honour cancellation.
-- Queues SHOULD drain where practical.
-- Pending retries SHOULD survive restart.
-- Resource ownership MUST determine cleanup.
-- Shutdown SHOULD remain observable.
-- Graceful shutdown SHOULD remain bounded by timeout.
-- Capabilities MUST react to runtime lifecycle rather than define it.
+- Shutdown must be graceful.
+- New work must stop before existing work.
+- Workers must honour cancellation.
+- Queues should drain where practical.
+- Pending retries should survive restart.
+- Resource ownership must determine cleanup.
+- Shutdown should remain observable.
+- Graceful shutdown should remain bounded by timeout.
+- Capabilities must react to runtime lifecycle rather than define it.
 
 ---
 
 # Relationship to the Runtime
 
-Graceful shutdown completes the runtime lifecycle defined throughout MEG-002.
-
-Combined with:
-
-- worker ownership
-- scheduling
-- retries
-- idempotency
-- observability
-
-shutdown becomes a predictable operational process rather than an emergency procedure.
-
-This consistency allows the Mosaic Runtime to:
-
-- deploy safely
-- scale safely
-- recover safely
-- evolve safely
-
-without compromising business correctness.
+Graceful shutdown completes the runtime lifecycle defined throughout MEG-002. Combined with worker ownership, scheduling, retries, idempotency and observability, shutdown becomes a predictable operational process rather than an emergency procedure. That consistency is what allows the Mosaic Runtime to deploy, scale, recover and evolve safely without compromising business correctness.
 
 ---
 
 # Summary
 
-Stopping a platform should be as carefully engineered as starting it.
-
-Within Mosaic, graceful shutdown ensures:
+Stopping a platform should be as carefully engineered as starting it. Within Mosaic, graceful shutdown ensures:
 
 - accepted work completes
 - future work pauses
@@ -666,8 +452,4 @@ Within Mosaic, graceful shutdown ensures:
 - state remains consistent
 - recovery remains possible
 
-A runtime that cannot stop predictably cannot be considered production ready.
-
-Graceful shutdown is therefore not merely an operational concern.
-
-It is a fundamental architectural property of the Mosaic Runtime.
+A runtime that cannot stop predictably cannot be considered production ready. Graceful shutdown is therefore not merely an operational concern; it is a fundamental architectural property of the Mosaic Runtime.

@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-This document records the primary references that influenced the design of the Mosaic Event-Driven Runtime.
-
-MEG-002 intentionally combines ideas from:
+This document records the primary references that influenced the design of the Mosaic Event-Driven Runtime. MEG-002 intentionally combines ideas from:
 
 - Event-Driven Architecture
 - Distributed Systems
@@ -23,9 +21,7 @@ MEG-002 intentionally combines ideas from:
 - Domain-Driven Design
 - Cloud Native Architecture
 
-into a cohesive runtime model designed specifically for Mosaic.
-
-The purpose of these references is not to prescribe implementation, but to provide architectural context for the standards defined throughout MEG-002.
+into a cohesive runtime model designed specifically for Mosaic. The purpose of these references is not to prescribe implementation, but to provide architectural context for the standards defined throughout MEG-002.
 
 ---
 
@@ -54,9 +50,7 @@ https://martinfowler.com/articles/201701-event-driven.html
 
 **Authors**
 
-Gregor Hohpe
-
-Bobby Woolf
+Gregor Hohpe and Bobby Woolf.
 
 **Topics**
 
@@ -78,7 +72,7 @@ Many runtime concepts used within MEG-002 originate from these messaging pattern
 
 **Purpose**
 
-Defines the characteristics of reactive systems.
+Defines the characteristics of reactive systems, which are:
 
 - Responsive
 - Resilient
@@ -99,7 +93,7 @@ https://www.reactivemanifesto.org/
 
 **Author**
 
-Martin Kleppmann
+Martin Kleppmann.
 
 **Topics**
 
@@ -124,7 +118,7 @@ This work heavily influenced:
 
 **Author**
 
-Michael T. Nygard
+Michael T. Nygard.
 
 **Topics**
 
@@ -141,54 +135,25 @@ Many runtime resilience strategies draw inspiration from this work.
 
 ## Effective Go
 
-The Go Team
-
-Primary reference for:
-
-- concurrency
-- interfaces
-- composition
-- package design
-
-https://go.dev/doc/effective_go
+The Go Team. Primary reference for concurrency, interfaces, composition and package design, available at https://go.dev/doc/effective_go
 
 ---
 
 ## Go Concurrency Patterns
 
-The Go Team
-
-Recommended reading for:
-
-- pipelines
-- cancellation
-- worker coordination
-
-https://go.dev/blog/pipelines
+The Go Team. Recommended reading for pipelines, cancellation and worker coordination, available at https://go.dev/blog/pipelines
 
 ---
 
 ## Context
 
-The Go Team
-
-Reference for:
-
-- cancellation
-- deadlines
-- request lifecycles
-
-https://go.dev/blog/context
+The Go Team. Reference for cancellation, deadlines and request lifecycles, available at https://go.dev/blog/context
 
 ---
 
 ## Share Memory By Communicating
 
-The Go Team
-
-Reference for Go's concurrency philosophy.
-
-https://go.dev/blog/share-memory-by-communicating
+The Go Team. Reference for Go's concurrency philosophy, available at https://go.dev/blog/share-memory-by-communicating
 
 ---
 
@@ -196,21 +161,13 @@ https://go.dev/blog/share-memory-by-communicating
 
 ## Idempotent Consumer
 
-Chris Richardson
-
-Reference describing safe event consumption under at-least-once delivery.
-
-https://microservices.io/post/microservices/patterns/2020/10/16/idempotent-consumer.html
+Chris Richardson. Reference describing safe event consumption under at-least-once delivery, available at https://microservices.io/post/microservices/patterns/2020/10/16/idempotent-consumer.html
 
 ---
 
 ## Transactional Outbox
 
-Chris Richardson
-
-Reference describing durable event publication after successful state transitions.
-
-https://microservices.io/patterns/data/transactional-outbox.html
+Chris Richardson. Reference describing durable event publication after successful state transitions, available at https://microservices.io/patterns/data/transactional-outbox.html
 
 ---
 
@@ -218,22 +175,13 @@ https://microservices.io/patterns/data/transactional-outbox.html
 
 ## OpenTelemetry
 
-Reference implementation for:
-
-- traces
-- metrics
-- logs
-- correlation
-
-https://opentelemetry.io/
+Reference implementation for traces, metrics, logs and correlation, available at https://opentelemetry.io/
 
 ---
 
 ## Prometheus
 
-Recommended operational metrics model.
-
-https://prometheus.io/
+Recommended operational metrics model, available at https://prometheus.io/
 
 ---
 
@@ -241,20 +189,14 @@ https://prometheus.io/
 
 ## Twelve-Factor App
 
-Several operational principles remain applicable.
-
-Examples include:
+Several operational principles remain applicable, examples of which include:
 
 - configuration
 - disposability
 - logging
 - processes
 
-Not every principle is adopted directly.
-
-However, many complement the runtime architecture.
-
-https://12factor.net/
+Not every principle is adopted directly, but many complement the runtime architecture. The reference is available at https://12factor.net/
 
 ---
 
@@ -306,9 +248,7 @@ The following specifications complement MEG-002.
 
 # Runtime Principles
 
-The runtime philosophy established throughout MEG-002 is intentionally built upon several enduring architectural principles.
-
-These include:
+The runtime philosophy established throughout MEG-002 is intentionally built upon several enduring architectural principles. These include:
 
 - Components own behaviour.
 - Events describe facts.
@@ -327,13 +267,7 @@ These principles should be considered more important than any individual impleme
 
 # Keeping References Current
 
-Distributed systems continue to evolve.
-
-Observability continues to evolve.
-
-Go continues to evolve.
-
-This reference list SHOULD therefore be reviewed periodically to ensure that:
+Distributed systems continue to evolve, observability continues to evolve and Go continues to evolve. This reference list should therefore be reviewed periodically to ensure that:
 
 - links remain valid
 - recommendations remain relevant
@@ -346,11 +280,7 @@ The architectural philosophy of the runtime should remain stable, even as implem
 
 # Closing Statement
 
-MEG-002 intentionally does not attempt to invent a new event-driven architecture.
-
-Instead, it combines proven ideas from distributed systems, reactive architectures and Go engineering into a runtime specifically designed for the Mosaic platform.
-
-The resulting architecture emphasises:
+MEG-002 intentionally does not attempt to invent a new event-driven architecture. Instead, it combines proven ideas from distributed systems, reactive architectures and Go engineering into a runtime specifically designed for the Mosaic platform. The resulting architecture emphasises:
 
 - autonomy
 - simplicity
@@ -358,10 +288,4 @@ The resulting architecture emphasises:
 - observability
 - extensibility
 
-Every runtime capability should reinforce these properties.
-
-As the Mosaic ecosystem grows, the runtime should continue to feel predictable, understandable and remarkably boring.
-
-That is not a criticism.
-
-For infrastructure, boring is one of the highest compliments an engineer can give.
+Every runtime capability should reinforce these properties. As the Mosaic ecosystem grows, the runtime should continue to feel predictable, understandable and remarkably boring, and that is not a criticism: for infrastructure, boring is one of the highest compliments an engineer can give.

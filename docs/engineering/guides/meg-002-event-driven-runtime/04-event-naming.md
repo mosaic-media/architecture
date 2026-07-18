@@ -12,17 +12,13 @@ Status: Draft
 
 # Purpose
 
-[MIP-001](../../protocols/mip-001-event-protocol/index.md) defines the event naming protocol.
-
-This chapter explains how engineers should apply that protocol while building capabilities.
+[MIP-001](../../protocols/mip-001-event-protocol/index.md) defines the event naming protocol, and this chapter explains how engineers should apply that protocol while building capabilities.
 
 ---
 
 # Engineering Guidance
 
-Event names should describe completed business facts in the language of the publishing capability.
-
-Preferred examples include:
+Event names should describe completed business facts in the language of the publishing capability. Preferred examples include:
 
 ```text
 media.imported
@@ -33,11 +29,7 @@ platform.module.installed
 
 Avoid names that describe handlers, transports, queues or implementation mechanics.
 
-Event names should be namespaced according to [MIP-001](../../protocols/mip-001-event-protocol/index.md).
-
-The namespace should identify the event owner.
-
-Examples.
+Event names should be namespaced according to [MIP-001](../../protocols/mip-001-event-protocol/index.md), and the namespace should identify the event owner. Examples include:
 
 ```text
 anime.episode.released

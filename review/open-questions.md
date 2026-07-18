@@ -126,6 +126,10 @@ Chapter 08 makes the gap sharper still: the Scheduler owns "retry timing" and "d
 
 Either a component not yet described in MEG-005 owns retry policy, or one of these chapters is wrong.
 
+**MEG-002 answers one level above the component boundary and so does not resolve this.** [MEG-002 ch13](../docs/engineering/guides/meg-002-event-driven-runtime/13-retry-strategy.md) *Runtime Ownership* assigns retry scheduling, timing, counting, cancellation and observability to "the runtime", and its Philosophy states "Retry infrastructure belongs to the runtime. Recovery belongs to the capability." It names no component.
+
+MEG-005 is itself split: [ch16](../docs/engineering/guides/meg-005-runtime-architecture/16-contributor-guidance.md) says a Worker Manager should "let the Scheduler own the retry" and [ch08](../docs/engineering/guides/meg-005-runtime-architecture/08-scheduler-architecture.md) lists retry timing among Scheduler responsibilities, while [ch06](../docs/engineering/guides/meg-005-runtime-architecture/06-execution-engine.md) says "The Runtime decides whether to retry, dead letter or shut down." MEG-002 sides with the latter phrasing. Whether retry *timing* (Scheduler) and retry *policy* (Runtime) are deliberately different owners needs an architecture decision. See also Q-090, which records that no bound on retries is stated anywhere.
+
 **Resolution:**
 
 ## Q-028 — Startup has eleven diagram stages and ten numbered headings
@@ -281,6 +285,66 @@ This is the most consequential entry recorded against MEG-006: the isolation cla
 The struct embeds `Logger`, `Scheduler`, `Configuration`, `Events` and `Health` as bare type names, but the chapter then accesses them as methods — `ctx.Configuration()`, `ctx.Scheduler()`, `ctx.Events()`, `ctx.Logger()`, `ctx.Health()` — which embedded fields would not provide. The struct and the call sites cannot both be right; both were preserved exactly.
 
 Separately, `ctx.BlobStore()` is used as the worked permissions example but is not among the SDK's listed contracts, models or context members, and `blob.read` is the chapter's only permission string.
+
+**Resolution:**
+
+## Q-082 — MEG-002 and MEG-005 order the shutdown stages incompatibly
+
+**Status:** `Open`
+**Where:** [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md), *Shutdown Sequence*; [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Shutdown Sequence*
+
+The two documents specify the same procedure in two different orders:
+
+- **MEG-002:** stop accepting → cancel scheduling → drain queues → finish active work → **release resources → stop workers** → runtime stops.
+- **MEG-005:** cooldown → capability drain → **worker drain → runtime services stop → resource release** → kernel shutdown → process exit.
+
+MEG-002 releases resources *before* it stops workers; MEG-005 stops workers *before* it releases resources and states the governing rule explicitly — "Worker disposal should occur only after execution completes". MEG-002 asserts of its own ordering that "The order is deliberate. Changing it risks inconsistent behaviour."
+
+These cannot both be right, and MEG-002's order releases database transactions, file handles and network connections that its own chapter 10 says workers may still hold. This is the highest-consequence contradiction found in this document: implemented as written, it is a use-after-release during every shutdown.
+
+**Resolution:**
+
+## Q-083 — Chapter 20 mandates a deduplication key that chapter 12 makes optional
+
+**Status:** `Open`
+**Where:** [MEG-002 ch20](../docs/engineering/guides/meg-002-event-driven-runtime/20-v2-event-backbone.md), *Delivery Semantics*; [ch12](../docs/engineering/guides/meg-002-event-driven-runtime/12-idempotency.md), *Event Recording*
+
+Chapter 20 requires that consumers "must be idempotent and must use the event identifier or an equivalent deduplication key when applying side effects". Chapter 12 says subscribers *may* maintain a processed-event store, adds that "the runtime does not require a specific implementation, only the resulting behaviour", and actively prefers business keys over event identifiers.
+
+The two agree that subscribers must be idempotent. They disagree on whether a deduplication key is mandated, and chapter 20 mandates the specific mechanism chapter 12 declines to mandate.
+
+**Resolution:**
+
+## Q-084 — Chapter 20 is titled "v2" but written as current commitment
+
+**Status:** `Open`
+**Where:** [MEG-002 ch20](../docs/engineering/guides/meg-002-event-driven-runtime/20-v2-event-backbone.md)
+
+The file is named *v2 Event Backbone* and the index carries a "Current v2 direction" banner, but the chapter's epigraph opens "**Current direction:** Mosaic uses a PostgreSQL transactional outbox", the tense is present throughout, and it closes with a *Required Guarantees* section carrying six normative `must` clauses.
+
+If the backbone is deferred, [MDG-001 ch04](../docs/engineering/documentation/mdg-001-documentation-authority-guide/04-writing-standards.md) is breached — planning language must not make uncommitted work appear mandatory. If it is not deferred, the "v2" title is misleading and the chapter is a second authority for material chapters 07 and 12 to 15 already own.
+
+The chapter also departs from the house template: `##` headings with no `---` rules, no Purpose, Philosophy, Mosaic Guidelines or Summary section, and a bold callout in place of the italic epigraph. Reshaping it interacts with the lifecycle question, so nothing was normalised.
+
+**Resolution:**
+
+## Q-085 — Trace propagation ownership contradicts MEG-008
+
+**Status:** `Open`
+**Where:** [MEG-002 ch16](../docs/engineering/guides/meg-002-event-driven-runtime/16-correlation-and-observability.md); [MEG-008 ch04](../docs/engineering/guides/meg-008-observability/04-distributed-tracing.md)
+
+MEG-008 states "The Runtime owns propagation. **The SDK exposes it.**" MEG-002 says only that "the runtime owns tracing infrastructure" and never mentions the SDK. Resolution depends on whether MIP-004 carries it, and MIP-004 is a published stub (Q-019).
+
+More fundamentally, **Correlation ID and Causation ID appear nowhere in MEG-008 at all.** MEG-008 requires a "trace identifier, parent span, correlation metadata" and has no causation concept. Whether Causation ID and parent span are one mechanism under two names is exactly what must not be inferred, so MEG-002's vocabulary was preserved unchanged.
+
+**Resolution:**
+
+## Q-086 — Priority is optional and its outcome is recommended
+
+**Status:** `Open`
+**Where:** [MEG-002 ch15](../docs/engineering/guides/meg-002-event-driven-runtime/15-backpressure.md), *Priority* and *Mosaic Guidelines*
+
+The body says the scheduler *may* prioritise work; the guidelines say high-priority work *should* remain responsive. An optional mechanism cannot deliver a recommended outcome, so one of the two normative levels is wrong. Related to Q-032, which records that MEG-005's priority tiers never connect to admission.
 
 **Resolution:**
 
@@ -483,6 +547,43 @@ Several of those unrecorded areas are exactly the subjects this rewrite found to
 
 **Resolution:**
 
+## Q-087 — MEG-002 chapter 16 duplicates MEG-008 and cites it nowhere
+
+**Status:** `Open`
+**Where:** [MEG-002 ch16](../docs/engineering/guides/meg-002-event-driven-runtime/16-correlation-and-observability.md), [references](../docs/engineering/guides/meg-002-event-driven-runtime/references.md)
+
+Chapter 16 runs to 420 lines covering the three observability pillars, correlation and causation identifiers, distributed tracing, structured logging, metrics, health and privacy. [MEG-008](../docs/engineering/guides/meg-008-observability/index.md) has a dedicated chapter for each.
+
+`MEG-008 — Observability` appears in the whole of MEG-002 exactly once: as a bare bullet in `references.md`, under a *Planned Engineering Specifications* heading although it is published (Q-058). A grep of the folder returns no other occurrence, so the chapter that duplicates the observability specification never refers the reader to it.
+
+MEG-002 chapter 16 also parallels MEG-005 chapter 19, whose redaction list is similar but not identical, with no citation either way. The substantive divergences are recorded as Q-085.
+
+**Resolution:**
+
+## Q-088 — MEG-002 chapter 17 and MEG-005 chapter 11 are the same chapter
+
+**Status:** `Open`
+**Where:** [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md), [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md)
+
+Both cover runtime shutdown at the same depth: signals, the initiating-request list, admission closure, worker cancellation, the resource-ownership rule, forced-shutdown fallback, health progression, restart recovery, testing and the anti-pattern set all appear in both.
+
+Deciding which document owns runtime shutdown is an authority decision, and it must be made before Q-082 and Q-036 can be settled — those record that the two chapters give incompatible stage orderings and different deadline values for the same procedure.
+
+MEG-002 chapter 17 additionally contains no cross-references at all: it names MEG-002 once as bare text and links nothing, despite depending on retry, idempotency and observability material owned by its own chapters 12, 13 and 16, and on durable retry state described by chapter 20.
+
+**Resolution:**
+
+## Q-089 — Chapter 20 restates chapters 07 and 12 to 15
+
+**Status:** `Open`
+**Where:** [MEG-002 ch20](../docs/engineering/guides/meg-002-event-driven-runtime/20-v2-event-backbone.md)
+
+Chapter 20 compresses the delivery, idempotency, ordering and retry rules that chapters 07 and 12 to 15 own, in different wording and — as Q-083 records — at a different normative strength. Its Transactional Outbox and Retry And Dead Letters sections describe a concrete PostgreSQL mechanism for what chapter 17's Retry Queue describes abstractly, with no cross-reference either way. Chapter 17 never mentions dead letters, which chapter 20 treats as the terminal state of exhausted retries.
+
+Whether chapter 20 supersedes those chapters or merely summarises them depends on the lifecycle question in Q-084.
+
+**Resolution:**
+
 ---
 
 # Underspecified — needs domain knowledge
@@ -633,6 +734,8 @@ Separately, structural configuration changes get a warm-and-switch path with "re
 **Where:** [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Shutdown Deadlines*
 
 The only concrete number in the chapter, 60 seconds, appeared solely as a diagram node label with no text stating whether it is a default, a recommendation or an illustration, while the timeout is simultaneously described as configurable. It was preserved hedged as an example rather than promoted to a default.
+
+**MEG-002 states a different number for what appears to be the same budget.** [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md) *Timeouts* gives **30 seconds**, also only inside a Mermaid node label, also unattributed, also described as configurable. Either the two documents disagree, or these are two nested budgets that nothing distinguishes. See Q-088, which records that the two chapters are otherwise the same chapter, and Q-082, which records that they also order the shutdown stages incompatibly.
 
 **Resolution:**
 
@@ -802,6 +905,100 @@ Separately, two checklists require compatibility to be "declared". Chapter 11 de
 
 **Resolution:**
 
+## Q-090 — Retry is required to be bounded by nothing in particular
+
+**Status:** `Open`
+**Where:** [MEG-002 ch13](../docs/engineering/guides/meg-002-event-driven-runtime/13-retry-strategy.md), *Maximum Retries*, *Retry Budget*, *Retry Cancellation*, *Retry Classification*
+
+The chapter prohibits infinite retries and requires retries to terminate, but states no maximum, no default and no configuration point. The retained diagram shows four attempts and is captioned as illustration. *Retry Budget* names three dimensions — maximum retries, maximum retry duration, maximum concurrent retries — with no values and no enforcing component.
+
+Two further gaps in the same chapter: *Retry Cancellation* makes restart-resumption an opt-in ("unless explicitly configured") while *Retry Persistence* makes it a default expectation ("should survive runtime restarts"), naming neither the mechanism nor who decides which retries are correctness-critical; and *Retry Classification* says errors "should communicate retry intent" through "future runtime APIs" that do not exist, while the runtime is forbidden from inspecting error messages.
+
+This compounds chapter 14's guarantee that "every accepted event will eventually be delivered (subject to retry policy)" — with no stated bound, that guarantee has no floor.
+
+**Resolution:**
+
+## Q-091 — Backpressure states no threshold anywhere
+
+**Status:** `Open`
+**Where:** [MEG-002 ch15](../docs/engineering/guides/meg-002-event-driven-runtime/15-backpressure.md), *Bounded Queues*, *Queue Growth*, *Adaptive Scaling*, *Mosaic Guidelines*
+
+The chapter mandates a "maximum size" for every queue, a bounded worker pool, action "before queues become completely full", a named `Near Capacity` state and bounded scaling — with no number, formula, default, configuration surface or owner anywhere. `Near Capacity` is a named state with no entry condition.
+
+Separately, *Load Shedding* closes with "The runtime should understand this distinction" without saying how work is classified as sheddable. This is load-bearing for modules: *Module Isolation* requires backpressure against a misbehaving module, but a module defines its own event types, so the runtime has no stated basis for judging them.
+
+Values are a capacity-planning decision and may belong to MEG-005 chapter 09 (Resource Management), which Q-030 already records as never defining the Resource Manager.
+
+**Resolution:**
+
+## Q-092 — Idempotency defines the obligation but no detection mechanism
+
+**Status:** `Open`
+**Where:** [MEG-002 ch12](../docs/engineering/guides/meg-002-event-driven-runtime/12-idempotency.md), *Event Identity*, *Event Recording*, *Event Replay*
+
+Chapters 07, 08 and 09 all forward-reference this chapter, and it does discharge the obligation normatively: every subscriber must be idempotent, duplicate delivery must produce the same business state, correctness must not depend on exactly-once. What it never defines is **how a duplicate is detected**. Using the Event ID is a `should`, maintaining a processed-event store is a `may`, and where that store lives, who owns it and what the deduplication key is are unstated. A subscriber can satisfy every `must` while performing no duplicate detection at all.
+
+The chapter also gives no retention window for processed Event IDs, and that collides with its own *Event Replay* section: replay must remain safe and intentionally re-delivers historical events, but indefinite retention makes replay a no-op unable to rebuild a projection, which is the stated point of replay. If entries expire, nothing says when.
+
+**Resolution:**
+
+## Q-093 — Ordering guarantees name nothing that enforces them
+
+**Status:** `Open`
+**Where:** [MEG-002 ch14](../docs/engineering/guides/meg-002-event-driven-runtime/14-event-ordering.md), *Per-Entity Ordering*, *Runtime Guarantees*, *Replay Ordering*, *Purpose*
+
+*Per-Entity Ordering* says ordering "should generally be scoped to a business entity" and "provides deterministic behaviour", while *Runtime Guarantees* states the runtime does not guarantee subscriber or cross-capability ordering. No partition key, per-entity queue or serialisation point is named, and the hedge "should generally" names no exception.
+
+Two further unqualified escape hatches in the same chapter: business state should converge "regardless of delivery order **wherever practical**", and replay "should preserve original occurrence order **where practical**" — neither naming the impractical case, and *Replay Ordering* naming no mechanism that preserves occurrence order.
+
+Chapter 14 is the owner chapter 12 declines to name when it says "ordering guarantees belong elsewhere", but the pointer is unlinked and unnamed in both directions.
+
+**Resolution:**
+
+## Q-094 — Publisher-side validation has no defined scope or owner
+
+**Status:** `Open`
+**Where:** [MEG-002 ch08](../docs/engineering/guides/meg-002-event-driven-runtime/08-publishers.md), *Constructing Events*; [ch07](../docs/engineering/guides/meg-002-event-driven-runtime/07-event-bus.md); [ch09](../docs/engineering/guides/meg-002-event-driven-runtime/09-subscribers.md)
+
+Chapter 07 excludes business validation from the Event Bus and chapter 08 assigns validation to the publisher, but chapter 09 also requires subscribers to validate on receipt — supported version, required payload fields, mandatory identifiers, business preconditions. Whether publisher-side validation is envelope-level, payload-level or both is unstated, as is whether MIP-001 owns the rule.
+
+Separately, chapter 08's *Publisher Failure* permits treating a publication failure as non-fatal "unless the runtime explicitly guarantees deferred publication", without saying whether such a guarantee exists. The Transactional Outbox reference two sections earlier is introduced as industry practice rather than a Mosaic commitment, so a reader cannot tell whether the escape clause is live — though chapter 20 does describe an outbox, unreferenced from here (Q-089).
+
+**Resolution:**
+
+## Q-095 — Checkpointing is asserted, undefined, and contradicts two sections
+
+**Status:** `Open`
+**Where:** [MEG-002 ch10](../docs/engineering/guides/meg-002-event-driven-runtime/10-worker-lifecycle.md), *Long Running Tasks*, *Restart Behaviour*, *Anti-Patterns*
+
+*Long Running Tasks* says tasks should "checkpoint where practical", without defining what a checkpoint is, where it lives, or how a restarted worker resumes from one. *Restart Behaviour* argues restart is safe *because* "business state belongs elsewhere", and the *Permanent Mutable State* anti-pattern prohibits workers retaining business state between tasks.
+
+A checkpoint looks like exactly the worker-held progress state those two sections rule out — unless it is stored outside the worker, which the chapter does not say.
+
+The same chapter's *Worker Pools* closes "Worker pools are discussed further in future runtime specifications" with no identifier, where the convention requires an unavailable reference to be marked `planned; not yet published`.
+
+**Resolution:**
+
+## Q-096 — Degraded and unhealthy are illustrated but never distinguished
+
+**Status:** `Open`
+**Where:** [MEG-002 ch16](../docs/engineering/guides/meg-002-event-driven-runtime/16-correlation-and-observability.md), *Health*
+
+The section gives example strings — `External API unavailable` for degraded, `Database disconnected` for unhealthy — but states no rule for classifying a condition into one or the other, and never says what the runtime does differently in response, in particular whether a degraded capability still receives work.
+
+Related: *Privacy* makes a must-level prohibition defeasible with "unless explicitly required", naming no approver, declaration mechanism or review path, while MEG-005 chapter 19 states the equivalent rule flatly with no exemption. And nothing states whether runtime events such as `WorkerStarted` are subject to the chapter's own correlation rules — they are declared "runtime events rather than business events", yet the guidelines require every workflow to carry a Correlation ID and `WorkerStarted` has no workflow.
+
+**Resolution:**
+
+## Q-097 — Architectural review has no owner or trigger
+
+**Status:** `Open`
+**Where:** [MEG-002 ch19](../docs/engineering/guides/meg-002-event-driven-runtime/19-contributor-guidance.md), *Before Changing Runtime Behaviour*
+
+Seven categories of change "should require architectural review", but nothing says who reviews, what artefact records the outcome, or whether chapter 18's ADR mechanism is that artefact. This is a governance boundary rather than an editorial gap, and it is the same shape as Q-078, which records that MEG-006 never names who approves a capability exposing a public contract.
+
+**Resolution:**
+
 ---
 
 # Factual and naming defects
@@ -820,24 +1017,24 @@ Used once as `ArtworkProvider`; every other mention across the guide is `Artwork
 ## Q-021 — Stale repository trees describing a layout that no longer exists
 
 **Status:** `Open`
-**Where:** [MEG-004 index](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md), [MEG-005 index](../docs/engineering/guides/meg-005-runtime-architecture/index.md), [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md), [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md), all *Repository Structure*
+**Where:** [MEG-004 index](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md), [MEG-005 index](../docs/engineering/guides/meg-005-runtime-architecture/index.md), [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md), [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md), [MEG-002 index](../docs/engineering/guides/meg-002-event-driven-runtime/index.md), all *Repository Structure*
 
 The tree names `README.md` as the folder's landing file; the real file is `index.md`. The folder path shown, `engineering/meg/MEG-004 Hexagonal Architecture/`, does not match the real `docs/engineering/guides/meg-004-hexagonal-architecture/`.
 
 Preserved verbatim under the no-invention rule. Other specifications may carry the same stale tree.
 
-MEG-005, MEG-003 and MEG-006 confirm this is a pattern rather than a one-off. Each shows `engineering/meg/<Document Title>/` containing `README.md`, with the same two defects, while the chapter filenames they list are correct. Only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
+MEG-005, MEG-003, MEG-006 and MEG-002 confirm this is a pattern rather than a one-off. Each shows `engineering/meg/<Document Title>/` containing `README.md`, with the same two defects, while the chapter filenames they list are correct. Only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
 
 **Resolution:**
 
 ## Q-022 — MDP-001 listed twice with an identical label
 
 **Status:** `Open`
-**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md), [MEG-003 references](../docs/engineering/guides/meg-003-domain-driven-design/references.md), [MEG-006 references](../docs/engineering/guides/meg-006-module-platform/references.md)
+**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md), [MEG-003 references](../docs/engineering/guides/meg-003-domain-driven-design/references.md), [MEG-006 references](../docs/engineering/guides/meg-006-module-platform/references.md), [MEG-002 references](../docs/engineering/guides/meg-002-event-driven-runtime/references.md)
 
 Listed once pointing at `index.md` and once at `14-adaptive-tile-model.md`, both labelled "MDP-001 — Adaptive Composition Runtime". The second entry needs a distinguishing label.
 
-All four guides carry the identical pair, so the fix should be applied to each. All three also file MDP-001 under a *Mosaic Design Specifications* heading although it lives under `docs/engineering/architecture/` — see Q-040, which records that alongside the MEG-005 glossary defects.
+All five guides checked so far carry the identical pair, so the fix should be applied to each. All three also file MDP-001 under a *Mosaic Design Specifications* heading although it lives under `docs/engineering/architecture/` — see Q-040, which records that alongside the MEG-005 glossary defects.
 
 **Resolution:**
 
@@ -927,7 +1124,7 @@ All were preserved verbatim. Someone should confirm each source is real and cita
 
 Four small defects, each changing meaning rather than wording, so none were fixed:
 
-- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`. MEG-003, MEG-004 and MEG-006 file it the same way, so this is a corpus-wide misfiling rather than a MEG-005 slip. MEG-006's list also omits MDS-006 and MDS-007, which exist on disk, while including MDS-008.
+- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`. MEG-003, MEG-004, MEG-006 and MEG-002 file it the same way, so this is a corpus-wide misfiling rather than a MEG-005 slip. The MEG-006 and MEG-002 lists also omit MDS-006 and MDS-007, which exist on disk, while including MDS-008.
 - MDS-006 and MDS-007 exist in the repository but are absent from that list, while MDS-008 is present.
 - The glossary defines both *Kernel* and *Runtime Kernel* for what appears to be the same component, with overlapping but non-identical content — the *Kernel* entry carries the microkernel comparison and its citation, the *Runtime Kernel* entry carries the small, stable and business-agnostic list. Merging them would drop or relocate a citation.
 - *Recovery UI* refers to "the embedded recovery renderer" in lower case, while Embedded Recovery Renderer is defined elsewhere as a capitalised proper noun.
@@ -939,11 +1136,11 @@ See also Q-022, which covers the duplicated MDP-001 entry in the same file.
 ## Q-041 — Unanchored version numbers in Document Control
 
 **Status:** `Open`
-**Where:** [MEG-005 ch00](../docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md), [MEG-006 ch00](../docs/engineering/guides/meg-006-module-platform/00-document-control.md), both *Purpose*
+**Where:** [MEG-005 ch00](../docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md), [MEG-006 ch00](../docs/engineering/guides/meg-006-module-platform/00-document-control.md), [MEG-002 ch00](../docs/engineering/guides/meg-002-event-driven-runtime/00-document-control.md), all *Purpose*
 
 "Version 0.4 records the Supervisor Build Pipeline as an isolated runtime composition and activation flow." MEG-005 declares no version anywhere, and CLAUDE.md forbids a `Version:` metadata field, so the number refers to nothing. Under [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) only the contract a MIP defines carries a version.
 
-MEG-006 carries the identical construction — "Version 0.8 defines the Test Harness as a deterministic suite of development-only Modules" — so this is a pattern rather than a slip.
+MEG-006 and MEG-002 carry the identical construction — "Version 0.8 defines the Test Harness as a deterministic suite of development-only Modules" and "Version 0.3 aligns implementation guidance with MIP-001" — so this is a pattern rather than a slip.
 
 The sentences are presumably leftovers from versioned drafts, but deleting them would remove the only statement of what each revision covers.
 
@@ -980,11 +1177,13 @@ Each of these is small, each changes meaning, and none were normalised:
 ## Q-058 — Published specifications listed as planned or future
 
 **Status:** `Open`
-**Where:** [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md) and [references](../docs/engineering/guides/meg-003-domain-driven-design/references.md); [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md) and [references](../docs/engineering/guides/meg-006-module-platform/references.md)
+**Where:** [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md) and [references](../docs/engineering/guides/meg-003-domain-driven-design/references.md); [MEG-006 index](../docs/engineering/guides/meg-006-module-platform/index.md) and [references](../docs/engineering/guides/meg-006-module-platform/references.md); [MEG-002 index](../docs/engineering/guides/meg-002-event-driven-runtime/index.md) and [references](../docs/engineering/guides/meg-002-event-driven-runtime/references.md)
 
 Both lists describe MEG-004 as future or planned. [MEG-004](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md) is published, and is the calibration reference this rewrite is measured against. The index also lists MEG-006 before MEG-005.
 
 MEG-006 has the same defect at larger scale: MEG-007, MEG-008, MEG-009 and MEG-010 are each full multi-chapter specifications on disk with `Status: Draft`, yet `references.md` lists all four as planned, while the index lists three as future and omits MEG-010 entirely. MEG-006 chapter 09 depends on MEG-009 in substance (Q-068) while its index calls MEG-009 future.
+
+MEG-002 is the worst instance found: its `references.md` lists **eight** specifications as planned — MEG-003 through MEG-010 — and all eight exist on disk with `Status: Draft`. Its index repeats the defect under a "Future companion specifications" heading, and both lists place MEG-006 before MEG-005.
 
 Correcting it means knowing the real Status of every MEG in each list, which is a lifecycle question governed by [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) rather than an editorial one.
 
@@ -1043,6 +1242,56 @@ Two distinct defects, both affecting load-bearing claims.
 Same class as Q-039; each should be confirmed real and citable or substituted.
 
 **Resolution:**
+
+## Q-098 — MEG-002 diagrams contradict the prose beside them
+
+**Status:** `Open`
+**Where:** [MEG-002 ch07](../docs/engineering/guides/meg-002-event-driven-runtime/07-event-bus.md), [ch08](../docs/engineering/guides/meg-002-event-driven-runtime/08-publishers.md), [ch13](../docs/engineering/guides/meg-002-event-driven-runtime/13-retry-strategy.md)
+
+The MEG-002 counterpart to Q-017, Q-037, Q-056 and Q-079. Rule 5 licenses deleting a diagram that *restates* prose, not silently rewiring one that contradicts it, so each was preserved as committed:
+
+- ch07 *Fan-Out*: the prose says "One event may have many subscribers" and "The Event Bus performs the fan-out automatically", while the diagram draws a six-node **chain** — `PlaybackCompleted → Statistics → Recommendations → History → Achievements → Analytics`. Read literally it says Statistics publishes to Recommendations, which the rest of the chapter prohibits. The intended shape is almost certainly the fan-out drawn two sections earlier in *Delivery Model*.
+- ch08 *Multiple Events*: the prose says one operation may publish several independent facts; the diagram draws `Import Media → media.imported → LibraryUpdated`, i.e. one event causing the next. If that is *not* a defect — if `LibraryUpdated` really is published by a subscriber to `media.imported` — then the section's claim is illustrated by an example that does not demonstrate it, and the example should change instead.
+- ch13 *Retry Independence* (deleted under the chain rule): the prose says subscribers never block one another; the diagram drew `media.imported → Metadata Retry → Artwork Success → Search Success` serially, which is the exact blocking the prose prohibits. The labels were folded into prose as three independent outcomes, the plain meaning of the surrounding sentences, but the original author may have intended something else.
+
+**Resolution:**
+
+## Q-099 — "runtime" and "Runtime" are used inconsistently within and across documents
+
+**Status:** `Open`
+**Where:** MEG-002 throughout; [MEG-005](../docs/engineering/guides/meg-005-runtime-architecture/index.md), [MEG-006](../docs/engineering/guides/meg-006-module-platform/index.md), [MEG-008](../docs/engineering/guides/meg-008-observability/index.md)
+
+MEG-002 writes lower-case **runtime** in most prose, including in normative guidelines, while capitalising **Mosaic Runtime** as a proper name. Its chapters 03 and 06 use capitalised **Runtime** exclusively, and chapters 07, 08, 13, 14 and 17 mix both, sometimes within a paragraph. MEG-005, MEG-006 and MEG-008 capitalise in the same normative positions where MEG-002 does not — MEG-008's "The Runtime owns propagation" is the direct counterpart of MEG-002's "the runtime owns tracing infrastructure".
+
+The pattern is consistent enough to look deliberate — capitalised where the Runtime is a named component, lower-case where it is the coordinating concept — but that distinction is stated nowhere. Either it is real and belongs in [MDG-001 ch04](../docs/engineering/documentation/mdg-001-documentation-authority-guide/04-writing-standards.md)'s terminology table, or MEG-002 is the outlier and needs a mechanical pass. Every occurrence was preserved exactly as found.
+
+**Resolution:**
+
+## Q-100 — Two event-naming conventions coexist
+
+**Status:** `Open`
+**Where:** MEG-002 chapters 08, 12, 13, 14; [ch04](../docs/engineering/guides/meg-002-event-driven-runtime/04-event-naming.md)
+
+Dotted lower-case (`media.imported`, `playback.started`) and PascalCase (`PlaybackCompleted`, `MetadataImported`, `MetadataCorrected`, `MetadataFetched`, `ArtworkDownloaded`, `LibraryUpdated`) both appear throughout. In chapter 12's *Event Ordering* the two sit inside a single comparison of the same playback lifecycle, reading as two schemes for the same events.
+
+Chapter 04 owns event naming and MIP-001 owns the contract, so this may encode a real distinction — business events against runtime events, say — but neither chapter states one. Every name was preserved byte-exactly.
+
+**Resolution:**
+
+## Q-101 — MEG-002 glossary defects
+
+**Status:** `Open`
+**Where:** [MEG-002 glossary](../docs/engineering/guides/meg-002-event-driven-runtime/glossary.md)
+
+- **Module event visibility is defined twice under three names.** *Event Visibility* defines both public and private events, then *Private Event* and *Public Event* define the same concepts again with more precision, adding "manifest-declared subscriptions" which *Event Visibility* omits. Which is canonical depends on whether MIP-002 owns the classification; chapter 18 links MIP-002 for exactly this, the glossary does not.
+- **Alphabetical order is broken in section E:** Event, Event Bus, Event Envelope, *Event Visibility*, *Event Payload*. This interacts with the entry above, so both are worth fixing together.
+- **`SWR` is defined but unused.** *Common Acronyms* expands SWR to Stale-While-Revalidate; the term appears nowhere else in MEG-002 and has no runtime referent, so it appears carried over from another document's glossary.
+
+**Resolution:**
+
+---
+
+# Resolved
 
 Entries move here once applied, with their original number.
 

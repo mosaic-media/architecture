@@ -40,9 +40,7 @@ sequenceDiagram
 
 ## Transactional Outbox
 
-Any state transition that creates a domain fact must write the state change and its `domain_events` row in the same PostgreSQL transaction.
-
-This prevents the dual-write failure in which state commits without an event or an event is published for state that later rolls back.
+Any state transition that creates a domain fact must write the state change and its `domain_events` row in the same PostgreSQL transaction, because this prevents the dual-write failure in which state commits without an event or an event is published for state that later rolls back.
 
 An outbox record should include:
 
@@ -58,7 +56,7 @@ Undispatched records remain recoverable after process failure. The Supervisor ma
 
 ## Delivery Semantics
 
-Mosaic uses at-least-once delivery. Consumers MUST be idempotent and MUST use the event identifier or an equivalent deduplication key when applying side effects.
+Mosaic uses at-least-once delivery. Consumers must be idempotent and must use the event identifier or an equivalent deduplication key when applying side effects.
 
 Exactly-once business effects are not promised by the Event Bus. A subscriber should commit its state change and its consumer checkpoint or deduplication record atomically where correctness requires it.
 

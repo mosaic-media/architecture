@@ -12,17 +12,7 @@ Status: Draft
 
 # Purpose
 
-The Event Bus is the central coordination mechanism of the Mosaic Runtime.
-
-It is responsible for delivering events between capabilities while remaining completely unaware of business behaviour.
-
-The Event Bus is **not** a workflow engine.
-
-It is **not** an orchestration engine.
-
-It is **not** a rules engine.
-
-Its only responsibility is to reliably transport immutable business facts from publishers to interested subscribers.
+The Event Bus is the central coordination mechanism of the Mosaic Runtime, responsible for delivering events between capabilities while remaining completely unaware of business behaviour. It is **not** a workflow engine, **not** an orchestration engine and **not** a rules engine. Its only responsibility is to reliably transport immutable business facts from publishers to interested subscribers.
 
 ---
 
@@ -32,17 +22,7 @@ Within Mosaic:
 
 > **The Event Bus owns delivery. Capabilities own meaning.**
 
-The Event Bus should never understand:
-
-- media
-- playback
-- metadata
-- users
-- modules
-
-Those are business concepts.
-
-The Event Bus understands only:
+The Event Bus should never understand media, playback, metadata, users or modules, because those are business concepts owned by the capabilities that publish them. It understands only:
 
 - events
 - subscribers
@@ -53,13 +33,13 @@ The Event Bus understands only:
 - visibility metadata
 - version metadata
 
-This separation is fundamental to maintaining loose coupling.
+This separation is fundamental to maintaining loose coupling, and it is what allows the platform to grow without introducing direct dependencies between capabilities.
 
 ---
 
 # Responsibilities
 
-The Event Bus owns the following responsibilities.
+The Event Bus owns the following responsibilities, every one of which concerns transport rather than meaning.
 
 - Event publication
 - Subscriber discovery
@@ -80,11 +60,13 @@ The Event Bus intentionally does **not** own:
 - business state
 - business decisions
 
+Each of those is a business concern, so admitting any one of them would make the Event Bus a participant in behaviour it exists only to carry.
+
 ---
 
 # Runtime Model
 
-Every event follows the same runtime path.
+Every event follows the same runtime path, and the shape of that path is what keeps publishers and subscribers apart.
 
 ```mermaid
 flowchart TD
@@ -105,9 +87,7 @@ N4 --> N6
 N5 --> N6
 ```
 
-Notice that publishers never communicate directly with subscribers.
-
-Every interaction occurs through the Event Bus.
+Publishers never communicate directly with subscribers, because every interaction occurs through the Event Bus.
 
 ---
 
@@ -117,78 +97,27 @@ Publishing an event means:
 
 > **This business fact has occurred.**
 
-The publisher does not ask:
-
-- Who receives it?
-- How many subscribers exist?
-- Did anybody process it?
-- What happens next?
-
-Publishing should be fire-and-forget from the publisher's perspective.
-
-Once accepted by the Event Bus, responsibility transfers to the runtime.
+The publisher does not ask who receives it, how many subscribers exist, whether anybody processed it, or what happens next. Publishing should therefore be fire-and-forget from the publisher's perspective, because once the Event Bus has accepted the event, responsibility transfers to the runtime.
 
 ---
 
 # Subscription
 
-Capabilities subscribe to events.
-
-Not publishers.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Subscribes"]
-N3["media.imported"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Library capability remains unaware that Playback exists.
-
-Adding another subscriber never requires modifying the publisher.
+Capabilities subscribe to events, not to publishers. Playback subscribes to `media.imported`, and the Library capability remains unaware that Playback exists, which means adding another subscriber never requires modifying the publisher.
 
 ---
 
 # Routing
 
-The Event Bus routes events using:
+The Event Bus routes events by matching the Event Name against its Registered Subscribers and performing Delivery to each of them. No routing logic should exist inside business capabilities: capabilities express interest, and the runtime performs routing.
 
-```mermaid
-flowchart TD
-
-N1["Event Name"]
-N2["Registered Subscribers"]
-N3["Delivery"]
-
-N1 --> N2
-N2 --> N3
-```
-
-No routing logic should exist inside business capabilities.
-
-Capabilities express interest.
-
-The runtime performs routing.
-
-Routing should respect event visibility.
-
-Public Module events and Platform events may be subscribed to by other Modules.
-
-Private Module events should remain within the owning Module boundary.
+Routing should respect event visibility, so Public Module events and Platform events may be subscribed to by other Modules, whereas Private Module events should remain within the owning Module boundary.
 
 ---
 
 # Delivery Model
 
-The Event Bus delivers events independently.
-
-Example.
+The Event Bus delivers events independently, so a single `media.imported` event reaches Metadata, Artwork, Recommendations, Search and Analytics without any of them being aware of the others.
 
 ```mermaid
 flowchart TD
@@ -207,11 +136,7 @@ N1 --> N5
 N1 --> N6
 ```
 
-Each subscriber receives the event independently.
-
-Failure in one subscriber MUST NOT prevent delivery to others.
-
-Subscriber isolation is one of the key properties of resilient event-driven systems.
+Each subscriber receives the event independently, and failure in one subscriber must not prevent delivery to others. Subscriber isolation is one of the key properties of resilient event-driven systems.
 
 ---
 
@@ -221,11 +146,7 @@ Within Mosaic, the Event Bus provides:
 
 > **At-Least-Once Delivery**
 
-Every published event is delivered one or more times.
-
-Subscribers MUST therefore be idempotent.
-
-Exactly-once delivery is intentionally avoided because it introduces substantial complexity and often relies on infrastructure-specific guarantees. At-least-once delivery with idempotent consumers is the more common architectural choice for distributed event-driven systems. ([microservices.io](https://microservices.io/post/microservices/patterns/2020/10/16/idempotent-consumer.html))
+Every published event is delivered one or more times, so subscribers must be idempotent. Exactly-once delivery is intentionally avoided because it introduces substantial complexity and often relies on infrastructure-specific guarantees, whereas at-least-once delivery with idempotent consumers is the more common architectural choice for distributed event-driven systems. ([microservices.io](https://microservices.io/post/microservices/patterns/2020/10/16/idempotent-consumer.html))
 
 Future chapters define idempotency requirements.
 
@@ -252,83 +173,25 @@ N4 --> N5
 N5 --> N6
 ```
 
-The Event Bus performs the fan-out automatically.
-
-Publishers remain unchanged regardless of subscriber count.
+The Event Bus performs the fan-out automatically, so publishers remain unchanged regardless of subscriber count.
 
 ---
 
 # No Subscriber Ordering
 
-Subscribers MUST be considered independent.
-
-The runtime makes **no guarantee** that:
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Artwork"]
-
-N1 --> N2
-```
-
-will execute before:
-
-```
-
-Recommendations
-```
-
-If ordering is required, it should emerge naturally through additional events.
-
-Never through subscriber registration order.
+Subscribers must be considered independent, and the runtime makes **no guarantee** that Metadata and Artwork will execute before Recommendations. Where ordering is required it should emerge naturally through additional events, never through subscriber registration order.
 
 ---
 
 # Runtime Registration
 
-Capabilities register subscriptions during startup.
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["Capability"]
-N3["Register Subscription"]
-N4["Ready"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Subscriptions should remain static throughout the application's lifetime unless explicitly designed otherwise.
+Capabilities register subscriptions during startup, so the path from Runtime to Capability runs through Register Subscription before that capability becomes Ready. Subscriptions should remain static throughout the application's lifetime unless explicitly designed otherwise.
 
 ---
 
 # Dynamic Modules
 
-Modules register subscriptions exactly like Platform capabilities.
-
-```mermaid
-flowchart TD
-
-N1["Module Loaded"]
-N2["Register Events"]
-N3["Begin Receiving"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Event Bus makes no distinction between:
-
-- Platform capabilities
-- First-party modules
-- Third-party modules
-
-Every capability participates equally.
+Modules register subscriptions exactly like Platform capabilities: once a Module is loaded it registers its events and begins receiving them. The Event Bus makes no distinction between Platform capabilities, first-party modules and third-party modules, so every capability participates equally.
 
 ---
 
@@ -351,131 +214,50 @@ N1 --> N4
 N1 --> N5
 ```
 
-The failure affects only Artwork.
-
-Other subscribers continue normally.
-
-Retry belongs to Artwork.
-
-Not the publisher.
+The failure affects only Artwork, so the other subscribers continue normally and retry belongs to Artwork rather than to the publisher.
 
 ---
 
 # Event Acknowledgement
 
-Subscribers acknowledge successful processing.
-
-```mermaid
-flowchart TD
-
-N1["Receive"]
-N2["Process"]
-N3["Acknowledge"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Only after acknowledgement is the event considered successfully processed for that subscriber.
-
-Unacknowledged events become eligible for retry.
+A subscriber will receive an event, process it and acknowledge it, and only after that acknowledgement is the event considered successfully processed for that subscriber. Unacknowledged events become eligible for retry.
 
 ---
 
 # Event Filtering
 
-Subscribers receive only events they have explicitly subscribed to.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Receive Everything"]
-N2["Filter Internally"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["Deliver Relevant Events"]
-
-N1 --> N2
-```
-
-The runtime performs routing.
-
-Subscribers process business logic.
+Subscribers receive only events they have explicitly subscribed to. It is poor practice for a subscriber to receive everything and filter internally; the preferred arrangement is for the runtime to deliver relevant events, so that the runtime performs routing while subscribers process business logic.
 
 ---
 
 # Backpressure
 
-The Event Bus is responsible for protecting the runtime during overload.
-
-Possible strategies include:
+The Event Bus is responsible for protecting the runtime during overload, and possible strategies include:
 
 - bounded queues
 - worker pools
 - rate limiting
 - deferred retries
 
-Unbounded queues are prohibited.
-
-The runtime must remain stable under sustained load.
-
-Future chapters discuss backpressure in detail.
+Unbounded queues are prohibited, because the runtime must remain stable under sustained load. Future chapters discuss backpressure in detail.
 
 ---
 
 # Event Persistence
 
-The Event Bus MAY persist events before delivery.
-
-Persistence enables:
-
-- replay
-- diagnostics
-- recovery
-- auditing
-
-Whether persistence is enabled is a runtime concern.
-
-Business capabilities should remain unaware.
+The Event Bus may persist events before delivery, which enables replay, diagnostics, recovery and auditing. Whether persistence is enabled is a runtime concern, so business capabilities should remain unaware of it.
 
 ---
 
 # Event Replay
 
-Replay follows the same delivery path as live events.
-
-```mermaid
-flowchart TD
-
-N1["Historical Events"]
-N2["Event Bus"]
-N3["Subscribers"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Subscribers should not need separate replay implementations.
-
-Processing historical events should be indistinguishable from processing live events wherever practical.
+Replay follows the same delivery path as live events, so Historical Events travel through the Event Bus to Subscribers exactly as live events do. Subscribers should not need separate replay implementations, and processing historical events should be indistinguishable from processing live events wherever practical.
 
 ---
 
 # Runtime Observability
 
-Every significant Event Bus action SHOULD produce telemetry.
-
-Examples include:
+Every significant Event Bus action should produce telemetry, examples of which include:
 
 - published events
 - delivery latency
@@ -484,26 +266,20 @@ Examples include:
 - queue depth
 - dead-letter events
 
-The Event Bus should be one of the most observable components within the platform.
-
-If events cannot be observed, debugging distributed behaviour becomes significantly harder.
+The Event Bus should be one of the most observable components within the platform, because if events cannot be observed, debugging distributed behaviour becomes significantly harder.
 
 ---
 
 # Event Bus Boundaries
 
-The Event Bus should remain intentionally small.
-
-It should expose behaviour such as:
+The Event Bus should remain intentionally small, exposing behaviour such as:
 
 - Publish
 - Subscribe
 - Register
 - Shutdown
 
-It should not expose business concepts.
-
-The runtime API should remain stable even as capabilities evolve.
+It should not expose business concepts, which is what allows the runtime API to remain stable even as capabilities evolve.
 
 ---
 
@@ -513,33 +289,13 @@ The following practices are prohibited.
 
 ## Business Logic Inside The Event Bus
 
-```mermaid
-flowchart TD
-
-N1["If PlaybackCompleted"]
-N2["Update Statistics"]
-
-N1 --> N2
-```
-
-The Event Bus should never understand business events.
+Branching on a business fact — if PlaybackCompleted, then Update Statistics — makes the transport a participant in the behaviour it carries. The Event Bus should never understand business events.
 
 ---
 
 ## Subscriber Discovery By Publishers
 
-```mermaid
-flowchart TD
-
-N1["Publisher"]
-N2["Find Subscriber"]
-N3["Call Subscriber"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Publishers should never know subscribers exist.
+A Publisher that will Find Subscriber and then Call Subscriber has rebuilt exactly the direct dependency the Event Bus exists to remove. Publishers should never know subscribers exist.
 
 ---
 
@@ -551,19 +307,13 @@ Subscribers communicating through shared mutable memory rather than events.
 
 ## Runtime Orchestration
 
-The Event Bus deciding which business operation should execute next.
-
-Business workflows emerge from events.
-
-Not runtime decisions.
+The Event Bus deciding which business operation should execute next. Business workflows emerge from events, not from runtime decisions.
 
 ---
 
 ## Synchronous Delivery Requirements
 
-Publishers waiting for every subscriber before continuing.
-
-The runtime should remain asynchronous wherever practical.
+Publishers waiting for every subscriber before continuing. The runtime should remain asynchronous wherever practical.
 
 ---
 
@@ -571,30 +321,18 @@ The runtime should remain asynchronous wherever practical.
 
 Within Mosaic:
 
-- The Event Bus MUST remain business agnostic.
-- Publishers MUST publish facts only.
-- Subscribers MUST register explicitly.
-- Subscribers MUST remain independent.
-- Delivery MUST be at-least-once.
-- Subscriber failures MUST NOT affect other subscribers.
-- Runtime routing MUST remain transparent to publishers.
-- The Event Bus MUST remain observable.
-- Modules MUST integrate through the same Event Bus as Platform capabilities.
+- The Event Bus must remain business agnostic.
+- Publishers must publish facts only.
+- Subscribers must register explicitly.
+- Subscribers must remain independent.
+- Delivery must be at-least-once.
+- Subscriber failures must not affect other subscribers.
+- Runtime routing must remain transparent to publishers.
+- The Event Bus must remain observable.
+- Modules must integrate through the same Event Bus as Platform capabilities.
 
 ---
 
 # Summary
 
-The Event Bus is the nervous system of the Mosaic Runtime.
-
-It transports information.
-
-It coordinates delivery.
-
-It observes execution.
-
-It never owns business behaviour.
-
-Maintaining this separation allows the platform to grow from a handful of capabilities to hundreds without introducing direct dependencies between them.
-
-The Event Bus therefore remains one of the smallest yet most important components within the entire Mosaic architecture.
+The Event Bus is the nervous system of the Mosaic Runtime: it transports information, coordinates delivery and observes execution, but it never owns business behaviour. Maintaining that separation allows the platform to grow from a handful of capabilities to hundreds without introducing direct dependencies between them, which is why the Event Bus remains one of the smallest yet most important components within the entire Mosaic architecture.

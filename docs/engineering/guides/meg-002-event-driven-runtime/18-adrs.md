@@ -12,11 +12,7 @@ Status: Draft
 
 # Purpose
 
-MEG-002 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries.
-
-The decision process itself is governed by **[MDG-001 — Documentation Authority Guide](../../documentation/mdg-001-documentation-authority-guide/index.md)**.
-
-This chapter avoids repeating ADR process rules so the documentation library has one authoritative home for decision practice.
+MEG-002 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries. The decision process itself is governed by **[MDG-001 — Documentation Authority Guide](../../documentation/mdg-001-documentation-authority-guide/index.md)**, so this chapter avoids repeating ADR process rules and the documentation library retains one authoritative home for decision practice.
 
 ---
 
@@ -52,21 +48,13 @@ Accepted
 
 ## Context
 
-Mosaic needs event-driven communication between independently developed Modules.
-
-A traditional typed event bus would require the SDK or Platform to define every possible event type.
-
-That would make the SDK change whenever a Module adds or evolves a domain event.
-
-It would also make the Platform aware of domain concepts that should remain Module-owned.
+Mosaic needs event-driven communication between independently developed Modules. A traditional typed event bus would require the SDK or Platform to define every possible event type, which would make the SDK change whenever a Module adds or evolves a domain event. It would also make the Platform aware of domain concepts that should remain Module-owned.
 
 ---
 
 ## Decision
 
-The Platform owns generic event infrastructure.
-
-The Platform owns:
+The Platform owns generic event infrastructure, which means the Platform owns:
 
 - Event Bus
 - Event Envelope
@@ -82,9 +70,7 @@ The SDK owns:
 - Event Bus interfaces
 - core Platform lifecycle events
 
-Modules own domain events.
-
-Modules own:
+Modules own domain events, so Modules own:
 
 - event names
 - payload definitions
@@ -94,13 +80,7 @@ Modules own:
 - publishers
 - subscribers
 
-Event names must be namespaced.
-
-Module events may be public or private.
-
-Public Module events form the Module's documented integration contract.
-
-Private Module events remain implementation details.
+Event names must be namespaced. Module events may be public or private: public Module events form the Module's documented integration contract, whereas private Module events remain implementation details.
 
 ---
 
@@ -118,42 +98,22 @@ Private Module events remain implementation details.
 
 ## Consequences
 
-The SDK remains stable while the event ecosystem grows.
-
-Modules can evolve domain events independently.
-
-The Platform can route, deliver, observe and replay events without understanding payload semantics.
-
-Public/private event visibility gives Module authors an explicit external API boundary.
-
-Manifests become the discovery and validation surface for published and subscribed events.
+The SDK remains stable while the event ecosystem grows, because Modules can evolve domain events independently and the Platform can route, deliver, observe and replay events without understanding payload semantics. Public/private event visibility gives Module authors an explicit external API boundary, and manifests become the discovery and validation surface for published and subscribed events.
 
 ---
 
 ## Implementation Implications
 
-[MIP-001](../../protocols/mip-001-event-protocol/index.md) defines the event protocol.
-
-[MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md) defines how Module manifests declare public/private event publications and subscriptions.
-
-The Event Bus should route by namespaced event name and honour visibility metadata.
-
-Tooling should generate event documentation from manifests.
-
-Subscribers should depend on public Module events or Platform events, not another Module's private events.
+[MIP-001](../../protocols/mip-001-event-protocol/index.md) defines the event protocol, and [MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md) defines how Module manifests declare public/private event publications and subscriptions. The Event Bus should therefore route by namespaced event name and honour visibility metadata, while tooling should generate event documentation from manifests. Subscribers should depend on public Module events or Platform events, not another Module's private events.
 
 ---
 
 # Relationship To [MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md)
 
-[MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md) defines ADR structure, review expectations, lifecycle and cross-reference rules.
-
-This guide should reference decisions that affect it, but should not redefine the decision process.
+[MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md) defines ADR structure, review expectations, lifecycle and cross-reference rules. This guide should reference decisions that affect it, but should not redefine the decision process.
 
 ---
 
 # Review Guidance
 
-During review, confirm that the guide and any related decision record agree.
-
-If a decision changes the meaning of this guide, update the affected chapter and reference the decision from this page.
+During review, confirm that the guide and any related decision record agree. If a decision changes the meaning of this guide, update the affected chapter and reference the decision from this page.

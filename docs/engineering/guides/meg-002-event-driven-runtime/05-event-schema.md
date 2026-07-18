@@ -12,19 +12,13 @@ Status: Draft
 
 # Purpose
 
-[MIP-001](../../protocols/mip-001-event-protocol/index.md) defines the canonical event envelope and payload boundary.
-
-This chapter describes how engineering teams should implement that boundary.
+[MIP-001](../../protocols/mip-001-event-protocol/index.md) defines the canonical event envelope and payload boundary, and this chapter describes how engineering teams should implement that boundary.
 
 ---
 
 # Engineering Guidance
 
-Runtime code should treat the envelope as Platform-owned metadata.
-
-Capability code should treat the payload as business-owned data.
-
-Implementations should not blur this boundary by placing Runtime routing decisions into payload fields or by forcing the Runtime to inspect business payloads unnecessarily.
+Runtime code should treat the envelope as Platform-owned metadata, whereas capability code should treat the payload as business-owned data. Implementations should not blur this boundary by placing Runtime routing decisions into payload fields or by forcing the Runtime to inspect business payloads unnecessarily.
 
 ---
 

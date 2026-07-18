@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-This glossary defines the terminology used throughout the Mosaic Event-Driven Runtime.
-
-Runtime terminology should remain consistent across:
+This glossary defines the terminology used throughout the Mosaic Event-Driven Runtime. Runtime terminology should remain consistent across:
 
 - Architecture Specifications
 - ADRs
@@ -31,9 +29,7 @@ Where a term has a specific meaning within the Mosaic Runtime, that definition t
 
 ## Acknowledgement (ACK)
 
-Confirmation that a subscriber has successfully processed an event.
-
-Acknowledgement informs the runtime that:
+Confirmation that a subscriber has successfully processed an event. Acknowledgement informs the runtime that:
 
 - the event does not require retry
 - processing completed successfully
@@ -44,11 +40,7 @@ Acknowledgement does **not** imply that other subscribers have also completed su
 
 ## At-Least-Once Delivery
 
-The runtime guarantee that every published event will be delivered one or more times.
-
-Duplicate delivery is therefore expected.
-
-Subscribers must be idempotent.
+The runtime guarantee that every published event will be delivered one or more times. Duplicate delivery is therefore expected, and subscribers must be idempotent.
 
 ---
 
@@ -56,9 +48,7 @@ Subscribers must be idempotent.
 
 ## Backpressure
 
-The runtime mechanism that limits incoming work when processing capacity becomes constrained.
-
-Backpressure protects:
+The runtime mechanism that limits incoming work when processing capacity becomes constrained. Backpressure protects:
 
 - memory
 - CPU
@@ -71,23 +61,7 @@ It exists to preserve runtime stability.
 
 ## Business Event
 
-An immutable fact describing a completed business state transition.
-
-Examples include:
-
-```
-
-media.imported
-```
-
-```
-
-PlaybackCompleted
-```
-
-Business events belong to capabilities.
-
-Not the runtime.
+An immutable fact describing a completed business state transition, such as `media.imported` or `PlaybackCompleted`. Business events belong to capabilities, not the runtime.
 
 ---
 
@@ -95,9 +69,7 @@ Not the runtime.
 
 ## Capability
 
-A self-contained unit of business functionality.
-
-Examples include:
+A self-contained unit of business functionality. Examples include:
 
 - Library
 - Metadata
@@ -116,19 +88,13 @@ Capabilities do not own runtime infrastructure.
 
 ## Causation ID
 
-The identifier of the event that directly caused another event.
-
-Causation expresses immediate parent-child relationships.
-
-Unlike Correlation IDs, Causation IDs change throughout a workflow.
+The identifier of the event that directly caused another event. Causation expresses immediate parent-child relationships, so unlike Correlation IDs, Causation IDs change throughout a workflow.
 
 ---
 
 ## Correlation ID
 
-An identifier shared by all events participating in the same business workflow.
-
-Correlation allows complete workflows to be reconstructed across many capabilities.
+An identifier shared by all events participating in the same business workflow. Correlation allows complete workflows to be reconstructed across many capabilities.
 
 ---
 
@@ -136,19 +102,13 @@ Correlation allows complete workflows to be reconstructed across many capabiliti
 
 ## Dead Letter Queue (DLQ)
 
-The destination for events that cannot be processed successfully after retry exhaustion.
-
-Dead-letter events require investigation.
-
-They should never disappear silently.
+The destination for events that cannot be processed successfully after retry exhaustion. Dead-letter events require investigation, and they should never disappear silently.
 
 ---
 
 ## Delivery
 
-The runtime process of transporting an event from the Event Bus to a subscriber.
-
-Delivery is owned entirely by the runtime.
+The runtime process of transporting an event from the Event Bus to a subscriber. Delivery is owned entirely by the runtime.
 
 ---
 
@@ -156,24 +116,18 @@ Delivery is owned entirely by the runtime.
 
 ## Event
 
-An immutable record describing a completed business fact.
-
-Every event consists of:
+An immutable record describing a completed business fact. Every event consists of:
 
 - Runtime Envelope
 - Business Payload
 
-Events never describe intentions.
-
-Only completed reality.
+Events never describe intentions, only completed reality.
 
 ---
 
 ## Event Bus
 
-The runtime component responsible for routing events between publishers and subscribers.
-
-The Event Bus owns:
+The runtime component responsible for routing events between publishers and subscribers. The Event Bus owns:
 
 - routing
 - delivery
@@ -186,9 +140,7 @@ It intentionally owns no business logic.
 
 ## Event Envelope
 
-Runtime metadata surrounding every event.
-
-Examples include:
+Runtime metadata surrounding every event. Examples include:
 
 - Event ID
 - Version
@@ -201,21 +153,13 @@ The envelope belongs to the runtime.
 
 ## Event Visibility
 
-The contract classification of a Module event.
-
-Public events are integration contracts.
-
-Private events are implementation details.
+The contract classification of a Module event: public events are integration contracts, whereas private events are implementation details.
 
 ---
 
 ## Event Payload
 
-The immutable business information carried by an event.
-
-Payloads describe business facts.
-
-They never describe runtime behaviour.
+The immutable business information carried by an event. Payloads describe business facts, and they never describe runtime behaviour.
 
 ---
 
@@ -223,9 +167,7 @@ They never describe runtime behaviour.
 
 ## Idempotency
 
-The property whereby processing the same event multiple times produces the same final business state.
-
-Idempotency is mandatory for every subscriber.
+The property whereby processing the same event multiple times produces the same final business state. Idempotency is mandatory for every subscriber.
 
 ---
 
@@ -233,11 +175,7 @@ Idempotency is mandatory for every subscriber.
 
 ## Occurred At
 
-The timestamp recording when the business fact became true.
-
-It represents business chronology.
-
-Not delivery chronology.
+The timestamp recording when the business fact became true. It represents business chronology, not delivery chronology.
 
 ---
 
@@ -245,35 +183,25 @@ Not delivery chronology.
 
 ## Producer
 
-The capability that published an event.
-
-Every event has exactly one producer.
+The capability that published an event. Every event has exactly one producer.
 
 ---
 
 ## Private Event
 
-A Module-owned event that remains inside the Module's implementation boundary.
-
-Other Modules should not subscribe to private events.
+A Module-owned event that remains inside the Module's implementation boundary. Other Modules should not subscribe to private events.
 
 ---
 
 ## Public Event
 
-A Module-owned event that is part of the Module's documented integration contract.
-
-Other Modules may subscribe to public events through manifest-declared subscriptions.
+A Module-owned event that is part of the Module's documented integration contract. Other Modules may subscribe to public events through manifest-declared subscriptions.
 
 ---
 
 ## Publisher
 
-The runtime component responsible for introducing events into the Event Bus.
-
-Publishers announce facts.
-
-They never coordinate workflows.
+The runtime component responsible for introducing events into the Event Bus. Publishers announce facts, and they never coordinate workflows.
 
 ---
 
@@ -281,11 +209,7 @@ They never coordinate workflows.
 
 ## Queue
 
-A bounded runtime structure holding work awaiting execution.
-
-Every runtime queue has finite capacity.
-
-Unlimited queues are prohibited.
+A bounded runtime structure holding work awaiting execution. Every runtime queue has finite capacity, and unlimited queues are prohibited.
 
 ---
 
@@ -293,9 +217,7 @@ Unlimited queues are prohibited.
 
 ## Reactive Runtime
 
-The runtime architecture through which autonomous capabilities cooperate by publishing and subscribing to immutable events.
-
-The Reactive Runtime owns:
+The runtime architecture through which autonomous capabilities cooperate by publishing and subscribing to immutable events. The Reactive Runtime owns:
 
 - coordination
 - scheduling
@@ -309,9 +231,7 @@ Business capabilities own behaviour.
 
 ## Replay
 
-The process of delivering historical events through the runtime again.
-
-Replay enables:
+The process of delivering historical events through the runtime again. Replay enables:
 
 - rebuilding projections
 - diagnostics
@@ -324,36 +244,13 @@ Replay should produce identical business behaviour to live execution.
 
 ## Retry
 
-A subsequent attempt to process a previously failed event.
-
-Retries are owned by the runtime.
-
-Business capabilities simply return failures.
+A subsequent attempt to process a previously failed event. Retries are owned by the runtime, and business capabilities simply return failures.
 
 ---
 
 ## Runtime Event
 
-An event describing platform behaviour rather than business behaviour.
-
-Examples include:
-
-```
-
-WorkerStarted
-```
-
-```
-
-RetryScheduled
-```
-
-```
-
-BackpressureApplied
-```
-
-Runtime events belong to infrastructure.
+An event describing platform behaviour rather than business behaviour, such as `WorkerStarted`, `RetryScheduled` or `BackpressureApplied`. Runtime events belong to infrastructure.
 
 ---
 
@@ -361,9 +258,7 @@ Runtime events belong to infrastructure.
 
 ## Scheduler
 
-The runtime component responsible for delayed and recurring execution.
-
-Schedulers own:
+The runtime component responsible for delayed and recurring execution. Schedulers own:
 
 - timers
 - recurring jobs
@@ -375,9 +270,7 @@ They never own business decisions.
 
 ## Subscriber
 
-A capability that reacts to published events.
-
-Subscribers:
+A capability that reacts to published events. Subscribers:
 
 - validate
 - execute business behaviour
@@ -391,26 +284,20 @@ Subscribers remain autonomous.
 
 ## Task
 
-A unit of executable work performed by a worker.
-
-Tasks originate from:
+A unit of executable work performed by a worker. Tasks originate from:
 
 - events
 - schedules
 - retries
 - runtime operations
 
-Tasks are execution concepts.
-
-Not business concepts.
+Tasks are execution concepts, not business concepts.
 
 ---
 
 ## Trace
 
-A complete execution path describing one workflow across the runtime.
-
-Traces combine:
+A complete execution path describing one workflow across the runtime. Traces combine:
 
 - Correlation IDs
 - Causation IDs
@@ -423,19 +310,13 @@ Traces combine:
 
 ## Worker
 
-A runtime component responsible for executing tasks.
-
-Workers own execution.
-
-They do not own business behaviour.
+A runtime component responsible for executing tasks. Workers own execution, and they do not own business behaviour.
 
 ---
 
 ## Worker Pool
 
-A bounded collection of workers processing queued tasks.
-
-Worker pools provide:
+A bounded collection of workers processing queued tasks. Worker pools provide:
 
 - controlled concurrency
 - predictable resource usage
@@ -460,9 +341,7 @@ Worker pools provide:
 
 # Relationship to MEG-002
 
-This glossary supports every document within the Event-Driven Runtime specification.
-
-Definitions should remain consistent across:
+This glossary supports every document within the Event-Driven Runtime specification. Definitions should remain consistent across:
 
 - runtime implementation
 - module SDKs
@@ -470,4 +349,4 @@ Definitions should remain consistent across:
 - operational tooling
 - contributor documentation
 
-Where runtime terminology evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
+Where runtime terminology evolves, this glossary should be updated before introducing new terminology elsewhere.
