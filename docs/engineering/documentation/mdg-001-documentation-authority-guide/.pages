@@ -3,5 +3,6 @@ arrange:
   - index.md
   - 00-document-control.md
   - ...
-  - 10-references.md
-  - 11-glossary.md
+  - 10-standards-mapping.md
+  - references.md
+  - glossary.md

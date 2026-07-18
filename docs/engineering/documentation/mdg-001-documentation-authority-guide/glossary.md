@@ -1,11 +1,10 @@
 <!--
-File: docs/engineering/documentation/mdg-001-documentation-authority-guide/11-glossary.md
+File: docs/engineering/documentation/mdg-001-documentation-authority-guide/glossary.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
-# 11 — Glossary
+# Glossary
 
 ---
 
@@ -77,6 +76,16 @@ Capability Managers determine routing, orchestration, validation and provider se
 
 ---
 
+# Contract Version
+
+The major compatibility version of a contract defined by an Integration Protocol.
+
+A contract version describes whether independently developed components interoperate. It belongs to the contract rather than to the document describing it, and uses a major integer only, such as `Event Protocol v1`.
+
+Prose documents carry no version of any kind.
+
+---
+
 # Design Language (MDL)
 
 The collection of documents defining the visual philosophy of Mosaic.
@@ -101,7 +110,7 @@ Design Proposals are discussion documents.
 
 Accepted proposals normally result in one or more Architecture Decisions.
 
-Every MDP declares an Active, Deferred, Accepted, Rejected or Superseded disposition independently from its document Status and Version.
+Every MDP declares its lifecycle through Status, which for proposals additionally admits Deferred, Accepted, Rejected and Withdrawn.
 
 ---
 
@@ -261,9 +270,9 @@ Multiple providers may satisfy the same capability depending upon Platform polic
 
 # Proposal Disposition
 
-The lifecycle classification applied to an MDP independently from document Status and Version.
+A retired field previously used to classify an MDP independently from its document Status.
 
-Valid dispositions are Active, Deferred, Accepted, Rejected and Superseded.
+Proposal lifecycle is now expressed through Status. Existing MDP documents retaining a `Disposition` row within Document Control keep it as a legacy alias until migrated. Where the two disagree, Status governs.
 
 ---
 
@@ -294,13 +303,23 @@ A self-contained architectural publication composed of multiple chapters.
 
 Every specification contains:
 
-- README
+- `index.md`
 - Document Control
 - numbered chapters
 - References
 - Glossary
 
 Specifications are treated as complete publications rather than collections of unrelated Markdown files.
+
+---
+
+# Status
+
+The declared authority of a document.
+
+Status answers whether a reader may rely upon a document. Valid values are Draft, Review, Active, Deprecated and Superseded, with Deferred, Accepted, Rejected and Withdrawn additionally available to Mosaic Design Proposals.
+
+Status replaces the numeric document version formerly used to communicate maturity.
 
 ---
 
@@ -327,13 +346,3 @@ The Supervisor exists independently of the Platform runtime.
 The ability to follow architectural concepts through proposals, decisions, specifications and implementation using documented relationships and references.
 
 Traceability reduces duplication while preserving architectural history.
-
----
-
-# Version
-
-A measure of document maturity.
-
-Documentation versions communicate review progress rather than implementation maturity.
-
-Version numbers are independent of software release versions.

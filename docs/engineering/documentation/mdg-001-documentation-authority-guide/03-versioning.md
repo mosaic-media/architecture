@@ -1,257 +1,243 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
-# 03 — Versioning
+# 03 — Status And Versioning
 
 ---
 
 # Purpose
 
-Versioning communicates the maturity of a document rather than the maturity of the implementation it describes.
+A reader arriving at any Mosaic document needs to answer one question immediately:
 
-Documentation versions allow readers to understand:
+> **Can I rely upon this?**
 
-- how stable the information is
-- whether the document is still evolving
-- whether architectural review has completed
-- whether the document should be considered authoritative
+This chapter defines how that question is answered.
 
-Documentation version numbers are therefore independent of software release versions.
+Mosaic documents declare a **Status**. Status communicates authority rather than effort.
 
-This distinction is especially important for MRM documents: an MRM document version communicates review maturity, while its contents describe Mosaic software release horizons.
+Mosaic documents do not carry a document version number. Prose does not have releases, and a number attached to prose invites a precision the prose cannot honour.
+
+Only a **contract** carries a version. Contracts are defined by Integration Protocols, and their versions describe compatibility between independently developed components rather than the maturity of the Markdown that describes them.
 
 ---
 
 # Guiding Principles
 
-Documentation versioning should:
+Document lifecycle metadata should:
 
-- communicate document maturity
-- remain predictable
-- encourage deliberate progression
-- avoid unnecessary version inflation
-- reflect meaningful review milestones
+- communicate authority rather than effort
+- remain auditable by a reader and by tooling
+- avoid encoding review history within a number
+- distinguish the document from the contract the document defines
+- preserve change history without duplicating it into metadata
 
-Version numbers should never be incremented solely because time has passed.
-
----
-
-# Version Progression
-
-Documentation progresses through a defined lifecycle.
-
-| Version | Meaning |
-|---------:|---------|
-| 0.1 | Initial draft. |
-| 0.2 | Editorial review completed. |
-| 0.3 | Structural review completed. |
-| 0.4 | Cross-reference review completed. |
-| 0.5 | Technical review completed. |
-| 0.6–0.8 | Iterative refinement. |
-| 0.9 | Candidate for approval. |
-| 1.0 | Canonical release. |
-
-Each progression represents a measurable improvement in document quality.
+A reader should never need to interpret a decimal to discover whether a document is binding.
 
 ---
 
-# Initial Draft (0.1)
+# Prose Documents Carry Status
 
-Version **0.1** represents the first complete expression of an idea.
+The following document types are prose. They describe architecture, practice, procedure, design intent, decisions and documentation standards.
 
-The objective is to establish:
+- Mosaic Architecture Canon (MAC)
+- Mosaic Engineering Guide (MEG)
+- Mosaic Operations & Playbook (MOP)
+- Mosaic Design Language (MDL)
+- Mosaic Design System (MDS)
+- Mosaic Documentation Guide (MDG)
+- Mosaic Architecture Decision (MAD)
+- Mosaic Design Proposal (MDP)
+- Mosaic Roadmap (MRM)
 
-- purpose
-- scope
-- philosophy
-- overall direction
+Prose documents declare a Status and no version.
 
-Documents at this stage should prioritise clarity of intent over completeness.
+Maturity is established by two sources that cannot drift from the document:
 
-Large revisions are expected.
+- **Git history**, which records every change, its author and its reasoning.
+- **A revision history**, maintained where a document benefits from a human-readable summary of meaningful change.
 
----
-
-# Editorial Review (0.2)
-
-Version **0.2** indicates the document has undergone editorial review.
-
-Typical improvements include:
-
-- improved consistency
-- clearer language
-- corrected terminology
-- improved structure
-- removal of duplication
-- alignment with documentation standards
-
-Editorial review should not substantially alter architectural intent.
+Neither source requires a number within the metadata block, and neither can silently disagree with the document it describes.
 
 ---
 
-# Structural Review (0.3)
+# Status Lifecycle
 
-Version **0.3** confirms the document structure has been reviewed.
+Every Mosaic document declares exactly one Status.
 
-Typical activities include:
+| Status | Meaning |
+|--------|---------|
+| Draft | The document is being written. It is not authoritative and may change substantially. |
+| Review | The document is complete enough to be assessed and is awaiting review outcomes. It is not yet authoritative. |
+| Active | The document is authoritative. Readers should rely upon it and implementations should conform to it. |
+| Deprecated | The document remains published for reference, but its guidance should no longer be adopted for new work. |
+| Superseded | The document has been replaced. It must identify its replacement. |
 
-- chapter organisation
-- navigation improvements
-- section ordering
-- improved hierarchy
-- better separation of concerns
+Two further statuses apply only to Mosaic Design Proposals.
 
-Readers should now find the document significantly easier to navigate.
+| Status | Meaning |
+|--------|---------|
+| Rejected | The proposal will not proceed under its recorded assumptions. It is retained for historical reasoning. |
+| Withdrawn | The proposal was retired by its author before a decision was reached. |
 
----
+The normal progression is illustrated below.
 
-# Cross-Reference Review (0.4)
+```mermaid
+flowchart TD
 
-Version **0.4** focuses on integration with the wider documentation library.
+N1["Draft"]
+N2["Review"]
+N3["Active"]
+N4["Deprecated"]
+N5["Superseded"]
 
-Typical activities include:
+N1 --> N2
+N2 --> N1
+N2 --> N3
+N3 --> N4
+N3 --> N5
+N4 --> N5
+```
 
-- validating references
-- removing duplicated concepts
-- improving traceability
-- linking related specifications
-- ensuring glossary consistency
+Proposals follow a different path.
 
-The documentation should increasingly behave as a connected knowledge base rather than isolated documents.
+```mermaid
+flowchart TD
 
----
+P1["Draft"]
+P2["Review"]
+P3["Deferred"]
+P4["Accepted"]
+P5["Rejected"]
+P6["Withdrawn"]
 
-# Technical Review (0.5)
-
-Version **0.5** confirms that subject matter experts have reviewed the technical accuracy of the document.
-
-Reviewers should verify:
-
-- architectural correctness
-- engineering accuracy
-- terminology
-- consistency with the Architecture Canon
-- consistency with accepted Architecture Decisions
-
-At this stage the document should accurately represent the current understanding of the platform.
-
----
-
-# Refinement (0.6 – 0.8)
-
-Versions between **0.6** and **0.8** represent iterative improvement.
-
-Typical changes include:
-
-- clarification
-- expanded examples
-- improved diagrams
-- improved explanations
-- incorporation of review feedback
-
-These revisions should refine the document rather than redefine it.
-
-Major architectural changes should instead begin with a new Mosaic Design Proposal.
+P1 --> P2
+P2 --> P4
+P2 --> P3
+P3 --> P2
+P2 --> P5
+P1 --> P6
+P2 --> P6
+```
 
 ---
 
-# Candidate (0.9)
+# Status Transitions
 
-Version **0.9** indicates the document is considered complete pending final approval.
+Status changes deliberately rather than incidentally.
 
-Only minor changes should occur at this stage.
+| Transition | Condition |
+|------------|-----------|
+| Draft → Review | The document expresses its subject completely enough to be assessed. |
+| Review → Draft | Review identified changes substantial enough to require rewriting. |
+| Review → Active | Editorial, structural, cross-reference and technical review have all completed. |
+| Active → Deprecated | The guidance remains historically accurate but should not be adopted for new work. |
+| Active → Superseded | A replacement document has become Active. |
+| Deprecated → Superseded | A replacement document has become Active for previously deprecated guidance. |
 
-Examples include:
+A Superseded or Deprecated document must link to its replacement, or state plainly that no replacement exists.
 
-- typographical corrections
-- formatting improvements
-- reference validation
-- final editorial polish
-
-Architectural changes should generally be avoided.
-
----
-
-# Canonical Release (1.0)
-
-Version **1.0** represents the first canonical publication of the document.
-
-For Architecture Canon documents this indicates:
-
-- architectural consensus
-- editorial completion
-- technical approval
-
-Version 1.0 documents become authoritative references for subsequent documentation.
+Editorial corrections never change Status.
 
 ---
 
-# Version Increment Policy
+# Contracts Carry Versions
 
-Version numbers should increase only when meaningful improvements occur.
+An Integration Protocol defines a contract between independently developed components. Those components must be able to state which contract they implement.
 
-Examples include:
-
-| Change | Version Increment |
-|---------|-------------------|
-| Editorial improvements | Minor draft progression |
-| Structural reorganisation | Minor draft progression |
-| New chapters | Minor draft progression |
-| Significant architectural revision | New draft cycle or major version |
-| Typographical corrections | No version change (unless part of a scheduled review) |
-
-Version inflation should be avoided.
-
----
-
-# Status Relationship
-
-Document version and document status are related but independent.
+The contract therefore carries a **major compatibility version**, declared within the MIP document.
 
 For example:
 
-| Status | Typical Versions |
-|---------|------------------|
-| Draft | 0.1 – 0.9 |
-| Approved | 1.x |
-| Superseded | Any |
-| Archived | Any |
+> This document defines **Event Protocol v1**.
 
-MDP disposition is separate from both Status and Version. For example, a technically mature proposal may remain `Status: Draft`, `Version: 0.5`, `Disposition: Deferred` because it is preserved research rather than accepted authority.
+The following rules govern contract versions.
 
-Changing status does not automatically require a version increment.
+- The version belongs to the contract rather than to the Markdown document describing it.
+- Only a major integer version is used. There is no minor or patch component.
+- A new major version is issued when a change would break an existing conforming implementation.
+- Backward-compatible additions do not produce a new version. They are recorded within the document revision history.
+- A MIP document may describe more than one contract version while both remain supported.
+- The MIP document itself declares a Status exactly as every other document does.
 
-Likewise, version progression does not imply approval.
+The distinction is deliberate.
 
----
+| Concept | Carries | Answers |
+|---------|---------|---------|
+| Document | Status | Can I rely upon this text? |
+| Contract | Major version | Will my component interoperate? |
 
-# Major Versions
-
-Major version increments should represent significant changes to the document itself.
-
-Examples include:
-
-- substantial architectural revision
-- restructuring due to accepted Design Proposals
-- replacement of obsolete concepts
-- changes to governing principles
-
-Major versions should remain relatively rare.
-
-Frequent major version increments indicate architectural instability.
+A MIP document may therefore be `Status: Draft` while defining `Event Protocol v1`, and may be `Status: Active` while defining both `v1` and `v2`.
 
 ---
 
-# Document History
+# No Minor Or Patch Versions
 
-Every document should maintain version metadata within its Document Control chapter.
+Mosaic documentation uses no `MINOR.PATCH` numbering of any kind.
 
-Where appropriate, a revision history may also be maintained.
+This applies to:
 
-Revision histories should summarise meaningful changes rather than listing every editorial correction.
+- document metadata
+- Document Control tables
+- contract versions declared within Integration Protocols
+- revision histories
+- navigation and index pages
 
-This preserves the readability of the specification while maintaining appropriate historical traceability.
+Where a document previously declared a numeric document version such as `0.4`, that field is removed and Status is set to the value that honestly describes the authority of the document.
+
+---
+
+# Revision History
+
+A document benefits from a human-readable summary of meaningful change.
+
+Where a revision history is maintained, it should:
+
+- record meaningful changes rather than every editorial correction
+- group changes beneath the date they became effective
+- describe what changed and why
+- record Status transitions
+- record contract version introductions for MIP documents
+
+Revision histories complement Git history. Git records what happened. A revision history records what mattered.
+
+Revision history conventions are described within [10 — Standards Mapping](10-standards-mapping.md).
+
+---
+
+# Roadmap Horizons
+
+An MRM document describes Mosaic software release horizons.
+
+Those horizons belong to the platform rather than to the document.
+
+An MRM therefore declares a Status like any other prose document, while its contents describe release sequencing. A Roadmap that is `Status: Active` is an authoritative statement of plan rather than an authoritative statement of architecture.
+
+---
+
+# Proposal Status
+
+An MDP records both its lifecycle and its relationship to the accepted architecture.
+
+Proposals use the Status field for this purpose. The values `Deferred`, `Accepted`, `Rejected` and `Withdrawn` describe the outcome of a proposal directly.
+
+A Deferred proposal:
+
+- remains non-authoritative
+- retains its research and unresolved questions
+- must not establish implementation requirements
+- may return to review when evidence or Roadmap priorities change
+
+Existing MDP documents declaring a separate `Disposition` row within Document Control retain that row as a legacy alias until they are migrated. Where `Disposition` and `Status` disagree, Status governs.
+
+---
+
+# Metadata Consequences
+
+Removal of the document version field has three consequences authors should expect.
+
+- The metadata block becomes shorter and is defined precisely within [07 — Repository Organisation](07-repository-organisation.md).
+- The Document Control table no longer carries a Version row.
+- Review milestones are recorded as review outcomes and Status transitions rather than decimal progressions, as described within [05 — Review Process](05-review-process.md).

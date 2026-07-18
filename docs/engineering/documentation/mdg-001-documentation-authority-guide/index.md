@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/index.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # MDG-001 — Documentation Authority Guide
@@ -35,9 +34,10 @@ It defines:
 - documentation responsibilities
 - document taxonomy
 - authorship standards
-- versioning expectations
+- the document status lifecycle
 - review requirements
 - organisational conventions
+- the open standards each document type profiles
 
 Rather than documenting Mosaic itself, this guide documents **how Mosaic documentation is created and maintained**.
 
@@ -60,6 +60,7 @@ This includes, but is not limited to:
 - Mosaic Operations & Playbooks (MOP)
 - Mosaic Design Language (MDL)
 - Mosaic Design System (MDS)
+- Mosaic Documentation Guides (MDG)
 
 Future documentation types shall follow the principles defined here unless explicitly stated otherwise.
 
@@ -174,9 +175,10 @@ Subsequent chapters describe:
 
 - the documentation hierarchy
 - individual document responsibilities
-- versioning
+- the status lifecycle and contract versioning
 - writing standards
 - review processes
 - repository organisation
+- standards mapping
 
 Together these chapters establish a coherent documentation system capable of evolving alongside the Mosaic platform for many years.

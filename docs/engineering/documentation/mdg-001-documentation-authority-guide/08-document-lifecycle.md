@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/08-document-lifecycle.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 08 — Document Lifecycle
@@ -112,7 +111,7 @@ Deferred proposals:
 
 - remain non-authoritative
 - retain their research and unresolved questions
-- must declare `Disposition: Deferred`
+- must declare `Status: Deferred`
 - must not establish implementation requirements
 - may return to Active review when evidence or Roadmap priorities change
 
@@ -253,6 +252,8 @@ Archived documents remain valuable because they preserve:
 - implementation context
 
 Archived documentation should remain clearly identifiable while continuing to be accessible.
+
+Archival is a description of intent rather than a Status value. An archived document declares `Status: Superseded` where a replacement exists, and `Status: Deprecated` where the material has simply fallen out of use. The Status lifecycle is defined within [03 — Status And Versioning](03-versioning.md).
 
 ---
 

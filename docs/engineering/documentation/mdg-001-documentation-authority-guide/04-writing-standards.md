@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/04-writing-standards.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 04 — Writing Standards
@@ -146,7 +145,7 @@ N7 --> N8
 
 Individual document types may extend this structure where appropriate.
 
-The `index.md` page introduces the specification. Authored pages should not include review-status summaries or manual previous and next page links. Metadata communicates document maturity, while the documentation portal provides navigation between pages.
+The `index.md` page introduces the specification. Authored pages should not include review-status summaries or manual previous and next page links. Metadata communicates document authority through Status, while the documentation portal provides navigation between pages.
 
 ---
 
@@ -197,7 +196,7 @@ Tables should be used whenever structured comparison improves readability.
 
 Examples include:
 
-- version progression
+- status lifecycles
 - terminology
 - document responsibilities
 - capability comparisons
@@ -294,11 +293,13 @@ Authors should use normative language consistently.
 | May | Optional behaviour |
 | Must Not | Prohibited behaviour |
 
+These terms carry RFC 2119 semantics as clarified by RFC 8174. Mosaic uses ordinary capitalisation rather than the uppercase convention because Mosaic documentation is written to be read continuously. The meaning is unchanged. The mapping is recorded within [10 — Standards Mapping](10-standards-mapping.md).
+
 These terms should only be used where normative intent is required.
 
 MRM documents must distinguish committed outcomes from candidate or research horizons explicitly. Planning language must not make a deferred MDP or unapproved architecture appear mandatory.
 
-MDP documents must state their disposition without using normative language to imply that Active or Deferred proposals are current requirements.
+MDP documents must state their Status without using normative language to imply that a proposal under review or a Deferred proposal is a current requirement.
 
 ---
 

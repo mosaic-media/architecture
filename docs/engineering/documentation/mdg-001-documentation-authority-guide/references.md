@@ -1,11 +1,10 @@
 <!--
-File: docs/engineering/documentation/mdg-001-documentation-authority-guide/10-references.md
+File: docs/engineering/documentation/mdg-001-documentation-authority-guide/references.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
-# 10 — References
+# References
 
 ---
 
@@ -54,23 +53,41 @@ References should always identify the authoritative document rather than duplica
 
 ---
 
-# External References
+# External Standards
 
-The following external resources influenced the documentation philosophy adopted by Mosaic.
+Each Mosaic document type is a branded profile of an established open standard. The profiles themselves are recorded within [10 — Standards Mapping](10-standards-mapping.md). The sources are listed here.
 
 ## Architecture Decision Records (ADR)
 
 Architecture Decision Records provide a well-established approach to preserving architectural reasoning and historical decision making.
 
-Although Mosaic uses the term **Mosaic Architecture Decision (MAD)**, the underlying philosophy is similar.
+Mosaic Architecture Decisions profile the ADR pattern, and specifically the Markdown Architectural Decision Record (MADR) template, under the Mosaic name.
+
+- Michael Nygard, *Documenting Architecture Decisions*, 2011.
+- *MADR — Markdown Architectural Decision Records*, <https://adr.github.io/madr/>
+- *Architecture Decision Record organisation*, <https://adr.github.io/>
 
 ---
 
-## RFC Series
+## RFC And PEP Process Documents
 
-The Internet Engineering Task Force Request for Comments (RFC) series demonstrates the long-term value of stable, versioned technical specifications.
+The Internet Engineering Task Force Request for Comments series and the Python Enhancement Proposal process both demonstrate the long-term value of a written proposal process that records rejected and withdrawn ideas alongside accepted ones.
 
-Mosaic adopts similar principles of traceability and progressive refinement while using documentation types more appropriate to the platform.
+Mosaic Design Proposals profile that process.
+
+- *PEP 1 — PEP Purpose and Guidelines*, <https://peps.python.org/pep-0001/>
+- *IETF RFC Series*, <https://www.rfc-editor.org/>
+
+---
+
+## RFC 2119 And RFC 8174 (BCP 14)
+
+RFC 2119, as clarified by RFC 8174, defines the normative keywords used to indicate requirement levels within technical specifications. Together they form BCP 14.
+
+Mosaic normative language carries RFC 2119 semantics using ordinary capitalisation, as recorded within [10 — Standards Mapping](10-standards-mapping.md).
+
+- *RFC 2119 — Key words for use in RFCs to Indicate Requirement Levels*, <https://www.rfc-editor.org/rfc/rfc2119>
+- *RFC 8174 — Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, <https://www.rfc-editor.org/rfc/rfc8174>
 
 ---
 
@@ -83,7 +100,29 @@ The Diátaxis framework identifies four fundamental forms of documentation:
 - Explanation
 - Reference
 
-While Mosaic organises documentation differently, the emphasis on clear documentation responsibilities strongly influenced the documentation hierarchy described by this guide.
+Mosaic Architecture Canon, Engineering Guides and Operations Playbooks profile the Diátaxis modes, which is why this guide forbids mixing explanation with instruction within a single document type.
+
+- *Diátaxis*, <https://diataxis.fr/>
+
+---
+
+## Semantic Versioning
+
+Semantic Versioning defines `MAJOR.MINOR.PATCH` numbering for released software artefacts.
+
+Mosaic adopts only the major component, and applies it only to the contracts defined by Integration Protocols. Mosaic prose documents carry no version.
+
+- *Semantic Versioning 2.0.0*, <https://semver.org/>
+
+---
+
+## Keep A Changelog
+
+Keep a Changelog defines a human-readable convention for recording meaningful change.
+
+Mosaic revision histories profile this convention, grouped by effective date rather than by release.
+
+- *Keep a Changelog*, <https://keepachangelog.com/>
 
 ---
 

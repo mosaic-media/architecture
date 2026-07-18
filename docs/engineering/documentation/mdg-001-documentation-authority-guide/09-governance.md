@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/09-governance.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 09 — Governance
@@ -199,7 +198,7 @@ Future tooling should validate:
 
 - document metadata
 - document numbering
-- version consistency
+- status consistency
 - repository organisation
 - reference integrity
 - glossary completeness

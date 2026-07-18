@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/00-document-control.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 00 — Document Control
@@ -16,8 +15,7 @@ Version: 0.4
 | Document | MDG-001 |
 | Title | Documentation Authority Guide |
 | Classification | Mosaic Documentation Guide |
-| Status | Draft |
-| Version | 0.4 |
+| Status | Active |
 | Owner | Mosaic Architecture |
 | Repository | mosaic-architecture |
 
@@ -31,9 +29,10 @@ It defines:
 
 - documentation philosophy
 - document responsibilities
-- document lifecycle
+- document lifecycle and status
 - writing standards
 - organisational conventions
+- standards mapping
 - governance expectations
 
 The purpose of MDG-001 is not to document Mosaic itself.
@@ -69,6 +68,7 @@ This includes, but is not limited to:
 - Mosaic Operations & Playbook (MOP)
 - Mosaic Design Language (MDL)
 - Mosaic Design System (MDS)
+- Mosaic Documentation Guide (MDG)
 
 Future documentation types are expected to adopt these standards unless a documented exception is approved.
 
@@ -102,29 +102,33 @@ The following terms are used throughout this document.
 
 These terms are used consistently throughout Mosaic documentation to distinguish mandatory architectural requirements from implementation guidance and optional practices.
 
+They carry RFC 2119 semantics, as recorded within [10 — Standards Mapping](10-standards-mapping.md).
+
 ---
 
-# Versioning
+# Status
 
-Documentation follows semantic progression rather than implementation maturity.
+Mosaic documents declare authority through Status rather than through a version number.
 
-| Version | Meaning |
-|---------:|---------|
-| 0.1 | Initial draft. |
-| 0.2 | Editorial review completed. |
-| 0.3 | Structural review completed. |
-| 0.4 | Cross-reference review completed. |
-| 0.5 | Technical review completed. |
-| 0.9 | Candidate for approval. |
-| 1.0 | Canonical release. |
+| Status | Meaning |
+|--------|---------|
+| Draft | Being written. Not authoritative. |
+| Review | Complete enough to be assessed. Not yet authoritative. |
+| Active | Authoritative. |
+| Deprecated | Published for reference. Not to be adopted for new work. |
+| Superseded | Replaced by another document. |
 
-Version increments should represent meaningful improvements to the document rather than simple passage of time.
+Mosaic Design Proposals additionally use `Deferred`, `Accepted`, `Rejected` and `Withdrawn`.
+
+Prose documents carry no version number. Only the contracts defined by Integration Protocols carry a major compatibility version.
+
+The full lifecycle is defined within [03 — Status And Versioning](03-versioning.md).
 
 ---
 
 # Review Policy
 
-Every document should undergo review before progressing between versions.
+Every document should undergo review before its Status advances.
 
 Reviews should consider:
 
@@ -152,9 +156,10 @@ Subsequent chapters establish:
 
 - documentation hierarchy
 - document responsibilities
-- versioning strategy
+- status lifecycle and contract versioning
 - writing standards
 - governance
 - repository organisation
+- standards mapping
 
 Together these chapters define the Mosaic documentation system.

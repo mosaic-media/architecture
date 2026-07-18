@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 02 — Document Types
@@ -85,19 +84,23 @@ An MDP should not:
 - provide implementation guidance
 - become permanent reference documentation
 
-## Proposal Disposition
+## Proposal Status
 
-Every MDP must declare one disposition independently from document maturity:
+Every MDP declares its lifecycle through the Status field, which for proposals admits four values beyond those used by other document types.
 
-| Disposition | Meaning |
-|-------------|---------|
-| Active | The proposal is currently being developed or reviewed. |
+| Status | Meaning |
+|--------|---------|
+| Draft | The proposal is being written. |
+| Review | The proposal is being discussed and evaluated. |
 | Deferred | The proposal is preserved but unscheduled and non-authoritative. |
 | Accepted | The proposal has completed review and should resolve into decisions and authoritative specifications. |
 | Rejected | The proposal will not proceed under its recorded assumptions. |
+| Withdrawn | The proposal was retired by its author before a decision was reached. |
 | Superseded | A newer proposal replaces this proposal. |
 
 A deferred MDP may retain substantial research, equations, prototypes and unresolved design work. It must not be presented as current architecture or appear as a committed Roadmap outcome.
+
+The complete lifecycle is defined within [03 — Status And Versioning](03-versioning.md), which also records how legacy `Disposition` rows are interpreted.
 
 ---
 
@@ -263,6 +266,16 @@ Examples include:
 - compatibility rules
 - protocol semantics
 
+## Contract Versioning
+
+A MIP is the only document type that defines a versioned artefact.
+
+The contract it defines carries a major compatibility version, declared within the document itself:
+
+> This document defines **Event Protocol v1**.
+
+The version describes the contract rather than the Markdown. The MIP document declares a Status like every other document. Contract versioning rules are defined within [03 — Status And Versioning](03-versioning.md).
+
 ## Should Not Contain
 
 MIPs should avoid implementation-specific behaviour wherever possible.
@@ -350,9 +363,11 @@ They establish:
 - organisational rules
 - review expectations
 - documentation governance
-- versioning conventions
+- status lifecycle and contract versioning conventions
 
 MDGs govern the documentation ecosystem rather than the Mosaic platform.
+
+Documentation is a first-class engineering discipline, and MDG documents are held to the standards they define. An MDG that violates its own rules has forfeited its authority.
 
 ---
 

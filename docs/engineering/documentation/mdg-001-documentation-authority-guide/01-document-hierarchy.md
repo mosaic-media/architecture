@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/01-document-hierarchy.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 01 — Documentation Hierarchy
@@ -29,55 +28,56 @@ Every document created within the Mosaic Architecture repository shall belong to
 
 # Documentation Layers
 
-Mosaic documentation is organised into five primary disciplines.
+Mosaic documentation is organised into three disciplines: Engineering, Design and Roadmaps.
 
 ```mermaid
 flowchart TD
 
 N1["Engineering"]
 N2["Architecture"]
-N3["Guides"]
-N4["Protocols"]
-N5["Operations"]
-N6["Design"]
-N7["Design Language"]
-N8["Design System"]
-N9["Product"]
-N10["(Future)"]
-N11["Community"]
-N12["(Future)"]
-N13["Roadmaps"]
-N14["Delivery Sequencing"]
+N3["Documentation"]
+N4["Guides"]
+N5["Protocols"]
+N6["Operations"]
+N7["Design"]
+N8["Design Language"]
+N9["Design System"]
+N10["Roadmaps"]
+N11["Delivery Sequencing"]
 
 N1 --> N2
 N1 --> N3
 N1 --> N4
 N1 --> N5
-N6 --> N7
-N6 --> N8
-N9 --> N10
-N11 --> N12
-N13 --> N14
+N1 --> N6
+N7 --> N8
+N7 --> N9
+N10 --> N11
 ```
 
 Within these disciplines, document types provide progressively greater levels of detail.
+
+These are the disciplines that exist. Additional disciplines may be introduced later, but this guide describes only those the repository currently contains. [07 — Repository Organisation](07-repository-organisation.md) defines the corresponding directory structure and must remain consistent with this hierarchy.
 
 ---
 
 # Engineering
 
-Engineering documentation defines how Mosaic is architected, implemented, integrated and operated.
+Engineering documentation defines how Mosaic is architected, documented, implemented, integrated and operated.
 
 It contains:
 
 - Mosaic Architecture Canon (MAC)
 - Mosaic Design Proposals (MDP)
 - Mosaic Architecture Decisions (MAD)
+- Mosaic Documentation Guides (MDG)
 - Mosaic Engineering Guides (MEG)
 - Mosaic Integration Protocols (MIP)
 - Mosaic Operations & Playbooks (MOP)
 
 Engineering documentation is considered the authoritative technical reference for the platform.
+
+Documentation is a first-class engineering discipline rather than a supporting activity. Documentation Guides occupy their own directory within Engineering and are governed by the same lifecycle, review and organisational rules as every other document type. This guide is itself an MDG document and is bound by the standards it defines.
 
 ---
 
@@ -233,6 +233,7 @@ Generally:
 | MAC | Very High |
 | MAD | Immutable after acceptance |
 | MDP | Highly Iterative |
+| MDG | High |
 | MEG | Medium |
 | MIP | Medium |
 | MOP | Medium |
@@ -272,6 +273,10 @@ engineering/
         MAD-001
 
         MDP-001
+
+    documentation/
+
+        MDG-001
 
     guides/
 

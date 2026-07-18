@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/05-review-process.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 05 — Review Process
@@ -177,6 +176,8 @@ A review should conclude with one of the following outcomes.
 | Superseded | Document should be replaced by another specification. |
 | Archived | Document retained for historical purposes only. |
 
+Review outcomes describe the conclusion of a review. They are not Status values. An outcome of Superseded results in `Status: Superseded`, and an outcome of Archived results in `Status: Deprecated` or `Status: Superseded` according to whether a replacement exists.
+
 Review outcomes should be constructive and documented.
 
 ---
@@ -196,23 +197,24 @@ When architectural drift is identified, the preferred resolution is to update th
 
 ---
 
-# Version Progression
+# Review Milestones And Status
 
-Successful review may justify progression to the next documentation version.
+Review milestones are recorded as completed review activities rather than as a numeric progression.
 
-Version increments should reflect completed review milestones rather than document age.
+A document does not advance a version as each review completes. It remains `Status: Review` until every required review has concluded, and then becomes `Status: Active`.
 
-For example:
+| Review Activity | Effect On Status |
+|-----------------|------------------|
+| Editorial Review | No change. Recorded as a completed review activity. |
+| Structural Review | No change. Recorded as a completed review activity. |
+| Cross-reference Review | No change. Recorded as a completed review activity. |
+| Technical Review | No change. Recorded as a completed review activity. |
+| All required reviews complete | Review → Active. |
+| Review requires substantial rewriting | Review → Draft. |
 
-| Review Activity | Typical Version |
-|-----------------|-----------------|
-| Initial Draft | 0.1 |
-| Editorial Review | 0.2 |
-| Structural Review | 0.3 |
-| Cross-reference Review | 0.4 |
-| Technical Review | 0.5 |
+Review completion is therefore traceable through Git history and through the document revision history rather than through a version number.
 
-Review completion should therefore be traceable through document version history.
+The Status lifecycle is defined within [03 — Status And Versioning](03-versioning.md).
 
 ---
 

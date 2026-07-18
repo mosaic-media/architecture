@@ -1,8 +1,7 @@
 <!--
 File: docs/engineering/documentation/mdg-001-documentation-authority-guide/07-repository-organisation.md
 Document: MDG-001
-Status: Draft
-Version: 0.4
+Status: Active
 -->
 
 # 07 — Repository Organisation
@@ -27,21 +26,19 @@ The repository should be organised according to the following principles.
 
 Top-level directories should represent disciplines rather than document identifiers.
 
-For example:
+The repository contains three disciplines:
 
 ```text
 engineering/
 
 design/
 
-product/
-
-community/
-
 roadmaps/
 ```
 
 This allows readers to locate documentation according to subject matter rather than documentation taxonomy.
+
+These are the only disciplines that exist. Directories must not be created speculatively. A new discipline is introduced when a document requires it, and [01 — Documentation Hierarchy](01-document-hierarchy.md) is updated in the same change.
 
 ---
 
@@ -55,6 +52,8 @@ For example:
 engineering/
 
     architecture/
+
+    documentation/
 
     guides/
 
@@ -190,7 +189,9 @@ Numbering should remain sequential. The landing page, References and Glossary us
 
 # Metadata
 
-Every Markdown document should begin with a metadata block.
+Every authored Markdown page must begin with a metadata block.
+
+The block is an HTML comment placed at the very start of the file, before any content including the H1 heading. The comment mechanism is deliberate: metadata stays invisible when the file is read as plain Markdown on GitHub, while remaining machine-readable to validation tooling and to the documentation portal.
 
 Example:
 
@@ -199,22 +200,51 @@ Example:
 File: docs/engineering/guides/meg-001-go-engineering-standards/index.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 ```
 
-Metadata provides:
+## Field Schema
 
-- document identity
-- file location
-- publication status
-- version information
+The metadata block contains exactly three fields, in this order.
 
-MDP Document Control must additionally declare `Disposition`. MRM Document Control should declare its release horizon and planning owner without placing those values in the metadata comment.
+| Field | Required | Format | Purpose |
+|-------|----------|--------|---------|
+| `File` | Yes | Repository-relative POSIX path to this file | Detects moved or copied files whose metadata was not updated |
+| `Document` | Yes | `PREFIX-NNN` for specification pages; the page identity for landing pages | Binds the page to its owning document |
+| `Status` | Yes | One value from the Status lifecycle | Declares the authority of the document |
 
-Metadata should remain synchronised with the document.
+The following rules apply.
 
-Repository and section landing pages use the same fields. For those pages, `Document` contains the page identity rather than a specification identifier.
+- Field names are case-sensitive and appear exactly as written above.
+- Each field occupies one line in the form `Name: value`, with a single space following the colon.
+- No field may be repeated.
+- No field may be empty.
+- No additional fields are permitted within the metadata block.
+- `File` must match the current repository-relative path of the file exactly, using forward slashes and no leading slash.
+- `Document` must match the document identifier derived from the specification folder name for every page within that folder.
+- Every page within a specification folder must declare identical `Document` and `Status` values. A specification advances as a whole.
+- `Status` must be `Draft`, `Review`, `Active`, `Deprecated` or `Superseded`, and for MDP documents may additionally be `Deferred`, `Accepted`, `Rejected` or `Withdrawn`.
+
+## Removed Fields
+
+The `Version` field is no longer part of the schema. It must not appear within a metadata block or within a Document Control table.
+
+Contract versions belong within the body of the MIP document defining them, as described within [03 — Status And Versioning](03-versioning.md).
+
+## Document Control Properties
+
+Document Control tables repeat metadata for human readers and may carry additional properties that do not belong within the metadata comment.
+
+- `Title`, `Classification`, `Owner` and `Repository` appear within the Document Control table only.
+- MRM Document Control should declare its release horizon and planning owner within the table rather than within the metadata comment.
+- MDP documents still carrying a legacy `Disposition` row retain it within the table until migrated. `Status` governs where the two disagree.
+- Where the Document Control table repeats `Document` or `Status`, its values must match the metadata block exactly.
+
+## Landing Pages
+
+Repository and section landing pages use the same three fields. For those pages, `Document` contains the page identity rather than a specification identifier, and must match the page H1 heading.
+
+Metadata must remain synchronised with the document. Stale metadata is a documentation defect rather than a cosmetic concern.
 
 ---
 
