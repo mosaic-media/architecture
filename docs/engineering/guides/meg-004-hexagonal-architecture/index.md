@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/index.md
 Document: MEG-004
 Status: Draft
-Version: 0.4
 -->
 
 # MEG-004 — Hexagonal Architecture

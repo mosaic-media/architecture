@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/05-versioning-and-validation.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # 05 — Versioning And Validation

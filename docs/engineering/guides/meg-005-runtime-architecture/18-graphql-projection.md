@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/guides/meg-005-runtime-architecture/18-graphql-projection.md
 Document: MEG-005
-Chapter: 18
-Title: GraphQL Projection
 Status: Draft
-Version: 0.4
 -->
 
 # GraphQL Projection

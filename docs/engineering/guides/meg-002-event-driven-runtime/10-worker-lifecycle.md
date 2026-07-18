@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/10-worker-lifecycle.md
 Document: MEG-002
 Status: Draft
-Version: 0.4
 -->
 
 # Worker Lifecycle

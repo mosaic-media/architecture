@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/08-runtime-pipelines.md
 Document: MDP-001
-Chapter: 08
-Title: Runtime Pipelines
 Status: Draft
-Version: 0.1
 -->
 
 # Runtime Pipelines

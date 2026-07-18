@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/03-coordinates-and-radiance.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 03 — Coordinates And Radiance

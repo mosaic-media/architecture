@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/03-surface-and-spatial-resolution.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 03 — Surface And Spatial Resolution

@@ -2,7 +2,6 @@
 File: docs/engineering/operations/mop-001-observability-operations/00-document-control.md
 Document: MOP-001
 Status: Draft
-Version: 0.4
 -->
 
 # 00 — Document Control
@@ -16,6 +15,5 @@ Version: 0.4
 | Document | MOP-001 |
 | Title | Observability Operations |
 | Status | Draft |
-| Version | 0.4 |
-| Owner | Mosaic Operations |
+| Owner | AdamNi-7080 |
 | Audience | Operators, maintainers, engineers and support owners |

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/04-expression-resolution.md
 Document: MDP-001
-Chapter: 04
-Title: Expression Resolution
 Status: Draft
-Version: 0.1
 -->
 
 # Expression Resolution

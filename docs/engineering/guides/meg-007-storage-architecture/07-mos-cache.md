@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-007-storage-architecture/07-mos-cache.md
 Document: MEG-007
 Status: Draft
-Version: 0.4
 -->
 
 # MOS Cache

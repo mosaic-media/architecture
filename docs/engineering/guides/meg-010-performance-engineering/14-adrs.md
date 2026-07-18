@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-010-performance-engineering/14-adrs.md
 Document: MEG-010
 Status: Draft
-Version: 0.4
 -->
 
 # Architectural Decision Guidance

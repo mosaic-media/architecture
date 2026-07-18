@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-001-transactional-store-extensibility/03-alternatives-considered.md
 Document: MAD-001
 Status: Draft
-Version: 0.1
 -->
 
 # 03 — Alternatives Considered

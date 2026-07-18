@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/05-resolution-pipeline.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 05 — Resolution Pipeline

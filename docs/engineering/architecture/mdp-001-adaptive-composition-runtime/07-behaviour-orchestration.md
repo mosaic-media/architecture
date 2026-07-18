@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/07-behaviour-orchestration.md
 Document: MDP-001
-Chapter: 07
-Title: Behaviour Orchestration
 Status: Draft
-Version: 0.1
 -->
 
 # Behaviour Orchestration

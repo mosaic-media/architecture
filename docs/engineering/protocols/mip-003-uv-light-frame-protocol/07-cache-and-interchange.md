@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/07-cache-and-interchange.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 07 — Cache And Interchange

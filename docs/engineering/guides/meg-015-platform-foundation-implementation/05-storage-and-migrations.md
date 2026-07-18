@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/05-storage-and-migrations.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # 05 — Storage and Migrations

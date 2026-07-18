@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/00-document-control.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # Document Control
@@ -16,7 +15,6 @@ Version: 0.1
 | Document | MEG-015 |
 | Title | Platform Foundation Implementation |
 | Status | Draft |
-| Version | 0.1 |
 | Owner | AdamNi-7080 |
 | Audience | Platform, SDK, Supervisor and infrastructure engineers |
 | Classification | Engineering specification |

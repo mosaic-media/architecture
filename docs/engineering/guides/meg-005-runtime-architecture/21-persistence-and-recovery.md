@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/guides/meg-005-runtime-architecture/21-persistence-and-recovery.md
 Document: MEG-005
-Chapter: 21
-Title: Persistence And Recovery
 Status: Draft
-Version: 0.4
 -->
 
 # Persistence And Recovery

@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/08-compatibility-and-validation.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 08 — Compatibility And Validation

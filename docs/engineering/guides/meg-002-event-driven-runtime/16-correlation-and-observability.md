@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/16-correlation-and-observability.md
 Document: MEG-002
 Status: Draft
-Version: 0.4
 -->
 
 # Correlation and Observability

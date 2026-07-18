@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/08-resilience-and-observability.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 08 — Resilience And Observability

@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/glossary.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # Glossary

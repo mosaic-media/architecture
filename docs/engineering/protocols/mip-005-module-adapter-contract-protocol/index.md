@@ -2,10 +2,13 @@
 File: docs/engineering/protocols/mip-005-module-adapter-contract-protocol/index.md
 Document: MIP-005
 Status: Draft
-Version: 0.1
 -->
 
 # MIP-005 — Module Adapter Contract Protocol
+
+> **Outline only.** This protocol states its intended contract but has not yet been expanded into chapters. It is not ready to be implemented against, and it does not yet declare a contract version. Treat it as a statement of direction until it is completed and reviewed.
+
+---
 
 This protocol defines how a Module fulfils a Platform port.
 

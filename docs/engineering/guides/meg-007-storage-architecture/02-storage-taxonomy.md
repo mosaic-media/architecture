@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-007-storage-architecture/02-storage-taxonomy.md
 Document: MEG-007
 Status: Draft
-Version: 0.4
 -->
 
 # Storage Taxonomy

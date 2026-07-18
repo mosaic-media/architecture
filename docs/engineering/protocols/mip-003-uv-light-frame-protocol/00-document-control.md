@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/00-document-control.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 00 — Document Control
@@ -16,7 +15,6 @@ Version: 0.1
 | Document | MIP-003 |
 | Title | UVLightFrame Protocol |
 | Status | Draft |
-| Version | 0.1 |
 | Owner | AdamNi-7080 |
 | Audience | Artwork-pipeline, MOS Cache, media-pipeline and client-renderer engineers |
 

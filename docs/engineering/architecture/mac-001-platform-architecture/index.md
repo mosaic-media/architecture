@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/index.md
 Document: MAC-001
 Status: Draft
-Version: 0.4
 -->
 
 # MAC-001 — Platform Architecture

@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/10-concurrency.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Concurrency

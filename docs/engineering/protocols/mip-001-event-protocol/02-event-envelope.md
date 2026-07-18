@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-001-event-protocol/02-event-envelope.md
 Document: MIP-001
 Status: Draft
-Version: 0.4
 -->
 
 # 02 — Event Envelope

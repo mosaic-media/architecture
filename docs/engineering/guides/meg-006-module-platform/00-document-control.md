@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-006-module-platform/00-document-control.md
 Document: MEG-006
 Status: Draft
-Version: 0.8
 -->
 
 # Document Control
@@ -17,7 +16,6 @@ Version: 0.8
 | Title | Module Platform |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.8 |
 | Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 

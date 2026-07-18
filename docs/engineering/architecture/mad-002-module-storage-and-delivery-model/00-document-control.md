@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-002-module-storage-and-delivery-model/00-document-control.md
 Document: MAD-002
 Status: Draft
-Version: 0.1
 -->
 
 # Document Control
@@ -16,9 +15,8 @@ Version: 0.1
 | Document | MAD-002 |
 | Title | Module Storage and Delivery Model |
 | Status | Draft |
-| Version | 0.1 |
 | Decision Status | Accepted |
-| Owner | Mosaic Architecture |
+| Owner | AdamNi-7080 |
 | Audience | Platform, SDK, Supervisor and Module engineers |
 | Classification | Architecture decision record |
 

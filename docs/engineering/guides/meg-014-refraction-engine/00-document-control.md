@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/00-document-control.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # Document Control
@@ -16,7 +15,6 @@ Version: 0.1
 | Document | MEG-014 |
 | Title | Refraction Engine |
 | Status | Draft |
-| Version | 0.1 |
 | Owner | AdamNi-7080 |
 | Audience | Web, native-client, media-pipeline and renderer engineers |
 | Classification | Engineering specification |

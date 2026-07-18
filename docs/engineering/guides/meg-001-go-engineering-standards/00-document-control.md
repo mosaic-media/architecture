@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/00-document-control.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -17,7 +16,6 @@ Version: 0.4
 | Title | Go Engineering Standards |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/guides/meg-005-runtime-architecture/19-configuration-and-secrets.md
 Document: MEG-005
-Chapter: 19
-Title: Configuration And Secrets
 Status: Draft
-Version: 0.4
 -->
 
 # Configuration And Secrets

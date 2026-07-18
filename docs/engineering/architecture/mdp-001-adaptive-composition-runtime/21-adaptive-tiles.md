@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/21-adaptive-tiles.md
 Document: MDP-001
-Chapter: 21
-Title: Adaptive Tiles
 Status: Draft
-Version: 0.1
 -->
 
 # Adaptive Tiles

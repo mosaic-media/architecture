@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/24-runtime-tile-resolution.md
 Document: MDP-001
-Chapter: 24
-Title: Runtime Tile Resolution
 Status: Draft
-Version: 0.1
 -->
 
 # Runtime Tile Resolution

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/06-adaptive-layout.md
 Document: MDP-001
-Chapter: 06
-Title: Adaptive Layout
 Status: Draft
-Version: 0.1
 -->
 
 # Adaptive Layout

@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-003-domain-driven-design/index.md
 Document: MEG-003
 Status: Draft
-Version: 0.4
 -->
 
 # MEG-003 — Domain-Driven Design

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/19-expression-mapping.md
 Document: MDP-001
-Chapter: 19
-Title: Expression Mapping
 Status: Draft
-Version: 0.1
 -->
 
 # Expression Mapping

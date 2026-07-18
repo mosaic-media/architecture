@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/04-canonical-texture-profile.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 04 — Canonical Texture Profile

@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-006-module-platform/references.md
 Document: MEG-006
 Status: Draft
-Version: 0.8
 -->
 
 # References

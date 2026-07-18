@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/26-tile-orchestration.md
 Document: MDP-001
-Chapter: 26
-Title: Tile Orchestration
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Orchestration

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/27-tile-governance.md
 Document: MDP-001
-Chapter: 27
-Title: Tile Framework Governance
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Framework Governance

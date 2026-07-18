@@ -2,7 +2,6 @@
 File: docs/engineering/operations/index.md
 Document: Operations
 Status: Draft
-Version: 0.2
 -->
 
 # Operations

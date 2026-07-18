@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/10-mathematical-contract.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 10 — Mathematical Contract

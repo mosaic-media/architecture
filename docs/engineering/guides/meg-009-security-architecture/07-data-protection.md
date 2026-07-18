@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-009-security-architecture/07-data-protection.md
 Document: MEG-009
 Status: Draft
-Version: 0.4
 -->
 
 # Data Protection

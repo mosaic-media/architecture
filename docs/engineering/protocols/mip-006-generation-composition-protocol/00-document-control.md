@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-006-generation-composition-protocol/00-document-control.md
 Document: MIP-006
 Status: Draft
-Version: 0.1
 -->
 
 # 00 — Document Control
@@ -12,5 +11,4 @@ Version: 0.1
 | Document | MIP-006 |
 | Title | Generation Composition Protocol |
 | Status | Draft |
-| Version | 0.1 |
-| Owner | Mosaic Architecture |
+| Owner | AdamNi-7080 |

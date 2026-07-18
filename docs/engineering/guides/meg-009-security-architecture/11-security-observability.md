@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-009-security-architecture/11-security-observability.md
 Document: MEG-009
 Status: Draft
-Version: 0.4
 -->
 
 # Security Observability

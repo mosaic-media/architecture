@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/09-graphql-and-diagnostics.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # 09 — GraphQL and Diagnostics

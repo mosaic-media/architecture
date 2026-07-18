@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-009-security-architecture/references.md
 Document: MEG-009
 Status: Draft
-Version: 0.4
 -->
 
 # References

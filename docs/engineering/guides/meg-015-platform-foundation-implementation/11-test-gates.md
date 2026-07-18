@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/11-test-gates.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # 11 — Test Gates

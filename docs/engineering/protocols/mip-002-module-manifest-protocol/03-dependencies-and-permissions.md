@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/03-dependencies-and-permissions.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # 03 — Dependencies And Permissions

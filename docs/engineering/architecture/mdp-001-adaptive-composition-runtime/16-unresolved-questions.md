@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/16-unresolved-questions.md
 Document: MDP-001
-Chapter: 16
-Title: Unresolved Questions
 Status: Draft
-Version: 0.1
 -->
 
 # Unresolved Questions

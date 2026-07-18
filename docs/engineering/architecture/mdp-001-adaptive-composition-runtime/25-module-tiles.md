@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/25-module-tiles.md
 Document: MDP-001
-Chapter: 25
-Title: Module Tiles
 Status: Draft
-Version: 0.1
 -->
 
 # Module Tiles

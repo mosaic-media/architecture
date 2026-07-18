@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/05-normalisation-and-mip-levels.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 05 — Normalisation And Mip Levels

@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/00-document-control.md
 Document: MAC-001
 Status: Draft
-Version: 0.4
 -->
 
 # 00 — Document Control
@@ -16,8 +15,7 @@ Version: 0.4
 | Document | MAC-001 |
 | Title | Platform Architecture |
 | Status | Draft |
-| Version | 0.4 |
-| Owner | Mosaic Architecture |
+| Owner | AdamNi-7080 |
 | Audience | Architects, engineers, module authors and maintainers |
 
 ---

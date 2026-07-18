@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/02-runtime-world.md
 Document: MDP-001
-Chapter: 02
-Title: Runtime World
 Status: Draft
-Version: 0.1
 -->
 
 # Runtime World

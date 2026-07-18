@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-002-event-driven-runtime/00-document-control.md
 Document: MEG-002
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -17,7 +16,6 @@ Version: 0.4
 | Title | Event-Driven Runtime |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 

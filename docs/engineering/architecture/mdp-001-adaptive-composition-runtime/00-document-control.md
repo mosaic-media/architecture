@@ -1,9 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/00-document-control.md
 Document: MDP-001
-Title: Adaptive Composition Runtime
 Status: Draft
-Version: 0.1
 -->
 
 # Document Control
@@ -20,7 +18,6 @@ Version: 0.1
 | Title | Mosaic Design Proposal — Adaptive Composition Runtime |
 | Classification | Internal |
 | Status | Draft |
-| Version | 0.1 |
 | Disposition | Deferred |
 | Delivery Target | Unscheduled post-v1 research |
 | Owner | AdamNi-7080 |

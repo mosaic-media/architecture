@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/06-contract-and-communication-model.md
 Document: MAC-001
 Status: Draft
-Version: 0.4
 -->
 
 # 06 — Contract And Communication Model

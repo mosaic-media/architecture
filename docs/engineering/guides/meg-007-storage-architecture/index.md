@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-007-storage-architecture/index.md
 Document: MEG-007
 Status: Draft
-Version: 0.4
 -->
 
 # MEG-007 — Storage Architecture

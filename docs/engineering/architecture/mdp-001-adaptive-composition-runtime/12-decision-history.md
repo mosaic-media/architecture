@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/12-decision-history.md
 Document: MDP-001
-Chapter: 12
-Title: Decision History
 Status: Draft
-Version: 0.1
 -->
 
 # Decision History

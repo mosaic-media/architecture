@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/18-tile-taxonomy.md
 Document: MDP-001
-Chapter: 18
-Title: Tile Taxonomy
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Taxonomy

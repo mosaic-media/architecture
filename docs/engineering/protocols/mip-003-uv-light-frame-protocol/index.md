@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/index.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # MIP-003 — UVLightFrame Protocol

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/20-tile-lifecycle.md
 Document: MDP-001
-Chapter: 20
-Title: Tile Lifecycle
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Lifecycle

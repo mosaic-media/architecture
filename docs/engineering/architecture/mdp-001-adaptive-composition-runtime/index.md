@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/index.md
 Document: MDP-001
 Status: Draft
-Version: 0.1
 -->
 
 # MDP-001 — Adaptive Composition Runtime

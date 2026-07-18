@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/04-contracts-and-lifecycle.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # 04 — Contracts And Lifecycle

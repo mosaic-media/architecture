@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-007-storage-architecture/11-backup-and-restore.md
 Document: MEG-007
 Status: Draft
-Version: 0.4
 -->
 
 # Backup and Restore

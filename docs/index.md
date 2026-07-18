@@ -2,7 +2,6 @@
 File: docs/index.md
 Document: Mosaic Architecture
 Status: Draft
-Version: 0.2
 -->
 
 # Mosaic Architecture

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/03-composition-solver.md
 Document: MDP-001
-Chapter: 03
-Title: Composition Solver
 Status: Draft
-Version: 0.1
 -->
 
 # Composition Solver

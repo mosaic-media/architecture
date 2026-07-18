@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/06-interfaces-and-abstraction.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Interfaces and Abstraction

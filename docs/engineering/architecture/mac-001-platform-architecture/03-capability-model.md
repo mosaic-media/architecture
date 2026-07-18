@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/03-capability-model.md
 Document: MAC-001
 Status: Draft
-Version: 0.4
 -->
 
 # 03 — Capability Model

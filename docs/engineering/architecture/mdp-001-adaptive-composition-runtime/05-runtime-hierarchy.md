@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/05-runtime-hierarchy.md
 Document: MDP-001
-Chapter: 05
-Title: Runtime Hierarchy
 Status: Draft
-Version: 0.1
 -->
 
 # Runtime Hierarchy

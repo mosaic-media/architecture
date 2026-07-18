@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-009-security-architecture/00-document-control.md
 Document: MEG-009
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -17,7 +16,6 @@ Version: 0.4
 | Title | Security Architecture |
 | File | 00-document-control.md |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Classification | Internal Architecture Specification |
 

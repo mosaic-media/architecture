@@ -16,7 +16,7 @@ Status: Active
 | Title | Documentation Authority Guide |
 | Classification | Mosaic Documentation Guide |
 | Status | Active |
-| Owner | Mosaic Architecture |
+| Owner | AdamNi-7080 |
 | Repository | mosaic-architecture |
 
 ---
@@ -110,7 +110,7 @@ They carry RFC 2119 semantics, as recorded within [10 — Standards Mapping](10-
 
 Mosaic documents declare authority through Status rather than through a version number.
 
-| Status | Meaning |
+| Status | Active |
 |--------|---------|
 | Draft | Being written. Not authoritative. |
 | Review | Complete enough to be assessed. Not yet authoritative. |

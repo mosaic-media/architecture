@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/index.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # MEG-015 — Platform Foundation Implementation

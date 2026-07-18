@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-001-event-protocol/01-event-model.md
 Document: MIP-001
 Status: Draft
-Version: 0.4
 -->
 
 # 01 — Event Model

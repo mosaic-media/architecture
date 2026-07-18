@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/29-tile-contributor-guidance.md
 Document: MDP-001
-Chapter: 29
-Title: Contributor Guidance
 Status: Draft
-Version: 0.1
 -->
 
 # Contributor Guidance

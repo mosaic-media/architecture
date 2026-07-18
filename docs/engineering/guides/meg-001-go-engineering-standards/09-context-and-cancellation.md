@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/09-context-and-cancellation.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Context and Cancellation

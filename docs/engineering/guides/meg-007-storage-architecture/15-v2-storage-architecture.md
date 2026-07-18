@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/guides/meg-007-storage-architecture/15-v2-storage-architecture.md
 Document: MEG-007
-Chapter: 15
-Title: v2 Storage Architecture
 Status: Draft
-Version: 0.4
 -->
 
 # v2 Storage Architecture

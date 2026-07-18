@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/28-tile-decision-history.md
 Document: MDP-001
-Chapter: 28
-Title: Tile Decision History
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Decision History

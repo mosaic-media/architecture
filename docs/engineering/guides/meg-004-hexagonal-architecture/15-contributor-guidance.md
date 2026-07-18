@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/15-contributor-guidance.md
 Document: MEG-004
 Status: Draft
-Version: 0.4
 -->
 
 # Contributor Guidance

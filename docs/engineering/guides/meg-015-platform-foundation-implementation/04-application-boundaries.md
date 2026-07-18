@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/04-application-boundaries.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # 04 — Application Boundaries

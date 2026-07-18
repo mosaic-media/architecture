@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-004-hexagonal-architecture/10-application-services.md
 Document: MEG-004
 Status: Draft
-Version: 0.4
 -->
 
 # Application Services

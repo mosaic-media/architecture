@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-001-transactional-store-extensibility/references.md
 Document: MAD-001
 Status: Draft
-Version: 0.1
 -->
 
 # References

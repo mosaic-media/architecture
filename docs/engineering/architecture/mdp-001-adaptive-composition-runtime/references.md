@@ -1,9 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/references.md
 Document: MDP-001
-Title: References
 Status: Draft
-Version: 0.1
 -->
 
 # References

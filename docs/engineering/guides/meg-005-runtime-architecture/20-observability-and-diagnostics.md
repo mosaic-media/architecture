@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/guides/meg-005-runtime-architecture/20-observability-and-diagnostics.md
 Document: MEG-005
-Chapter: 20
-Title: Observability And Diagnostics
 Status: Draft
-Version: 0.4
 -->
 
 # Observability And Diagnostics

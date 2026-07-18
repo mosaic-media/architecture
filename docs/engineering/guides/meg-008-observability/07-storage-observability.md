@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-008-observability/07-storage-observability.md
 Document: MEG-008
 Status: Draft
-Version: 0.4
 -->
 
 # Storage Observability

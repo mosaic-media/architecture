@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/01-engineering-philosophy.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Engineering Philosophy

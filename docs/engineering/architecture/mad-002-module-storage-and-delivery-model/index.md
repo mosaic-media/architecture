@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-002-module-storage-and-delivery-model/index.md
 Document: MAD-002
 Status: Draft
-Version: 0.1
 -->
 
 # MAD-002 — Module Storage and Delivery Model

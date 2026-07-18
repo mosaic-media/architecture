@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/references.md
 Document: MAC-001
 Status: Draft
-Version: 0.4
 -->
 
 # References

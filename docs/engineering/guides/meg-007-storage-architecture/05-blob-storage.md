@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-007-storage-architecture/05-blob-storage.md
 Document: MEG-007
 Status: Draft
-Version: 0.4
 -->
 
 # Blob Storage

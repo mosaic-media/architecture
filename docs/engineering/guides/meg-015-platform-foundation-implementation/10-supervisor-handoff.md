@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/10-supervisor-handoff.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # 10 — Supervisor Handoff

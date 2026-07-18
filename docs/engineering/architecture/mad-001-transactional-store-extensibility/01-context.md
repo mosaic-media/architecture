@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-001-transactional-store-extensibility/01-context.md
 Document: MAD-001
 Status: Draft
-Version: 0.1
 -->
 
 # 01 — Context

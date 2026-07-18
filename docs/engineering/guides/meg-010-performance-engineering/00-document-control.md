@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-010-performance-engineering/00-document-control.md
 Document: MEG-010
 Status: Draft
-Version: 0.4
 -->
 
 # Document Control
@@ -26,7 +25,6 @@ If performance is going to shape the platform, then the document defining it mus
 | Document | MEG-010 |
 | Title | Performance Engineering |
 | Status | Draft |
-| Version | 0.4 |
 | Owner | AdamNi-7080 |
 | Audience | Contributors, reviewers, maintainers |
 | Classification | Engineering specification |
@@ -81,10 +79,10 @@ Contributors should become familiar with the performance specification before re
 
 # Revision History
 
-| Version | Status | Notes |
-|---------|--------|-------|
-| 0.1 | Draft | Initial structure and performance architecture outline |
-| 0.4 | Draft | Editorial, structural and cross-reference review completed |
+| Status | Notes |
+|--------|-------|
+| Draft | Initial structure and performance architecture outline |
+| Draft | Editorial, structural and cross-reference review completed |
 
 Future revisions should record:
 

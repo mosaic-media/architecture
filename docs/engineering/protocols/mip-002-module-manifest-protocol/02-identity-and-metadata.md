@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/02-identity-and-metadata.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # 02 — Identity And Metadata

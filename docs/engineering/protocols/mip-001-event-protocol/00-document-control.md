@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-001-event-protocol/00-document-control.md
 Document: MIP-001
 Status: Draft
-Version: 0.4
 -->
 
 # 00 — Document Control
@@ -16,6 +15,5 @@ Version: 0.4
 | Document | MIP-001 |
 | Title | Event Protocol |
 | Status | Draft |
-| Version | 0.4 |
-| Owner | Mosaic Architecture |
+| Owner | AdamNi-7080 |
 | Audience | Engineers, module authors, integrators and tooling authors |

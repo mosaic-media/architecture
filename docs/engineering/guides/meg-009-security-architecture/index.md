@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-009-security-architecture/index.md
 Document: MEG-009
 Status: Draft
-Version: 0.4
 -->
 
 # MEG-009 — Security Architecture

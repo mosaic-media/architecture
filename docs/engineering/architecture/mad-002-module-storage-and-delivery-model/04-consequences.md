@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-002-module-storage-and-delivery-model/04-consequences.md
 Document: MAD-002
 Status: Draft
-Version: 0.1
 -->
 
 # 04 — Consequences

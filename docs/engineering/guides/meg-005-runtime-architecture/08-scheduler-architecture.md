@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-005-runtime-architecture/08-scheduler-architecture.md
 Document: MEG-005
 Status: Draft
-Version: 0.4
 -->
 
 # Scheduler Architecture

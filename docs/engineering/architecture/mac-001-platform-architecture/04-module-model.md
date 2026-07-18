@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mac-001-platform-architecture/04-module-model.md
 Document: MAC-001
 Status: Draft
-Version: 0.4
 -->
 
 # 04 — Module Model

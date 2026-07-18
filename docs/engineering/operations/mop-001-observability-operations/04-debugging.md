@@ -2,7 +2,6 @@
 File: docs/engineering/operations/mop-001-observability-operations/04-debugging.md
 Document: MOP-001
 Status: Draft
-Version: 0.4
 -->
 
 # 04 — Debugging

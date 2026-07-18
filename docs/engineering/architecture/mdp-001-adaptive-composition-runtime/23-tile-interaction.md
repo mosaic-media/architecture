@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/23-tile-interaction.md
 Document: MDP-001
-Chapter: 23
-Title: Tile Interaction
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Interaction

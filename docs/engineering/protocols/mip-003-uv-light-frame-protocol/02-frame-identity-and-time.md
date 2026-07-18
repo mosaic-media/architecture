@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/02-frame-identity-and-time.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 02 — Frame Identity And Time

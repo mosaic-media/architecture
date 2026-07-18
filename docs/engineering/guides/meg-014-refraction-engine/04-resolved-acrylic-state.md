@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/04-resolved-acrylic-state.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 04 — Resolved Acrylic State

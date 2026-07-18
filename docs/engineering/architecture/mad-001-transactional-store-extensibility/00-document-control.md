@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/mad-001-transactional-store-extensibility/00-document-control.md
 Document: MAD-001
 Status: Draft
-Version: 0.1
 -->
 
 # Document Control
@@ -16,9 +15,8 @@ Version: 0.1
 | Document | MAD-001 |
 | Title | Transactional Store Extensibility |
 | Status | Draft |
-| Version | 0.1 |
 | Decision Status | Accepted |
-| Owner | Mosaic Architecture |
+| Owner | AdamNi-7080 |
 | Audience | Platform, SDK and Module engineers |
 | Classification | Architecture decision record |
 

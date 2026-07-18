@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/index.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # MIP-002 — Module Manifest Protocol

@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/01-engine-boundary.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 01 — Engine Boundary

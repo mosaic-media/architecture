@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/08-error-handling.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Error Handling

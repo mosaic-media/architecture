@@ -2,7 +2,6 @@
 File: docs/engineering/index.md
 Document: Engineering
 Status: Draft
-Version: 0.4
 -->
 
 # Engineering

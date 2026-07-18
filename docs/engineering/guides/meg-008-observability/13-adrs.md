@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-008-observability/13-adrs.md
 Document: MEG-008
 Status: Draft
-Version: 0.4
 -->
 
 # Architectural Decision Guidance

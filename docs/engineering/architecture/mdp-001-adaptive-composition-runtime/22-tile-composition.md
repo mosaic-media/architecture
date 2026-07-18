@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/22-tile-composition.md
 Document: MDP-001
-Chapter: 22
-Title: Tile Composition
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Composition

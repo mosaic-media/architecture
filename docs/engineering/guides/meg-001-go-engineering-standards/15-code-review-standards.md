@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/15-code-review-standards.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # Code Review Standards

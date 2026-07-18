@@ -2,7 +2,6 @@
 File: docs/engineering/documentation/index.md
 Document: Documentation
 Status: Draft
-Version: 0.2
 -->
 
 # Documentation

@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/guides/meg-002-event-driven-runtime/20-v2-event-backbone.md
 Document: MEG-002
-Chapter: 20
-Title: v2 Event Backbone
 Status: Draft
-Version: 0.4
 -->
 
 # v2 Event Backbone

@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-006-module-platform/01-module-philosophy.md
 Document: MEG-006
 Status: Draft
-Version: 0.8
 -->
 
 # Module Philosophy

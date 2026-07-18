@@ -2,7 +2,6 @@
 File: docs/engineering/operations/mop-001-observability-operations/01-health-model.md
 Document: MOP-001
 Status: Draft
-Version: 0.4
 -->
 
 # 01 — Health Model

@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/index.md
 Document: Protocols
 Status: Draft
-Version: 0.3
 -->
 
 # Protocols

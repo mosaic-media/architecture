@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-015-platform-foundation-implementation/03-platform-contracts.md
 Document: MEG-015
 Status: Draft
-Version: 0.1
 -->
 
 # 03 — Platform Contracts

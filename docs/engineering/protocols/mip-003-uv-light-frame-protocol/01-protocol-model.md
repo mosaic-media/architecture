@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-003-uv-light-frame-protocol/01-protocol-model.md
 Document: MIP-003
 Status: Draft
-Version: 0.1
 -->
 
 # 01 — Protocol Model

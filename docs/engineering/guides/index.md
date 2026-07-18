@@ -2,7 +2,6 @@
 File: docs/engineering/guides/index.md
 Document: Guides
 Status: Draft
-Version: 0.3
 -->
 
 # Guides

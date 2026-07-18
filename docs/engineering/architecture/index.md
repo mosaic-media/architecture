@@ -2,7 +2,6 @@
 File: docs/engineering/architecture/index.md
 Document: Architecture
 Status: Draft
-Version: 0.2
 -->
 
 # Architecture

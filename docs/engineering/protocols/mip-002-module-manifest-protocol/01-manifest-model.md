@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-002-module-manifest-protocol/01-manifest-model.md
 Document: MIP-002
 Status: Draft
-Version: 0.4
 -->
 
 # 01 — Manifest Model

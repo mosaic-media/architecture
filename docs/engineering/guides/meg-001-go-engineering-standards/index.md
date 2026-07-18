@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-001-go-engineering-standards/index.md
 Document: MEG-001
 Status: Draft
-Version: 0.4
 -->
 
 # MEG-001 — Go Engineering Standards

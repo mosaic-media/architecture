@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/17-tile-philosophy.md
 Document: MDP-001
-Chapter: 17
-Title: Tile Philosophy
 Status: Draft
-Version: 0.1
 -->
 
 # Tile Philosophy

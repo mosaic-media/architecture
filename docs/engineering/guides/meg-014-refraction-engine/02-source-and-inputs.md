@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-014-refraction-engine/02-source-and-inputs.md
 Document: MEG-014
 Status: Draft
-Version: 0.1
 -->
 
 # 02 — Source And Inputs

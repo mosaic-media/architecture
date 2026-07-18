@@ -2,7 +2,6 @@
 File: docs/engineering/protocols/mip-001-event-protocol/index.md
 Document: MIP-001
 Status: Draft
-Version: 0.4
 -->
 
 # MIP-001 — Event Protocol

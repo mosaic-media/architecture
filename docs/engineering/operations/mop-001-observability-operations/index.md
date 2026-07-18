@@ -2,7 +2,6 @@
 File: docs/engineering/operations/mop-001-observability-operations/index.md
 Document: MOP-001
 Status: Draft
-Version: 0.4
 -->
 
 # MOP-001 — Observability Operations

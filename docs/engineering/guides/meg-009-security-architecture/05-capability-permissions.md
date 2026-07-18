@@ -2,7 +2,6 @@
 File: docs/engineering/guides/meg-009-security-architecture/05-capability-permissions.md
 Document: MEG-009
 Status: Draft
-Version: 0.4
 -->
 
 # Capability Permissions

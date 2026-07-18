@@ -1,10 +1,7 @@
 <!--
 File: docs/engineering/architecture/mdp-001-adaptive-composition-runtime/11-governance.md
 Document: MDP-001
-Chapter: 11
-Title: Composition Engine Governance
 Status: Draft
-Version: 0.1
 -->
 
 # Composition Engine Governance
