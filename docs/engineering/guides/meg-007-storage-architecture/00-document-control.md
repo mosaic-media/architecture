@@ -50,8 +50,8 @@ MEG-007 is the authoritative specification governing persistence throughout the 
 
 This specification applies to:
 
-- PostgreSQL
-- DuckDB
+- PostgreSQL — the one authoritative state store
+- the analytical processing port (PostgreSQL today; an optional additional engine such as DuckDB later)
 - Blob Storage
 - MOS archives
 - MOS cache
@@ -60,6 +60,8 @@ This specification applies to:
 - Runtime persistence
 
 Every storage implementation SHOULD conform to the architectural boundaries established by this specification.
+
+The current authoritative model is [15 — v2 Storage Architecture](15-v2-storage-architecture.md): one Platform-owned PostgreSQL state store, a content-agnostic object model that Modules use rather than extend, and analytical processing behind a port. Earlier chapters that describe a mandatory second analytical database are superseded by that chapter, per [MAD-002 — Module Storage and Delivery Model](../../architecture/mad-002-module-storage-and-delivery-model/index.md).
 
 ---
 

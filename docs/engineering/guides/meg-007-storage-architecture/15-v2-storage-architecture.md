@@ -11,13 +11,15 @@ Version: 0.4
 
 > **Current direction:** PostgreSQL is Mosaic's authoritative state store. Modules use Platform-owned storage contracts and do not create independent databases.
 
-This chapter records the v2 storage design supplied for the Mosaic Platform Foundation. It refines the existing storage taxonomy around one consistency domain, a shared object graph and logical bounded contexts.
+This chapter records the authoritative v2 storage design for the Mosaic Platform Foundation. It refines the existing storage taxonomy around one consistency domain, a shared object graph and logical bounded contexts. Where earlier chapters in this specification describe a mandatory second analytical database, this chapter supersedes them. The decision behind it is recorded in [MAD-002 — Module Storage and Delivery Model](../../architecture/mad-002-module-storage-and-delivery-model/index.md).
 
 ## Ownership Rule
 
 The Platform owns the storage authority, connection lifecycle, migrations, transactions, access policy, backup boundary and repository contracts.
 
-Modules contribute domain behaviour and use scoped repositories or services exposed by the Platform. They do not own storage engines, bypass Platform policy or query another context's tables directly.
+Modules contribute domain behaviour and use scoped repositories or services exposed by the Platform. They do not own storage engines, define their own tables, modify Platform schema, bypass Platform policy or query another context's tables directly ([MIP-005](../../protocols/mip-005-module-adapter-contract-protocol/index.md)).
+
+The schema is designed so this is practical rather than limiting. The Platform's object model is deliberately **content-agnostic** — a recursive node tree, a separate relation graph, engine-neutral identity and flexible per-type attributes — so any Module maps its data onto existing structure. Adding a new content capability is new rows and attribute data, not new schema. A genuinely new data-owning domain is Platform and SDK evolution, decided deliberately, not something a Module introduces on its own.
 
 Bounded contexts own logical aggregates and persistence responsibility within the shared database. Logical ownership is not permission to create a fragmented storage system.
 
@@ -67,7 +69,28 @@ An edition or cut remains a Part, not a second media Node. Anime and its source 
 
 PostgreSQL is the single authoritative database for transactional and queryable Mosaic state. It stores the object graph, access state, source bindings, jobs, domain events, projections and control-plane records in one consistency domain.
 
-The v2 design does not place PostgreSQL and DuckDB on competing critical paths. Analytical exports may be produced later, but a separate analytical database is not required for the Platform Foundation.
+The v2 design does not place PostgreSQL and a separate analytical database on competing critical paths. A separate analytical database is not required for the Platform Foundation.
+
+## Analytical Processing Port
+
+Analytical work — recommendations, cross-provider correlation, reporting, popularity ranking and search candidates — is defined behind a Platform-owned **analytical processing port**, not bound to a specific engine.
+
+```mermaid
+flowchart TD
+
+N1["Analytical Processing Port"]
+N2["PostgreSQL adapter (today)"]
+N3["Dedicated analytical engine (later, if needed)"]
+
+N1 --> N2
+N1 -.->|"added only if PostgreSQL cannot carry the load"| N3
+```
+
+PostgreSQL satisfies the port today, through materialised views, relation edges and the `SKIP LOCKED` job queue. One database is sufficient for the Platform Foundation.
+
+If PostgreSQL cannot carry the analytical load alone, an additional engine — for example DuckDB — is added as an **essential Module implementing the same port**, exactly like any other adapter. It never becomes a competing source of business truth: authoritative state stays in the state store and analytical outputs remain derived and reproducible.
+
+The Platform therefore mandates the analytical capability, not the number of databases that provide it. This is the storage-as-a-port principle of [MAD-001 — Transactional Store Extensibility](../../architecture/mad-001-transactional-store-extensibility/index.md) applied to analytics.
 
 The core object tables are conceptually:
 

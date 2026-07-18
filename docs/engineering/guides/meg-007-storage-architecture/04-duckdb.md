@@ -7,7 +7,7 @@ Version: 0.4
 
 # DuckDB
 
-> **Historical direction:** This chapter preserves the earlier analytical-storage proposal. It is not part of the current v2 Platform critical path. Current Mosaic state, projections, jobs and domain events use Platform-owned PostgreSQL; future analytics may consume scheduled exports.
+> **Superseded as a mandatory engine.** Under the current model, analytical work sits behind the analytical processing port defined in [15 — v2 Storage Architecture](15-v2-storage-architecture.md), satisfied by PostgreSQL today. DuckDB is **not** a required second database. This chapter is retained as the reference design for the case where a dedicated analytical engine is later added as an essential Module behind that port; wherever it reads as mandatory, treat it as conditional on that adoption. The decision is recorded in [MAD-002 — Module Storage and Delivery Model](../../architecture/mad-002-module-storage-and-delivery-model/index.md).
 
 > *DuckDB is not the memory of the business. It is the memory of understanding.*
 
@@ -502,16 +502,15 @@ Creating analytical datasets that cannot be regenerated.
 
 # Mosaic Guidelines
 
-Within Mosaic:
+Within Mosaic (conditional on DuckDB being adopted as the analytical processing adapter, per [15 — v2 Storage Architecture](15-v2-storage-architecture.md)):
 
-- DuckDB MUST remain the analytical storage engine.
-- Business State MUST remain outside DuckDB.
-- DuckDB SHOULD consume Runtime events and derived datasets.
+- Analytical processing MUST sit behind the Platform-owned analytical processing port, whichever engine satisfies it.
+- If adopted, DuckDB MUST be an essential Module implementing that port, not a parallel database.
+- Business State MUST remain outside the analytical engine.
 - Analytical outputs SHOULD remain reproducible.
-- Recommendation engines SHOULD build upon DuckDB.
 - Reporting SHOULD remain isolated from transactional persistence.
-- DuckDB SHOULD optimise for analytical workloads.
-- PostgreSQL and DuckDB MUST never compete as authoritative sources of business truth.
+- The analytical engine SHOULD optimise for analytical workloads.
+- The state store and any analytical engine MUST never compete as authoritative sources of business truth.
 
 ---
 

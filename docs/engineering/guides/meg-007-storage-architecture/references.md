@@ -56,7 +56,7 @@ It is **not** the analytical engine.
 
 **Purpose**
 
-DuckDB provides embedded analytical processing.
+DuckDB is a candidate adapter for the analytical processing port, not a mandatory second database. It is adopted only if PostgreSQL cannot carry the analytical load alone, and then as an essential Module behind the port (see [15 — v2 Storage Architecture](15-v2-storage-architecture.md)). It provides embedded analytical processing.
 
 Relevant characteristics include:
 
@@ -315,6 +315,15 @@ The following specifications complement MEG-007.
 - [MEG-004 — Hexagonal Architecture](../meg-004-hexagonal-architecture/index.md)
 - [MEG-005 — Runtime Architecture](../meg-005-runtime-architecture/index.md)
 - [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
+- [MEG-015 — Platform Foundation Implementation](../meg-015-platform-foundation-implementation/index.md)
+
+---
+
+## Architecture
+
+- [MAC-001 — Platform Architecture](../../architecture/mac-001-platform-architecture/index.md)
+- [MAD-001 — Transactional Store Extensibility](../../architecture/mad-001-transactional-store-extensibility/index.md)
+- [MAD-002 — Module Storage and Delivery Model](../../architecture/mad-002-module-storage-and-delivery-model/index.md)
 
 ---
 

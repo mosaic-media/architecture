@@ -147,7 +147,7 @@ Analytical State is generally:
 - scan heavy
 - reproducible
 
-Analytical workloads should remain separate from transactional workloads.
+Analytical workloads should remain logically separate from transactional workloads. That separation is a property of the analytical processing port, not of a specific engine: the state store satisfies it today, and a dedicated engine may satisfy it later without changing the taxonomy. See [15 — v2 Storage Architecture](15-v2-storage-architecture.md).
 
 ---
 
@@ -625,7 +625,7 @@ The Storage Taxonomy is the foundation of every persistence decision within Mosa
 Before choosing:
 
 - PostgreSQL
-- DuckDB
+- an analytical processing engine
 - Blob Storage
 - MOS
 

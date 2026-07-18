@@ -182,19 +182,19 @@ Implemented as:
 ```mermaid
 flowchart TD
 
-N1["PostgreSQL"]
-N2["DuckDB"]
+N1["PostgreSQL — one authoritative state store"]
+N2["Analytical Processing Port"]
 N3["Blob Storage"]
 N4["MOS Archives"]
 N5["MOS Cache"]
 
 N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
+N1 --> N3
+N1 --> N4
+N3 --> N5
 ```
 
-The Platform owns one authoritative state boundary, with specialised blob and derived-asset planes where justified.
+The Platform owns one authoritative state boundary, with specialised blob and derived-asset planes where justified. Analytical processing is a port satisfied by that store today; a dedicated analytical engine may be added later as an essential Module behind the same port without changing the contract. See [15 — v2 Storage Architecture](15-v2-storage-architecture.md).
 
 ---
 
