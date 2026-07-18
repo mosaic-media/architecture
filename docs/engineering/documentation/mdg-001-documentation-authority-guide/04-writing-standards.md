@@ -68,6 +68,42 @@ Active voice generally improves readability while making responsibilities explic
 
 ---
 
+# Paragraphs
+
+A paragraph carries an argument. It should contain two to five sentences that develop one idea, and it should connect that idea to the next.
+
+The failure mode this rule exists to prevent is the one-sentence paragraph used as a rhythmic device:
+
+```text
+Software inevitably changes.
+
+Databases are replaced.
+
+Protocols evolve.
+
+Frameworks become obsolete.
+```
+
+Each fragment is true, and nothing explains how they relate. The reader is given a list and left to infer the argument. Written as a paragraph, the same facts carry their own reasoning:
+
+```text
+Software changes constantly. Databases are replaced, protocols evolve, frameworks become
+obsolete and even programming languages change. The business those systems serve generally
+changes far more slowly, and Hexagonal Architecture exists to keep the faster-moving layer
+from forcing change on the slower one.
+```
+
+Authors should therefore:
+
+- join related sentences into paragraphs rather than separating them for emphasis
+- use connectives — because, so, which means, but, therefore — to make reasoning explicit
+- vary sentence length, because uniform sentence length reads as incantation rather than explanation
+- reserve the standalone single-sentence paragraph for genuine emphasis, where it is rare enough to work
+
+Bullet lists remain appropriate for genuine enumerations, as described under Lists. A list of related assertions that build towards a conclusion is a paragraph, not a list.
+
+---
+
 # Terminology
 
 Terminology should remain consistent throughout the documentation library.
@@ -210,6 +246,8 @@ Narrative explanation should accompany complex comparisons where necessary.
 # Diagrams
 
 Diagrams should explain relationships rather than decorate documentation.
+
+A diagram earns its place by showing something a sentence cannot: a branch, a cycle, a hierarchy, a fan-out, an ordering with more than one path through it. A two or three node chain that restates the sentence beside it is decoration, and it costs the reader more attention than it returns. Where a diagram would only repeat adjacent prose, delete the diagram and keep the prose.
 
 Preferred diagram types include:
 
