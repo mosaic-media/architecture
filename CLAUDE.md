@@ -44,9 +44,11 @@ index.md
 01-...
 02-...
 ...
-glossary.md
 references.md
+glossary.md
 ```
+
+Start a new specification by copying the matching template from `templates/`, not by copying an existing document. Each template's chapters correspond one-to-one with its [MDG-001](docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md) type definition. See [templates/README.md](templates/README.md) for the copy procedure. Do not add `templates/` to the site build; it lives outside `docs/` so MkDocs and `scripts/validate_docs.py` never see it.
 
 ## Working Expectations
 

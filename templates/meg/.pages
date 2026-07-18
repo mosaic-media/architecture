@@ -1,0 +1,10 @@
+# Replace the title with the human-readable specification title, without the document ID.
+# The `...` entry expands to the numbered content chapters in filename order, which is why
+# references.md and glossary.md must be listed explicitly to stay last.
+title: Specification Title
+arrange:
+  - index.md
+  - 00-document-control.md
+  - ...
+  - references.md
+  - glossary.md

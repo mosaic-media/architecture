@@ -49,6 +49,8 @@ references.md
 glossary.md
 ```
 
+Start a new specification by copying the matching template from `templates/`, not by copying an existing document. Each template's chapters correspond one-to-one with its [MDG-001](docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md) type definition, and each ships with `Status: Draft` and no `Version` field. See [templates/README.md](templates/README.md). `templates/` deliberately lives outside `docs/`, so MkDocs and `scripts/validate_docs.py` never see it; do not move it or add it to the site build.
+
 ## Documentation Rules
 
 - Follow the existing `MDP-*`, `MAD-*`, `MAC-*`, `MEG-*`, `MIP-*`, `MOP-*`, `MDL-*`, `MDS-*`, `MDG-*`, and `MRM-*` folder naming conventions.

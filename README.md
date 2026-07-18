@@ -50,7 +50,10 @@ docs/
     protocols/     Integration and interoperability protocol specifications
     operations/    Runtime, support, and operational specifications
   roadmaps/        Cross-disciplinary Mosaic Roadmaps
+templates/         Authoritative starting point for each document type
 ```
+
+`templates/` sits outside `docs/` deliberately: MkDocs never renders it and `scripts/validate_docs.py` never scans it, so placeholder identifiers do not register as defects. See [templates/README.md](templates/README.md).
 
 The current imported specification set lives in:
 
@@ -85,6 +88,8 @@ The structure is intended to support these document families without another maj
 - `MDS` — Mosaic Design System
 - `MDG` — Mosaic Documentation Guide
 - `MRM` — Mosaic Roadmap
+
+Each type has an authoritative template under [`templates/`](templates/README.md). The templates are the machine-readable form of [MDG-001](docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md): their chapter skeletons match the type definitions one-to-one, so structure alone keeps the types apart. Start a new specification by copying the matching template rather than by copying an existing document.
 
 ## Documentation Conventions
 
