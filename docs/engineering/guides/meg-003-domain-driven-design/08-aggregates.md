@@ -12,20 +12,7 @@ Status: Draft
 
 # Purpose
 
-Business rules rarely apply to a single Entity in isolation.
-
-For example:
-
-- a Library owns many Media items
-- a Collection owns many references to Media
-- a Playback Session owns Watch Progress
-- a User owns Preferences
-
-These related concepts must remain internally consistent.
-
-Domain-Driven Design models these consistency boundaries as **Aggregates**.
-
-This document defines how Aggregates should be identified, designed and maintained throughout the Mosaic platform.
+Business rules rarely apply to a single Entity in isolation. A Library owns many Media items, a Collection owns many references to Media, a Playback Session owns Watch Progress, and a User owns Preferences. In each case the related concepts must remain internally consistent, because a rule that spans two objects cannot be enforced by either one alone. Domain-Driven Design models these consistency boundaries as **Aggregates**, and this document defines how Aggregates should be identified, designed and maintained throughout the Mosaic platform.
 
 ---
 
@@ -35,11 +22,7 @@ Within Mosaic:
 
 > **Aggregates own business consistency.**
 
-An Aggregate exists to protect business invariants.
-
-It is not simply a convenient grouping of related objects.
-
-Every Aggregate should answer one question.
+An Aggregate exists to protect business invariants rather than to provide a convenient grouping of related objects. Every Aggregate should therefore answer one question.
 
 > **Which business rules must always remain true together?**
 
@@ -47,75 +30,31 @@ Every Aggregate should answer one question.
 
 # What Is An Aggregate?
 
-An Aggregate is a cluster of related domain objects treated as a single consistency boundary.
-
-It consists of:
+An Aggregate is a cluster of related domain objects treated as a single consistency boundary. Its membership is decided by the business rules it must protect rather than by how its objects happen to be related. It consists of:
 
 - one Aggregate Root
 - zero or more Entities
 - zero or more Value Objects
 
-Everything inside the Aggregate participates in maintaining one coherent business concept.
+Everything inside the Aggregate participates in maintaining one coherent business concept. That is also why the whole cluster is loaded and saved together rather than piece by piece.
 
 ---
 
 # Why Aggregates Exist
 
-Suppose a Playback Session contains:
-
-- current position
-- watched duration
-- completion state
-
-These values cannot evolve independently.
-
-If playback reaches 100%, the session must also become completed.
-
-Without an Aggregate:
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Position Updated"]
-N3["Completion Forgotten"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The business becomes inconsistent.
-
-Aggregates prevent this.
+Suppose a Playback Session contains a current position, a watched duration and a completion state. These values cannot evolve independently, because if playback reaches 100% the session must also become completed. Without an Aggregate, playback can have its position updated while completion is forgotten, and the business becomes inconsistent. Aggregates prevent this by making the two changes inseparable.
 
 ---
 
 # Consistency Boundary
 
-The Aggregate defines the boundary within which business consistency is guaranteed.
-
-```mermaid
-flowchart TD
-
-N1["Aggregate"]
-N2["Business Rules"]
-N3["Always Consistent"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Outside the Aggregate:
-
-Only eventual consistency should generally be assumed.
-
-This distinction aligns naturally with Mosaic's event-driven runtime.
+The Aggregate defines the boundary within which business consistency is guaranteed, which means the business rules held inside an Aggregate are always consistent whenever the Aggregate is observed. Outside the Aggregate only eventual consistency should generally be assumed, and that distinction aligns naturally with Mosaic's event-driven runtime.
 
 ---
 
 # Aggregate Structure
 
-Every Aggregate follows the same conceptual model.
+Every Aggregate follows the same conceptual model, in which one Root sits above the Entities and Value Objects that make up the concept.
 
 ```mermaid
 flowchart TD
@@ -132,57 +71,19 @@ N1 --> N4
 N1 --> N5
 ```
 
-The Aggregate Root controls every modification.
-
-Nothing else may mutate Aggregate state directly.
+The Aggregate Root controls every modification. Nothing else may mutate Aggregate state directly, which is what makes the boundary enforceable rather than merely drawn.
 
 ---
 
 # Aggregate Size
 
-Aggregates SHOULD remain small.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Library"]
-N2["Everything"]
-
-N1 --> N2
-```
-
-Better.
-
-```
-
-Library
-```
-
-```
-
-Collection
-```
-
-```
-
-Playback
-```
-
-Each Aggregate should represent one coherent business concept.
-
-Large Aggregates reduce concurrency, increase coupling and become increasingly difficult to evolve.
-
-Evans emphasises keeping Aggregates as small as practical while still protecting business invariants. ([dddcommunity.org](https://dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf))
+Aggregates should remain small. A Library modelled to own everything is a poor Aggregate, whereas separate Library, Collection and Playback Aggregates each represent one coherent business concept. Large Aggregates reduce concurrency, increase coupling and become increasingly difficult to evolve. Evans emphasises keeping Aggregates as small as practical while still protecting business invariants. ([dddcommunity.org](https://dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf))
 
 ---
 
 # One Transaction
 
-Business consistency is guaranteed only inside one Aggregate.
-
-Example.
+Business consistency is guaranteed only inside one Aggregate, so a Playback Session that updates its position, marks itself complete and commits does so as a single unit.
 
 ```mermaid
 flowchart TD
@@ -197,21 +98,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Everything succeeds.
-
-Or nothing succeeds.
-
-Across Aggregates:
-
-Consistency is eventual.
+Everything succeeds or nothing succeeds. Across Aggregates, consistency is eventual.
 
 ---
 
 # Aggregate Boundaries
 
-Aggregates should be identified through business rules.
-
-Ask:
+Aggregates should be identified through business rules, which means the question to ask is:
 
 > **Which information must always change together?**
 
@@ -219,145 +112,31 @@ Not:
 
 > **Which objects reference each other?**
 
-Relationships alone do not justify an Aggregate.
-
-Consistency does.
+Relationships alone do not justify an Aggregate. Consistency does, because two objects that merely point at one another can be saved separately without breaking any rule.
 
 ---
 
 # Aggregate Ownership
 
-Every Aggregate belongs to exactly one Bounded Context.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback Context"]
-N2["Playback Aggregate"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Library Context"]
-N2["Library Aggregate"]
-
-N1 --> N2
-```
-
-Aggregates must never span multiple Bounded Contexts.
-
-Context boundaries remain stronger than Aggregate boundaries.
+Every Aggregate belongs to exactly one Bounded Context: the Playback Aggregate belongs to the Playback Context, and the Library Aggregate belongs to the Library Context. Aggregates must never span multiple Bounded Contexts, because context boundaries remain stronger than Aggregate boundaries.
 
 ---
 
 # Aggregate Behaviour
 
-Business behaviour belongs inside the Aggregate.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackService"]
-N2["Update Position"]
-N3["Validate"]
-N4["Complete"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Advance()"]
-N3["Complete()"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Aggregate enforces its own rules.
-
-Services coordinate.
-
-Aggregates decide.
+Business behaviour belongs inside the Aggregate. It is poor practice for a PlaybackService to update position, validate it and then complete the session from outside, because the rules then live where nothing guarantees they are applied; Playback should instead expose `Advance()` and `Complete()` and enforce its own rules. Services coordinate and Aggregates decide.
 
 ---
 
 # Aggregate State
 
-Internal state should never become invalid.
-
-Example.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Progress = 120%"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Playback.Advance()"]
-N2["Validation"]
-N3["Progress = 100%"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Invalid state should never be observable.
+Internal state should never become invalid. A Playback whose progress can be set to 120% is a modelling failure, whereas `Playback.Advance()` performs validation before allowing progress to reach 100%. Invalid state should never be observable.
 
 ---
 
 # Aggregate References
 
-Aggregates SHOULD reference other Aggregates by identity.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Collection"]
-N2["MediaID"]
-
-N1 --> N2
-```
-
-Not.
-
-```mermaid
-flowchart TD
-
-N1["Collection"]
-N2["Entire Media Aggregate"]
-
-N1 --> N2
-```
-
-Identity references reduce coupling.
-
-Loading large object graphs should be avoided.
+Aggregates should reference other Aggregates by identity, so a Collection holds a MediaID rather than the entire Media Aggregate. Identity references reduce coupling, and loading large object graphs should be avoided.
 
 ---
 
@@ -369,43 +148,13 @@ Aggregates communicate through:
 - identities
 - repositories
 
-They SHOULD NOT directly modify another Aggregate.
-
-Example.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Modify User Aggregate"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["User Context Reacts"]
-
-N1 --> N2
-```
-
-The runtime coordinates.
-
-Aggregates remain autonomous.
+They should not directly modify another Aggregate. Playback modifying the User Aggregate is poor practice; Playback should raise `PlaybackCompleted` and let the User Context react to it. The runtime coordinates, which allows Aggregates to remain autonomous.
 
 ---
 
 # Aggregate Lifetime
 
-The Aggregate Root owns the lifetime of everything inside it.
-
-Example.
+The Aggregate Root owns the lifetime of everything inside it, so a Collection owns its Collection Item, which in turn owns its Artwork Preference.
 
 ```mermaid
 flowchart TD
@@ -418,17 +167,13 @@ N1 --> N2
 N2 --> N3
 ```
 
-Removing the Aggregate removes its internal concepts.
-
-Internal Entities should not outlive their owning Aggregate.
+Removing the Aggregate removes its internal concepts. Internal Entities should not outlive their owning Aggregate, because once the Root is gone nothing remains to enforce the rules they were part of.
 
 ---
 
 # Transactions
 
-One transaction should modify one Aggregate.
-
-Poor.
+One transaction should modify one Aggregate. Committing Playback, User and Metadata together in a single transaction is poor practice.
 
 ```mermaid
 flowchart TD
@@ -443,7 +188,7 @@ N2 --> N4
 N3 --> N4
 ```
 
-Preferred.
+Preferred instead is a commit confined to Playback, after which the resulting event allows other Aggregates to react.
 
 ```mermaid
 flowchart TD
@@ -464,84 +209,36 @@ This naturally complements the Event-Driven Runtime defined in [MEG-002](../meg-
 
 # Aggregate Invariants
 
-Aggregates enforce business invariants.
-
-Examples.
-
-Playback.
+Aggregates enforce business invariants. Each Aggregate carries the specific rules that its own state must always satisfy, and Playback protects rules such as:
 
 - Progress cannot exceed duration.
 - Completion requires reaching the end.
 - Resume position cannot be negative.
 
-Collection.
+Collection protects rules such as:
 
 - Duplicate media references prohibited.
 - Collection name required.
 
-Business rules belong inside the Aggregate.
-
-Not inside controllers or repositories.
+Business rules belong inside the Aggregate rather than inside controllers or repositories. A rule enforced at the edge is a rule that can be reached around, which is precisely what the consistency boundary exists to prevent.
 
 ---
 
 # Domain Events
 
-Aggregates are the primary source of Domain Events.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback Aggregate"]
-N2["Complete()"]
-N3["PlaybackCompleted"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Business events originate from business behaviour.
-
-Not infrastructure.
+Aggregates are the primary source of Domain Events: the Playback Aggregate calling `Complete()` is what produces `PlaybackCompleted`. Business events originate from business behaviour, not infrastructure.
 
 ---
 
 # Persistence
 
-Repositories persist entire Aggregates.
-
-Poor.
-
-```
-
-PlaybackPositionRepository
-```
-
-```
-
-PlaybackProgressRepository
-```
-
-Preferred.
-
-```
-
-PlaybackRepository
-```
-
-Repositories persist consistency boundaries.
-
-Not individual implementation details.
+Repositories persist entire Aggregates. Splitting persistence into a PlaybackPositionRepository and a PlaybackProgressRepository is poor practice; a single PlaybackRepository is preferred, because repositories persist consistency boundaries rather than individual implementation details.
 
 ---
 
 # Avoid Large Object Graphs
 
-Large Aggregates often indicate poor modelling.
-
-Poor.
+Large Aggregates often indicate poor modelling. A Library that reaches through Collections into Media, Metadata, Playback and Users is the shape to avoid.
 
 ```mermaid
 flowchart TD
@@ -560,33 +257,13 @@ N4 --> N5
 N5 --> N6
 ```
 
-Better.
-
-```mermaid
-flowchart TD
-
-N1["Library"]
-N2["Collection IDs"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Media ID"]
-
-N1 --> N2
-```
-
-Small Aggregates naturally improve scalability.
+A Library holding Collection IDs and a Playback holding a Media ID are better. Small Aggregates naturally improve scalability, because each one can be loaded and committed without dragging the rest of the model along with it.
 
 ---
 
 # Aggregate Design Checklist
 
-Before defining an Aggregate ask:
+Before defining an Aggregate, work through the questions that separate a real consistency boundary from a convenient one:
 
 - What business rule am I protecting?
 - What must always remain consistent?
@@ -600,14 +277,7 @@ If the answer is convenience, reconsider the boundary.
 
 # Mosaic Examples
 
-Examples of Aggregates within Mosaic include:
-
-```
-
-Library
-```
-
-Responsible for:
+Examples of Aggregates within Mosaic include Library, which is responsible for:
 
 - media ownership
 - import state
@@ -615,12 +285,7 @@ Responsible for:
 
 ---
 
-```
-
-Playback Session
-```
-
-Responsible for:
+The Playback Session Aggregate is responsible for:
 
 - playback progress
 - completion state
@@ -628,18 +293,13 @@ Responsible for:
 
 ---
 
-```
-
-Collection
-```
-
-Responsible for:
+The Collection Aggregate is responsible for:
 
 - collection membership
 - ordering
 - user ownership
 
-Each Aggregate protects one coherent set of business rules.
+Each Aggregate protects one coherent set of business rules. None of them reaches into another, because each one is reachable only by identity or through an event.
 
 ---
 
@@ -649,38 +309,31 @@ The following practices are prohibited.
 
 ## Giant Aggregates
 
-```mermaid
-flowchart TD
-
-N1["Media Platform"]
-N2["Everything"]
-
-N1 --> N2
-```
+Modelling the entire Media Platform as one Aggregate that owns everything. Such an Aggregate reduces concurrency, increases coupling and becomes increasingly difficult to evolve.
 
 ---
 
 ## Cross-Aggregate Transactions
 
-One transaction updating multiple Aggregates.
+One transaction updating multiple Aggregates. Consistency across Aggregates is eventual, so a transaction that spans them claims a guarantee the model does not offer.
 
 ---
 
 ## Shared Mutable Entities
 
-Entities simultaneously belonging to multiple Aggregates.
+Entities simultaneously belonging to multiple Aggregates. Shared ownership leaves no single Root able to guarantee the Entity's state, so no invariant covering it can be enforced.
 
 ---
 
 ## Aggregate Bypass
 
-Repositories modifying internal Entities directly.
+Repositories modifying internal Entities directly. This bypasses the Aggregate Root, which is the only object permitted to change Aggregate state.
 
 ---
 
 ## Technical Aggregates
 
-Grouping objects because they share a database table rather than a business invariant.
+Grouping objects because they share a database table rather than a business invariant. A boundary drawn from storage models convenience, not consistency, and it protects nothing.
 
 ---
 
@@ -688,14 +341,14 @@ Grouping objects because they share a database table rather than a business inva
 
 Within Mosaic:
 
-- Every Aggregate MUST protect one consistency boundary.
-- Every Aggregate MUST have one Aggregate Root.
-- Aggregate behaviour MUST enforce business invariants.
-- Aggregates SHOULD remain small.
-- Aggregates MUST communicate through identities or events.
-- Cross-Aggregate consistency SHOULD be eventual.
-- Repositories MUST persist Aggregates rather than individual Entities.
-- Aggregate boundaries SHOULD follow business rules rather than object relationships.
+- Every Aggregate must protect one consistency boundary.
+- Every Aggregate must have one Aggregate Root.
+- Aggregate behaviour must enforce business invariants.
+- Aggregates should remain small.
+- Aggregates must communicate through identities or events.
+- Cross-Aggregate consistency should be eventual.
+- Repositories must persist Aggregates rather than individual Entities.
+- Aggregate boundaries should follow business rules rather than object relationships.
 
 ---
 
@@ -719,9 +372,7 @@ The next chapter introduces the **Aggregate Root**, the only object permitted to
 
 # Summary
 
-Aggregates are the mechanism through which Domain-Driven Design preserves business correctness without sacrificing scalability.
-
-Within Mosaic they provide:
+Aggregates are the mechanism through which Domain-Driven Design preserves business correctness without sacrificing scalability. They achieve both because the boundary is drawn where the rules are, and no wider. Within Mosaic they provide:
 
 - explicit consistency boundaries
 - protected business invariants
@@ -729,6 +380,4 @@ Within Mosaic they provide:
 - small transactional units
 - natural integration with the Event-Driven Runtime
 
-Every Aggregate should exist because it protects an important business rule.
-
-If it does not, it probably should not exist.
+Every Aggregate should exist because it protects an important business rule. If it does not, it probably should not exist.

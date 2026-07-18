@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-As Mosaic grows, it will encompass many independent business capabilities.
-
-Examples include:
+As Mosaic grows it will encompass many independent business capabilities, and attempting to model all of those concerns within a single unified object model would inevitably produce a tightly coupled, increasingly complex platform. Domain-Driven Design (DDD) provides the architectural principles required to manage that complexity. The capabilities anticipated today are:
 
 - Libraries
 - Metadata
@@ -28,13 +26,7 @@ Examples include:
 - Music
 - Live TV
 
-Attempting to model all of these concerns within a single unified object model would inevitably produce a tightly coupled, increasingly complex platform.
-
-Domain-Driven Design (DDD) provides the architectural principles required to manage that complexity.
-
-Unlike many implementations of DDD, Mosaic does **not** adopt Domain-Driven Design because it is fashionable.
-
-It adopts DDD because it aligns naturally with:
+Unlike many implementations of DDD, Mosaic does **not** adopt Domain-Driven Design because it is fashionable. It adopts DDD because the approach aligns naturally with commitments the platform has already made:
 
 - Event-Driven Runtime
 - Module-first architecture
@@ -69,17 +61,13 @@ N7 --> N8
 N8 --> N9
 ```
 
-[MEG-001](../meg-001-go-engineering-standards/index.md) explains **how software is written.**
-
-[MEG-002](../meg-002-event-driven-runtime/index.md) explains **how software executes.**
-
-MEG-003 explains **how the business itself is modelled.**
+[MEG-001](../meg-001-go-engineering-standards/index.md) explains **how software is written** and [MEG-002](../meg-002-event-driven-runtime/index.md) explains **how software executes**. MEG-003 explains **how the business itself is modelled**, and [MEG-004](../meg-004-hexagonal-architecture/index.md) then explains how that model is protected once it exists.
 
 ---
 
 # Scope
 
-This specification defines:
+MEG-003 covers business modelling from the language used to describe the domain through to the rules that keep a model internally consistent. This specification defines:
 
 - Domain philosophy
 - Ubiquitous language
@@ -99,7 +87,7 @@ This specification defines:
 - Factories
 - Domain invariants
 
-This specification intentionally does **not** define:
+The boundary matters as much as the contents. MEG-003 is a modelling specification, so it intentionally does **not** define:
 
 - Runtime behaviour
 - Event delivery
@@ -108,7 +96,7 @@ This specification intentionally does **not** define:
 - Transport protocols
 - Storage implementation
 
-Those concerns are defined by other MEG specifications.
+Those concerns are defined by other MEG specifications. Keeping them apart allows business modelling and technical implementation to evolve independently.
 
 ---
 
@@ -126,7 +114,7 @@ Within Mosaic:
 
 > **Software should reflect the language of the business, not the language of the implementation.**
 
-The domain model should describe:
+That statement carries a practical test. The vocabulary of the model should be vocabulary the business already uses, which means the domain model should describe:
 
 - media
 - libraries
@@ -134,7 +122,7 @@ The domain model should describe:
 - users
 - metadata
 
-It should **not** describe:
+The same test excludes the vocabulary of the machinery underneath. The domain model should **not** describe:
 
 - controllers
 - databases
@@ -142,15 +130,13 @@ It should **not** describe:
 - workers
 - SQL
 
-Business concepts should remain independent of technical concerns.
-
-This is one of the central goals of Domain-Driven Design: creating a shared domain model expressed through a ubiquitous language understood by both domain experts and engineers.  [Google Books](https://books.google.com/books/about/Domain_Driven_Design_Reference.html?id=ccRsBgAAQBAJ)
+Business concepts should remain independent of technical concerns. That independence is one of the central goals of Domain-Driven Design, which aims at a shared domain model expressed through a ubiquitous language understood by both domain experts and engineers.  [Google Books](https://books.google.com/books/about/Domain_Driven_Design_Reference.html?id=ccRsBgAAQBAJ)
 
 ---
 
 # Domain Hierarchy
 
-The Mosaic platform intentionally separates domain modelling into conceptual layers.
+The Mosaic platform intentionally separates domain modelling into conceptual layers, and each layer owns exactly one responsibility.
 
 ```mermaid
 flowchart TD
@@ -171,15 +157,13 @@ N5 --> N6
 N6 --> N7
 ```
 
-Each layer owns exactly one responsibility.
-
-Future chapters define every layer in detail.
+Future chapters define every layer in detail. They work downwards from the business domain to the value objects that compose it, and only then to implementation.
 
 ---
 
 # Expected Outcome
 
-After reading MEG-003 contributors should understand:
+MEG-003 is a modelling specification rather than an implementation one. After reading it, contributors should understand:
 
 - why Mosaic uses Domain-Driven Design
 - how bounded contexts are identified
@@ -195,54 +179,30 @@ without discussing runtime implementation or transport infrastructure.
 
 # Repository Structure
 
-```
-
+```text
 engineering/
-
 └── meg/
-
     └── MEG-003 Domain-Driven Design/
-
         README.md
-
         00-document-control.md
-
         01-domain-philosophy.md
-
         02-ubiquitous-language.md
-
         03-subdomains.md
-
         04-bounded-contexts.md
-
         05-context-maps.md
-
         06-entities.md
-
         07-value-objects.md
-
         08-aggregates.md
-
         09-aggregate-roots.md
-
         10-domain-services.md
-
         11-domain-events.md
-
         12-repositories.md
-
         13-factories.md
-
         14-domain-invariants.md
-
         15-modelling-guidelines.md
-
         16-adrs.md
-
         17-contributor-guidance.md
-
         references.md
-
         glossary.md
 ```
 
@@ -278,6 +238,4 @@ The Domain Model is intended to produce software that is:
 - Expressive
 - Independent of infrastructure
 
-The model should become deeper as understanding improves.
-
-It should never become more technical.
+The model should become deeper as understanding improves. It should never become more technical.

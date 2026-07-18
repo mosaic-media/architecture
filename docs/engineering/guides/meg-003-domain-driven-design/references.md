@@ -12,13 +12,7 @@ Status: Draft
 
 # Purpose
 
-This document records the primary references that informed the Domain-Driven Design principles established throughout MEG-003.
-
-The objective of these references is not to prescribe implementation.
-
-Instead, they provide the theoretical and architectural foundations upon which the Mosaic Domain Model has been developed.
-
-Where the MEG differs from traditional DDD guidance, it does so intentionally to support the unique requirements of the Mosaic platform.
+This document records the primary references that informed the Domain-Driven Design principles established throughout MEG-003. The objective of these references is not to prescribe implementation; instead, they provide the theoretical and architectural foundations upon which the Mosaic Domain Model has been developed. Where the MEG differs from traditional DDD guidance, it does so intentionally to support the unique requirements of the Mosaic platform.
 
 ---
 
@@ -26,9 +20,7 @@ Where the MEG differs from traditional DDD guidance, it does so intentionally to
 
 ## Domain-Driven Design
 
-**Author**
-
-Eric Evans
+**Author:** Eric Evans
 
 **Purpose**
 
@@ -43,35 +35,25 @@ The foundational work introducing:
 - Strategic Design
 - Tactical Design
 
-This work forms the conceptual foundation of MEG-003.
-
-Although Mosaic adapts certain implementation details for an event-driven architecture, the underlying modelling philosophy remains strongly aligned.
+This work forms the conceptual foundation of MEG-003. Although Mosaic adapts certain implementation details for an event-driven architecture, the underlying modelling philosophy remains strongly aligned.
 
 ---
 
 ## Domain-Driven Design Reference
 
-**Author**
-
-Eric Evans
+**Author:** Eric Evans
 
 **Purpose**
 
-A concise summary of the fundamental principles introduced in Domain-Driven Design.
+A concise summary of the fundamental principles introduced in Domain-Driven Design, and recommended reading for all contributors.
 
-Recommended reading for all contributors.
-
-**URL**
-
-https://domainlanguage.com/ddd/reference/
+**URL:** https://domainlanguage.com/ddd/reference/
 
 ---
 
 ## Implementing Domain-Driven Design
 
-**Author**
-
-Vaughn Vernon
+**Author:** Vaughn Vernon
 
 **Purpose**
 
@@ -90,9 +72,7 @@ Many tactical recommendations adopted within Mosaic align closely with this work
 
 ## Effective Aggregate Design
 
-**Author**
-
-Vaughn Vernon
+**Author:** Vaughn Vernon
 
 **Purpose**
 
@@ -104,9 +84,7 @@ A three-part series focusing specifically on:
 
 This work significantly influenced the Aggregate guidance within MEG-003.
 
-**URL**
-
-https://dddcommunity.org/library/vernon_2011/
+**URL:** https://dddcommunity.org/library/vernon_2011/
 
 ---
 
@@ -114,9 +92,7 @@ https://dddcommunity.org/library/vernon_2011/
 
 ## Martin Fowler
 
-Martin Fowler's writings on Domain-Driven Design significantly influenced the modelling approach used throughout Mosaic.
-
-Recommended topics include:
+Martin Fowler's writings on Domain-Driven Design significantly influenced the modelling approach used throughout Mosaic. Recommended topics include:
 
 - Aggregates
 - Value Objects
@@ -124,17 +100,13 @@ Recommended topics include:
 - Domain Events
 - Anti-Corruption Layers
 
-**URL**
-
-https://martinfowler.com/
+**URL:** https://martinfowler.com/
 
 ---
 
 ## Patterns of Enterprise Application Architecture
 
-**Author**
-
-Martin Fowler
+**Author:** Martin Fowler
 
 Relevant concepts include:
 
@@ -151,9 +123,7 @@ Mosaic intentionally adopts some of these concepts while deliberately avoiding o
 
 ## Clean Architecture
 
-**Author**
-
-Robert C. Martin
+**Author:** Robert C. Martin
 
 Referenced primarily for:
 
@@ -167,9 +137,7 @@ Implementation details within Mosaic differ where Domain-Driven Design provides 
 
 ## Refactoring
 
-**Author**
-
-Martin Fowler
+**Author:** Martin Fowler
 
 Relevant for:
 
@@ -177,19 +145,13 @@ Relevant for:
 - improving terminology
 - incremental architectural refinement
 
-The Domain Model is expected to evolve continuously.
-
-This work strongly supports that philosophy.
+The Domain Model is expected to evolve continuously, and this work strongly supports that philosophy.
 
 ---
 
 ## The Pragmatic Programmer
 
-**Authors**
-
-Andrew Hunt
-
-David Thomas
+**Authors:** Andrew Hunt, David Thomas
 
 Referenced primarily for:
 
@@ -203,9 +165,7 @@ Many contributor guidelines throughout the MEG reflect the engineering mindset e
 
 # Event-Driven Architecture
 
-Although MEG-003 focuses upon the Domain rather than the Runtime, Domain Events naturally integrate with the runtime architecture defined in [MEG-002](../meg-002-event-driven-runtime/index.md).
-
-Recommended references include:
+Although MEG-003 focuses upon the Domain rather than the Runtime, Domain Events naturally integrate with the runtime architecture defined in [MEG-002](../meg-002-event-driven-runtime/index.md). Recommended references include the following.
 
 ## Martin Fowler
 
@@ -217,9 +177,7 @@ https://martinfowler.com/articles/201701-event-driven.html
 
 ## Enterprise Integration Patterns
 
-Gregor Hohpe
-
-Bobby Woolf
+Gregor Hohpe, Bobby Woolf
 
 Useful concepts include:
 
@@ -233,11 +191,7 @@ These patterns complement Domain Events without influencing the Domain Model its
 
 # Go References
 
-The Domain Model intentionally remains implementation independent.
-
-However, contributors are encouraged to understand how Go supports rich domain modelling.
-
-Recommended references include:
+The Domain Model intentionally remains implementation independent. However, contributors are encouraged to understand how Go supports rich domain modelling, and the following references are recommended.
 
 ## Effective Go
 
@@ -260,9 +214,7 @@ Recommended topics:
 - package design
 - concurrency
 
-Go implementation should always support the Domain Model.
-
-Never define it.
+Go implementation should always support the Domain Model, never define it.
 
 ---
 
@@ -314,9 +266,7 @@ The following specifications complement MEG-003.
 
 # Domain Principles
 
-The Domain Model established throughout MEG-003 is intentionally built upon several enduring principles.
-
-These include:
+The Domain Model established throughout MEG-003 is intentionally built upon several enduring principles. These include:
 
 - Business before technology.
 - Language before implementation.
@@ -335,11 +285,7 @@ These principles should remain stable even as implementation evolves.
 
 # Keeping References Current
 
-Domain modelling continues to evolve.
-
-Software architecture continues to evolve.
-
-The references contained within this document SHOULD therefore be reviewed periodically to ensure that:
+Domain modelling continues to evolve, and so does software architecture. The references contained within this document should therefore be reviewed periodically to ensure that:
 
 - recommended material remains current
 - obsolete guidance is removed
@@ -352,11 +298,7 @@ The philosophy of the Domain Model should remain stable even as modelling techni
 
 # Closing Statement
 
-MEG-003 does not attempt to replace Domain-Driven Design.
-
-Instead, it adapts proven modelling principles into an architecture specifically designed for the Mosaic platform.
-
-The resulting Domain Model intentionally emphasises:
+MEG-003 does not attempt to replace Domain-Driven Design; instead, it adapts proven modelling principles into an architecture specifically designed for the Mosaic platform. The resulting Domain Model intentionally emphasises:
 
 - business language
 - explicit ownership
@@ -364,9 +306,7 @@ The resulting Domain Model intentionally emphasises:
 - autonomous capabilities
 - clear consistency boundaries
 
-Everything else within the platform exists to support these business concepts.
-
-Because ultimately:
+Everything else within the platform exists to support these business concepts, because ultimately:
 
 > **The business is the product.**
 

@@ -23,21 +23,13 @@ Status: Draft
 
 # Purpose
 
-This document establishes the governance, authority and lifecycle of the Mosaic Domain-Driven Design specification.
-
-MEG-003 defines the canonical approach to modelling business domains throughout the Mosaic platform.
-
-Unlike implementation documentation, this specification defines how business complexity is understood, organised and communicated.
-
-It intentionally separates business thinking from implementation thinking.
+This document establishes the governance, authority and lifecycle of the Mosaic Domain-Driven Design specification. MEG-003 defines the canonical approach to modelling business domains throughout the Mosaic platform, so unlike implementation documentation it describes how business complexity is understood, organised and communicated rather than how it is built. That separation of business thinking from implementation thinking is intentional, and it shapes everything the specification governs.
 
 ---
 
 # Authority
 
-MEG-003 is the authoritative specification governing business modelling within the Mosaic ecosystem.
-
-This specification applies to:
+MEG-003 is the authoritative specification governing business modelling within the Mosaic ecosystem. Its reach is deliberately broad, because a modelling standard observed only by the platform would not produce the shared language it exists to create. This specification therefore applies to:
 
 - Mosaic Platform
 - First-party Modules
@@ -46,7 +38,7 @@ This specification applies to:
 - Runtime Capabilities
 - Future Platform Features
 
-Every business capability introduced into Mosaic SHOULD align with the modelling principles defined within this specification.
+Every business capability introduced into Mosaic should align with the modelling principles defined within this specification.
 
 ---
 
@@ -116,9 +108,7 @@ Every subsequent chapter expands one or more of these principles.
 
 # Document Lifecycle
 
-MEG specifications evolve alongside the platform.
-
-Each document progresses through the following lifecycle.
+MEG specifications evolve alongside the platform, and each document progresses through the following lifecycle.
 
 ```mermaid
 flowchart TD
@@ -137,19 +127,13 @@ N4 --> N5
 N5 --> N6
 ```
 
-Accepted specifications become part of the canonical Mosaic architecture.
-
-Historical versions SHOULD remain available for future reference.
+Accepted specifications become part of the canonical Mosaic architecture. Historical versions should remain available for future reference, so that the evolution of the architecture stays traceable.
 
 ---
 
 # Domain Evolution
 
-Business understanding is expected to evolve.
-
-Consequently, the domain model will evolve.
-
-Changes affecting:
+Business understanding is expected to evolve, and consequently the domain model will evolve with it. Not every such change carries the same weight, but changes affecting:
 
 - bounded contexts
 - ubiquitous language
@@ -158,26 +142,20 @@ Changes affecting:
 - domain relationships
 - core business concepts
 
-SHOULD be accompanied by an Architectural Decision Record (ADR).
-
-The evolution of the business model should remain deliberate and historically traceable.
+should be accompanied by an Architectural Decision Record (ADR). The evolution of the business model should remain deliberate and historically traceable, and the ADR is what records that intent at the moment it is formed.
 
 ---
 
 # Compliance
 
-All business capabilities SHOULD comply with MEG-003.
-
-Where deviation becomes necessary, the repository SHOULD document:
+All business capabilities should comply with MEG-003. Where deviation becomes necessary, the repository should document:
 
 - the reason
 - business motivation
 - architectural implications
 - migration strategy
 
-Temporary deviations should eventually be removed.
-
-Permanent deviations should generally result in updates to this specification.
+Temporary deviations should eventually be removed, whereas permanent deviations should generally result in updates to this specification. A deviation that is neither removed nor absorbed leaves the specification describing a platform that no longer exists.
 
 ---
 
@@ -192,19 +170,13 @@ MEG-003 intentionally favours:
 - expressive language
 - evolutionary modelling
 
-The domain model should become deeper as the platform matures.
-
-It should never become more technical.
-
-This follows the central ideas of Domain-Driven Design: focusing on the Platform foundation domain, collaborating around a ubiquitous language and modelling within explicitly bounded contexts.  [Google Books](https://books.google.com/books/about/Domain_Driven_Design_Reference.html?id=ccRsBgAAQBAJ)
+The domain model should become deeper as the platform matures, and it should never become more technical. This follows the central ideas of Domain-Driven Design: focusing on the Platform foundation domain, collaborating around a ubiquitous language and modelling within explicitly bounded contexts.  [Google Books](https://books.google.com/books/about/Domain_Driven_Design_Reference.html?id=ccRsBgAAQBAJ)
 
 ---
 
 # Scope of Authority
 
-MEG-003 governs business modelling.
-
-It does **not** define:
+MEG-003 governs business modelling. It does **not** define:
 
 - runtime execution
 - event delivery
@@ -213,6 +185,4 @@ It does **not** define:
 - storage technologies
 - deployment architecture
 
-Those concerns belong to other MEG specifications.
-
-Separating business modelling from technical implementation allows each to evolve independently.
+Those concerns belong to other MEG specifications. Separating business modelling from technical implementation allows each to evolve independently.

@@ -12,22 +12,11 @@ Status: Draft
 
 # Purpose
 
-Business logic should never concern itself with:
-
-- SQL
-- PostgreSQL
-- DuckDB
-- Blob Storage
-- Redis
-- Filesystems
-
-The domain should ask only one question:
+Business logic should never concern itself with SQL, PostgreSQL, DuckDB, Blob Storage, Redis or filesystems, because every one of those is a decision about storage rather than a decision about the business. The domain should ask only one question:
 
 > **"Can I obtain this Aggregate?"**
 
-Repositories answer that question.
-
-They provide a collection-like abstraction over persistent storage while insulating the Domain Model from infrastructure concerns.
+Repositories answer that question, providing a collection-like abstraction over persistent storage while insulating the Domain Model from infrastructure concerns.
 
 ---
 
@@ -37,30 +26,13 @@ Within Mosaic:
 
 > **Repositories exist to persist Aggregates, not data.**
 
-This distinction is fundamental.
-
-Repositories do not manage:
-
-- rows
-- tables
-- documents
-- files
-
-They manage:
-
-- Aggregate Roots
-
-Everything else is an implementation detail.
-
-This reflects the classic DDD Repository pattern, whose purpose is to isolate the domain model from persistence concerns while presenting aggregates as though they were held in an in-memory collection.  [O'Reilly Media](https://www.oreilly.com/library/view/implementing-domain-driven-design/9780133039900/ch12.html)
+This distinction is fundamental, and it determines what a Repository is allowed to know. Repositories do not manage rows, tables, documents or files; they manage Aggregate Roots, and everything else is an implementation detail. This reflects the classic DDD Repository pattern, whose purpose is to isolate the domain model from persistence concerns while presenting aggregates as though they were held in an in-memory collection.  [O'Reilly Media](https://www.oreilly.com/library/view/implementing-domain-driven-design/9780133039900/ch12.html)
 
 ---
 
 # What Is A Repository?
 
-A Repository provides the illusion that Aggregates are stored within an in-memory collection.
-
-Conceptually.
+A Repository provides the illusion that Aggregates are stored within an in-memory collection. Conceptually the domain loads an Aggregate, works with it, and hands it back.
 
 ```mermaid
 flowchart TD
@@ -75,13 +47,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-How that Aggregate is stored is irrelevant to the domain.
+How that Aggregate is stored is irrelevant to the domain, which is precisely what makes the illusion valuable.
 
 ---
 
 # Why Repositories Exist
 
-Without Repositories:
+Without Repositories the business reaches through to storage directly, and each hop teaches it something it should not know.
 
 ```mermaid
 flowchart TD
@@ -98,9 +70,7 @@ N3 --> N4
 N4 --> N5
 ```
 
-The business now understands infrastructure.
-
-Instead:
+The business now understands infrastructure, so a change to either forces a change to the other. Introducing a Repository shortens that chain to a single contract.
 
 ```mermaid
 flowchart TD
@@ -113,13 +83,13 @@ N1 --> N2
 N2 --> N3
 ```
 
-The Aggregate remains infrastructure agnostic.
+The Aggregate remains infrastructure agnostic, and persistence becomes something that happens on its behalf rather than something it participates in.
 
 ---
 
 # Repository Responsibilities
 
-Repositories are responsible for:
+A Repository's remit is deliberately narrow, because every responsibility added to it is a responsibility taken away from the domain. Repositories are responsible for:
 
 - loading Aggregates
 - saving Aggregates
@@ -134,223 +104,49 @@ Repositories are **not** responsible for:
 - transactions
 - event publication
 
-Business belongs to the domain.
-
-Persistence belongs to infrastructure.
+The division is the same one the whole chapter rests on: business belongs to the domain, whereas persistence belongs to infrastructure.
 
 ---
 
 # One Repository Per Aggregate
 
-Every Aggregate Root SHOULD have one Repository.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback Aggregate"]
-N2["PlaybackRepository"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Library Aggregate"]
-N2["LibraryRepository"]
-
-N1 --> N2
-```
-
-Not:
-
-```
-
-PlaybackPositionRepository
-```
-
-```
-
-WatchProgressRepository
-```
-
-Repositories persist Aggregate boundaries.
-
-Not implementation details.
-
-This one-repository-per-aggregate-root approach is one of the Platform foundation recommendations of DDD because repositories preserve aggregate consistency boundaries.  [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design)
+Every Aggregate Root should have one Repository, so a Playback Aggregate is reached through a PlaybackRepository and a Library Aggregate through a LibraryRepository. What should not appear is a Repository named for something inside an Aggregate, such as a PlaybackPositionRepository or a WatchProgressRepository, because those names persist implementation details rather than Aggregate boundaries. This one-repository-per-aggregate-root approach is one of the Platform foundation recommendations of DDD because repositories preserve aggregate consistency boundaries.  [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design)
 
 ---
 
 # Aggregate Roots Only
 
-Repositories should load and save Aggregate Roots.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackProgress"]
-N2["Repository"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackSession"]
-N2["Repository"]
-
-N1 --> N2
-```
-
-Internal Entities remain internal.
-
-The Aggregate Root protects consistency.
+Repositories should load and save Aggregate Roots. Giving PlaybackProgress its own Repository is poor, whereas giving PlaybackSession one is preferred, because internal Entities remain internal and it is the Aggregate Root that protects consistency. A Repository that reaches past the root allows a caller to change part of an Aggregate without the root ever knowing.
 
 ---
 
 # Collection Semantics
 
-Repositories should feel like collections.
-
-Examples.
-
-```
-
-Find()
-
-Save()
-
-Delete()
-
-Exists()
-```
-
-They should not expose database operations.
-
-Poor.
-
-```
-
-ExecuteSQL()
-```
-
-```
-
-RunQuery()
-```
-
-```
-
-UpdateRow()
-```
-
-These reveal persistence.
-
-Not business behaviour.
+Repositories should feel like collections, which means operations such as Find(), Save(), Delete() and Exists() rather than database operations. Names like ExecuteSQL(), RunQuery() or UpdateRow() are poor because they reveal persistence rather than business behaviour, and a caller who can see the mechanism will eventually write to it.
 
 ---
 
 # Domain Language
 
-Repository APIs should speak the ubiquitous language.
-
-Good.
-
-```go
-libraryRepository.FindByID(...)
-```
-
-```go
-playbackRepository.Save(...)
-```
-
-Poor.
-
-```go
-database.Select(...)
-```
-
-```go
-repository.Execute(...)
-```
-
-Names should communicate business intent.
+Repository APIs should speak the ubiquitous language, so `libraryRepository.FindByID(...)` and `playbackRepository.Save(...)` are good whereas `database.Select(...)` and `repository.Execute(...)` are poor. Names should communicate business intent, because the API is the point at which the domain either keeps or loses its own vocabulary.
 
 ---
 
 # Repository Interfaces
 
-Repository interfaces belong to the domain.
-
-Implementations belong to infrastructure.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Domain"]
-N2["PlaybackRepository Interface"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Infrastructure"]
-N2["PostgresPlaybackRepository"]
-
-N1 --> N2
-```
-
-The Domain knows nothing about PostgreSQL.
-
-Infrastructure knows everything.
-
-This separation preserves persistence ignorance while allowing different infrastructure implementations.  [Stack and System](https://stackandsystem.com/series/domain-driven-design/9-repositories-in-domain-driven-design)
+Repository interfaces belong to the domain and implementations belong to infrastructure, so the Domain owns the PlaybackRepository Interface while Infrastructure supplies PostgresPlaybackRepository. The Domain knows nothing about PostgreSQL and Infrastructure knows everything about it. This separation preserves persistence ignorance while allowing different infrastructure implementations.  [Stack and System](https://stackandsystem.com/series/domain-driven-design/9-repositories-in-domain-driven-design)
 
 ---
 
 # Persistence Ignorance
 
-Aggregates should remain completely unaware of persistence.
-
-Poor.
-
-```go
-playback.Save()
-```
-
-Preferred.
-
-```go
-repository.Save(playback)
-```
-
-Persistence should always occur outside the Aggregate.
-
-The domain models business.
-
-Infrastructure models storage.
+Aggregates should remain completely unaware of persistence, which makes `playback.Save()` poor and `repository.Save(playback)` preferred. Persistence should always occur outside the Aggregate, because the domain models business and infrastructure models storage; an Aggregate that can save itself has already taken on a second job.
 
 ---
 
 # Transactions
 
-Repositories participate in transactions.
-
-They do not own them.
-
-Typical flow.
+Repositories participate in transactions but they do not own them. The typical flow is a short one.
 
 ```mermaid
 flowchart TD
@@ -363,108 +159,37 @@ N1 --> N2
 N2 --> N3
 ```
 
-The Repository persists the Aggregate.
-
-The Aggregate determines what changed.
+The Repository persists the Aggregate, whereas the Aggregate determines what changed — which is why transaction scope is decided outside the Repository rather than within it.
 
 ---
 
 # Queries
 
-Repositories exist primarily for write models.
-
-Complex reporting queries often belong elsewhere.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackRepository"]
-N2["Playback Aggregate"]
-
-N1 --> N2
-```
-
-versus.
-
-```mermaid
-flowchart TD
-
-N1["Continue Watching View"]
-N2["Read Model"]
-
-N1 --> N2
-```
-
-Repositories should not become reporting engines.
-
-This aligns naturally with CQRS where rich queries are separated from aggregate persistence.
+Repositories exist primarily for write models, so complex reporting queries often belong elsewhere. A PlaybackRepository serves the Playback Aggregate, whereas a Continue Watching View is served by a Read Model. Repositories should not become reporting engines, and this aligns naturally with CQRS where rich queries are separated from aggregate persistence.
 
 ---
 
 # Avoid Generic Repositories
 
-Poor.
+A single generic type is a tempting shortcut.
 
 ```go
 type Repository[T any]
 ```
 
-While technically elegant, generic repositories frequently describe persistence rather than business behaviour.
-
-Instead.
-
-```
-
-PlaybackRepository
-```
-
-```
-
-LibraryRepository
-```
-
-```
-
-CollectionRepository
-```
-
-Business language should always dominate technical abstraction.
+While technically elegant, generic repositories frequently describe persistence rather than business behaviour. Named types such as PlaybackRepository, LibraryRepository and CollectionRepository are preferred instead, because business language should always dominate technical abstraction.
 
 ---
 
 # Repository Methods
 
-Repositories SHOULD expose intention-revealing operations.
-
-Examples.
-
-```go
-FindByID()
-```
-
-```go
-FindBySource()
-```
-
-```go
-Exists()
-```
-
-Avoid exposing generic database operations.
-
-Repositories should describe business retrieval.
-
-Not storage mechanics.
+Repositories should expose intention-revealing operations such as FindByID(), FindBySource() and Exists(), and should avoid exposing generic database operations. Repositories should describe business retrieval rather than storage mechanics, so each method name should read as a question the business would actually ask.
 
 ---
 
 # Repository Scope
 
-Repositories should remain small.
-
-Poor.
+Repositories should remain small. A PlaybackRepository that has accumulated Save, Find, Export, Metrics, Analytics, Search, Cache and Notifications is poor.
 
 ```mermaid
 flowchart TD
@@ -489,7 +214,7 @@ N1 --> N8
 N1 --> N9
 ```
 
-Better.
+Better is a Repository that does only what a Repository is for.
 
 ```mermaid
 flowchart TD
@@ -504,13 +229,13 @@ N1 --> N3
 N1 --> N4
 ```
 
-Business behaviour belongs elsewhere.
+Business behaviour belongs elsewhere, and a Repository that grows past loading and saving has usually absorbed it.
 
 ---
 
 # Repositories Do Not Orchestrate
 
-Poor.
+A Repository that loads, modifies an Aggregate, publishes events and then calls an API is poor, because each of those steps is a decision the Repository is not entitled to make.
 
 ```mermaid
 flowchart TD
@@ -527,9 +252,7 @@ N3 --> N4
 N4 --> N5
 ```
 
-Repositories should simply persist Aggregates.
-
-Everything else belongs to:
+Repositories should simply persist Aggregates. Everything else belongs to:
 
 - Aggregates
 - Domain Services
@@ -540,65 +263,32 @@ Everything else belongs to:
 
 # Multiple Storage Engines
 
-One of Mosaic's defining architectural characteristics is multiple storage technologies.
-
-Examples include:
-
-- PostgreSQL
-- DuckDB
-- Blob Storage
-- Filesystem
-- MOS Files
-
-The Domain should remain unaware of all of them.
-
-Every implementation should satisfy the same Repository contract.
-
-Changing persistence should never require changing business behaviour.
+One of Mosaic's defining architectural characteristics is multiple storage technologies, which include PostgreSQL, DuckDB, Blob Storage, Filesystem and MOS Files. The Domain should remain unaware of all of them, so every implementation should satisfy the same Repository contract. Changing persistence should never require changing business behaviour.
 
 ---
 
 # Repository Lifetime
 
-Repositories should remain lightweight.
-
-They should not:
+Repositories should remain lightweight. They should not:
 
 - cache business state
 - maintain sessions
 - own transactions
 - retain Aggregate instances
 
-Every call should remain explicit.
-
-Repositories are gateways.
-
-Not application state.
+Every call should remain explicit, because Repositories are gateways rather than application state, and a Repository holding state becomes a second place where business truth lives.
 
 ---
 
 # Testing
 
-Repositories should be replaceable during testing.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackRepository"]
-N2["In-Memory Repository"]
-
-N1 --> N2
-```
-
-Business tests should not require:
+Repositories should be replaceable during testing, so a PlaybackRepository can be substituted by an In-Memory Repository. Business tests should not require:
 
 - PostgreSQL
 - DuckDB
 - Blob Storage
 
-The domain should remain testable independently of infrastructure.
+The domain should remain testable independently of infrastructure, which is the practical proof that the abstraction is genuine rather than nominal.
 
 ---
 
@@ -608,12 +298,7 @@ The following practices are prohibited.
 
 ## Generic Repository
 
-```
-
-Repository<T>
-```
-
-used for every Aggregate.
+A single Repository<T> used for every Aggregate.
 
 ---
 
@@ -625,12 +310,7 @@ Repositories for child Entities.
 
 ## SQL In The Domain
 
-```
-
-SELECT ...
-```
-
-appearing within business logic.
+A SELECT ... appearing within business logic.
 
 ---
 
@@ -656,43 +336,27 @@ One Repository managing multiple unrelated Aggregate Roots.
 
 Within Mosaic:
 
-- Every Aggregate Root SHOULD have one Repository.
-- Repositories MUST persist Aggregate Roots.
-- Repository interfaces SHOULD belong to the Domain.
-- Repository implementations MUST belong to Infrastructure.
-- Repositories MUST speak the ubiquitous language.
-- Repositories MUST remain persistence focused.
-- Business behaviour MUST remain outside Repositories.
-- The Domain MUST remain unaware of storage technologies.
+- Every Aggregate Root should have one Repository.
+- Repositories must persist Aggregate Roots.
+- Repository interfaces should belong to the Domain.
+- Repository implementations must belong to Infrastructure.
+- Repositories must speak the ubiquitous language.
+- Repositories must remain persistence focused.
+- Business behaviour must remain outside Repositories.
+- The Domain must remain unaware of storage technologies.
 
 ---
 
 # Relationship to MEG
 
-Aggregates own consistency.
-
-Aggregate Roots protect consistency.
-
-Repositories preserve consistency.
-
-The next chapter introduces **Factories**, which solve the complementary problem of constructing complex Aggregates in valid business states before they are ever persisted.
+Aggregates own consistency and Aggregate Roots protect it, so Repositories preserve it by refusing to persist anything smaller than a root. The next chapter introduces **Factories**, which solve the complementary problem of constructing complex Aggregates in valid business states before they are ever persisted.
 
 ---
 
 # Summary
 
-Repositories are one of the most misunderstood patterns in Domain-Driven Design.
-
-They are not database wrappers.
-
-They are not DAOs.
-
-They are not query builders.
-
-Within Mosaic, they exist for one purpose:
+Repositories are one of the most misunderstood patterns in Domain-Driven Design. They are not database wrappers, they are not DAOs and they are not query builders. Within Mosaic, they exist for one purpose:
 
 > **Provide the domain with the illusion that Aggregates simply exist, while keeping every persistence concern outside the business model.**
 
-When implemented correctly, changing PostgreSQL to another storage engine should require changes only within infrastructure.
-
-The business should never notice.
+When implemented correctly, changing PostgreSQL to another storage engine should require changes only within infrastructure, and the business should never notice.

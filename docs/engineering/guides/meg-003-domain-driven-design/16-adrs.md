@@ -12,17 +12,13 @@ Status: Draft
 
 # Purpose
 
-MEG-003 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries.
-
-The decision process itself is governed by **[MDG-001 — Documentation Authority Guide](../../documentation/mdg-001-documentation-authority-guide/index.md)**.
-
-This chapter avoids repeating ADR process rules so the documentation library has one authoritative home for decision practice.
+MEG-003 may require architecture decisions when changes alter long-lived engineering direction, compatibility expectations or responsibility boundaries. The decision process itself is governed by **[MDG-001 — Documentation Authority Guide](../../documentation/mdg-001-documentation-authority-guide/index.md)**, and this chapter avoids repeating those ADR process rules so that the documentation library retains one authoritative home for decision practice.
 
 ---
 
 # Decision Areas
 
-Create or update a decision record when a change affects:
+Each of the following areas fixes a responsibility boundary that chapters of this guide depend upon, so create or update a decision record when a change affects:
 
 - Library Is The Core Aggregate
 - Playback As Independent Context
@@ -32,18 +28,16 @@ Create or update a decision record when a change affects:
 - Media Identity Strategy
 - Collection Ownership
 
+Because a decision in any of these areas can change what this guide means, the record and the affected chapter have to move together.
+
 ---
 
 # Relationship To [MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md)
 
-[MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md) defines ADR structure, review expectations, lifecycle and cross-reference rules.
-
-This guide should reference decisions that affect it, but should not redefine the decision process.
+[MDG-001](../../documentation/mdg-001-documentation-authority-guide/index.md) defines ADR structure, review expectations, lifecycle and cross-reference rules, which means this guide should reference the decisions that affect it but should not redefine the decision process itself.
 
 ---
 
 # Review Guidance
 
-During review, confirm that the guide and any related decision record agree.
-
-If a decision changes the meaning of this guide, update the affected chapter and reference the decision from this page.
+During review, confirm that the guide and any related decision record agree. Where a decision changes the meaning of this guide, update the affected chapter and reference the decision from this page.

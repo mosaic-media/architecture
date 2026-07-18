@@ -139,6 +139,43 @@ Deciding which is authoritative means either adding a stage boundary or removing
 
 **Resolution:**
 
+## Q-042 — MEG-003 chapters 08 and 09 state three incompatible rules
+
+**Status:** `Open`
+**Where:** [MEG-003 ch08](../docs/engineering/guides/meg-003-domain-driven-design/08-aggregates.md), [ch09](../docs/engineering/guides/meg-003-domain-driven-design/09-aggregate-roots.md)
+
+Both chapters carry a Mosaic Guidelines list, and the two lists disagree on three points. An implementer reading only one chapter gets a different rule from one reading only the other:
+
+- **Unit of persistence.** Chapter 08 requires repositories to persist *Aggregates*; chapter 09 requires them to persist *Aggregate Roots*. Chapter 08's *Persistence* section introduces a third noun, "consistency boundaries". If the Root is the boundary these coincide, but they are written as distinct normative requirements.
+- **Source of Domain Events.** Chapter 08 calls Aggregates the *primary* source, which admits others; chapter 09 calls Aggregate Roots the *canonical* source, which does not. Neither says whether a non-Root Entity inside an Aggregate may raise a Domain Event.
+- **Cross-Aggregate transactions.** Chapter 08's body says one transaction *should* modify one Aggregate, while its own Anti-Patterns section opens "The following practices are prohibited" and lists Cross-Aggregate Transactions. A recommendation and a prohibition on the same behaviour, three sections apart.
+
+Related to Q-045, which covers the broader overlap between these two chapters.
+
+**Resolution:**
+
+## Q-043 — May a Domain Service raise a Domain Event?
+
+**Status:** `Open`
+**Where:** [MEG-003 ch10](../docs/engineering/guides/meg-003-domain-driven-design/10-domain-services.md), *Domain Events*; [ch11](../docs/engineering/guides/meg-003-domain-driven-design/11-domain-events.md), *Mosaic Guidelines*
+
+Chapter 10 says business facts should originate from Aggregates "whenever practical", which implies an exception exists. Chapter 11 says Domain Events must originate from Aggregates, which allows none. Chapter 10 separately forbids Domain Services from publishing runtime events, which is a different prohibition again.
+
+Either a Domain Service may raise a Domain Event directly in some named circumstance, or chapter 10's hedge is wrong. Both wordings were preserved unchanged.
+
+**Resolution:**
+
+## Q-044 — The infrastructure-dependency prohibition is stated three different ways
+
+**Status:** `Open`
+**Where:** [MEG-003 ch06](../docs/engineering/guides/meg-003-domain-driven-design/06-entities.md), *Persistence* and *Anti-Patterns*; [ch07](../docs/engineering/guides/meg-003-domain-driven-design/07-value-objects.md), *Anti-Patterns*
+
+What is presumably one rule appears as three overlapping but non-identical lists. Chapter 06's Anti-Patterns prohibit SQL, HTTP, JSON and Logging; chapter 07's prohibit SQL, HTTP, Logging and **Runtime**; chapter 06's *Persistence* names SQL, PostgreSQL, DuckDB, HTTP and JSON.
+
+Whether `Runtime` is deliberately Value-Object-only matters, because [MEG-004](../docs/engineering/guides/meg-004-hexagonal-architecture/01-hexagonal-philosophy.md) treats the Runtime as infrastructure for the whole Domain, which would make it apply to Entities too.
+
+**Resolution:**
+
 ---
 
 # Duplication and Ownership
@@ -226,6 +263,54 @@ Fixing it means rewriting the definitional sentence in seven chapters, which cha
 Chapter 16 uses "Runtime Kernel" throughout, including in *Before Modifying The Kernel* and its checklist, while chapter 15's Decision Areas list uses "Microkernel Runtime". These may name the same component, or may be a whole-versus-part distinction.
 
 The glossary does not settle it, because it separately defines both *Kernel* and *Runtime Kernel* — see Q-040. Unifying the terms would assert an architectural identity that cannot be verified from the repository, so all three spellings were left as written.
+
+**Resolution:**
+
+## Q-045 — MEG-003 chapters 08 and 09 are substantially the same chapter
+
+**Status:** `Open`
+**Where:** [ch08 Aggregates](../docs/engineering/guides/meg-003-domain-driven-design/08-aggregates.md), [ch09 Aggregate Roots](../docs/engineering/guides/meg-003-domain-driven-design/09-aggregate-roots.md)
+
+The MEG-003 counterpart to Q-007. The two chapters restate each other in nine places: *Persistence* is near-verbatim in both; cross-Aggregate references build the same `Collection → MediaID` example against the same Fowler citation; Domain Events use the same `Complete()` → `PlaybackCompleted` example; the transactional boundary is argued three times across the two; invariant enforcement appears in four sections; size and cohesion twice; *Mosaic Examples* twice with **different** responsibility bullets (see Q-051); the anti-pattern lists overlap; and the single-Root rule is stated in 08 and re-argued as the whole of 09.
+
+A workable split, if someone wants one: 08 owns *boundary identification* — which rules must hold together, size, Bounded Context ownership, cross-Aggregate eventual consistency — and 09 owns the *enforcement mechanism* — single entry point, hidden internals, API shape, constructors, identity. Under that split, References, Persistence, Transactions, Domain Events and Mosaic Examples currently sit in the wrong chapter or in both.
+
+The three outright contradictions this overlap produces are recorded separately as Q-042.
+
+**Resolution:**
+
+## Q-046 — MEG-003 chapters 06 and 07 are mirror images
+
+**Status:** `Open`
+**Where:** [ch06 Entities](../docs/engineering/guides/meg-003-domain-driven-design/06-entities.md), [ch07 Value Objects](../docs/engineering/guides/meg-003-domain-driven-design/07-value-objects.md)
+
+The two chapters teach the same distinction twice from opposite ends. Chapter 06's *What Is Not An Entity?* lists Duration, Resolution, Rating, Language and Genre; chapter 07's *What Is Not A Value Object?* lists Media, User, Collection and Playback Session. Identity-based equality is defined in 06 *Equality* and defined again by negation in 07 *Value Defines Equality*. The rule that an invalid instance should never exist because the constructor enforces it appears as a full section in both. Both carry a near-identical *Evolution* section.
+
+Deciding which chapter owns the contrast, and whether the other should summarise and link per [MDG-001 *Avoid Duplication*](../docs/engineering/documentation/mdg-001-documentation-authority-guide/04-writing-standards.md), is an authority decision.
+
+**Resolution:**
+
+## Q-047 — MEG-003 chapter 15 restates chapters 04 to 14
+
+**Status:** `Open`
+**Where:** [MEG-003 ch15](../docs/engineering/guides/meg-003-domain-driven-design/15-modelling-guidelines.md)
+
+*Identify Entities*, *Identify Value Objects*, *Identify The Aggregate*, *Find The Aggregate Root*, *Introduce Domain Services Carefully*, *Introduce Repositories Last* and *Protect Invariants* each re-derive the defining test from the chapter that owns the concept, so the identity-versus-value test, the consistency-boundary test and the "Domain Services should remain rare" rule now each exist in two places.
+
+This may well be deliberate, since a guidelines chapter that summarises is doing its job. It is recorded because the repeated tests are stated as rules rather than as summaries with links, which is what makes them able to drift. *Resist Technical Thinking* and *Common Modelling Mistakes* also duplicate each other within chapter 15 itself.
+
+The same question applies to the glossary, which carries full definitions of Aggregate, Aggregate Root, Bounded Context, Entity, Value Object, Domain Service, Factory and Repository, each of which has a dedicated chapter.
+
+**Resolution:**
+
+## Q-048 — MEG-003 has a chapter about ADRs and no ADRs
+
+**Status:** `Open`
+**Where:** [MEG-003 ch16](../docs/engineering/guides/meg-003-domain-driven-design/16-adrs.md)
+
+The chapter defines when to create a decision record and names seven decision areas — Library Is The Core Aggregate, Playback As Independent Context, Metadata Ownership, Continue Watching Model, Recommendation Domain, Media Identity Strategy, Collection Ownership — but contains no decision records, and no `ADR-nnn` identifier appears anywhere in MEG-003. The chapter is 49 lines and was confirmed as a genuine stub rather than padded.
+
+Either these seven decisions were never recorded, or they live somewhere the chapter does not point to. Two of the seven — Continue Watching Model and Recommendation Domain — have no corresponding chapter in MEG-003 modelling them at all, so it is not clear whether they are forward-looking placeholders or references to modelling that was dropped.
 
 **Resolution:**
 
@@ -382,6 +467,96 @@ The only concrete number in the chapter, 60 seconds, appeared solely as a diagra
 
 **Resolution:**
 
+## Q-049 — Nobody owns transaction scope
+
+**Status:** `Open`
+**Where:** [MEG-003 ch12](../docs/engineering/guides/meg-003-domain-driven-design/12-repositories.md), *Repository Responsibilities*, *Transactions* and *Repository Lifetime*
+
+The chapter says twice that Repositories do not own transactions — "Repositories participate in transactions. They do not own them" — but never names who does. [MEG-004 ch07](../docs/engineering/guides/meg-004-hexagonal-architecture/07-driven-adapters.md) separately lists transaction management among Repository Adapter responsibilities.
+
+These are probably reconcilable, with the Adapter running the mechanics while something above decides the scope, but MEG-003 does not say so and naming the owner would mean inventing it.
+
+This is the MEG-003 face of Q-013, which records the same gap in MEG-004. [MAD-001](../docs/engineering/architecture/mad-001-transactional-store-extensibility/index.md) may already answer both.
+
+**Resolution:**
+
+## Q-050 — Read models and CQRS are gestured at but never sited
+
+**Status:** `Open`
+**Where:** [MEG-003 ch12](../docs/engineering/guides/meg-003-domain-driven-design/12-repositories.md), *Queries*
+
+The section introduces a Read Model and a Continue Watching View and says the design "aligns naturally with CQRS", without saying whether Mosaic adopts CQRS, where read models live, or what "often belong elsewhere" resolves to.
+
+`read model` appears in [MEG-005 ch17](../docs/engineering/guides/meg-005-runtime-architecture/17-graphql-projection.md) and in MEG-010, so an answer may already exist — but deciding which document owns the concept is an authority decision.
+
+**Resolution:**
+
+## Q-051 — Cross-Aggregate consistency has no decision rule
+
+**Status:** `Open`
+**Where:** [MEG-003 ch14](../docs/engineering/guides/meg-003-domain-driven-design/14-domain-invariants.md), *Cross-Aggregate Rules*; [ch08](../docs/engineering/guides/meg-003-domain-driven-design/08-aggregates.md), *Consistency Boundary*
+
+Chapter 14 says cross-Aggregate rules "should rarely be enforced through distributed transactions" and that "only rules requiring immediate consistency belong inside one Aggregate", without saying how an engineer determines that a rule requires immediate consistency. `Library Storage Quota` and `Subscription Limits` are named as examples and left unclassified.
+
+Chapter 08 hedges the same boundary from the other side: outside the Aggregate "only eventual consistency should **generally** be assumed", naming no exception.
+
+Separately, the two chapters' *Mosaic Examples* sections give different answers for the same concepts — Library is "media ownership / import state / source configuration" in chapter 08 and "importing media / source ownership / library consistency" in chapter 09, and Collection gains "duplicate prevention" in 09 that 08 omits.
+
+**Resolution:**
+
+## Q-052 — Names used once and never defined
+
+**Status:** `Open`
+**Where:** MEG-003 chapters 04, 05, 06, 10, 12
+
+Six terms appear in normative examples without being defined anywhere in the repository. Each was preserved verbatim because guessing an expansion would settle it:
+
+- **Infuse Module** — [ch04](../docs/engineering/guides/meg-003-domain-driven-design/04-bounded-contexts.md) *Modules And Contexts*, presented as a Playback Context module. Appears nowhere else; unclear whether it is a planned integration or a placeholder, and whether it belongs alongside Jellyfin, Plex, Stremio, TMDB, AniList and Trakt.
+- **Primary Metadata** — [ch05](../docs/engineering/guides/meg-003-domain-driven-design/05-context-maps.md) *Module Relationships*, sourcing `MetadataFetched`. Either a distinct context no chapter introduces, or loose phrasing for the Metadata Context.
+- **Observability Context** — ch05 *Conformist*, its only appearance. Absent from the Bounded Context list and from the Mosaic Context Map, so chapter 05's own guideline that every Bounded Context appears in a Context Map is arguably violated by its own example.
+- **Metadata Entity** — [ch06](../docs/engineering/guides/meg-003-domain-driven-design/06-entities.md) *Entity Ownership*. Elsewhere metadata is treated as an attribute that changes on a Media Entity, so it is unclear whether this is a modelled Entity or a placeholder.
+- **Recommendation Created** — [ch10](../docs/engineering/guides/meg-003-domain-driven-design/10-domain-services.md) *Domain Events*, in the position of an intermediate value or event. If it is an event it collides with the rule that only Aggregates raise events, because the node precedes the Aggregate.
+- **MOS Files** — [ch12](../docs/engineering/guides/meg-003-domain-driven-design/12-repositories.md) *Multiple Storage Engines*, listed as a storage technology beside PostgreSQL, DuckDB, Blob Storage and Filesystem. The string appears nowhere else in the repository, not even in MEG-003's own glossary.
+
+Chapter 08 *Aggregate Behaviour* has a milder version of the same problem: "Services coordinate. Aggregates decide." never says whether these are Domain Services or application services.
+
+**Resolution:**
+
+## Q-053 — Subdomain classification is incomplete
+
+**Status:** `Open`
+**Where:** [MEG-003 ch03](../docs/engineering/guides/meg-003-domain-driven-design/03-subdomains.md), *Mosaic Core Domains*
+
+"The following are currently considered Core Domains" names Library, Playback and Metadata, but *Purpose* lists nine capabilities and the Supporting and Generic sections account for further names. Several — Collections, Users, Search, Modules — appear as subdomains without a category.
+
+Whether the uncategorised ones are Supporting by default or simply unclassified is a strategic-investment decision, which is exactly what the chapter says subdomain classification is for.
+
+**Resolution:**
+
+## Q-054 — Domain ownership names teams that may not exist
+
+**Status:** `Open`
+**Where:** [MEG-003 ch03](../docs/engineering/guides/meg-003-domain-driven-design/03-subdomains.md), *Domain Ownership*
+
+The chapter requires every subdomain to have a clearly defined owner and names a "Playback Team" and a "Metadata Team". Nothing in the repository establishes that these teams exist, or that per-team ownership is the intended model rather than illustration. The labels were folded into prose verbatim, without softening or hardening the claim.
+
+**Resolution:**
+
+## Q-055 — Rules stated without the detail needed to apply them
+
+**Status:** `Open`
+**Where:** [MEG-003 ch14](../docs/engineering/guides/meg-003-domain-driven-design/14-domain-invariants.md), [ch15](../docs/engineering/guides/meg-003-domain-driven-design/15-modelling-guidelines.md)
+
+Three places state a rule and stop short of what an engineer would need to follow it:
+
+- ch14 *Value Objects* gives candidate invariants as "non-negative", "finite" and "valid range" without stating what the valid range for `Duration` is, or naming who decides.
+- ch14 *Anti-Patterns* declares six practices prohibited in one-line subsections with no statement of what enforcement looks like — review gate, lint, or nothing.
+- ch15 *Modelling Checklist* says "If any answer is 'no', continue modelling. Implementation should wait", naming no reviewer or approval step, so whether this is a hard gate or advice is unclear.
+
+Separately, ch15 *Raise Domain Events* says "That question belongs to the runtime" — its only mention of a runtime — without linking [MEG-002](../docs/engineering/guides/meg-002-event-driven-runtime/index.md), although MEG-004 links it for the same separation. Adding that cross-reference would assert a dependency between MEG-003 and MEG-002 that is not recorded.
+
+**Resolution:**
+
 ---
 
 # Factual and naming defects
@@ -406,18 +581,18 @@ The tree names `README.md` as the folder's landing file; the real file is `index
 
 Preserved verbatim under the no-invention rule. Other specifications may carry the same stale tree.
 
-MEG-005 confirms this is a pattern rather than a one-off: its tree shows `engineering/meg/MEG-005 Runtime Architecture/` containing `README.md`, with the same two defects. The chapter filenames it lists are all correct, so only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
+MEG-005 and MEG-003 confirm this is a pattern rather than a one-off. Each shows `engineering/meg/<Document Title>/` containing `README.md`, with the same two defects, while the chapter filenames they list are correct. Only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
 
 **Resolution:**
 
 ## Q-022 — MDP-001 listed twice with an identical label
 
 **Status:** `Open`
-**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md)
+**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md), [MEG-003 references](../docs/engineering/guides/meg-003-domain-driven-design/references.md)
 
 Listed once pointing at `index.md` and once at `14-adaptive-tile-model.md`, both labelled "MDP-001 — Adaptive Composition Runtime". The second entry needs a distinguishing label.
 
-MEG-005's references carry the identical pair, so the fix should be applied to both.
+All three guides carry the identical pair, so the fix should be applied to each. All three also file MDP-001 under a *Mosaic Design Specifications* heading although it lives under `docs/engineering/architecture/` — see Q-040, which records that alongside the MEG-005 glossary defects.
 
 **Resolution:**
 
@@ -507,7 +682,7 @@ All were preserved verbatim. Someone should confirm each source is real and cita
 
 Four small defects, each changing meaning rather than wording, so none were fixed:
 
-- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`.
+- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`. MEG-003 and MEG-004 file it the same way, so this is a corpus-wide misfiling rather than a MEG-005 slip.
 - MDS-006 and MDS-007 exist in the repository but are absent from that list, while MDS-008 is present.
 - The glossary defines both *Kernel* and *Runtime Kernel* for what appears to be the same component, with overlapping but non-identical content — the *Kernel* entry carries the microkernel comparison and its citation, the *Runtime Kernel* entry carries the small, stable and business-agnostic list. Merging them would drop or relocate a citation.
 - *Recovery UI* refers to "the embedded recovery renderer" in lower case, while Embedded Recovery Renderer is defined elsewhere as a capitalised proper noun.
@@ -524,6 +699,54 @@ See also Q-022, which covers the duplicated MDP-001 entry in the same file.
 "Version 0.4 records the Supervisor Build Pipeline as an isolated runtime composition and activation flow." MEG-005 declares no version anywhere, and CLAUDE.md forbids a `Version:` metadata field, so the number refers to nothing. Under [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) only the contract a MIP defines carries a version.
 
 The sentence is presumably a leftover from a versioned draft, but deleting it would remove a statement about what the document covers.
+
+**Resolution:**
+
+## Q-056 — MEG-003 diagrams draw splits and cycles as straight chains
+
+**Status:** `Open`
+**Where:** [MEG-003 ch03](../docs/engineering/guides/meg-003-domain-driven-design/03-subdomains.md), [ch05](../docs/engineering/guides/meg-003-domain-driven-design/05-context-maps.md)
+
+The MEG-003 counterpart to Q-017 and Q-037. Two retained diagrams assert a shape the prose contradicts:
+
+- ch03 *Evolving Subdomains* draws `Metadata → Providers → Artwork → Translation` as a linear chain while the prose describes a subdomain *splitting*. The correct shape is almost certainly a fan-out from Metadata, but that changes what the diagram claims about whether Providers, Artwork and Translation are peers or layers.
+- ch05 *Avoid Bidirectional Dependencies* and *Anti-Patterns → Circular Relationships* both render the cycle as `N1["Playback"] → N2["Metadata"] → N3["Playback"]`, using two separate nodes carrying the same label instead of closing the loop back to `N1`. Both therefore render as a chain and do not depict the cycle they warn against. The fix is one line, but it changes what the diagram asserts, and it is not clear whether the duplication is an authoring mistake or a deliberate way of showing the return path.
+
+**Resolution:**
+
+## Q-057 — Naming inconsistencies within MEG-003
+
+**Status:** `Open`
+**Where:** MEG-003 chapters 00, 02, 03, 08, 09, 10, 11
+
+Each of these is small, each changes meaning, and none were normalised:
+
+- **Recommendation / Recommendations** — ch02 *Business Before Technology* gives the singular as the preferred domain term while *Avoid Abbreviations* gives the plural as the preferred expansion of Recs. ch03 uses the plural for the subdomain and the singular in "Recommendation Module".
+- **Collection** — ch02 *One Name, One Meaning* uses Collection as its worked example of a word overloaded across concepts, while *Mosaic Examples* lists it under good names. *Context Matters* reconciles the two, but a reader meets the contradiction first.
+- **Playback Session / PlaybackSession / Playback** — ch08 names the Aggregate "Playback Session" and sometimes "Playback"; ch09 names the Root type `PlaybackSession`. Plausibly a deliberate Aggregate-versus-Root convention, equally plausibly drift.
+- **Runtime Adapter / Runtime Translation** — ch11 uses both for what appears to be one thing. [MEG-004](../docs/engineering/guides/meg-004-hexagonal-architecture/01-hexagonal-philosophy.md) uses Runtime Adapter.
+- **`CollectionOrderingPolicy`** — ch10 *Examples Within Mosaic* lists it beside `MetadataMatcher`, `DuplicateResolver` and `RecommendationEngine`. Nothing says whether "Policy" is a sanctioned Domain Service suffix or an inconsistency with the naming guidance two sections earlier.
+- **"Platform foundation domain"** — ch00 *Design Philosophy* attributes to Evans a focus on "the Platform foundation domain". The DDD term is *core domain*, and MEG-003's own scope lists Core domains separately. Either a Mosaic-specific renaming or a transcription error.
+
+**Resolution:**
+
+## Q-058 — MEG-003 misstates the publication state of MEG-004
+
+**Status:** `Open`
+**Where:** [MEG-003 index](../docs/engineering/guides/meg-003-domain-driven-design/index.md), *Dependencies*; [references](../docs/engineering/guides/meg-003-domain-driven-design/references.md), *Planned Engineering Specifications*
+
+Both lists describe MEG-004 as future or planned. [MEG-004](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md) is published, and is the calibration reference this rewrite is measured against. The index also lists MEG-006 before MEG-005.
+
+Correcting it means knowing the real Status of every MEG in the list, which is a lifecycle question governed by [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) rather than an editorial one.
+
+**Resolution:**
+
+## Q-059 — Citation label does not match its subject
+
+**Status:** `Open`
+**Where:** [MEG-003 ch09](../docs/engineering/guides/meg-003-domain-driven-design/09-aggregate-roots.md), *Identity*
+
+The aggregate-root article is cited with the link text "Baeldung on Kotlin", which does not match the subject matter and looks like a copy error. Preserved verbatim; worth checking against `references.md`.
 
 **Resolution:**
 

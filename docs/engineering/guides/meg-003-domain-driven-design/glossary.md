@@ -37,9 +37,7 @@ A consistency boundary consisting of:
 - zero or more Entities
 - zero or more Value Objects
 
-An Aggregate protects business invariants.
-
-It is persisted as a single unit.
+An Aggregate protects business invariants and is persisted as a single unit.
 
 ---
 
@@ -103,17 +101,13 @@ Context Maps identify:
 - translation boundaries
 - communication mechanisms
 
-They describe architecture.
-
-Not implementation.
+They describe architecture, not implementation.
 
 ---
 
 ## Core Domain
 
-The part of the business providing Mosaic's primary competitive advantage.
-
-Core Domains receive the greatest architectural investment.
+The part of the business providing Mosaic's primary competitive advantage. Core Domains receive the greatest architectural investment.
 
 ---
 
@@ -121,16 +115,7 @@ Core Domains receive the greatest architectural investment.
 
 ## Domain
 
-The area of knowledge the software exists to model.
-
-Within Mosaic:
-
-```
-
-Media Management
-```
-
-is the overall domain.
+The area of knowledge the software exists to model. Within Mosaic, `Media Management` is the overall domain.
 
 ---
 
@@ -138,9 +123,7 @@ is the overall domain.
 
 An immutable record describing a completed business fact.
 
-Domain Events originate inside the Domain Model.
-
-They later become Runtime Events.
+Domain Events originate inside the Domain Model and later become Runtime Events.
 
 ---
 
@@ -200,9 +183,7 @@ Factories ensure:
 - default state
 - complete construction
 
-Factories perform creation.
-
-Not business behaviour.
+Factories perform creation, not business behaviour.
 
 ---
 
@@ -228,17 +209,13 @@ Generic Domains should usually leverage established solutions.
 
 The stable characteristic that distinguishes one Entity from another.
 
-Identity belongs to the business.
-
-Not the database.
+Identity belongs to the business, not the database.
 
 ---
 
 ## Invariant
 
-A business rule that must always remain true.
-
-Aggregates exist primarily to protect invariants.
+A business rule that must always remain true. Aggregates exist primarily to protect invariants.
 
 ---
 
@@ -262,9 +239,7 @@ Within Mosaic this is usually expressed through:
 
 A persistence abstraction responsible for loading and saving Aggregate Roots.
 
-Repositories hide storage implementation.
-
-They expose business concepts.
+Repositories hide storage implementation and expose business concepts.
 
 ---
 
@@ -274,9 +249,7 @@ They expose business concepts.
 
 A shared Domain Model used by multiple Bounded Contexts.
 
-Within Mosaic this pattern is generally discouraged because it increases coupling.
-
-Published contracts are preferred.
+Within Mosaic this pattern is generally discouraged because it increases coupling, so published contracts are preferred.
 
 ---
 
@@ -371,4 +344,4 @@ Definitions should remain consistent across:
 - Module SDKs
 - Contributor Documentation
 
-Whenever the ubiquitous language evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
+Whenever the ubiquitous language evolves, this glossary should be updated before introducing new terminology elsewhere.

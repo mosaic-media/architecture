@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-A Mosaic platform consists of many independent Bounded Contexts.
-
-Examples include:
+A Mosaic platform consists of many independent Bounded Contexts. Examples include:
 
 - Library
 - Metadata
@@ -23,13 +21,7 @@ Examples include:
 - Authentication
 - Modules
 
-Although each context evolves independently, they rarely exist in complete isolation.
-
-Business capabilities inevitably collaborate.
-
-Without explicitly modelling those relationships, dependencies gradually become informal, undocumented and increasingly difficult to maintain.
-
-Context Maps make those relationships explicit.
+Although each context evolves independently, they rarely exist in complete isolation, because business capabilities inevitably collaborate. Without explicitly modelling those relationships, dependencies gradually become informal, undocumented and increasingly difficult to maintain. Context Maps make those relationships explicit.
 
 ---
 
@@ -52,9 +44,7 @@ No context should become tightly coupled simply because implementation made it c
 
 # What Is A Context Map?
 
-A Context Map describes the relationships between Bounded Contexts.
-
-It answers questions such as:
+A Context Map describes the relationships between Bounded Contexts, answering questions such as:
 
 - Which context owns this concept?
 - Which context depends upon another?
@@ -62,9 +52,7 @@ It answers questions such as:
 - Who translates between models?
 - Where are architectural boundaries?
 
-Context Maps describe architecture.
-
-Not implementation.
+Every one of those questions is architectural, which is the point: Context Maps describe architecture, not implementation.
 
 ---
 
@@ -87,38 +75,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Dependencies slowly become:
-
-- circular
-- implicit
-- undocumented
-
-Eventually:
-
-Nobody understands why changing one context affects another.
-
-Context Maps prevent this.
+Dependencies slowly become circular, implicit and undocumented, until eventually nobody understands why changing one context affects another. Context Maps prevent this by recording the relationship at the point it is created rather than leaving it to be reconstructed later.
 
 ---
 
 # Context Relationships
 
-Every relationship should answer:
-
-```mermaid
-flowchart TD
-
-N1["Who owns the model?"]
-N2["Who consumes the model?"]
-N3["How is information exchanged?"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Ownership should always remain obvious.
-
-Consumers should never redefine another context's business concepts.
+Every relationship should answer who owns the model, who consumes it, and how information is exchanged between them. Ownership should always remain obvious, and consumers should never redefine another context's business concepts.
 
 ---
 
@@ -147,46 +110,19 @@ N5 --> N7
 N6 --> N8
 ```
 
-This diagram represents business relationships.
-
-Not package dependencies.
+This diagram represents business relationships, not package dependencies.
 
 ---
 
 # Direction Of Knowledge
 
-Knowledge should always flow in one direction.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Library"]
-N2["MediaImported"]
-N3["Metadata"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Metadata learns:
-
-A media item was imported.
-
-Library does **not** learn:
-
-How metadata is fetched.
-
-Dependencies remain one directional.
+Knowledge should always flow in one direction. When Library publishes MediaImported, Metadata learns that a media item was imported, but Library does **not** learn how metadata is fetched. Dependencies remain one directional.
 
 ---
 
 # Relationship Types
 
-Domain-Driven Design defines several relationship patterns.
-
-Within Mosaic, the following are recognised.
+Domain-Driven Design defines several relationship patterns. Within Mosaic, the following are recognised.
 
 - Partnership
 - Customer / Supplier
@@ -195,82 +131,25 @@ Within Mosaic, the following are recognised.
 - Published Language
 - Anti-Corruption Layer
 
-Not every relationship appears within every project.
-
-Understanding them allows engineers to choose the most appropriate collaboration model.
+Not every relationship appears within every project, but understanding them allows engineers to choose the most appropriate collaboration model rather than defaulting to whichever one the implementation suggests.
 
 ---
 
 # Published Language
 
-The preferred relationship within Mosaic.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Domain Events"]
-N3["Recommendations"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Playback publishes a stable business language.
-
-Recommendations consume it.
-
-Neither context understands the other's internal implementation.
-
-Published Language naturally complements the event-driven runtime established in [MEG-002](../meg-002-event-driven-runtime/index.md).
+Published Language is the preferred relationship within Mosaic. Playback publishes a stable business language as Domain Events and Recommendations consumes it, so neither context understands the other's internal implementation. Published Language naturally complements the event-driven runtime established in [MEG-002](../meg-002-event-driven-runtime/index.md).
 
 ---
 
 # Open Host Service
 
-Some contexts expose stable public interfaces.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Metadata API"]
-N3["Modules"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Modules interact through published contracts.
-
-They do not depend upon internal implementation.
-
-The interface remains stable even if the implementation evolves.
+Some contexts expose stable public interfaces. Metadata offers a Metadata API through which Modules interact using published contracts rather than depending upon internal implementation, which means the interface remains stable even if the implementation evolves.
 
 ---
 
 # Anti-Corruption Layer
 
-External systems frequently use different models.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["TMDB"]
-N2["Anti-Corruption Layer"]
-N3["Metadata Context"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The translation layer prevents external terminology from leaking into the Mosaic domain.
-
-Examples include:
+External systems frequently use different models, so an integration with TMDB reaches the Metadata Context only through an Anti-Corruption Layer. The translation layer prevents external terminology from leaking into the Mosaic domain. Examples include:
 
 - Jellyfin
 - Plex
@@ -279,69 +158,25 @@ Examples include:
 - AniList
 - Trakt
 
-Every external integration SHOULD terminate at an Anti-Corruption Layer.
-
-This is one of the defining tactical patterns in Domain-Driven Design for protecting an internal model from external concepts. ([martinfowler.com](https://martinfowler.com/bliki/AntiCorruptionLayer.html))
+Every external integration should terminate at an Anti-Corruption Layer. This is one of the defining tactical patterns in Domain-Driven Design for protecting an internal model from external concepts. ([martinfowler.com](https://martinfowler.com/bliki/AntiCorruptionLayer.html))
 
 ---
 
 # Conformist
 
-Sometimes the cost of translation outweighs the benefit.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["OpenTelemetry"]
-N2["Observability Context"]
-
-N1 --> N2
-```
-
-Rather than inventing new terminology, Mosaic simply adopts the external standard.
-
-Conformist relationships should remain rare.
-
-The Core Domain should never become conformist to an external product.
+Sometimes the cost of translation outweighs the benefit, as when the Observability Context adopts OpenTelemetry directly rather than inventing new terminology for the same concepts. Conformist relationships should nonetheless remain rare, and the Core Domain should never become conformist to an external product.
 
 ---
 
 # Customer / Supplier
 
-One context depends upon another.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["PlaybackCompleted"]
-N3["Recommendations"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Playback supplies business facts.
-
-Recommendations consumes them.
-
-Playback should remain unaware of Recommendations.
-
-Recommendations depends upon Playback.
-
-Not the reverse.
+One context depends upon another. Playback supplies business facts through PlaybackCompleted and Recommendations consumes them, so Recommendations depends upon Playback and not the reverse. Playback should remain unaware of Recommendations entirely.
 
 ---
 
 # Partnership
 
 Occasionally two contexts evolve together.
-
-Example.
 
 ```mermaid
 flowchart LR
@@ -352,38 +187,13 @@ N2["Watch History"]
 N1 <--> N2
 ```
 
-Both contexts share significant business knowledge.
-
-Partnerships should be introduced cautiously.
-
-They naturally increase coupling.
+Both contexts share significant business knowledge, and because a partnership naturally increases coupling in both directions it should be introduced cautiously.
 
 ---
 
 # Shared Kernel
 
-Within Mosaic:
-
-Shared Kernels SHOULD generally be avoided.
-
-A Shared Kernel creates:
-
-```mermaid
-flowchart TD
-
-N1["Context A"]
-N2["Shared Model"]
-N3["Context B"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Both contexts now evolve together.
-
-This increases coupling.
-
-Instead, prefer:
+Within Mosaic, Shared Kernels should generally be avoided. A Shared Kernel places a Shared Model between Context A and Context B, which means both contexts now evolve together and coupling increases. Prefer instead:
 
 - events
 - published contracts
@@ -395,38 +205,19 @@ Shared Kernels should remain exceptional.
 
 # Context Translation
 
-Translation occurs at boundaries.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Jellyfin"]
-N2["Jellyfin Adapter"]
-N3["Library Context"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Library never understands:
+Translation occurs at boundaries. Jellyfin reaches the Library Context only through a Jellyfin Adapter, so Library never understands:
 
 - Jellyfin models
 - Jellyfin terminology
 - Jellyfin identifiers
 
-Adapters translate.
-
-Contexts remain pure.
+Adapters translate and contexts remain pure.
 
 ---
 
 # Event Relationships
 
 Events naturally define Context Maps.
-
-Example.
 
 ```mermaid
 flowchart TD
@@ -443,38 +234,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Each event communicates:
-
-- ownership
-- dependency direction
-- collaboration
-
-The event graph effectively becomes the Context Map.
+Each event communicates ownership, dependency direction and collaboration, which means the event graph effectively becomes the Context Map.
 
 ---
 
 # Module Relationships
 
-Modules participate as independent contexts.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Primary Metadata"]
-N2["MetadataFetched"]
-N3["Anime Module"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The module consumes published language.
-
-It never modifies the Platform foundation.
-
-This allows modules to remain isolated while participating fully within the platform.
+Modules participate as independent contexts. An Anime Module consumes MetadataFetched from Primary Metadata, so it depends upon published language and never modifies the Platform foundation. This allows modules to remain isolated while participating fully within the platform.
 
 ---
 
@@ -493,59 +259,23 @@ N1 --> N2
 N2 --> N3
 ```
 
-Bidirectional dependencies rapidly increase complexity.
-
-Instead.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["PlaybackCompleted"]
-N3["Metadata"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The dependency direction remains clear.
+Bidirectional dependencies rapidly increase complexity. Where Playback instead publishes PlaybackCompleted and Metadata consumes it, the dependency direction remains clear.
 
 ---
 
 # Context Independence
 
-Every context should be removable.
-
-Ask:
+Every context should be removable. Ask:
 
 > **If this context disappeared tomorrow, what would break?**
 
-Ideally:
-
-Only published contracts fail.
-
-Other contexts remain internally consistent.
-
-This is a useful test of architectural coupling.
+Ideally only published contracts fail while other contexts remain internally consistent, which makes the question a useful test of architectural coupling.
 
 ---
 
 # Evolution
 
-Context relationships evolve.
-
-Initially.
-
-```mermaid
-flowchart TD
-
-N1["Library"]
-N2["Metadata"]
-
-N1 --> N2
-```
-
-Later.
+Context relationships evolve. Library may initially depend upon Metadata alone, and later the map grows.
 
 ```mermaid
 flowchart TD
@@ -562,22 +292,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Growth should occur through new relationships.
-
-Existing relationships should remain stable wherever practical.
+Growth should occur through new relationships, whereas existing relationships should remain stable wherever practical.
 
 ---
 
 # Context Ownership
 
-Every Context Map SHOULD identify:
-
-- owning context
-- consuming context
-- communication mechanism
-- translation boundary
-
-Ambiguous ownership is an architectural smell.
+Every Context Map should identify the owning context, the consuming context, the communication mechanism and the translation boundary. Ambiguous ownership is an architectural smell.
 
 ---
 
@@ -587,26 +308,11 @@ The following practices are prohibited.
 
 ## Shared Domain Models
 
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Shared Media Object"]
-N3["Metadata"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Contexts should own their own models.
-
----
+Playback and Metadata both reaching for one Shared Media Object. Contexts should own their own models.
 
 ## Shared Database Ownership
 
 Multiple contexts directly modifying the same business tables.
-
----
 
 ## Circular Relationships
 
@@ -621,30 +327,13 @@ N1 --> N2
 N2 --> N3
 ```
 
----
-
 ## Leaking External Models
 
-Allowing:
-
-```mermaid
-flowchart TD
-
-N1["TMDB"]
-N2["Metadata Context"]
-
-N1 --> N2
-```
-
-without translation.
-
----
+Allowing TMDB to reach the Metadata Context without translation.
 
 ## Hidden Dependencies
 
-Relationships that exist only in implementation.
-
-Every significant relationship should appear within the Context Map.
+Relationships that exist only in implementation. Every significant relationship should appear within the Context Map.
 
 ---
 
@@ -652,14 +341,14 @@ Every significant relationship should appear within the Context Map.
 
 Within Mosaic:
 
-- Every Bounded Context SHOULD appear within a Context Map.
-- Relationships MUST have explicit ownership.
-- Published Language SHOULD be the preferred collaboration model.
-- Anti-Corruption Layers SHOULD protect Core Domains.
-- Shared Kernels SHOULD be avoided.
-- Event relationships SHOULD define dependency direction.
-- Contexts SHOULD remain independently evolvable.
-- Context Maps SHOULD evolve alongside the business.
+- Every Bounded Context should appear within a Context Map.
+- Relationships must have explicit ownership.
+- Published Language should be the preferred collaboration model.
+- Anti-Corruption Layers should protect Core Domains.
+- Shared Kernels should be avoided.
+- Event relationships should define dependency direction.
+- Contexts should remain independently evolvable.
+- Context Maps should evolve alongside the business.
 
 ---
 
@@ -679,9 +368,7 @@ The next chapter begins exploring the building blocks that exist *inside* those 
 
 # Summary
 
-Context Maps transform a collection of isolated Bounded Contexts into a coherent platform architecture.
-
-They make dependencies:
+Context Maps transform a collection of isolated Bounded Contexts into a coherent platform architecture. They make dependencies:
 
 - explicit
 - understandable

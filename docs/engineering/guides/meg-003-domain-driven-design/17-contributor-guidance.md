@@ -12,18 +12,14 @@ Status: Draft
 
 # Purpose
 
-The Domain Model is the intellectual centre of the Mosaic platform.
-
-Unlike infrastructure, which changes to support the business, the Domain Model exists to describe the business itself.
-
-Every contributor therefore shares responsibility for protecting:
+The Domain Model is the intellectual centre of the Mosaic platform. Unlike infrastructure, which changes to support the business, the Domain Model exists to describe the business itself, and every contributor therefore shares responsibility for protecting:
 
 - business language
 - business ownership
 - business boundaries
 - business behaviour
 
-This document provides practical guidance for engineers contributing to the Mosaic Domain Model.
+This document provides practical guidance for engineers contributing to the Mosaic Domain Model. It runs through the checks that apply before each kind of modelling change, and closes with the checklists that apply before merging.
 
 ---
 
@@ -33,7 +29,7 @@ Within Mosaic:
 
 > **Protect the model before extending it.**
 
-Adding functionality should never weaken:
+Extending the model is expected, but extension must not come at the cost of what the model already expresses. Adding functionality should never weaken:
 
 - ubiquitous language
 - aggregate boundaries
@@ -41,15 +37,13 @@ Adding functionality should never weaken:
 - business ownership
 - domain consistency
 
-The Domain Model should become clearer over time.
-
-Never more complicated.
+The Domain Model should become clearer over time, never more complicated.
 
 ---
 
 # Before Writing Code
 
-Before implementing a new feature ask:
+Each of these questions is owned by a chapter elsewhere in MEG-003, and answering them before writing code is cheaper than discovering the answers afterwards. Simple modelling frequently reveals missing concepts, incorrect ownership and unnecessary coupling while none of it has yet been built, so before implementing a new feature ask:
 
 - What business problem exists?
 - Which Bounded Context owns it?
@@ -63,73 +57,55 @@ Implementation should begin only after these questions have clear answers.
 
 # Before Creating A New Domain Concept
 
-Ask:
+A new concept enters the ubiquitous language, where it acquires one name, one meaning and one owner. That is a commitment across source code, documentation, events and discussion, so ask first:
 
 - Does this concept already exist?
 - Is the language consistent?
 - Does another Aggregate already own this behaviour?
 - Is this genuinely a new business concept?
 
-Avoid creating duplicate concepts with different names.
-
-The ubiquitous language should remain consistent.
+Avoid creating duplicate concepts with different names. Synonyms create confusion whereas consistency creates understanding, and a concept modelled twice is a concept that will eventually mean two different things.
 
 ---
 
 # Before Creating A New Bounded Context
 
-A new Bounded Context SHOULD only be introduced when:
+A Bounded Context is a statement of ownership rather than a suggestion about code layout, and each one introduced acquires exactly one owner and one canonical model. A new Bounded Context should therefore only be introduced when:
 
 - the language differs significantly
 - ownership differs
 - business rules differ
 - independent evolution is desirable
 
-A new package does **not** automatically justify a new Bounded Context.
-
-Bounded Contexts represent business boundaries.
-
-Not code organisation.
+A new package does **not** automatically justify a new Bounded Context, because Bounded Contexts represent business boundaries rather than code organisation. A boundary drawn around code instead of around ownership leaves concepts colliding and ownership unclear, and shared ownership usually indicates a poorly defined boundary.
 
 ---
 
 # Before Creating An Entity
 
-Ask:
+Identity is what separates an Entity from a Value Object, and it is the one characteristic that must remain stable while everything else about the concept changes. Ask:
 
 > Does the business recognise this concept through its identity?
 
-If yes:
-
-Entity.
-
-If no:
-
-Consider a Value Object.
-
-Identity should always have business meaning.
+If it does, model an Entity; if it does not, consider a Value Object instead. Identity should always have business meaning, because an identifier the business does not recognise communicates nothing that the value itself does not already say.
 
 ---
 
 # Before Creating A Value Object
 
-Ask:
+Many business concepts exist purely because of the information they represent, and modelling those as Value Objects keeps the surrounding Entities smaller and more focused. Ask:
 
 - Is identity irrelevant?
 - Is the concept immutable?
 - Does equality depend entirely upon value?
 
-If the answer is yes:
-
-Model a Value Object.
-
-Do not introduce identity unnecessarily.
+Where the answer to each is yes, model a Value Object and do not introduce identity unnecessarily. Leaving the concept as a bare primitive instead is the mistake Fowler names **Primitive Obsession**, where the type no longer answers what the value actually measures.
 
 ---
 
 # Before Creating An Aggregate
 
-Ask:
+An Aggregate is a consistency boundary, so its membership is decided by the rules it must protect rather than by how its objects happen to be related. Ask:
 
 > Which business rules must always remain true together?
 
@@ -137,77 +113,43 @@ Do **not** ask:
 
 > Which objects reference each other?
 
-Consistency determines Aggregate boundaries.
-
-Object relationships do not.
+Consistency determines Aggregate boundaries; object relationships do not, because two objects that merely point at one another can be saved separately without breaking any rule. An Aggregate drawn around convenience rather than consistency grows large, and large Aggregates reduce concurrency, increase coupling and become increasingly difficult to evolve.
 
 ---
 
 # Before Creating A Domain Service
 
-A Domain Service should be the last modelling choice.
-
-Ask:
+A Domain Service should be the last modelling choice, because behaviour that could have belonged to a domain object and did not is behaviour the domain has quietly given up. Exhaust the alternatives first and ask:
 
 - Can this behaviour belong to an Aggregate?
 - Can it belong to a Value Object?
 - Can it belong to an Entity?
 
-Only if the answer is "no" should a Domain Service be introduced.
-
-Large numbers of Domain Services usually indicate weak Aggregate modelling.  [Reddit](https://www.reddit.com/r/DomainDrivenDesign/comments/1sgqsv8/most_ddd_advice_starts_in_the_wrong_place/)
+Only if the answer is "no" should a Domain Service be introduced. Large numbers of Domain Services usually indicate weak Aggregate modelling. [Reddit](https://www.reddit.com/r/DomainDrivenDesign/comments/1sgqsv8/most_ddd_advice_starts_in_the_wrong_place/)
 
 ---
 
 # Before Creating A Repository
 
-Repositories should appear only after:
-
-- the Aggregate exists
-- the Aggregate Root is understood
-- persistence requirements become necessary
-
-Do not design repositories first.
-
-Model first.
-
-Persist later.
+Repositories should appear only after the Aggregate exists, the Aggregate Root is understood and persistence requirements become necessary, because a Repository is scoped to an Aggregate Root and a Repository that reaches past the root lets a caller change part of an Aggregate without the root ever knowing. Do not design repositories first: model first and persist later.
 
 ---
 
 # Before Creating A Domain Event
 
-Ask:
+A Domain Event records a completed business fact, and the domain records facts rather than requests. Ask:
 
 - Did something important happen?
 - Would the business describe this as a fact?
 - Does another capability care about this fact?
 
-If the event describes:
-
-```
-
-Do Something
-```
-
-it is probably a command.
-
-If it describes:
-
-```
-
-Something Happened
-```
-
-it is probably a Domain Event.
+The phrasing usually settles it: if the event name reads as `Do Something` it is probably a command, whereas if it reads as `Something Happened` it is probably a Domain Event. Each event should then describe exactly one business transition, because folding two together makes a single event describe two histories at once.
 
 ---
 
 # Before Renaming A Business Concept
 
-Changing language changes understanding.
-
-Before renaming:
+Changing language changes understanding, so before renaming:
 
 - update documentation
 - update diagrams
@@ -215,15 +157,13 @@ Before renaming:
 - update repositories
 - update package names where appropriate
 
-Language should evolve consistently.
-
-Half-completed terminology changes create architectural confusion.
+Language should evolve consistently, because the ubiquitous language is only useful while it holds together and half-completed terminology changes create architectural confusion.
 
 ---
 
 # Before Merging
 
-Every Domain contribution SHOULD satisfy the following checklist.
+Every Domain contribution should satisfy the following checklist. It groups into business language, ownership, behaviour, events and documentation, which are the five areas the preceding sections have each protected in turn.
 
 ## Business Language
 
@@ -264,13 +204,13 @@ Every Domain contribution SHOULD satisfy the following checklist.
 - Context Maps updated where appropriate.
 - Glossary updated when introducing new terminology.
 
-The model and its documentation should evolve together.
+The model and its documentation should evolve together, because documentation that introduces alternative names fragments the very understanding the model exists to share.
 
 ---
 
 # Avoid Technical Thinking
 
-During modelling discussions avoid asking:
+Technical questions describe the machinery rather than the business, and asking them first lets the machinery decide the model. During modelling discussions avoid asking:
 
 - Which database table?
 - Which HTTP endpoint?
@@ -283,30 +223,19 @@ Instead ask:
 - What behaviour exists?
 - What rules always remain true?
 
-The domain should remain independent of implementation.
+The domain should remain independent of implementation, because business rules belong with the business concepts they govern; where they do not, validation drifts outwards until it sits beside the transport layer.
 
 ---
 
 # Refactor The Model
 
-Refactoring the Domain Model is encouraged.
-
-Examples include:
-
-- improving terminology
-- refining Aggregate boundaries
-- simplifying Value Objects
-- extracting clearer concepts
-
-Improving understanding is one of the primary goals of Domain-Driven Design.
-
-Refactoring should therefore be viewed positively when it improves the model.
+Refactoring the Domain Model is encouraged, whether that means improving terminology, refining Aggregate boundaries, simplifying Value Objects or extracting clearer concepts. Improving understanding is one of the primary goals of Domain-Driven Design, so refactoring should be viewed positively whenever it improves the model.
 
 ---
 
 # Review Mindset
 
-Domain reviews should focus on:
+A domain review asks whether the model is right, not merely whether the code works. Domain reviews should therefore focus on:
 
 - business correctness
 - language
@@ -323,37 +252,19 @@ are significantly more valuable than:
 
 > "Could this be implemented differently?"
 
-Implementation should support the model.
-
-Not redefine it.
+Implementation should support the model, not redefine it.
 
 ---
 
 # Domain Tests
 
-Business behaviour should be verified through domain tests.
-
-Examples include:
-
-- Aggregate invariants
-- Entity behaviour
-- Value Object validation
-- Domain Service decisions
-- Domain Events
-
-The Domain should be testable without:
-
-- HTTP
-- databases
-- runtime infrastructure
-
-Pure domain tests provide the fastest feedback and the clearest business validation.
+Business behaviour should be verified through domain tests, covering Aggregate invariants, Entity behaviour, Value Object validation, Domain Service decisions and Domain Events. The Domain should be testable without HTTP, databases or runtime infrastructure, which is what allows pure domain tests to provide the fastest feedback and the clearest business validation.
 
 ---
 
 # Learning The Domain
 
-New contributors SHOULD study the Domain Model in the following order.
+Understanding terminology first dramatically improves modelling quality, so new contributors should study the Domain Model in the following order. The sequence runs from the strategic concepts that establish boundaries towards the tactical ones that live inside them, which means each stage supplies the vocabulary the next depends upon.
 
 ```mermaid
 flowchart TD
@@ -378,15 +289,11 @@ N7 --> N8
 N8 --> N9
 ```
 
-Understanding terminology first dramatically improves modelling quality.
-
 ---
 
 # Engineering Culture
 
-Domain modelling should be collaborative.
-
-Contributors are encouraged to:
+Domain modelling should be collaborative, and contributors are encouraged to:
 
 - question terminology
 - challenge unclear ownership
@@ -395,15 +302,13 @@ Contributors are encouraged to:
 - improve documentation
 - discuss business behaviour with domain experts
 
-The Domain Model should improve through conversation.
-
-Not individual opinion.
+The Domain Model should improve through conversation rather than individual opinion, because the language it encodes has to be shared by engineers, architects, product owners, documentation and source code alike.
 
 ---
 
 # Contributor Checklist
 
-Before requesting review, confirm:
+The following restates the preceding sections in a form that can be checked quickly. Before requesting review, confirm:
 
 - [ ] The ubiquitous language remains consistent.
 - [ ] Business ownership is explicit.
@@ -419,13 +324,11 @@ Before requesting review, confirm:
 
 # Relationship to MEG
 
-This document explains how contributors should evolve the Domain Model established throughout MEG-003.
-
-The previous chapters define:
+This document explains how contributors should evolve the Domain Model established throughout MEG-003. Where the previous chapters define:
 
 > **How the business should be modelled.**
 
-This chapter defines:
+this chapter defines:
 
 > **How engineers should improve that model over time.**
 
@@ -435,11 +338,7 @@ Protecting the integrity of the Domain Model is a shared engineering responsibil
 
 # Summary
 
-The Domain Model is not simply another layer of the application.
-
-It is the shared understanding upon which the entire platform is built.
-
-Every contribution should strengthen:
+The Domain Model is not simply another layer of the application; it is the shared understanding upon which the entire platform is built. Every contribution should therefore strengthen:
 
 - clarity
 - ownership
