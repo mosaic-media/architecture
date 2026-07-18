@@ -1,0 +1,20 @@
+# Retired chapter numbers.
+#
+# MDG-001 chapter 07 requires chapter numbering to remain sequential. scripts/validate_docs.py
+# enforces that, and a gap fails the build.
+#
+# Occasionally a gap is deliberate: a chapter is superseded and removed, and renumbering the
+# chapters after it would break every inbound reference to them. Record the retired number here
+# instead. The registry exists so the reason is written down at the moment the decision is made,
+# rather than inferred from a hole in the sequence years later.
+#
+# Format — one entry per specification, keyed by its repository-relative folder path:
+#
+#   docs/engineering/guides/meg-005-runtime-architecture:
+#     - 07  # Superseded by MEG-002 chapter 11; removed 2026-07-18. See MAD-004.
+#
+# Each retired number needs a reason and, where one exists, the decision that retired it.
+# Do not use this file to silence a numbering mistake. If a chapter was simply misnumbered,
+# renumber it.
+
+# No chapter numbers have been retired.

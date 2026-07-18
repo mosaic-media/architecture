@@ -3,3 +3,10 @@ site/
 .venv/
 __pycache__/
 *.pyc
+
+# Node tooling for markdownlint. Installed on demand; CI uses the pinned action.
+node_modules/
+package-lock.json
+
+# lychee link-check cache.
+.lycheecache

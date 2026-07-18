@@ -1,0 +1,36 @@
+extends: existence
+message: "'%s' is uppercase RFC 2119 typography. Mosaic adopts RFC 2119 semantics but not its capitalisation — write 'must', 'should', 'may' in ordinary sentence case."
+link: docs/engineering/documentation/mdg-001-documentation-authority-guide/10-standards-mapping.md
+level: warning
+
+# MDG-001 chapter 10 records this as a deliberate, explicit deviation:
+#
+#   "RFC 8174 restricts normative meaning to uppercase usage. Mosaic
+#    documentation is prose intended to be read continuously, and full
+#    uppercase disrupts that reading. Mosaic therefore uses ordinary
+#    capitalisation while retaining RFC 2119 semantics."
+#
+# The meaning of the keyword is unchanged; only the typography is wrong.
+# This is a warning rather than an error because the fix is an editorial
+# rewrite of the surrounding sentence, not a mechanical substitution.
+#
+# Case-sensitive: the whole point of the rule is the uppercase form.
+ignorecase: false
+
+# Word-bounded, so ordinary words are untouched and multi-word keywords are
+# matched as phrases. Longer keywords are listed first so that "MUST NOT"
+# reports as one alert rather than as "MUST" plus stray "NOT".
+nonword: false
+
+tokens:
+  - MUST NOT
+  - SHALL NOT
+  - SHOULD NOT
+  - NOT RECOMMENDED
+  - MUST
+  - SHALL
+  - SHOULD
+  - MAY
+  - REQUIRED
+  - RECOMMENDED
+  - OPTIONAL

@@ -1,0 +1,132 @@
+# lychee configuration for the Mosaic documentation repository.
+#
+# Primary purpose: relative cross-references between Markdown files.
+#
+# This repository's dominant link risk is internal, not external. MDG-001
+# requires every reference to another Mosaic document to be a relative
+# Markdown hyperlink, and specifications live in deeply nested folders, so
+# links routinely look like:
+#
+#   [MEG-002 — Event-Driven Runtime](../../guides/meg-002-event-driven-runtime/index.md)
+#
+# Renaming or moving a specification folder silently breaks dozens of these.
+# lychee resolves relative paths against the containing file, which is what
+# catches that class of breakage. External URLs are checked as a secondary
+# concern.
+#
+# Intended invocation (the file glob supplies the recursion; lychee has no
+# config key for it):
+#
+#   lychee --config lychee.toml './docs/**/*.md' './*.md'
+
+# --- Output ---------------------------------------------------------------
+
+# Verbosity is a level, not a flag: "error", "warn", "info", "debug" or "trace".
+# "info" lists every checked link rather than only the failures, which is what lets a
+# CI log confirm that coverage was real.
+verbose = "info"
+
+# Progress bars corrupt CI logs.
+no_progress = true
+
+# --- Caching --------------------------------------------------------------
+
+# Cache results between runs so repeated CI runs do not re-hammer external
+# hosts. One day is short enough that a genuinely dead link surfaces quickly.
+cache = true
+max_cache_age = "1d"
+
+# --- Network behaviour ----------------------------------------------------
+
+# 20s is generous enough for slow academic and standards-body hosts
+# (rfc-editor.org, thesai.org, registry.khronos.org all appear in the
+# References chapters) without stalling the pipeline.
+timeout = 20
+
+# Two retries with a real pause between them. Most external failures in a
+# documentation repository are transient rate limiting rather than rot.
+max_retries = 2
+retry_wait_time = 2
+
+# Modest concurrency. The References chapters cluster many links onto a
+# handful of hosts (55 on go.dev alone), and high concurrency turns that
+# into a burst that looks like abuse and earns a 429.
+max_concurrency = 8
+
+max_redirects = 5
+
+# Some hosts serve 403 to the default client. A browser-like agent removes
+# a whole category of false failures without any other behaviour change.
+user_agent = "Mozilla/5.0 (compatible; lychee/0.1; +https://github.com/lycheeverse/lychee)"
+
+# --- Accepted status codes ------------------------------------------------
+#
+#   200  OK.
+#   206  Partial Content — returned by hosts that honour the ranged GET
+#        lychee uses to avoid downloading whole documents.
+#   429  Too Many Requests — the host is rate limiting, which proves the
+#        URL resolves. Treating it as a failure makes CI flaky rather than
+#        informative.
+accept = ["200", "206", "429"]
+
+# --- Path exclusions ------------------------------------------------------
+
+exclude_path = [
+  # MkDocs build artefacts. Generated output is never the source of truth,
+  # and site/ additionally contains rewritten links that are only valid
+  # relative to the served site root.
+  "./site",
+  "./output",
+
+  # Third-party dependencies.
+  "./node_modules",
+
+  # templates/ is excluded, and the reason is structural rather than
+  # cosmetic.
+  #
+  # Template links are written for the location a template will occupy
+  # AFTER it is copied into docs/, not for its location inside templates/.
+  # For example templates/meg/00-document-control.md contains:
+  #
+  #   [...](../../documentation/mdg-001-documentation-authority-guide/index.md)
+  #
+  # which resolves correctly from docs/engineering/guides/<slug>/ but
+  # resolves to a non-existent ./templates/documentation/... today.
+  # templates/README.md also links bare directory names such as `](meg)`.
+  #
+  # Every one of these is a guaranteed false positive, so checking
+  # templates/ would mean a permanently red job. Template link correctness
+  # is verified when a template is instantiated, not in place.
+  "./templates",
+
+  # Repository metadata and workflow files.
+  "./.git",
+  "./.github",
+]
+
+# --- URL exclusions -------------------------------------------------------
+
+# Skip mailto: links. Address validity is not something an HTTP checker can
+# establish, so any result it produces is noise. (The key is include_mail;
+# lychee excludes mail by default and there is no exclude_mail field.)
+include_mail = false
+
+exclude = [
+  # Local development addresses. Never resolvable from CI.
+  "^https?://localhost",
+  "^https?://127\\.0\\.0\\.1",
+  "^https?://0\\.0\\.0\\.0",
+  "^https?://\\[::1\\]",
+
+  # Known-flaky hosts that appear in the References chapters. Each of these
+  # blocks or throttles automated clients regardless of user agent, so they
+  # produce failures that say nothing about whether the citation is sound.
+  # Verify these by hand when revising a References chapter.
+  #
+  #   reddit.com        — 403s non-browser clients outright.
+  #   books.google.com  — interstitial and aggressive rate limiting.
+  #   oreilly.com       — bot protection on book landing pages.
+  "^https?://(www\\.)?reddit\\.com",
+  "^https?://books\\.google\\.com",
+  "^https?://(www\\.)?oreilly\\.com",
+]

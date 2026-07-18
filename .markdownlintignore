@@ -1,0 +1,26 @@
+# Paths markdownlint must not read.
+#
+# Only authored Markdown is linted. Per CLAUDE.md, authored Markdown under
+# docs/ is canonical and generated output is never the source of truth.
+
+# MkDocs build artefacts.
+site/
+output/
+
+# Workflow definitions and issue templates are not specification prose.
+.github/
+
+# Third-party dependencies.
+node_modules/
+
+# templates/ is intentionally NOT excluded.
+#
+# Template files contain placeholder prose and instructional HTML comments
+# describing what an author should write, but they are still authored
+# Markdown and must obey the same structural rules — a template that emits a
+# malformed list or an unlabelled fence propagates that defect into every
+# specification created from it.
+#
+# The placeholders are prose-level, not structure-level, so the rules enabled
+# in .markdownlint.yaml do not conflict with them. Prose-level tooling
+# (Vale, lychee) does exempt templates/; see .vale.ini and lychee.toml.

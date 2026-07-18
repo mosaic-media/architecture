@@ -1,0 +1,49 @@
+extends: substitution
+message: "Use '%s' rather than '%s'. See MDG-001 04 — Writing Standards, Terminology."
+link: docs/engineering/documentation/mdg-001-documentation-authority-guide/04-writing-standards.md
+level: error
+
+# Case-sensitive on purpose.
+#
+# Mosaic uses these words as capitalised architectural nouns. Lowercase
+# prose uses ("a core idea", "a useful feature", "services running in
+# production") are ordinary English and are not terminology slips, so
+# matching only the capitalised forms removes the largest source of noise.
+#
+# Word-bounded on purpose. `nonword: false` makes Vale wrap each token in
+# word boundaries, so "Adapter" does not fire inside "Adapters" being part
+# of a larger identifier, and "Core" does not fire inside "Coreference".
+ignorecase: false
+nonword: false
+
+# Documented exceptions to these rules, per 04-writing-standards.md:
+#
+#   * "Adapter" is correct when discussing Hexagonal Architecture. MEG-004
+#     is entirely about that pattern, and MIP-005 names it in its title.
+#     Both are exempted by path in .vale.ini rather than weakened here,
+#     because Vale substitution keys are RE2 regexes and RE2 has no
+#     lookaround with which to express "Adapter except in these phrases".
+#
+#   * "Core" may be used "unless historically required". In practice this
+#     covers the compound "Core Platform" used by MAD-001, MAD-002 and
+#     MEG-015, and the DDD term "Core Domain" used by MEG-003. Those paths
+#     are likewise exempted in .vale.ini.
+#
+#   * Glossary chapters define "Adapter", "Service" and "Feature" as
+#     headings and are exempted for the same reason.
+#
+# When an exception is genuinely local rather than document-wide, silence it
+# inline instead of adding another path exemption:
+#
+#   <!-- vale Mosaic.Terminology = NO -->
+#   ...text using the exempt term...
+#   <!-- vale Mosaic.Terminology = YES -->
+
+swap:
+  Core: Platform
+  Extensions?: Module
+  Plugins?: Module
+  Adapters?: Provider
+  Services?: Capability
+  Features?: Capability
+  Runtime Managers?: Supervisor

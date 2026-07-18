@@ -1,28 +1,115 @@
 name: Documentation
 
+# Pull requests run the full documentation gate. Pushes to main run the same gate and then
+# deploy to GitHub Pages, so nothing reaches the published site without passing every check.
 on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  # Serialise per ref so a rapid second push supersedes the first. Runs on main are not
+  # cancelled, because the Pages deployment must be allowed to finish.
+  group: docs-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
-    name: Build and deploy documentation
+  structure:
+    name: Structure and build
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install documentation dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
+
+      # The authority check: every rule it enforces is defined by MDG-001.
+      - name: Validate documentation structure
+        run: python scripts/validate_docs.py
+
+      - name: Test the specification scaffolder
+        run: python -m pytest scripts/test_new_doc.py -q
+
+      - name: Build site
+        env:
+          DISABLE_MKDOCS_2_WARNING: "true"
+        run: mkdocs build --strict
+
+  vale:
+    name: Terminology
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Vale
+        uses: errata-ai/vale-action@reviewdog
+        with:
+          files: docs
+          fail_on_error: true
+          reporter: github-pr-check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  markdownlint:
+    name: Markdown style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v20
+        with:
+          globs: |
+            docs/**/*.md
+            templates/**/*.md
+            *.md
+
+  links:
+    name: Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Relative cross-references are this repository's main link risk: they break silently
+      # when a specification is renamed. External URLs are checked on the same pass.
+      - name: Run lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --config lychee.toml --no-progress .
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: Deploy to GitHub Pages
+    # Only main deploys, and only once every gate above is green.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [structure, vale, markdownlint, links]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,9 +125,6 @@ jobs:
 
       - name: Install PDF rendering browser
         run: python -m playwright install --with-deps chromium
-
-      - name: Validate documentation structure
-        run: python scripts/validate_docs.py
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

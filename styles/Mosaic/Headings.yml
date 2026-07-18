@@ -1,0 +1,88 @@
+extends: existence
+message: "Heading begins with '%s'. MDG-001 asks headings to name subjects rather than actions — prefer 'Capability Registration' over 'Registering Capabilities'."
+link: docs/engineering/documentation/mdg-001-documentation-authority-guide/04-writing-standards.md
+level: warning
+scope: heading
+
+# `raw` with `^` anchors each pattern to the start of the heading text,
+# because `scope: heading` narrows the scoped string to the heading content
+# alone. Only the first word matters: "Capability Registration Ordering" is
+# a subject heading and must not be flagged for containing "Ordering".
+nonword: true
+
+# Deliberately a curated verb list rather than a generic /^[A-Z][a-z]+ing\b/.
+#
+# A generic gerund pattern matches roughly 300 headings in this repository,
+# and the clear majority are false positives, because English gerunds are
+# freely nominal and adjectival. All of the following are correct subject
+# headings that a generic rule would wrongly flag:
+#
+#   Reading Order        Engineering Implications   Guiding Principle
+#   Living References    Existing System            Breathing Space
+#   Processing Lifecycle Writing Philosophy         Planning Status
+#   Landing Pages        Compensating Events        Moving-Source Lifecycle
+#   Governing Principle  Scheduling                 Rendering
+#
+# Lifecycle state names (Running, Stopping, Draining, Sleeping, Waiting,
+# Retiring, Listening) are likewise nouns naming a state, not actions, and
+# are excluded for the same reason.
+#
+# The list below is restricted to gerunds that in this corpus are reliably
+# transitive actions taking an object. Extending the list is fine; extending
+# it to a generic pattern is not, unless the corpus itself changes.
+raw:
+  - '^Accepting\b'
+  - '^Adding\b'
+  - '^Applying\b'
+  - '^Assuming\b'
+  - '^Breaking\b'
+  - '^Building\b'
+  - '^Calling\b'
+  - '^Changing\b'
+  - '^Choosing\b'
+  - '^Comparing\b'
+  - '^Constructing\b'
+  - '^Creating\b'
+  - '^Defining\b'
+  - '^Designing\b'
+  - '^Determining\b'
+  - '^Discovering\b'
+  - '^Embedding\b'
+  - '^Entering\b'
+  - '^Extending\b'
+  - '^Filling\b'
+  - '^Forgetting\b'
+  - '^Handling\b'
+  - '^Ignoring\b'
+  - '^Implementing\b'
+  - '^Initiating\b'
+  - '^Interpreting\b'
+  - '^Introducing\b'
+  - '^Keeping\b'
+  - '^Leaking\b'
+  - '^Losing\b'
+  - '^Managing\b'
+  - '^Migrating\b'
+  - '^Mocking\b'
+  - '^Operating\b'
+  - '^Optimising\b'
+  - '^Organising\b'
+  - '^Packaging\b'
+  - '^Passing\b'
+  - '^Preventing\b'
+  - '^Proposing\b'
+  - '^Protecting\b'
+  - '^Publishing\b'
+  - '^Receiving\b'
+  - '^Recognising\b'
+  - '^Renaming\b'
+  - '^Reordering\b'
+  - '^Restoring\b'
+  - '^Retrying\b'
+  - '^Returning\b'
+  - '^Skipping\b'
+  - '^Solving\b'
+  - '^Storing\b'
+  - '^Treating\b'
+  - '^Using\b'
+  - '^Wrapping\b'

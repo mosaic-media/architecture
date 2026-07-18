@@ -1,0 +1,143 @@
+# Mosaic accepted vocabulary.
+#
+# Entries are case-sensitive regular expressions. Vale will not flag these
+# terms. Derived from the Glossary chapters under docs/**/glossary.md plus
+# the proper nouns that appear across the specification library.
+#
+# British English is the repository standard. Do not add American spellings
+# here, and do not add a rule elsewhere that flags British forms.
+
+# --- Mosaic identity ------------------------------------------------------
+Mosaic
+Mosaics?
+
+# --- Mosaic document type prefixes ---------------------------------------
+MAC(-[0-9]{3})?
+MAD(-[0-9]{3})?
+MDG(-[0-9]{3})?
+MDL(-[0-9]{3})?
+MDP(-[0-9]{3})?
+MDS(-[0-9]{3})?
+MEG(-[0-9]{3})?
+MIP(-[0-9]{3})?
+MOP(-[0-9]{3})?
+MRM(-[0-9]{3})?
+
+# --- Mosaic architectural nouns ------------------------------------------
+Acrylic
+Airspace
+Backdrop
+Canon
+Capabilit(y|ies)
+Companion
+Module
+Modules
+Platform
+Provider
+Providers
+Refraction
+Supervisor
+Supervisors
+Tile
+Tiles
+UVLightField
+UVLightFrame
+UVLightStream
+
+# --- Mosaic compound terms ------------------------------------------------
+Adaptive Composition
+Bounded Context
+Build of Record
+Capability Contract
+Capability Manager
+Capability Registry
+Composition Solver
+Core Domain
+Core Platform
+Event Bus
+Event Envelope
+Module Manifest
+MOS Archive
+MOS Cache
+Mosaic CLI
+Mosaic SDK
+Presentation Artefact
+Refresh(able)? Compiled SDUI
+Runtime Kernel
+Trusted Computing Base
+Ubiquitous Language
+Zero Trust
+
+# --- Acronyms and initialisms used in the library -------------------------
+ACK
+ADR
+API
+APIs
+BCP
+CLI
+DLQ
+JWT
+MADR
+MFA
+OIDC
+PII
+RFC
+SDK
+SDKs
+SDUI
+TCB
+UI
+UV
+UX
+
+# --- Documentation and publishing tooling ---------------------------------
+Diátaxis
+lychee
+markdownlint
+Markdown
+Mermaid
+MkDocs
+Vale
+
+# --- Technologies referenced across the specifications --------------------
+BLAKE3
+ClickHouse
+CloudEvents
+Compose
+Docker
+DuckDB
+Ed25519
+Flutter
+Golang
+Goroutines?
+Grafana
+GraphQL
+gRPC
+HTMX
+Jellyfin
+Kafka
+Kubernetes
+Metal
+MinIO
+Mona Sans
+NATS
+OAuth
+OpenTelemetry
+Parquet
+Postgres
+PostgreSQL
+Prometheus
+Protobuf
+React
+Redis
+Sigstore
+Skia
+SQLite
+SwiftUI
+Tailwind
+TypeScript
+Vulkan
+WebAssembly
+WebGPU
+Zstandard
+zstd
