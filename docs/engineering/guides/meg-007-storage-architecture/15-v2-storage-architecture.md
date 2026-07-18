@@ -65,6 +65,8 @@ This supports variable-depth structures without media-specific table trees:
 
 An edition or cut remains a Part, not a second media Node. Anime and its source manga remain separate Works connected by a Relation.
 
+The field-level schema for Node, Part, Relation and Source Binding — including the full media-type mapping, merge, split and orphan semantics, and the PostgreSQL realisation — is defined in [16 — Object Model](16-object-model.md).
+
 ## PostgreSQL State Store
 
 PostgreSQL is the single authoritative database for transactional and queryable Mosaic state. It stores the object graph, access state, source bindings, jobs, domain events, projections and control-plane records in one consistency domain.

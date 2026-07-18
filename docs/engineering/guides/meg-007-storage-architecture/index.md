@@ -105,6 +105,7 @@ This specification defines:
 - Storage taxonomy
 - Persistence boundaries
 - PostgreSQL architecture
+- content object model (Node, Part, Relation)
 - analytical export guidance
 - Blob Storage architecture
 - MOS archive format
