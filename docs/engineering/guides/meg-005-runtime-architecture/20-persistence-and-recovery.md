@@ -8,13 +8,7 @@ Status: Draft
 
 ## Generations and database boundary
 
-A Generation contains the executable and presentation surfaces:
-
-```text
-Platform + Shell + Modules + manifests + assets + signatures
-```
-
-The PostgreSQL database is never inside a Generation. Supervisor activates a complete Generation atomically and can roll back by activating an earlier Generation. Rollback never undoes database mutations or attempts to repair business state.
+A Generation contains the executable and presentation surfaces: the Platform, the Shell, Modules, manifests, assets and signatures. The PostgreSQL database is never inside a Generation, which is what makes activation safe: Supervisor activates a complete Generation atomically and can roll back by activating an earlier Generation, but rollback never undoes database mutations or attempts to repair business state.
 
 ```mermaid
 flowchart LR
@@ -34,7 +28,7 @@ Database migrations have an independent lifecycle. Application upgrades use expa
 3. cut over to the new shape; and
 4. defer destructive drops and renames to a later release after rollback risk has passed.
 
-Where practical, pgroll-style dual schema views provide the closest database analogue to generation activation: old and new shapes coexist over the same tables and cutover is a pointer change. This protects schema cutover, but it does not protect against corrupted data. Every migration MUST trigger a synchronous pre-migration backup before it starts.
+Where practical, pgroll-style dual schema views provide the closest database analogue to generation activation: old and new shapes coexist over the same tables and cutover is a pointer change. This protects schema cutover, but it does not protect against corrupted data. Every migration must trigger a synchronous pre-migration backup before it starts.
 
 ## Backup and export artifacts
 
@@ -46,7 +40,7 @@ Mosaic defines three separate artifacts with separate scopes and triggers:
 | `.mos` portability package | `mos_export` | On demand; selected library, work or container |
 | NFO export | `nfo_export` | On demand; selected local-media scope, excluding remote-only paths |
 
-All three are jobs in the existing jobs table and execute through the worker pool. NFO generation is owned by the Local Media Module’s export capability; Platform provides the job, storage and policy contracts.
+All three are jobs in the existing jobs table and execute through the worker pool, so they share scheduling, retry and observability behaviour. NFO generation is owned by the Local Media Module’s export capability, whereas Platform provides the job, storage and policy contracts.
 
 Backup scheduling and retention are administrator-configurable in the admin UI. Mosaic supplies safe defaults (daily backups with a rolling daily/weekly retention window), while allowing the user to choose the schedule, daily and weekly retention counts, optional monthly retention, storage location and maximum backup volume. The Platform enforces a disk-capacity guard, never deletes an in-use or restore-required backup, and reports when the selected policy cannot be satisfied.
 

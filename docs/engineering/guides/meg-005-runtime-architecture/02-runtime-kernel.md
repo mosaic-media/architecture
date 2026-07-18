@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-The Runtime consists of many independent subsystems.
-
-Examples include:
+The Runtime consists of many independent subsystems, and something must own the coordination between them. Within Mosaic that responsibility belongs to the **Runtime Kernel**. The subsystems it coordinates include:
 
 - Capability Registry
 - Execution Engine
@@ -23,21 +21,7 @@ Examples include:
 - Resource Manager
 - Lifecycle Manager
 
-Something must own the coordination of these subsystems.
-
-Within Mosaic, that responsibility belongs to the **Runtime Kernel**.
-
-The Runtime Kernel is the architectural centre of the Runtime.
-
-It owns:
-
-- lifecycle
-- coordination
-- service registration
-- dependency graph
-- runtime state
-
-It intentionally owns no business behaviour.
+The Kernel is the architectural centre of the Runtime, owning lifecycle, coordination, service registration, the dependency graph and runtime state, and it intentionally owns no business behaviour.
 
 ---
 
@@ -47,21 +31,13 @@ Within Mosaic:
 
 > **The Runtime Kernel coordinates runtime services. It never becomes one.**
 
-The Runtime Kernel should remain extremely small.
-
-It should provide only the minimum capabilities required for the Runtime to function.
-
-Everything else becomes a Runtime Service.
-
-This mirrors microkernel operating system design, where the kernel retains only essential responsibilities while higher-level services are implemented separately.  [Operating Systems](https://operatingsystemsauthority.com/operating-system-kernel)
+The Runtime Kernel should remain extremely small, providing only the minimum capabilities required for the Runtime to function so that everything else becomes a Runtime Service. This mirrors microkernel operating system design, where the kernel retains only essential responsibilities while higher-level services are implemented separately.  [Operating Systems](https://operatingsystemsauthority.com/operating-system-kernel)
 
 ---
 
 # What Is The Runtime Kernel?
 
-The Runtime Kernel is the root object of the Mosaic Runtime.
-
-Conceptually.
+The Runtime Kernel is the root object of the Mosaic Runtime. Conceptually it sits above every other runtime component and owns each of them, whereas those components do not own one another.
 
 ```mermaid
 flowchart TD
@@ -84,15 +60,11 @@ N1 --> N7
 N1 --> N8
 ```
 
-The Kernel owns these components.
-
-Those components do not own one another.
-
 ---
 
 # Why A Kernel Exists
 
-Without a Runtime Kernel:
+Without a Runtime Kernel, every subsystem ends up knowing every other subsystem.
 
 ```mermaid
 flowchart TD
@@ -109,34 +81,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-Eventually:
-
-- dependencies become circular
-- lifecycle becomes inconsistent
-- ownership becomes unclear
-
-Instead.
-
-```mermaid
-flowchart TD
-
-N1["Runtime Kernel"]
-N2["Coordinates"]
-N3["Runtime Services"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Dependencies remain explicit.
-
-Responsibilities remain isolated.
+Eventually dependencies become circular, lifecycle becomes inconsistent and ownership becomes unclear. Where the Kernel coordinates the Runtime Services instead, dependencies remain explicit and responsibilities remain isolated.
 
 ---
 
 # Kernel Responsibilities
 
-The Runtime Kernel owns:
+The Kernel's own responsibilities are deliberately few. All of them concern the Runtime rather than the business. The Runtime Kernel owns:
 
 - runtime bootstrap
 - service registration
@@ -146,7 +97,7 @@ The Runtime Kernel owns:
 - service discovery
 - shutdown coordination
 
-The Runtime Kernel intentionally does **not** own:
+Just as deliberately, the Runtime Kernel does **not** own the following, because each belongs to a dedicated Runtime Service:
 
 - scheduling
 - worker execution
@@ -154,61 +105,23 @@ The Runtime Kernel intentionally does **not** own:
 - business behaviour
 - persistence
 
-These belong to dedicated Runtime Services.
-
 ---
 
 # Runtime Composition
 
-Every Runtime Service is composed through the Kernel.
-
-```mermaid
-flowchart TD
-
-N1["Bootstrap"]
-N2["Runtime Kernel"]
-N3["Runtime Services"]
-N4["Capabilities"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The Kernel becomes the root of the Runtime object graph.
+Every Runtime Service is composed through the Kernel during bootstrap, and the capabilities those services support are composed in turn. The Kernel is therefore the root of the Runtime object graph.
 
 ---
 
 # Runtime Registry
 
-The Kernel maintains a registry of Runtime Services.
-
-Conceptually.
-
-```mermaid
-flowchart TD
-
-N1["Runtime Kernel"]
-N2["Register Scheduler"]
-N3["Register Worker Manager"]
-N4["Register Resource Manager"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-This registry exists solely for Runtime coordination.
-
-It is **not** a Service Locator.
-
-Runtime Services should still receive explicit dependencies through construction.
+The Kernel maintains a registry of Runtime Services, registering the Scheduler, the Worker Manager, the Resource Manager and every other service that participates in the Runtime. That registry exists solely for Runtime coordination and is **not** a Service Locator, so Runtime Services should still receive explicit dependencies through construction.
 
 ---
 
 # Lifecycle Ownership
 
-The Runtime Kernel owns lifecycle transitions.
+The Runtime Kernel owns lifecycle transitions. Every Runtime Service participates in the sequence below and none should transition independently, because lifecycle ownership remains centralised.
 
 ```mermaid
 flowchart TD
@@ -225,19 +138,11 @@ N3 --> N4
 N4 --> N5
 ```
 
-Every Runtime Service participates.
-
-No Runtime Service should transition independently.
-
-Lifecycle ownership remains centralised.
-
 ---
 
 # Runtime State
 
-The Kernel owns operational state.
-
-Examples include:
+The Kernel owns operational state, which describes the Runtime and nothing else. Business state remains entirely outside the Runtime. The Kernel therefore tracks only:
 
 - runtime status
 - registered services
@@ -245,143 +150,54 @@ Examples include:
 - startup progress
 - shutdown progress
 
-Business state remains entirely outside the Runtime.
-
 ---
 
 # Runtime Contracts
 
-Runtime Services interact with the Kernel through contracts.
-
-Examples include:
-
-```
-
-LifecycleService
-```
-
-```
-
-CapabilityRegistry
-```
-
-```
-
-ExecutionEngine
-```
-
-Services should never depend upon Kernel implementation details.
-
-Only Kernel contracts.
+Runtime Services interact with the Kernel through contracts such as `LifecycleService`, `CapabilityRegistry` and `ExecutionEngine`. Services should never depend upon Kernel implementation details, only upon Kernel contracts.
 
 ---
 
 # Kernel Simplicity
 
-The Runtime Kernel should remain intentionally small.
-
-A useful question is:
+The Runtime Kernel should remain intentionally small, and a useful question when weighing a new responsibility is:
 
 > **Could this responsibility become its own Runtime Service?**
 
-If yes:
-
-It probably should.
-
-The Kernel should coordinate.
-
-Not accumulate functionality.
+If the answer is yes, then it probably should, because the Kernel exists to coordinate rather than to accumulate functionality.
 
 ---
 
 # Runtime Services
 
-The Runtime should resemble:
-
-```mermaid
-flowchart TD
-
-N1["Kernel"]
-N2["Small Services"]
-
-N1 --> N2
-```
-
-Not:
-
-```mermaid
-flowchart TD
-
-N1["Kernel"]
-N2["Large Internal Modules"]
-
-N1 --> N2
-```
-
-Small Runtime Services provide:
+The Runtime should resemble a Kernel surrounded by small services rather than a Kernel containing large internal modules. Large kernels become difficult to evolve. Small Runtime Services instead provide:
 
 - replaceability
 - testability
 - isolation
 - observability
 
-Large kernels become difficult to evolve.
-
 ---
 
 # Capability Independence
 
-Capabilities should never communicate directly with the Kernel.
-
-Instead.
-
-```mermaid
-flowchart TD
-
-N1["Capability"]
-N2["Runtime Service"]
-N3["Kernel"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Kernel remains an internal Runtime concern.
-
-Capabilities should interact only with published Runtime contracts.
+Capabilities should never communicate directly with the Kernel; a capability talks to a Runtime Service, and that service talks to the Kernel. The Kernel therefore remains an internal Runtime concern, and capabilities interact only with published Runtime contracts.
 
 ---
 
 # Fault Isolation
 
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Failure"]
-
-N1 --> N2
-```
-
-The Runtime Kernel should:
+Suppose the Scheduler fails. The Scheduler should not attempt to restart itself, because operational coordination belongs to the Kernel. The Runtime Kernel should instead:
 
 - detect failure
 - report failure
 - coordinate recovery
 
-The Scheduler should not attempt to restart itself.
-
-Operational coordination belongs to the Kernel.
-
 ---
 
 # Service Independence
 
-Runtime Services should remain unaware of one another wherever practical.
-
-Poor.
+Runtime Services should remain unaware of one another wherever practical. The poor arrangement chains them together directly.
 
 ```mermaid
 flowchart TD
@@ -396,45 +212,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Kernel"]
-N3["Worker Manager"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Kernel coordinates communication.
-
-Runtime Services remain independent.
+The preferred arrangement has the Scheduler reach the Worker Manager through the Kernel instead. The Kernel coordinates communication, so Runtime Services remain independent.
 
 ---
 
 # Runtime Growth
 
-As Mosaic evolves, new Runtime Services should integrate naturally.
-
-Example.
-
-Initially.
-
-```mermaid
-flowchart TD
-
-N1["Kernel"]
-N2["Workers"]
-N3["Scheduler"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Later.
+As Mosaic evolves, new Runtime Services should integrate naturally. Initially the Runtime is small, carrying little beyond the Kernel, Workers and a Scheduler. Later it carries considerably more, and the Kernel should grow through composition rather than through increasing internal complexity.
 
 ```mermaid
 flowchart TD
@@ -453,15 +237,11 @@ N4 --> N5
 N5 --> N6
 ```
 
-The Kernel should grow through composition.
-
-Not through increasing internal complexity.
-
 ---
 
 # Startup
 
-During startup.
+During startup the Kernel owns the ordering. That order should never be implicit, so the Kernel drives the sequence explicitly.
 
 ```mermaid
 flowchart TD
@@ -480,15 +260,11 @@ N4 --> N5
 N5 --> N6
 ```
 
-The Kernel owns this sequence.
-
-Startup order should never be implicit.
-
 ---
 
 # Shutdown
 
-Likewise.
+Shutdown follows the same principle. Every Runtime Service follows the same lifecycle, and the Kernel coordinates it.
 
 ```mermaid
 flowchart TD
@@ -507,27 +283,17 @@ N4 --> N5
 N5 --> N6
 ```
 
-Every Runtime Service follows the same lifecycle.
-
-The Kernel coordinates.
-
 ---
 
 # Testing
 
-The Runtime Kernel should be testable independently.
-
-Typical tests verify:
+The Runtime Kernel should be testable independently. Business capabilities should not be required, because the Kernel exists independently of the business. Typical tests verify:
 
 - lifecycle ordering
 - service registration
 - dependency graph
 - startup
 - shutdown
-
-Business capabilities should not be required.
-
-The Kernel exists independently of the business.
 
 ---
 
@@ -561,15 +327,7 @@ Runtime Services depending directly upon one another.
 
 ## Capability Awareness
 
-The Kernel understanding:
-
-- playback
-- metadata
-- collections
-
-The Kernel coordinates execution.
-
-It never understands the business.
+The Kernel understanding playback, metadata or collections. The Kernel coordinates execution; it never understands the business.
 
 ---
 
@@ -577,14 +335,14 @@ It never understands the business.
 
 Within Mosaic:
 
-- The Runtime Kernel MUST remain small.
-- The Runtime Kernel MUST own lifecycle coordination.
-- Runtime Services MUST remain independently replaceable.
-- The Runtime Kernel MUST NOT contain business behaviour.
-- Runtime Services SHOULD communicate through Kernel contracts.
-- Startup and shutdown MUST be coordinated by the Kernel.
-- Runtime growth SHOULD occur through composition.
-- The Runtime Kernel SHOULD resemble a microkernel rather than a monolith.
+- The Runtime Kernel must remain small.
+- The Runtime Kernel must own lifecycle coordination.
+- Runtime Services must remain independently replaceable.
+- The Runtime Kernel must not contain business behaviour.
+- Runtime Services should communicate through Kernel contracts.
+- Startup and shutdown must be coordinated by the Kernel.
+- Runtime growth should occur through composition.
+- The Runtime Kernel should resemble a microkernel rather than a monolith.
 
 ---
 
@@ -604,9 +362,7 @@ The next chapter introduces the **Capability Registry**, the subsystem responsib
 
 # Summary
 
-The Runtime Kernel is the smallest yet most important component within the Runtime.
-
-It owns:
+The Runtime Kernel is the smallest yet most important component within the Runtime. It owns:
 
 - coordination
 - lifecycle

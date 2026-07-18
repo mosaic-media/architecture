@@ -12,23 +12,7 @@ Status: Draft
 
 # Purpose
 
-The Mosaic Runtime continuously maintains information describing its own operational condition.
-
-Examples include:
-
-- loaded capabilities
-- worker utilisation
-- scheduler status
-- execution queues
-- dependency graph
-- health
-- lifecycle
-
-This information is essential for operating the platform.
-
-It is **not** business information.
-
-This document defines the Runtime State maintained by the Mosaic Runtime and establishes the boundary between operational state and business state.
+The Mosaic Runtime continuously maintains information describing its own operational condition, including loaded capabilities, worker utilisation, scheduler status, execution queues, the dependency graph, health and lifecycle. This information is essential for operating the platform, but it is **not** business information. This document defines the Runtime State maintained by the Mosaic Runtime and establishes the boundary between operational state and business state.
 
 ---
 
@@ -38,38 +22,13 @@ Within Mosaic:
 
 > **The Runtime knows how the platform is operating. Capabilities know what the platform is doing.**
 
-The Runtime should never own:
-
-- playback progress
-- library contents
-- metadata
-- recommendations
-
-Capabilities should never own:
-
-- worker state
-- scheduler state
-- execution queues
-- lifecycle state
-
-Each model remains independent.
+The Runtime should therefore never own playback progress, library contents, metadata or recommendations, and capabilities should never own worker state, scheduler state, execution queues or lifecycle state. Each model remains independent.
 
 ---
 
 # What Is Runtime State?
 
-Runtime State is the operational state required for the Runtime to function.
-
-Examples include:
-
-- service lifecycle
-- worker allocation
-- active executions
-- queue depth
-- resource utilisation
-- capability registration
-
-Runtime State describes:
+Runtime State is the operational state required for the Runtime to function, such as service lifecycle, worker allocation, active executions, queue depth, resource utilisation and capability registration. It describes:
 
 > **The execution environment.**
 
@@ -81,200 +40,45 @@ It does not describe:
 
 # Runtime State Categories
 
-Runtime State naturally separates into several categories.
-
-```mermaid
-flowchart TD
-
-N1["Lifecycle"]
-N2["Execution"]
-N3["Resources"]
-N4["Capabilities"]
-N5["Health"]
-N6["Observability"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-```
-
-Each category represents one operational concern.
-
-The Runtime should avoid mixing unrelated state.
+Runtime State naturally separates into several categories — lifecycle, execution, resources, capabilities, health and observability — and each category represents one operational concern. The Runtime should avoid mixing unrelated state, because a category that absorbs a neighbouring concern loses the single owner that makes it operable.
 
 ---
 
 # Lifecycle State
 
-Lifecycle State records where Runtime components currently exist within their lifecycle.
-
-Examples include:
-
-```
-
-Created
-```
-
-```
-
-Ready
-```
-
-```
-
-Running
-```
-
-```
-
-Stopping
-```
-
-```
-
-Disposed
-```
-
-This information belongs exclusively to the Runtime.
-
-Capabilities participate.
-
-They do not own it.
+Lifecycle State records where Runtime components currently exist within their lifecycle, moving through Created, Ready, Running, Stopping and Disposed. This information belongs exclusively to the Runtime; capabilities participate in the lifecycle but they do not own it.
 
 ---
 
 # Execution State
 
-Execution State describes currently executing work.
-
-Examples include:
-
-- active Work Units
-- queued work
-- running workers
-- execution latency
-- execution completion
-
-Execution State exists only while work is executing.
-
-It should never become business state.
+Execution State describes currently executing work: active Work Units, queued work, running workers, execution latency and execution completion. It exists only while work is executing, which means it should never become business state.
 
 ---
 
 # Capability State
 
-The Runtime maintains capability metadata.
+The Runtime maintains capability metadata — whether a capability is registered, enabled, disabled, healthy or failed, and which version it is. This state describes Capability Availability rather than Capability Business State.
 
-Examples include:
-
-- registered
-- enabled
-- disabled
-- healthy
-- failed
-- version
-
-This state describes:
-
-```
-
-Capability Availability
-```
-
-Not:
-
-```
-
-Capability Business State
-```
-
-For example.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Healthy"]
-
-N1 --> N2
-```
-
-is Runtime State.
-
-```mermaid
-flowchart TD
-
-N1["Playback Progress"]
-N2["37 Minutes"]
-
-N1 --> N2
-```
-
-is business state.
-
-The distinction should remain absolute.
+The difference is easiest to see by example. Recording that Playback is Healthy is Runtime State, whereas recording that Playback Progress is 37 Minutes is business state. The distinction should remain absolute.
 
 ---
 
 # Resource State
 
-Resource State describes Runtime resource usage.
-
-Examples include:
-
-- worker pool utilisation
-- memory allocation
-- queue capacity
-- connection pools
-- scheduler capacity
-
-The Runtime owns these resources.
-
-Business capabilities simply consume them.
+Resource State describes Runtime resource usage: worker pool utilisation, memory allocation, queue capacity, connection pools and scheduler capacity. The Runtime owns these resources and business capabilities simply consume them.
 
 ---
 
 # Dependency State
 
-The Runtime maintains the dependency graph.
-
-Examples include:
-
-- dependency resolution
-- blocked capabilities
-- startup ordering
-- shutdown ordering
-
-This state enables deterministic Runtime behaviour.
-
-It has no business meaning.
+The Runtime maintains the dependency graph, covering dependency resolution, blocked capabilities, startup ordering and shutdown ordering. This state enables deterministic Runtime behaviour, but it has no business meaning.
 
 ---
 
 # Health State
 
-Health represents operational readiness.
-
-Examples include:
-
-```
-
-Healthy
-```
-
-```
-
-Degraded
-```
-
-```
-
-Unavailable
-```
-
-Health answers:
+Health represents operational readiness, and a component is either Healthy, Degraded or Unavailable. Health answers:
 
 > **Can this component currently perform its operational responsibilities?**
 
@@ -282,171 +86,50 @@ It does not answer:
 
 > **Is the business correct?**
 
-Those are different questions.
+Those are different questions, and conflating them makes operational signals unreadable.
 
 ---
 
 # Observability State
 
-The Runtime also maintains operational telemetry.
-
-Examples include:
-
-- traces
-- metrics
-- structured logs
-- execution history
-- queue history
-
-Observability supports operators.
-
-It should never influence business behaviour.
+The Runtime also maintains operational telemetry: traces, metrics, structured logs, execution history and queue history. Observability supports operators, so it should never influence business behaviour.
 
 ---
 
 # Runtime State Ownership
 
-Every category of Runtime State has exactly one owner.
+Every category of Runtime State has exactly one owner:
 
-Examples.
+- Worker State belongs to the Worker Manager.
+- Schedule State belongs to the Scheduler.
+- Execution State belongs to the Execution Engine.
+- Capability State belongs to the Capability Registry.
 
-```mermaid
-flowchart TD
-
-N1["Worker Manager"]
-N2["Worker State"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Schedule State"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Execution Engine"]
-N2["Execution State"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Capability Registry"]
-N2["Capability State"]
-
-N1 --> N2
-```
-
-Shared ownership is prohibited.
-
-Ownership determines:
-
-- mutation
-- persistence
-- observability
+Shared ownership is prohibited, because ownership determines mutation, persistence and observability, and none of those can be decided consistently by two components at once.
 
 ---
 
 # Runtime State Is Ephemeral
 
-Most Runtime State is temporary.
-
-Examples include:
-
-```
-
-Queue Depth
-```
-
-```
-
-Worker Allocation
-```
-
-```
-
-Active Execution
-```
-
-If the Runtime restarts:
-
-This state naturally disappears.
-
-Only durable Runtime State should survive restart.
+Most Runtime State is temporary — Queue Depth, Worker Allocation and Active Execution all describe a moment rather than a fact — so if the Runtime restarts this state naturally disappears. Only durable Runtime State should survive restart.
 
 ---
 
 # Durable Runtime State
 
-Some Runtime State SHOULD survive restart.
-
-Examples include:
-
-- recurring schedules
-- capability configuration
-- dependency metadata
-- runtime configuration
-
-This information allows the Runtime to resume normal operation after restart.
-
-Durability should remain deliberate.
-
-Not automatic.
+Some Runtime State should survive restart, notably recurring schedules, capability configuration, dependency metadata and runtime configuration. This information allows the Runtime to resume normal operation after restart. Durability should remain deliberate rather than automatic.
 
 ---
 
 # Business State
 
-Business State belongs exclusively to capabilities.
-
-Examples include:
-
-```
-
-Playback Progress
-```
-
-```
-
-Metadata
-```
-
-```
-
-Library Contents
-```
-
-```
-
-Collection Membership
-```
-
-The Runtime should never:
-
-- mutate
-- persist
-- interpret
-
-business state.
-
-It merely provides the environment in which capabilities manage it.
+Business State belongs exclusively to capabilities, and it includes Playback Progress, Metadata, Library Contents and Collection Membership. The Runtime should never mutate, persist or interpret business state; it merely provides the environment in which capabilities manage it.
 
 ---
 
 # Runtime State Transitions
 
-Runtime State changes frequently.
-
-Example.
+Runtime State changes frequently. A worker, for example, cycles continuously between availability and work.
 
 ```mermaid
 flowchart TD
@@ -463,49 +146,13 @@ N3 --> N4
 N4 --> N5
 ```
 
-These transitions should remain:
-
-- deterministic
-- observable
-- inexpensive
-
-Operational correctness depends upon them.
+These transitions should remain deterministic, observable and inexpensive, because operational correctness depends upon them.
 
 ---
 
 # Runtime Snapshots
 
-The Runtime MAY expose snapshots of operational state.
-
-Examples include:
-
-```mermaid
-flowchart TD
-
-N1["Runtime Snapshot"]
-N2["Capabilities"]
-N3["Workers"]
-N4["Queues"]
-N5["Resources"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
-
-Snapshots assist:
-
-- diagnostics
-- support
-- monitoring
-- debugging
-
-Snapshots should remain read-only.
-
-They describe the Runtime.
-
-They do not control it.
+The Runtime may expose snapshots of operational state, describing Capabilities, Workers, Queues and Resources as a single Runtime Snapshot. Snapshots assist diagnostics, support, monitoring and debugging, and they should remain read-only: they describe the Runtime rather than control it.
 
 ---
 
@@ -519,36 +166,19 @@ Runtime State describes:
 
 > **How the Runtime is currently operating.**
 
-These concepts should remain separate.
-
-Configuration changes are infrequent.
-
-Runtime State changes continuously.
+These concepts should remain separate because they change on entirely different timescales — configuration changes are infrequent, whereas Runtime State changes continuously.
 
 ---
 
 # Runtime State Is Not Cache
 
-Likewise.
-
-Runtime State is not:
-
-```
-
-Business Cache
-```
-
-Business caching belongs to capabilities.
-
-Runtime State exists solely to support Runtime operation.
-
-The two should never be conflated.
+Likewise, Runtime State is not a Business Cache. Business caching belongs to capabilities, whereas Runtime State exists solely to support Runtime operation, so the two should never be conflated.
 
 ---
 
 # Runtime State Recovery
 
-Following restart:
+Following restart, the Runtime rebuilds itself from what it deliberately kept.
 
 ```mermaid
 flowchart TD
@@ -563,17 +193,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Temporary Runtime State should not be restored unnecessarily.
-
-Only operationally valuable state should persist.
+Temporary Runtime State should not be restored unnecessarily, because only operationally valuable state should persist.
 
 ---
 
 # Observability
 
-Runtime State SHOULD be observable.
-
-Operators should be able to answer:
+Runtime State should be observable, which means operators should be able to answer:
 
 - What is running?
 - What is waiting?
@@ -591,14 +217,7 @@ The following practices are prohibited.
 
 ## Business State Inside Runtime
 
-```mermaid
-flowchart TD
-
-N1["Playback Progress"]
-N2["Runtime"]
-
-N1 --> N2
-```
+Holding Playback Progress inside the Runtime.
 
 ---
 
@@ -626,9 +245,7 @@ Persisting transient execution information unnecessarily.
 
 ## Runtime Decisions Using Business State
 
-The Runtime should remain operationally focused.
-
-Business decisions belong to capabilities.
+The Runtime should remain operationally focused, because business decisions belong to capabilities.
 
 ---
 
@@ -642,15 +259,15 @@ Capabilities depending upon queue depth or worker allocation.
 
 Within Mosaic:
 
-- Runtime State MUST remain operational.
-- Business State MUST remain inside capabilities.
-- Every Runtime State category MUST have one owner.
-- Runtime State SHOULD remain observable.
-- Temporary Runtime State SHOULD remain ephemeral.
-- Durable Runtime State SHOULD be explicitly identified.
-- Runtime State MUST NOT leak into the Domain.
-- Configuration MUST remain separate from Runtime State.
-- Runtime State SHOULD describe execution, not business.
+- Runtime State must remain operational.
+- Business State must remain inside capabilities.
+- Every Runtime State category must have one owner.
+- Runtime State should remain observable.
+- Temporary Runtime State should remain ephemeral.
+- Durable Runtime State should be explicitly identified.
+- Runtime State must not leak into the Domain.
+- Configuration must remain separate from Runtime State.
+- Runtime State should describe execution, not business.
 
 ---
 
@@ -670,24 +287,6 @@ The next chapter provides practical Runtime Architecture guidance for contributo
 
 # Summary
 
-The Runtime maintains one model.
+The Runtime maintains one model and capabilities maintain another. The Runtime's model describes execution, resources, health and lifecycle, whereas capabilities describe business, behaviour, users and media.
 
-Capabilities maintain another.
-
-The Runtime's model describes:
-
-- execution
-- resources
-- health
-- lifecycle
-
-Capabilities describe:
-
-- business
-- behaviour
-- users
-- media
-
-Maintaining this separation is one of the most important architectural decisions within Mosaic.
-
-It allows the Runtime to evolve operationally without ever becoming responsible for the business itself.  [Wikipedia](https://en.wikipedia.org/wiki/Architectural_state)
+Maintaining this separation is one of the most important architectural decisions within Mosaic, because it allows the Runtime to evolve operationally without ever becoming responsible for the business itself.  [Wikipedia](https://en.wikipedia.org/wiki/Architectural_state)

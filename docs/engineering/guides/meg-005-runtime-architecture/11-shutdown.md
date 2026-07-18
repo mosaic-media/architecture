@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-Eventually every Runtime stops.
-
-Reasons include:
+Eventually every Runtime stops. Reasons include:
 
 - deployment
 - maintenance
@@ -24,9 +22,7 @@ Reasons include:
 - scaling
 - operator request
 
-A controlled shutdown is one of the defining characteristics of a production-grade Runtime.
-
-Within Mosaic, shutdown should be:
+Most of these are routine, which is precisely why stopping cannot be treated as an exceptional event. A controlled shutdown is one of the defining characteristics of a production-grade Runtime, so within Mosaic shutdown should be:
 
 - deterministic
 - observable
@@ -43,15 +39,13 @@ Within Mosaic:
 
 > **The Runtime should stop accepting new work before it stops existing work.**
 
-Shutdown should never interrupt business behaviour unnecessarily.
-
-Instead, the Runtime should transition through well-defined phases until every component has safely completed its responsibilities.
+Shutdown should never interrupt business behaviour unnecessarily. Instead, the Runtime should transition through well-defined phases until every component has safely completed its responsibilities.
 
 ---
 
 # Shutdown Goals
 
-A successful shutdown should ensure:
+Shutdown is judged by what survives it rather than by how quickly it finishes. A successful shutdown should ensure:
 
 - no new work admitted
 - active work completes where practical
@@ -60,13 +54,13 @@ A successful shutdown should ensure:
 - capabilities stopped safely
 - observability maintained
 
-No Runtime component should disappear without first participating in the shutdown lifecycle.
+No Runtime component should disappear without first participating in the shutdown lifecycle, because a component that vanishes silently takes its resources and its in-flight work with it.
 
 ---
 
 # Shutdown Sequence
 
-Every Runtime follows the same shutdown sequence.
+Every Runtime follows the same shutdown sequence, in which each stage owns exactly one responsibility. The order is the reverse of startup, so what was built last is dismantled first.
 
 ```mermaid
 flowchart TD
@@ -89,17 +83,13 @@ N6 --> N7
 N7 --> N8
 ```
 
-Each stage owns exactly one responsibility.
-
-Shutdown order is the reverse of startup.
-
-Graceful shutdown in distributed systems commonly follows this pattern: stop accepting new work, drain in-flight work, release resources and terminate cleanly.  [GeeksforGeeks](https://www.geeksforgeeks.org/system-design/graceful-shutdown-in-distributed-systems-and-microservices/)
+This shape is the conventional one. Graceful shutdown in distributed systems commonly follows the same pattern: stop accepting new work, drain in-flight work, release resources and terminate cleanly.  [GeeksforGeeks](https://www.geeksforgeeks.org/system-design/graceful-shutdown-in-distributed-systems-and-microservices/)
 
 ---
 
 # Stage 1 — Shutdown Requested
 
-Shutdown begins when the Runtime receives:
+Shutdown is initiated from outside the Runtime rather than decided within it. It begins when the Runtime receives:
 
 - SIGTERM
 - SIGINT
@@ -107,96 +97,49 @@ Shutdown begins when the Runtime receives:
 - orchestrator request
 - maintenance request
 
-The Runtime immediately transitions into:
-
-```
-
-Stopping
-```
-
-The Runtime Kernel now owns shutdown coordination.
+The Runtime immediately transitions into the Stopping state, and the Runtime Kernel now owns shutdown coordination. No component begins stopping on its own initiative.
 
 ---
 
 # Stage 2 — Cooldown
 
-The Runtime enters cooldown.
-
-Cooldown means:
+Cooldown is the first stage that changes observable behaviour, and it changes exactly one thing:
 
 > **No new externally initiated work is accepted.**
 
-Examples include:
+Admission closes at every entry point at once. Examples include:
 
 - HTTP stops accepting requests
 - schedulers stop creating work
 - event consumers stop consuming
 - module entry points close
 
-Existing work continues.
-
-New work does not begin.
-
-Cooldown is distinct from draining because it closes admission before attempting to complete in-flight work.  [Reddit](https://www.reddit.com/r/node/comments/1s4x8gp/application_lifecycle_is_one_of_the_most_ignored/)
+Existing work continues, but new work does not begin. Cooldown is therefore distinct from draining, because it closes admission before anything attempts to complete work already in flight.  [Reddit](https://www.reddit.com/r/node/comments/1s4x8gp/application_lifecycle_is_one_of_the_most_ignored/)
 
 ---
 
 # Stage 3 — Capability Drain
 
-Capabilities finish existing business work.
-
-Examples include:
+With admission closed, capabilities finish the existing business work they were already carrying. Examples include:
 
 - playback updates
 - metadata imports
 - library scans
 - recommendation generation
 
-Capabilities should receive:
-
-```
-
-Cancellation Requested
-```
-
-They decide:
-
-How to leave business state consistent.
-
-The Runtime never decides business correctness.
+Capabilities should receive a cancellation requested notification, and they alone decide how to leave business state consistent. The Runtime never decides business correctness.
 
 ---
 
 # Stage 4 — Worker Drain
 
-Workers continue executing remaining Work Units.
-
-```mermaid
-flowchart TD
-
-N1["Worker Pool"]
-N2["Running Tasks"]
-N3["Complete"]
-N4["Idle"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Workers should not begin executing newly admitted work.
-
-Only already accepted work should continue.
+Workers continue executing remaining Work Units until their running tasks complete and the worker pool becomes idle. They should not begin executing newly admitted work, because only work already accepted should continue.
 
 ---
 
 # Stage 5 — Runtime Services
 
-Once workers finish:
-
-Runtime Services begin stopping.
-
-Typical order.
+Nothing may stop while business work is still running, so this stage cannot begin until the workers have drained. Runtime Services then begin stopping in a typical order.
 
 ```mermaid
 flowchart TD
@@ -211,17 +154,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Services stop according to the reverse dependency graph.
-
-No service should outlive the services upon which it depends.
+Services stop according to the reverse dependency graph, so no service should outlive the services upon which it depends. The Scheduler goes first because everything downstream of it would otherwise keep receiving work.
 
 ---
 
 # Stage 6 — Resource Release
 
-Resources are released.
-
-Examples include:
+Resources are released once the services holding them have stopped. Examples include:
 
 - database pools
 - blob storage
@@ -230,123 +169,41 @@ Examples include:
 - worker pools
 - network sockets
 
-Every Runtime Service releases only the resources it owns.
-
-Ownership determines cleanup responsibility.
+Every Runtime Service releases only the resources it owns, because ownership determines cleanup responsibility.
 
 ---
 
 # Stage 7 — Kernel Shutdown
 
-Once every Runtime Service has terminated:
-
-```mermaid
-flowchart TD
-
-N1["Runtime Kernel"]
-N2["Shutdown Complete"]
-
-N1 --> N2
-```
-
-The Kernel records final Runtime state before process termination.
-
-At this point:
-
-The Runtime no longer exists.
+Once every Runtime Service has terminated, the Runtime Kernel reaches shutdown complete and records final Runtime state before process termination. At this point the Runtime no longer exists, and everything that needed to survive it has already been persisted.
 
 ---
 
 # Admission Control
 
-The Runtime should distinguish between:
-
-```
-
-External Work
-```
-
-and
-
-```
-
-Internal Continuations
-```
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["PlaybackCompleted"]
-N2["RecommendationGenerated"]
-
-N1 --> N2
-```
-
-This follow-up work may still execute during draining because it belongs to an already admitted workflow.
-
-New user requests should not.
-
-This distinction prevents partially completed business workflows while still allowing shutdown to complete predictably.  [Reddit](https://www.reddit.com/r/node/comments/1s4x8gp/application_lifecycle_is_one_of_the_most_ignored/)
+The Runtime should distinguish between external work and internal continuations. A `RecommendationGenerated` follow-up raised by a `PlaybackCompleted` event, for example, may still execute during draining because it belongs to an already admitted workflow, whereas new user requests should not. This distinction prevents partially completed business workflows while still allowing shutdown to complete predictably.  [Reddit](https://www.reddit.com/r/node/comments/1s4x8gp/application_lifecycle_is_one_of_the_most_ignored/)
 
 ---
 
 # Shutdown Deadlines
 
-Graceful shutdown SHOULD remain bounded.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Shutdown"]
-N2["60 Second Budget"]
-N3["Graceful Completion"]
-N4["Forced Termination"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The timeout should remain configurable.
-
-Infinite shutdown is prohibited.
+Graceful shutdown should remain bounded, because draining that waits indefinitely is indistinguishable from a hang. Shutdown runs against a budget — 60 seconds, for example — within which graceful completion is attempted, and forced termination follows if that budget expires. The timeout should remain configurable, but infinite shutdown is prohibited.
 
 ---
 
 # Forced Shutdown
 
-If graceful shutdown cannot complete within the configured deadline:
-
-```mermaid
-flowchart TD
-
-N1["Timeout"]
-N2["Forced Stop"]
-
-N1 --> N2
-```
-
-Forced shutdown should remain exceptional.
-
-The Runtime should make every reasonable attempt to:
+If graceful shutdown cannot complete within the configured deadline, the timeout triggers a forced stop. Forced shutdown should remain exceptional, and before termination the Runtime should make every reasonable attempt to:
 
 - finish work
 - persist state
 - release resources
 
-before termination.
-
 ---
 
 # Capability Behaviour
 
-Capabilities should respond to shutdown through lifecycle notifications.
-
-They should never:
+Capabilities should respond to shutdown through lifecycle notifications rather than by acting on the Runtime themselves. They should never:
 
 - intercept process signals
 - stop Runtime Services
@@ -358,65 +215,52 @@ Lifecycle remains owned by the Runtime Kernel.
 
 # Scheduler Shutdown
 
-The Scheduler should:
+The Scheduler stops first, so its obligation is to close the source of new work without losing what has already been scheduled. It should:
 
 - stop accepting new schedules
 - persist recurring schedules
 - preserve delayed work
 - stop dispatching executable work
 
-Scheduled work should survive controlled restarts where appropriate.
+Scheduled work should survive controlled restarts where appropriate, which is why persistence happens as part of shutdown rather than being left to chance.
 
 ---
 
 # Execution Engine Shutdown
 
-The Execution Engine should:
+The Execution Engine stops admitting before it stops tracking, since work already accepted still needs somewhere to report to. It should:
 
 - reject new Work Units
 - continue tracking active work
 - report completion
 - stop after all active execution ends
 
-Execution should conclude before worker disposal begins.
+Execution should conclude before worker disposal begins, so the engine outlives the work it admitted.
 
 ---
 
 # Worker Manager Shutdown
 
-The Worker Manager should:
+The Worker Manager holds the last resources still performing business work, which makes it the last thing that may be taken away. It should:
 
 - stop allocating workers
 - wait for active workers
 - retire idle workers
 - dispose worker pools
 
-Worker disposal should occur only after execution completes.
+Worker disposal should occur only after execution completes, because a disposed pool cannot finish what the Execution Engine is still tracking.
 
 ---
 
 # Capability Registry Shutdown
 
-The Capability Registry should remain available until every capability has completed shutdown.
-
-Only then should:
-
-```mermaid
-flowchart TD
-
-N1["Capability Registry"]
-N2["Disposed"]
-
-N1 --> N2
-```
-
-Dependency information may still be required during shutdown coordination.
+The Capability Registry should remain available until every capability has completed shutdown, and only then should it be disposed. Dependency information may still be required while shutdown is being coordinated.
 
 ---
 
 # Restart Recovery
 
-Following restart:
+Shutdown is only half of the lifecycle, and the other half assumes nothing about how the previous one ended. Following restart, the Runtime recovers through a defined sequence.
 
 ```mermaid
 flowchart TD
@@ -431,39 +275,20 @@ N2 --> N3
 N3 --> N4
 ```
 
-Recovery should depend upon persisted Runtime state.
-
-Not on graceful shutdown always succeeding.
+Recovery should depend upon persisted Runtime state rather than upon graceful shutdown always succeeding, because the shutdowns most in need of recovery are the ones that did not complete.
 
 ---
 
 # Observability
 
-Shutdown SHOULD produce Runtime Events.
+Shutdown should produce Runtime Events throughout, so that a drain in progress is distinguishable from a drain that is stuck. Examples include:
 
-Examples include:
+- RuntimeStopping
+- CooldownStarted
+- WorkerDraining
+- RuntimeStopped
 
-```
-
-RuntimeStopping
-```
-
-```
-
-CooldownStarted
-```
-
-```
-
-WorkerDraining
-```
-
-```
-
-RuntimeStopped
-```
-
-Operators should always understand:
+From these, operators should always understand:
 
 - current shutdown phase
 - remaining work
@@ -476,9 +301,7 @@ Shutdown should never appear silent.
 
 # Health
 
-During shutdown:
-
-Health should transition:
+Health reporting changes before behaviour does, so that traffic is withdrawn while the Runtime can still serve it. During shutdown, health should transition through a defined progression.
 
 ```mermaid
 flowchart TD
@@ -493,17 +316,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-The Runtime should become unavailable before terminating.
-
-This prevents additional work from entering during shutdown.
+The Runtime should become unavailable before terminating, which prevents additional work from entering during shutdown.
 
 ---
 
 # Testing
 
-Shutdown SHOULD be tested explicitly.
-
-Typical tests verify:
+Shutdown correctness is as important as startup correctness, so shutdown should be tested explicitly. Typical tests verify:
 
 - cooldown
 - draining
@@ -512,7 +331,7 @@ Typical tests verify:
 - resource release
 - restart recovery
 
-Shutdown correctness is as important as startup correctness.
+Each of these is a path that only executes when the Runtime stops, which is exactly why it goes unexercised otherwise.
 
 ---
 
@@ -528,37 +347,37 @@ Calling:
 os.Exit(...)
 ```
 
-without Runtime shutdown.
+without Runtime shutdown. Nothing drains, and nothing releases what it holds.
 
 ---
 
 ## New Work During Shutdown
 
-Continuing to admit new Runtime work.
+Continuing to admit new Runtime work. Cooldown exists to close admission, and admitting work afterwards defeats every stage that follows.
 
 ---
 
 ## Worker Termination
 
-Killing workers before active work completes.
+Killing workers before active work completes. Existing work should complete where practical, and a terminated worker abandons it mid-flight.
 
 ---
 
 ## Hidden Cleanup
 
-Background goroutines performing undisclosed shutdown behaviour.
+Background goroutines performing undisclosed shutdown behaviour. Cleanup that the Kernel does not coordinate cannot be ordered or observed.
 
 ---
 
 ## Runtime-Owned Business Decisions
 
-The Runtime deciding which business work should be abandoned.
+The Runtime deciding which business work should be abandoned. That decision belongs to the capability that owns the work.
 
 ---
 
 ## Silent Failure
 
-Suppressing shutdown failures without observability.
+Suppressing shutdown failures without observability. Shutdown must remain observable, and a suppressed failure leaves the operator believing the Runtime stopped cleanly.
 
 ---
 
@@ -566,15 +385,15 @@ Suppressing shutdown failures without observability.
 
 Within Mosaic:
 
-- Shutdown MUST remain deterministic.
-- Cooldown MUST occur before draining.
-- New work MUST NOT be admitted during shutdown.
-- Existing work SHOULD complete where practical.
-- Runtime Services MUST stop in reverse dependency order.
-- Resources MUST be released by their owners.
-- Shutdown MUST remain observable.
-- Restart recovery MUST NOT depend upon graceful shutdown always succeeding.
-- Business correctness MUST remain more important than shutdown speed.
+- Shutdown must remain deterministic.
+- Cooldown must occur before draining.
+- New work must not be admitted during shutdown.
+- Existing work should complete where practical.
+- Runtime Services must stop in reverse dependency order.
+- Resources must be released by their owners.
+- Shutdown must remain observable.
+- Restart recovery must not depend upon graceful shutdown always succeeding.
+- Business correctness must remain more important than shutdown speed.
 
 ---
 
@@ -588,17 +407,13 @@ Shutdown explains:
 
 > **How the Runtime safely ceases operation.**
 
-Together they define the complete operational lifecycle of the Mosaic Runtime.
-
-The next chapter introduces **Runtime State**, describing the operational information maintained by the Runtime throughout its lifetime.
+Together they define the complete operational lifecycle of the Mosaic Runtime. The next chapter introduces **Runtime State**, describing the operational information maintained by the Runtime throughout its lifetime.
 
 ---
 
 # Summary
 
-A mature Runtime is defined as much by how it stops as by how it starts.
-
-Within Mosaic, shutdown is:
+A mature Runtime is defined as much by how it stops as by how it starts. Within Mosaic, shutdown is:
 
 - deliberate
 - observable
@@ -606,6 +421,4 @@ Within Mosaic, shutdown is:
 - resource aware
 - business safe
 
-The Runtime should leave the platform in a predictable state regardless of whether shutdown occurs because of deployment, maintenance or failure.
-
-That predictability is one of the defining characteristics of a reliable platform.
+The Runtime should leave the platform in a predictable state regardless of whether shutdown occurs because of deployment, maintenance or failure, and that predictability is one of the defining characteristics of a reliable platform.

@@ -12,33 +12,11 @@ Status: Draft
 
 # Purpose
 
-Many Runtime operations do not execute immediately.
-
-Examples include:
-
-- scheduled capability operations
-- delayed retries
-- recurring maintenance
-- cache refresh
-- metadata synchronisation
-- module maintenance
-- health verification
-
-These operations require a component capable of answering one question.
+Many Runtime operations do not execute immediately. Scheduled capability operations, delayed retries, recurring maintenance, cache refresh, metadata synchronisation, module maintenance and health verification all sit waiting until some condition of time is met, which means the Runtime needs a component capable of answering one question.
 
 > **Is this work ready to execute?**
 
-Within Mosaic, that responsibility belongs exclusively to the **Scheduler**.
-
-The Scheduler determines *when* work should execute.
-
-It does not determine:
-
-- where
-- how
-- by whom
-
-Those responsibilities belong to other Runtime components.
+Within Mosaic, that responsibility belongs exclusively to the **Scheduler**. The Scheduler determines *when* work should execute, but it determines neither where, nor how, nor by whom; those responsibilities belong to other Runtime components.
 
 ---
 
@@ -48,31 +26,13 @@ Within Mosaic:
 
 > **The Scheduler owns time. It does not own execution.**
 
-The Scheduler should remain intentionally small.
-
-Its purpose is to transform:
-
-```
-
-Future Work
-```
-
-into:
-
-```
-
-Executable Work
-```
-
-Once work becomes executable, responsibility transfers immediately to the Execution Engine.
+The Scheduler should remain intentionally small, because its purpose is narrow: it transforms Future Work into Executable Work and does nothing else. Once work becomes executable, responsibility transfers immediately to the Execution Engine.
 
 ---
 
 # What Is The Scheduler?
 
-The Scheduler is a Runtime Service responsible for managing temporal execution.
-
-Conceptually.
+The Scheduler is a Runtime Service responsible for managing temporal execution. Conceptually, a Capability issues a Schedule Request to the Scheduler, and when the time arrives the work travels onward through the Execution Engine and the Worker Manager to a Worker.
 
 ```mermaid
 flowchart TD
@@ -91,11 +51,7 @@ N4 --> N5
 N5 --> N6
 ```
 
-Notice:
-
-The Scheduler never executes work.
-
-It merely decides:
+Notice that the Scheduler appears only at the front of that chain. It never executes work; it merely decides:
 
 > **Now.**
 
@@ -126,7 +82,7 @@ These concerns remain elsewhere.
 
 # Scheduler Pipeline
 
-Every scheduled operation follows the same lifecycle.
+Every scheduled operation follows the same lifecycle, and the Scheduler's responsibility ends the moment a schedule becomes due.
 
 ```mermaid
 flowchart TD
@@ -145,119 +101,41 @@ N4 --> N5
 N5 --> N6
 ```
 
-Once a schedule becomes due:
-
-The Scheduler's responsibility ends.
-
 ---
 
 # Time Ownership
 
-One of the defining principles of the Runtime is:
-
-```mermaid
-flowchart TD
-
-N1["Time"]
-N2["Scheduler"]
-
-N1 --> N2
-```
-
-Business capabilities should never determine execution timing.
-
-Example.
-
-Poor.
+One of the defining principles of the Runtime is that Time belongs to the Scheduler, so business capabilities should never determine execution timing themselves. A capability that calls
 
 ```go
 time.Sleep(...)
 ```
 
-inside a capability.
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Capability"]
-N2["Schedule Request"]
-N3["Scheduler"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Runtime owns time.
-
-Capabilities own intent.
+inside its own logic has taken ownership of something that is not its own. The preferred alternative is for the Capability to issue a Schedule Request and let the Scheduler decide when the moment arrives. The Runtime owns time, whereas capabilities own only intent.
 
 ---
 
 # Delayed Execution
 
-The Scheduler supports delayed execution.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Retry Metadata"]
-N2["30 Seconds Later"]
-
-N1 --> N2
-```
-
-The delay belongs to the Scheduler.
-
-The Metadata capability remains completely unaware.
+The Scheduler supports delayed execution. When Retry Metadata needs to run again thirty seconds later, the delay belongs to the Scheduler and the Metadata capability remains completely unaware that any waiting took place.
 
 ---
 
 # Recurring Execution
 
-Recurring work is treated as a first-class Runtime concept.
+Recurring work is treated as a first-class Runtime concept, so any operation that repeats on a fixed interval is expressed as a schedule rather than a loop:
 
-Examples include:
+- a Library Scan every 6 hours
+- a Module Health Check every minute
+- a Metrics Snapshot every 30 seconds
 
-```mermaid
-flowchart TD
-
-N1["Library Scan"]
-N2["Every 6 Hours"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Module Health Check"]
-N2["Every Minute"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Metrics Snapshot"]
-N2["Every 30 Seconds"]
-
-N1 --> N2
-```
-
-Recurring schedules should produce new executable Work Units.
-
-Not execute work directly.
+Recurring schedules should produce new executable Work Units rather than execute work directly.
 
 ---
 
 # Execution Handoff
 
-When work becomes due:
+When work becomes due the Scheduler hands it onward and takes no further part in it.
 
 ```mermaid
 flowchart TD
@@ -272,23 +150,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-The Scheduler should not know:
-
-- worker count
-- worker availability
-- execution strategy
-
-Execution begins only after handoff.
-
-This separation between scheduling and execution allows each subsystem to scale and evolve independently.  [System Design Handbook](https://www.systemdesignhandbook.com/guides/design-a-distributed-job-scheduler/)
+The Scheduler should not know worker count, worker availability or execution strategy, because execution begins only after handoff. This separation between scheduling and execution allows each subsystem to scale and evolve independently.  [System Design Handbook](https://www.systemdesignhandbook.com/guides/design-a-distributed-job-scheduler/)
 
 ---
 
 # Schedule Storage
 
-Schedules SHOULD remain durable.
-
-Typical schedule information includes:
+Schedules should remain durable. Typical schedule information includes:
 
 - capability
 - operation
@@ -298,103 +166,33 @@ Typical schedule information includes:
 - owner
 - metadata
 
-Persistence allows schedules to survive:
-
-- restart
-- upgrade
-- failure
-
-The Scheduler owns schedule durability.
-
-Capabilities do not.
+Persistence allows schedules to survive restart, upgrade and failure, and because the Scheduler owns schedule durability, capabilities never have to.
 
 ---
 
 # Schedule Identity
 
-Every schedule SHOULD possess a unique Runtime identifier.
-
-Example.
-
-```
-
-schedule-42
-```
-
-Identity enables:
-
-- cancellation
-- diagnostics
-- replay
-- metrics
-
-Schedule identity belongs to Runtime infrastructure.
-
-Not business behaviour.
+Every schedule should possess a unique Runtime identifier such as `schedule-42`. Identity is what makes cancellation, diagnostics, replay and metrics possible at all, so schedule identity belongs to Runtime infrastructure rather than to business behaviour.
 
 ---
 
 # Schedule Ownership
 
-Every schedule has exactly one owner.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata Capability"]
-N2["Refresh Schedule"]
-
-N1 --> N2
-```
-
-The owning capability requests the schedule.
-
-The Scheduler owns its execution lifecycle.
-
-Ownership should remain explicit.
+Every schedule has exactly one owner. The Metadata Capability, for example, owns its Refresh Schedule: the owning capability requests the schedule while the Scheduler owns its execution lifecycle. Ownership should remain explicit.
 
 ---
 
 # Priority
 
-The Scheduler MAY assign execution priority.
+The Scheduler may assign execution priority. High priority covers user interaction, playback and authentication; normal priority covers metadata refresh and recommendation generation; low priority covers cleanup, analytics and maintenance.
 
-Example.
-
-High.
-
-- user interaction
-- playback
-- authentication
-
-Normal.
-
-- metadata refresh
-- recommendation generation
-
-Low.
-
-- cleanup
-- analytics
-- maintenance
-
-The Scheduler determines *when* work enters execution.
-
-The Execution Engine still determines *how* it executes.
-
-Priority influences admission.
-
-Not business semantics.
+The Scheduler determines *when* work enters execution, whereas the Execution Engine still determines *how* it executes. Priority therefore influences admission, not business semantics.
 
 ---
 
 # Cancellation
 
-Schedules SHOULD remain cancellable.
-
-Lifecycle.
+Schedules should remain cancellable, and cancellation follows its own short lifecycle.
 
 ```mermaid
 flowchart TD
@@ -407,84 +205,31 @@ N1 --> N2
 N2 --> N3
 ```
 
-Cancelled schedules should never reach the Execution Engine.
-
-Cancellation remains a scheduling concern.
+Cancelled schedules should never reach the Execution Engine, because cancellation remains a scheduling concern.
 
 ---
 
 # Dependency Awareness
 
-The Scheduler SHOULD respect Runtime state.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Capability Disabled"]
-N2["Scheduled Work"]
-N3["Do Not Dispatch"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Scheduler should consult the Capability Registry before dispatching work.
-
-It should never execute work for unavailable capabilities.
+The Scheduler should respect Runtime state. If a Capability is Disabled then its Scheduled Work must not be dispatched, so the Scheduler should consult the Capability Registry before dispatching work and should never execute work for unavailable capabilities.
 
 ---
 
 # Scheduler Simplicity
 
-The Scheduler should answer only two questions.
-
-```mermaid
-flowchart TD
-
-N1["Is this work due?"]
-N2["Can this work execute?"]
-
-N1 --> N2
-```
-
-It should never answer:
-
-```
-
-Should this business behaviour happen?
-```
-
-Business decisions remain outside the Runtime.
+The Scheduler should answer only two questions — is this work due, and can this work execute? It should never answer whether a given business behaviour should happen, because business decisions remain outside the Runtime.
 
 ---
 
 # Scaling
 
-The Scheduler should remain lightweight.
-
-It should:
-
-- determine execution time
-- enqueue executable work
-
-It should not execute capability logic.
-
-This allows:
-
-- Scheduler scaling
-- Execution scaling
-
-to occur independently.
-
-This separation is widely used in distributed schedulers because it keeps scheduling lightweight while worker fleets scale horizontally.  [System Design Handbook](https://www.systemdesignhandbook.com/guides/design-a-distributed-job-scheduler/)
+The Scheduler should remain lightweight, determining execution time and enqueuing executable work without ever executing capability logic. That restraint is what allows Scheduler scaling and Execution scaling to occur independently. The separation is widely used in distributed schedulers because it keeps scheduling lightweight while worker fleets scale horizontally.  [System Design Handbook](https://www.systemdesignhandbook.com/guides/design-a-distributed-job-scheduler/)
 
 ---
 
 # Failure Recovery
 
-Suppose the Scheduler fails.
+Suppose the Scheduler fails. On restart it recovers its schedules, resumes waiting and dispatches normally.
 
 ```mermaid
 flowchart TD
@@ -499,17 +244,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Schedules should survive failure.
-
-Capabilities should not recreate them manually.
-
-The Runtime owns recovery.
+Schedules should survive failure so that capabilities never recreate them manually. The Runtime owns recovery.
 
 ---
 
 # Observability
 
-The Scheduler SHOULD expose:
+The Scheduler should expose:
 
 - active schedules
 - waiting schedules
@@ -526,30 +267,7 @@ Operators should always understand:
 
 # Scheduler Independence
 
-The Scheduler should remain independent from:
-
-- worker implementation
-- execution strategy
-- storage implementation
-- business capabilities
-
-Changing:
-
-```
-
-Execution Engine
-```
-
-should not require changing:
-
-```
-
-Scheduler
-```
-
-Likewise.
-
-Changing storage should not alter scheduling semantics.
+The Scheduler should remain independent from worker implementation, execution strategy, storage implementation and business capabilities. Changing the Execution Engine should not require changing the Scheduler, and likewise changing storage should not alter scheduling semantics.
 
 ---
 
@@ -597,25 +315,25 @@ Embedding recurring timing directly inside business logic.
 
 Within Mosaic:
 
-- The Scheduler MUST own all temporal execution.
-- The Scheduler MUST NOT execute work directly.
-- The Scheduler MUST remain independent of worker allocation.
-- Schedules SHOULD remain durable.
-- Schedule identity MUST remain unique.
-- Capabilities MUST request scheduling rather than implement it.
-- The Scheduler SHOULD expose operational metrics.
-- The Scheduler SHOULD remain lightweight and deterministic.
-- Execution MUST begin only after handoff to the Execution Engine.
+- The Scheduler must own all temporal execution.
+- The Scheduler must not execute work directly.
+- The Scheduler must remain independent of worker allocation.
+- Schedules should remain durable.
+- Schedule identity must remain unique.
+- Capabilities must request scheduling rather than implement it.
+- The Scheduler should expose operational metrics.
+- The Scheduler should remain lightweight and deterministic.
+- Execution must begin only after handoff to the Execution Engine.
 
 ---
 
 # Relationship to MEG
 
-The Worker Manager answers:
+Where the Worker Manager answers:
 
 > **Where does work execute?**
 
-The Scheduler answers:
+the Scheduler answers:
 
 > **When does work become executable?**
 
@@ -625,9 +343,7 @@ The next chapter introduces the **Resource Manager**, the Runtime subsystem resp
 
 # Summary
 
-The Scheduler is the Runtime's keeper of time.
-
-It transforms future work into executable work while remaining completely unaware of:
+The Scheduler is the Runtime's keeper of time. It transforms future work into executable work while remaining completely unaware of:
 
 - business behaviour
 - execution strategy
@@ -640,8 +356,4 @@ By separating scheduling from execution, the Mosaic Runtime gains:
 - operational simplicity
 - clean architectural boundaries
 
-Time belongs to the Scheduler.
-
-Execution belongs to the Runtime.
-
-Business belongs to capabilities.
+Time belongs to the Scheduler, execution belongs to the Runtime, and business belongs to capabilities.

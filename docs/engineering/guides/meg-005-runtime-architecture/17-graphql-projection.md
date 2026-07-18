@@ -24,7 +24,7 @@ R --> G
 E --> G
 ```
 
-Resolvers MUST NOT:
+Resolvers must not:
 
 - query PostgreSQL directly;
 - bypass Platform repositories;
@@ -48,17 +48,13 @@ GraphQL field visibility is not a substitute for server-side policy. A hidden fi
 
 ## Query And Mutation Rules
 
-Queries project current authorised state. Mutations invoke application services that validate invariants, commit state and publish required domain events through the transactional outbox.
-
-Mutations must not write directly to read models or event subscribers.
+Queries project current authorised state, whereas mutations invoke application services that validate invariants, commit state and publish required domain events through the transactional outbox. Because those services own the write path, mutations must not write directly to read models or event subscribers.
 
 The schema should prefer domain-language operations over generic CRUD mutations. For example, `startPlayback` communicates intent more clearly than `updatePlaybackSessionRow`.
 
 ## Subscriptions
 
-GraphQL subscriptions consume permitted updates from the in-process Event Bus. The subscription layer translates event facts into client projections and applies the same identity, resource and device policy as queries.
-
-The GraphQL client never connects directly to PostgreSQL `LISTEN`/`NOTIFY`, the outbox table or the internal Event Bus.
+GraphQL subscriptions consume permitted updates from the in-process Event Bus. The subscription layer translates event facts into client projections and applies the same identity, resource and device policy as queries, which is why the GraphQL client never connects directly to PostgreSQL `LISTEN`/`NOTIFY`, the outbox table or the internal Event Bus.
 
 ## Projection And Performance
 
@@ -68,9 +64,7 @@ Large media bytes do not travel through ordinary GraphQL responses. GraphQL retu
 
 ## Error Boundary
 
-The gateway returns stable, non-sensitive error categories for authentication, authorisation, validation, not-found, conflict, dependency and internal failures.
-
-Internal SQL, credential, filesystem and Module details must remain in protected diagnostics rather than client error messages.
+The gateway returns stable, non-sensitive error categories for authentication, authorisation, validation, not-found, conflict, dependency and internal failures. Internal SQL, credential, filesystem and Module details must remain in protected diagnostics rather than client error messages.
 
 ## Guarantees
 

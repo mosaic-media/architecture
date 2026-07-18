@@ -12,30 +12,14 @@ Status: Draft
 
 # Purpose
 
-Every long-running platform operates within finite constraints.
-
-Examples include:
-
-- CPU
-- memory
-- worker capacity
-- database connections
-- blob storage
-- network bandwidth
-- file handles
-
-The Runtime is responsible for ensuring these resources are:
+Every long-running platform operates within finite constraints, and the Mosaic Runtime is no exception. CPU, memory, worker capacity, database connections, blob storage, network bandwidth and file handles all run out eventually, so the Runtime is responsible for ensuring these resources are:
 
 - allocated
 - monitored
 - protected
 - reclaimed
 
-Business capabilities should never concern themselves with resource management.
-
-They should simply request execution.
-
-The Runtime determines whether sufficient resources exist.
+Business capabilities should never concern themselves with resource management. They should simply request execution, and the Runtime determines whether sufficient resources exist.
 
 ---
 
@@ -45,21 +29,13 @@ Within Mosaic:
 
 > **Capabilities consume resources. The Runtime owns them.**
 
-Resources belong to the Runtime.
-
-Capabilities borrow them.
-
-This separation ensures that business behaviour remains independent of operational constraints.
-
-Operating systems are commonly described as resource managers because they allocate finite resources while protecting overall system stability.  [cis.temple.edu](https://cis.temple.edu/~giorgio/cis307/readings/intro.html)
+Resources belong to the Runtime and capabilities merely borrow them, which ensures that business behaviour remains independent of operational constraints. Operating systems are commonly described as resource managers for the same reason: they allocate finite resources while protecting overall system stability.  [cis.temple.edu](https://cis.temple.edu/~giorgio/cis307/readings/intro.html)
 
 ---
 
 # What Is A Resource?
 
-Within the Runtime, a resource is anything with finite availability.
-
-Examples include:
+Within the Runtime, a resource is anything with finite availability. Examples include:
 
 - workers
 - memory
@@ -76,62 +52,15 @@ Resources should be treated consistently regardless of implementation.
 
 # Resource Ownership
 
-Every Runtime resource has exactly one owner.
+Every Runtime resource has exactly one owner. The Worker Manager owns Workers, the Scheduler owns Schedules, the Execution Engine owns Execution State, and the Capability Registry owns Capability Metadata.
 
-Examples.
-
-```mermaid
-flowchart TD
-
-N1["Worker Manager"]
-N2["Workers"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Schedules"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Execution Engine"]
-N2["Execution State"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Capability Registry"]
-N2["Capability Metadata"]
-
-N1 --> N2
-```
-
-Ownership answers:
-
-- who allocates
-- who monitors
-- who releases
-- who reports health
-
-Shared ownership should be avoided.
+Ownership answers who allocates, who monitors, who releases and who reports health, which is precisely why shared ownership should be avoided — four unanswerable questions replace four answerable ones.
 
 ---
 
 # Resource Allocation
 
-Resources should be allocated explicitly.
-
-Conceptually.
+Resources should be allocated explicitly. Conceptually, a Capability issues an Execution Request, the Resource Manager allocates resources against it, and only then does the Execution Engine take over.
 
 ```mermaid
 flowchart TD
@@ -171,85 +100,25 @@ N3 --> N4
 N4 --> N5
 ```
 
-Resources should never remain allocated indefinitely.
-
-Ownership implies responsibility for release.
+Resources should never remain allocated indefinitely, because ownership implies responsibility for release.
 
 ---
 
 # Resource Pools
 
-Finite resources SHOULD generally be managed through pools.
-
-Examples include:
-
-```
-
-Database Connections
-```
-
-```
-
-HTTP Clients
-```
-
-```
-
-Blob Clients
-```
-
-```
-
-Workers
-```
-
-Pooling improves:
-
-- predictability
-- reuse
-- observability
-
-Resource creation should not occur for every request.
+Finite resources should generally be managed through pools — Database Connections, HTTP Clients, Blob Clients and Workers are the common examples. Pooling improves predictability, reuse and observability, and it removes the need to create a resource for every request.
 
 ---
 
 # Resource Limits
 
-Every managed resource SHOULD have explicit limits.
-
-Examples include:
-
-```
-
-Maximum Workers
-```
-
-```
-
-Maximum Queue Size
-```
-
-```
-
-Maximum Connections
-```
-
-```
-
-Maximum Concurrent Imports
-```
-
-Unlimited resources are prohibited.
-
-Finite limits enable predictable Runtime behaviour.
+Every managed resource should have explicit limits, such as Maximum Workers, Maximum Queue Size, Maximum Connections and Maximum Concurrent Imports. Unlimited resources are prohibited, because only finite limits enable predictable Runtime behaviour.
 
 ---
 
 # Resource Admission
 
-Before execution begins, the Runtime SHOULD determine whether sufficient resources exist.
-
-Conceptually.
+Before execution begins, the Runtime should determine whether sufficient resources exist. Conceptually, execution is requested, availability is tested, and work proceeds only when the answer is yes.
 
 ```mermaid
 flowchart TD
@@ -264,7 +133,7 @@ N2 --> N3
 N3 --> N4
 ```
 
-or
+When the answer is no, the Runtime chooses between two outcomes rather than proceeding regardless.
 
 ```mermaid
 flowchart TD
@@ -283,95 +152,31 @@ Admission control protects overall Runtime stability.
 
 # Resource Exhaustion
 
-Suppose:
-
-```
-
-Worker Pool Full
-```
-
-The Runtime should:
-
-- queue work
-- apply backpressure
-- expose metrics
-
-It should not:
-
-- create unlimited workers
-- ignore limits
-- exhaust memory
-
-Graceful degradation is always preferable to uncontrolled growth.
+Suppose the Worker Pool is full. The Runtime should queue work, apply backpressure and expose metrics; it should not create unlimited workers, ignore limits or exhaust memory. Graceful degradation is always preferable to uncontrolled growth.
 
 ---
 
 # Memory
 
-Memory is a shared Runtime resource.
-
-Capabilities should avoid:
-
-- retaining unnecessary state
-- caching indefinitely
-- allocating unbounded collections
-
-Long-lived allocations should remain visible to the Runtime.
-
-Memory ownership should always be explicit.
+Memory is a shared Runtime resource, so capabilities should avoid retaining unnecessary state, caching indefinitely or allocating unbounded collections. Long-lived allocations should remain visible to the Runtime, and memory ownership should always be explicit.
 
 ---
 
 # Connection Management
 
-External connections belong to infrastructure.
-
-Examples include:
-
-- PostgreSQL
-- Redis
-- TMDB
-- Blob Storage
-
-Connections SHOULD be:
-
-- pooled
-- reused
-- monitored
-- released
-
-Capabilities should consume abstractions.
-
-Not connections.
+External connections belong to infrastructure, whether to PostgreSQL, Redis, TMDB or Blob Storage. Such connections should be pooled, reused, monitored and released, which means capabilities should consume abstractions rather than connections.
 
 ---
 
 # Resource Isolation
 
-Capabilities should never monopolise Runtime resources.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Recommendation Capability"]
-N2["100% Worker Pool"]
-
-N1 --> N2
-```
-
-The Runtime should ensure fair allocation across capabilities.
-
-No single capability should destabilise the platform.
+Capabilities should never monopolise Runtime resources: a Recommendation Capability that consumes 100% of the Worker Pool has starved everything else. The Runtime should therefore ensure fair allocation across capabilities so that no single capability can destabilise the platform.
 
 ---
 
 # Resource Accounting
 
-Every significant resource SHOULD be measurable.
-
-Examples include:
+Every significant resource should be measurable. Examples include:
 
 - allocated workers
 - active executions
@@ -385,62 +190,25 @@ Operators should always understand where Runtime resources are being consumed.
 
 # Resource Reclamation
 
-Unused resources SHOULD be reclaimed automatically.
-
-Examples include:
-
-- idle workers
-- expired schedules
-- abandoned execution state
-- unused connections
-
-The Runtime should minimise resource leakage over long periods of execution.
+Unused resources should be reclaimed automatically, including idle workers, expired schedules, abandoned execution state and unused connections. The Runtime should minimise resource leakage over long periods of execution.
 
 ---
 
 # Capability Quotas
 
-The Runtime MAY impose capability-level quotas.
-
-Examples include:
-
-- maximum concurrent executions
-- maximum scheduled work
-- memory budgets
-- worker allocation limits
-
-Quotas prevent one capability from exhausting shared Runtime resources.
+The Runtime may impose capability-level quotas on maximum concurrent executions, maximum scheduled work, memory budgets and worker allocation limits. Quotas prevent one capability from exhausting shared Runtime resources.
 
 ---
 
 # Resource Health
 
-Every managed resource SHOULD expose health information.
-
-Examples include:
-
-```
-
-Healthy
-```
-
-```
-
-Near Capacity
-```
-
-```
-
-Exhausted
-```
-
-Health should influence Runtime decisions before failures occur.
+Every managed resource should expose health information, reporting itself as Healthy, Near Capacity or Exhausted. Health should influence Runtime decisions before failures occur.
 
 ---
 
 # Observability
 
-Resource Management SHOULD expose:
+Resource Management should expose:
 
 - resource utilisation
 - allocation rate
@@ -455,36 +223,13 @@ Resource usage should become one of the most observable aspects of the Runtime.
 
 # Resource Policies
 
-Allocation policies SHOULD remain configurable.
-
-Examples include:
-
-- fair sharing
-- priority-based allocation
-- reserved capacity
-- adaptive scaling
-
-Policies should evolve independently from business capabilities.
-
-Capabilities request execution.
-
-Policies decide resource allocation.
+Allocation policies should remain configurable, whether fair sharing, priority-based allocation, reserved capacity or adaptive scaling. Policies should evolve independently from business capabilities, because capabilities request execution whereas policies decide resource allocation.
 
 ---
 
 # Resource Independence
 
-The Resource Manager should remain independent from:
-
-- scheduling
-- worker implementation
-- execution strategy
-
-It provides resource information.
-
-Other Runtime components consume it.
-
-Responsibilities remain intentionally separated.
+The Resource Manager should remain independent from scheduling, worker implementation and execution strategy. It provides resource information and other Runtime components consume it, so responsibilities remain intentionally separated.
 
 ---
 
@@ -532,25 +277,25 @@ Multiple Runtime components claiming responsibility for the same resource.
 
 Within Mosaic:
 
-- Every Runtime resource MUST have one owner.
-- Resources MUST remain finite.
-- Resource allocation MUST remain explicit.
-- Resource pools SHOULD be preferred for reusable infrastructure.
-- Resources MUST be released after use.
-- Capability quotas MAY be applied where appropriate.
-- Resource usage MUST remain observable.
-- Resource exhaustion MUST trigger graceful degradation rather than uncontrolled growth.
-- Business capabilities MUST remain unaware of Runtime resource management.
+- Every Runtime resource must have one owner.
+- Resources must remain finite.
+- Resource allocation must remain explicit.
+- Resource pools should be preferred for reusable infrastructure.
+- Resources must be released after use.
+- Capability quotas may be applied where appropriate.
+- Resource usage must remain observable.
+- Resource exhaustion must trigger graceful degradation rather than uncontrolled growth.
+- Business capabilities must remain unaware of Runtime resource management.
 
 ---
 
 # Relationship to MEG
 
-The Scheduler determines:
+Where the Scheduler determines:
 
 > **When work becomes executable.**
 
-The Resource Manager determines:
+the Resource Manager determines:
 
 > **Whether sufficient Runtime resources exist to execute that work safely.**
 
@@ -560,17 +305,11 @@ The next chapter introduces **Startup**, describing how the Runtime Kernel trans
 
 # Summary
 
-Resource Management is one of the Runtime's primary responsibilities.
-
-It ensures that:
+Resource Management is one of the Runtime's primary responsibilities. It ensures that:
 
 - finite resources remain available
 - capabilities coexist fairly
 - Runtime stability is preserved
 - operational behaviour remains predictable
 
-Within Mosaic, business capabilities should never think about resource allocation.
-
-They should simply perform business behaviour.
-
-The Runtime exists to ensure the necessary resources are available to make that possible.
+Within Mosaic, business capabilities should never think about resource allocation; they should simply perform business behaviour, and the Runtime exists to ensure the necessary resources are available to make that possible.

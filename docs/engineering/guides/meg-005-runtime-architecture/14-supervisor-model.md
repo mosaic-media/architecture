@@ -12,27 +12,9 @@ Status: Draft
 
 # Purpose
 
-Mosaic is a self-hosted media centre, but its architecture should behave more like a small operating system than a conventional web application.
+Mosaic is a self-hosted media centre, but its architecture should behave more like a small operating system than a conventional web application, which means the Platform should be replaceable, the Shell should be replaceable, and Modules should be selected, composed and upgraded deliberately. The Supervisor is the stable host-level process that makes those properties possible. Because it exists outside Platform packages and Generations, it remains available when the Platform or Shell fails; it starts first, remains loaded for the lifetime of the Mosaic installation and owns health monitoring for the layers it manages.
 
-The Platform should be replaceable.
-
-The Shell should be replaceable.
-
-Modules should be selected, composed and upgraded deliberately.
-
-The Supervisor is the stable host-level process that makes those properties possible.
-
-It exists outside Platform packages and Generations and remains available when the Platform or Shell fails.
-
-It starts first, remains loaded for the lifetime of the Mosaic installation and owns health monitoring for the layers it manages.
-
-The Supervisor is the recovery layer.
-
-It must not be the thing that needs recovering.
-
-The Supervisor also owns the public entry point into Mosaic.
-
-The Platform should never expose itself directly to users.
+The Supervisor is the recovery layer, so it must not be the thing that needs recovering. It also owns the public entry point into Mosaic, because the Platform should never expose itself directly to users.
 
 ---
 
@@ -42,25 +24,13 @@ Within Mosaic:
 
 > **The Supervisor owns Mosaic installation, generation activation, upgrade and recovery. The Platform owns media execution.**
 
-The Supervisor should be the smallest durable layer a user installs.
-
-It should understand enough about Mosaic to assemble and recover the system.
-
-It should not become the media Platform itself.
-
-The Supervisor orchestrates build and activation.
-
-It does not contain build logic.
-
-Build mechanics belong to the Build Pipeline.
+The Supervisor should be the smallest durable layer a user installs. It should understand enough about Mosaic to assemble and recover the system without becoming the media Platform itself. It orchestrates build and activation but does not contain build logic, because build mechanics belong to the Build Pipeline.
 
 ---
 
 # What Is The Supervisor?
 
-The Supervisor is the always-running Mosaic manager.
-
-It is responsible for:
+The Supervisor is the always-running Mosaic manager. It is responsible for:
 
 - installing the Mosaic Shell
 - running onboarding
@@ -78,7 +48,7 @@ It is responsible for:
 - emitting Recovery SDUI for recovery and diagnostics
 - keeping the richest available interface alive during recovery
 
-Conceptually.
+Conceptually, the chain runs from the container definition down to a running system.
 
 ```mermaid
 flowchart TD
@@ -101,13 +71,7 @@ N6 --> N7
 N7 --> N8
 ```
 
-The Supervisor is not a Runtime Service inside the Platform.
-
-It is the host-level manager that creates and supervises the Platform.
-
-It should remain intentionally tiny, independently testable and dependency-light.
-
-Its role is closer to a bootloader than an application framework.
+The Supervisor is not a Runtime Service inside the Platform; it is the host-level manager that creates and supervises the Platform. It should therefore remain intentionally tiny, independently testable and dependency-light, because its role is closer to a bootloader than an application framework.
 
 The Supervisor is not:
 
@@ -116,40 +80,13 @@ The Supervisor is not:
 - the Platform,
 - a compiler.
 
-It is the runtime composition orchestrator.
-
-It assembles a desired Mosaic runtime from selected Modules, invokes the Build Pipeline and activates the resulting Generation only after validation.
+It is the runtime composition orchestrator, which means it assembles a desired Mosaic runtime from selected Modules, invokes the Build Pipeline and activates the resulting Generation only after validation.
 
 ---
 
 # Public Entry Point
 
-The Supervisor is the only public entry point for Mosaic.
-
-All user traffic should enter through the Supervisor.
-
-Conceptually.
-
-```mermaid
-flowchart TD
-
-N1["User"]
-N2["Supervisor HTTP Entry Point"]
-N3["Shell"]
-N4["Platform"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The Platform never serves UI directly.
-
-When the Platform is healthy, the Supervisor routes the user toward the Shell and the Shell communicates with the Platform.
-
-When the Platform is unavailable, the Supervisor emits Recovery SDUI and the Shell renders recovery state.
-
-When the Shell is unavailable, the Supervisor serves the embedded recovery renderer.
+The Supervisor is the only public entry point for Mosaic, so all user traffic should enter through the Supervisor HTTP entry point rather than reaching the Platform directly. When the Platform is healthy, the Supervisor routes the user toward the Shell and the Shell communicates with the Platform. When the Platform is unavailable, the Supervisor emits Recovery SDUI and the Shell renders recovery state; when the Shell is unavailable, the Supervisor serves the embedded recovery renderer. The Platform never serves UI directly under any of these conditions.
 
 ---
 
@@ -159,13 +96,7 @@ Within Mosaic:
 
 > **The Supervisor guarantees that there is always an intelligent interface available. The only thing that changes is how capable that interface is.**
 
-Recovery should happen in layers.
-
-The most capable available interface should always be used.
-
-More primitive interfaces should appear only when richer interfaces are unavailable.
-
-The user should not lose their interface simply because the Platform is unavailable.
+Recovery should therefore happen in layers, with the most capable available interface always in use and more primitive interfaces appearing only when richer interfaces are unavailable. The user should not lose their interface simply because the Platform is unavailable.
 
 ---
 
@@ -186,29 +117,15 @@ N2 --> N3
 N3 --> N4
 ```
 
-The user should almost never see the final layer.
+The user should almost never see the final layer. During normal operation the Shell renders Runtime SDUI from the Platform, and during Platform recovery the Shell remains active and renders Recovery SDUI from the Supervisor instead. Native clients use their own renderer to present the same Recovery SDUI directly from the Supervisor, so only when the Web Shell is unavailable does a browser fall back to the embedded recovery renderer. No UI means catastrophic failure in which neither a client renderer nor the embedded Web recovery path can communicate with the Supervisor.
 
-During normal operation, the Shell renders Runtime SDUI from the Platform.
-
-During Platform recovery, the Shell remains active and renders Recovery SDUI from the Supervisor.
-
-Native clients use their own renderer to present the same Recovery SDUI directly from the Supervisor.
-
-Only when the Web Shell is unavailable does a browser fall back to the embedded recovery renderer.
-
-No UI means catastrophic failure in which neither a client renderer nor the embedded Web recovery path can communicate with the Supervisor.
-
-The Presentation Layer does not recover the Supervisor.
-
-It keeps an interface available while the Supervisor recovers the Platform or Web Shell.
+The Presentation Layer does not recover the Supervisor. It keeps an interface available while the Supervisor recovers the Platform or Web Shell.
 
 ---
 
 # System Hierarchy
 
-The Supervisor changes the Mosaic hierarchy.
-
-Preferred.
+The Supervisor changes the Mosaic hierarchy, because the preferred arrangement places it above everything it manages.
 
 ```mermaid
 flowchart TD
@@ -223,28 +140,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Avoid.
-
-```mermaid
-flowchart TD
-
-N1["Platform"]
-N2["Supervisor"]
-
-N1 --> N2
-```
-
-The thing responsible for recovery should not be the thing that needs recovering.
-
-Everything above the Supervisor can be created, replaced, restarted or recovered by the Supervisor.
+The inverted arrangement, in which the Platform sits above the Supervisor, should be avoided: the thing responsible for recovery should not be the thing that needs recovering. Everything above the Supervisor can be created, replaced, restarted or recovered by the Supervisor.
 
 ---
 
 # Supervisor Immutability
 
-The Supervisor should behave like Mosaic's boot layer.
-
-It should be:
+The Supervisor should behave like Mosaic's boot layer. It should be:
 
 - intentionally tiny
 - rarely changed
@@ -252,23 +154,13 @@ It should be:
 - dependency-light
 - capable of recovering the rest of Mosaic
 
-The Supervisor may be upgraded deliberately, but its design should resist frequent change.
-
-Most Mosaic evolution should occur in Generations, Platform packages, Shell releases and Modules.
-
-The Supervisor should remain stable enough that users can rely on it when every other Mosaic layer fails.
+The Supervisor may be upgraded deliberately, but its design should resist frequent change, so most Mosaic evolution should occur in Generations, Platform packages, Shell releases and Modules. The Supervisor should remain stable enough that users can rely on it when every other Mosaic layer fails.
 
 ---
 
 # Installation Boundary
 
-A self-hosted user should be able to add Mosaic to a Docker Compose file and start the Supervisor.
-
-The Supervisor then prepares the rest of Mosaic immediately.
-
-Bootstrap begins when the Supervisor starts.
-
-It must not wait for a browser connection or user action.
+A self-hosted user should be able to add Mosaic to a Docker Compose file and start the Supervisor, and the Supervisor then prepares the rest of Mosaic immediately. Bootstrap begins when the Supervisor starts; it must not wait for a browser connection or user action.
 
 Initial installation should follow this shape.
 
@@ -299,35 +191,13 @@ N9 --> N10
 N10 --> N11
 ```
 
-The user should not manually assemble Platform packages.
-
-The Supervisor owns orchestration of that composition step.
-
-The Build Pipeline owns the mechanics of producing the package.
-
-The normal installation path must not ask the user to enter recovery or click a `Build Mosaic` action before onboarding.
-
-The Supervisor should be the first Mosaic component to start and the last to stop.
+The user should not manually assemble Platform packages, because the Supervisor owns orchestration of that composition step while the Build Pipeline owns the mechanics of producing the package. The normal installation path must not ask the user to enter recovery or click a `Build Mosaic` action before onboarding. The Supervisor should be the first Mosaic component to start and the last to stop.
 
 ---
 
 # Shell Relationship
 
-The Shell is the normal Mosaic presentation layer for the web.
-
-The Supervisor installs and starts the Shell.
-
-The Shell should render user-facing onboarding, normal administration and the operational facade over the Platform.
-
-The Supervisor owns onboarding state and flow until the Platform is ready.
-
-The Supervisor should retain enough authority to recover or reinstall the Shell if it fails.
-
-The Shell is therefore managed by the Supervisor, but it is not the Supervisor.
-
-The Platform does not present itself directly.
-
-The Shell presents the Platform.
+The Shell is the normal Mosaic presentation layer for the web, and the Supervisor installs and starts it. The Shell should render user-facing onboarding, normal administration and the operational facade over the Platform, whereas the Supervisor owns onboarding state and flow until the Platform is ready. The Supervisor should retain enough authority to recover or reinstall the Shell if it fails, which means the Shell is managed by the Supervisor but is not the Supervisor. The Platform does not present itself directly; the Shell presents the Platform.
 
 ```mermaid
 flowchart TD
@@ -342,21 +212,13 @@ N1 --> N3
 N1 --> N4
 ```
 
-The Shell is the operational facade over Mosaic.
-
-It should stay available during Platform failure whenever possible.
-
-If the Platform disconnects, the Shell should reconnect to the Supervisor and render Recovery SDUI.
-
-The user remains inside the Shell while the Supervisor restarts, rolls back or repairs the Platform.
+Because the Shell is the operational facade over Mosaic, it should stay available during Platform failure whenever possible. If the Platform disconnects, the Shell should reconnect to the Supervisor and render Recovery SDUI, so the user remains inside the Shell while the Supervisor restarts, rolls back or repairs the Platform.
 
 ---
 
 # Onboarding Relationship
 
-During onboarding, the user selects the functionality Mosaic should have.
-
-Examples include:
+During onboarding, the user selects the functionality Mosaic should have. Examples include:
 
 - media features such as Anime, Movies, TV and Music
 - providers such as AniList, TMDB and Jellyfin
@@ -364,25 +226,9 @@ Examples include:
 - update channels
 - the generated Build Specification
 
-The selected functionality determines which Modules participate in the Platform composition.
+The selected functionality determines which Modules participate in the Platform composition, so onboarding produces a desired Mosaic Generation. The Supervisor turns that desired Generation into an activated system by resolving Modules, invoking the Build Pipeline and activating the produced package, and none of this requires the Platform to exist during onboarding.
 
-Onboarding produces a desired Mosaic Generation.
-
-The Supervisor turns that desired Generation into an activated system by resolving Modules, invoking the Build Pipeline and activating the produced package.
-
-The Platform does not need to exist during onboarding.
-
-The Supervisor should query the Module Catalogue and derive onboarding choices from Module manifests.
-
-The Shell must not hardcode the available Module set.
-
-When a Module appears in the Module Catalogue, its manifest metadata should make it available as an onboarding candidate without requiring a Shell release.
-
-Final compatibility is established only during admission and dependency validation.
-
-[MEG-006](../meg-006-module-platform/index.md) defines Module Catalogue discovery.
-
-[MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md) defines the manifest metadata available to catalogue and onboarding clients.
+The Supervisor should query the Module Catalogue and derive onboarding choices from Module manifests, because the Shell must not hardcode the available Module set. When a Module appears in the Module Catalogue, its manifest metadata should make it available as an onboarding candidate without requiring a Shell release; final compatibility is established only during admission and dependency validation. [MEG-006](../meg-006-module-platform/index.md) defines Module Catalogue discovery, and [MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md) defines the manifest metadata available to catalogue and onboarding clients.
 
 The onboarding flow may be:
 
@@ -403,13 +249,9 @@ N4 --> N5
 N5 --> N6
 ```
 
-After onboarding completes, the Supervisor builds and validates the Platform package, starts the Platform, and the Shell switches to Runtime SDUI.
+After onboarding completes, the Supervisor builds and validates the Platform package, starts the Platform, and the Shell switches to Runtime SDUI. Onboarding uses Recovery SDUI because the Platform does not yet exist and therefore cannot produce Runtime SDUI.
 
-Onboarding uses Recovery SDUI because the Platform does not yet exist and therefore cannot produce Runtime SDUI.
-
-The Build Specification is the declarative result of onboarding.
-
-Conceptually.
+The Build Specification is the declarative result of onboarding, and conceptually it looks like this.
 
 ```yaml
 runtime:
@@ -426,21 +268,13 @@ modules:
   - recommendations
 ```
 
-The Supervisor uses the Build Specification to orchestrate manifest and dependency resolution, SDK compatibility validation, Module acquisition and isolated Build Workspace preparation.
-
-The Build Pipeline owns the mechanics of acquiring build inputs and preparing the Build Workspace.
-
-The Build Specification describes the desired runtime composition.
-
-It does not contain build mechanics.
+The Supervisor uses the Build Specification to orchestrate manifest and dependency resolution, SDK compatibility validation, Module acquisition and isolated Build Workspace preparation, while the Build Pipeline owns the mechanics of acquiring build inputs and preparing the Build Workspace. The Build Specification describes the desired runtime composition; it does not contain build mechanics.
 
 ---
 
 # Module Composition
 
-Modules are Go libraries that implement the Mosaic SDK and declare their contracts through the Module system.
-
-Examples include:
+Modules are Go libraries that implement the Mosaic SDK and declare their contracts through the Module system. Examples include:
 
 - Jellyfin adapter
 - metadata provider
@@ -448,50 +282,26 @@ Examples include:
 - storage provider
 - external integration runner
 
-The Supervisor should not treat Modules as dynamic Runtime patches.
-
-It should resolve the selected Modules and invoke the Build Pipeline to produce a concrete Platform package.
-
-The Supervisor should never know how to compile Modules.
-
-Build logic belongs to the Build Pipeline.
-
-[MEG-006](../meg-006-module-platform/index.md) defines how Modules participate in Mosaic.
-
-[MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md) defines how Module manifests describe identity, dependencies, permissions and compatibility.
+The Supervisor should not treat Modules as dynamic Runtime patches. It should instead resolve the selected Modules and invoke the Build Pipeline to produce a concrete Platform package, and it should never know how to compile Modules, because build logic belongs to the Build Pipeline. [MEG-006](../meg-006-module-platform/index.md) defines how Modules participate in Mosaic, and [MIP-002](../../protocols/mip-002-module-manifest-protocol/index.md) defines how Module manifests describe identity, dependencies, permissions and compatibility.
 
 ---
 
 # Build Pipeline
 
-The Build Pipeline is responsible for producing Platform packages.
-
-It consumes:
+The Build Pipeline is responsible for producing Platform packages. It consumes:
 
 - Platform foundation
 - selected Modules
 - resolved SDK contracts
 - validated configuration
 
-The Supervisor invokes the Build Pipeline.
-
-The Build Pipeline produces a candidate Platform package.
-
-The Supervisor validates and activates that package as part of a Generation.
-
-This keeps build logic out of the Supervisor.
+The Supervisor invokes the Build Pipeline, the Build Pipeline produces a candidate Platform package, and the Supervisor validates and activates that package as part of a Generation. This division keeps build logic out of the Supervisor.
 
 ---
 
 # Supervisor Build Pipeline
 
-The Supervisor Build Pipeline describes the orchestration flow from a desired runtime composition to an activated Generation.
-
-The Supervisor owns orchestration, policy, progress, diagnostics and activation.
-
-The Build Pipeline owns build mechanics.
-
-The source repository is never modified during this process.
+The Supervisor Build Pipeline describes the orchestration flow from a desired runtime composition to an activated Generation. The Supervisor owns orchestration, policy, progress, diagnostics and activation, whereas the Build Pipeline owns build mechanics, and the source repository is never modified during this process.
 
 While the Build Pipeline runs, the Supervisor should emit Recovery SDUI containing:
 
@@ -500,11 +310,7 @@ While the Build Pipeline runs, the Supervisor should emit Recovery SDUI containi
 - relevant logs
 - estimated completion when a meaningful estimate is available
 
-The Shell remains loaded and renders those updates throughout the build.
-
-Every build occurs in an isolated workspace and produces a candidate Platform package before activation.
-
-Conceptually.
+The Shell remains loaded and renders those updates throughout the build. Every build occurs in an isolated workspace and produces a candidate Platform package before activation, which conceptually proceeds as follows.
 
 ```mermaid
 flowchart TD
@@ -539,9 +345,7 @@ N12 --> N13
 N13 --> N14
 ```
 
-The pipeline is closer to a compiler toolchain than a traditional package manager.
-
-It assembles a bespoke Mosaic runtime from declarative Module manifests and produces a deterministic executable.
+The pipeline is closer to a compiler toolchain than a traditional package manager, because it assembles a bespoke Mosaic runtime from declarative Module manifests and produces a deterministic executable.
 
 ---
 
@@ -558,15 +362,13 @@ A build may be initiated by:
 - rollback preparation
 - development environment
 
-The Supervisor determines the desired runtime composition before invoking the Build Pipeline.
+Whichever the trigger, the Supervisor determines the desired runtime composition before invoking the Build Pipeline.
 
 ---
 
 # Manifest Resolution
 
-The Supervisor downloads or reads each selected Module manifest.
-
-The manifest is the Supervisor's source of truth for:
+The Supervisor downloads or reads each selected Module manifest, and that manifest is the Supervisor's source of truth for:
 
 - SDK requirements
 - capabilities
@@ -575,17 +377,13 @@ The manifest is the Supervisor's source of truth for:
 - published events
 - subscribed events
 
-The Supervisor never analyses Go source code to discover those declarations.
-
-If manifest resolution fails, the build ends before dependency resolution or compilation.
+The Supervisor never analyses Go source code to discover those declarations. If manifest resolution fails, the build ends before dependency resolution or compilation.
 
 ---
 
 # Dependency Validation
 
-The Supervisor builds the complete dependency graph before compilation.
-
-It validates:
+The Supervisor builds the complete dependency graph before compilation, validating:
 
 - required Modules
 - compatible versions
@@ -595,17 +393,13 @@ It validates:
 - required permissions
 - contract availability
 
-If validation fails, the build terminates before compilation begins.
-
-The previous active Generation remains untouched.
+If validation fails, the build terminates before compilation begins and the previous active Generation remains untouched.
 
 ---
 
 # Build Workspace
 
-The Supervisor creates a temporary build workspace for each candidate Generation.
-
-Conceptually.
+The Supervisor creates a temporary build workspace for each candidate Generation, conceptually laid out like this.
 
 ```text
 workspace/
@@ -616,43 +410,31 @@ workspace/
     generated/
 ```
 
-Every build starts from a clean workspace.
-
-The workspace protects source repositories from mutation and makes build inputs explicit.
-
-The Supervisor must not modify the Platform source repository or Module source repositories while preparing a Generation.
+Every build starts from a clean workspace, because the workspace protects source repositories from mutation and makes build inputs explicit. The Supervisor must not modify the Platform source repository or Module source repositories while preparing a Generation.
 
 ---
 
 # Go Dependency Management
 
-Go remains responsible for resolving library dependencies.
+Go remains responsible for resolving library dependencies, so the Build Pipeline updates the temporary `go.mod`.
 
-The Build Pipeline updates the temporary `go.mod`.
-
-Example.
-
-```text
+```bash
 go mod edit -require=github.com/mosaic/module-anilist@v1.2.0
 ```
 
 Then:
 
-```text
+```bash
 go mod tidy
 ```
 
-The Supervisor observes progress and diagnostics.
-
-It does not implement Go dependency resolution itself.
+The Supervisor observes progress and diagnostics; it does not implement Go dependency resolution itself.
 
 ---
 
 # Automatic Module Discovery
 
-Go only compiles imported packages.
-
-Rather than modifying Platform source code, the Build Pipeline generates exactly one integration source file.
+Go only compiles imported packages, so rather than modifying Platform source code the Build Pipeline generates exactly one integration source file.
 
 ```text
 generated/
@@ -660,7 +442,7 @@ generated/
     imports.go
 ```
 
-Example.
+That file consists entirely of blank imports.
 
 ```go
 package generated
@@ -672,19 +454,13 @@ import (
 )
 ```
 
-Blank imports ensure every selected Module package's `init()` function executes at Platform startup.
-
-This is the only generated Go source required for Module discovery.
-
-[MEG-006](../meg-006-module-platform/index.md) governs the generated imports boundary.
+Blank imports ensure every selected Module package's `init()` function executes at Platform startup, and this is the only generated Go source required for Module discovery. [MEG-006](../meg-006-module-platform/index.md) governs the generated imports boundary.
 
 ---
 
 # Runtime Registration
 
 At startup, each selected Module registers itself with the SDK.
-
-Example.
 
 ```go
 func init() {
@@ -700,15 +476,13 @@ Registration rules:
 - no networking
 - no goroutines
 
-The SDK registry becomes the Platform's runtime Module catalogue.
-
-The Platform then asks:
+The SDK registry becomes the Platform's runtime Module catalogue, which the Platform then queries.
 
 ```go
 sdk.Modules()
 ```
 
-and builds Capability Managers from registered Modules.
+From the registered Modules it returns, the Platform builds Capability Managers.
 
 ---
 
@@ -716,7 +490,7 @@ and builds Capability Managers from registered Modules.
 
 After dependency preparation and generated imports exist, the Build Pipeline runs:
 
-```text
+```bash
 go build
 ```
 
@@ -726,19 +500,13 @@ The output is a single executable containing:
 - SDK
 - every selected Module
 
-There are no runtime plugins.
-
-There is no dynamic loading.
-
-The finished executable behaves like a single Go application while still being assembled from independently versioned Modules.
+There are no runtime plugins and no dynamic loading, so the finished executable behaves like a single Go application while still being assembled from independently versioned Modules.
 
 ---
 
 # Pre-Activation Health Checks
 
-The Supervisor must never activate an unverified runtime.
-
-Validation may include:
+The Supervisor must never activate an unverified runtime. Validation may include:
 
 - successful startup
 - HTTP readiness
@@ -754,9 +522,7 @@ Only healthy candidate runtimes may become active.
 
 # Atomic Runtime Activation
 
-The Supervisor stages runtimes before activation.
-
-Conceptually.
+The Supervisor stages runtimes before activation, conceptually as follows.
 
 ```text
 runtime/
@@ -783,20 +549,7 @@ N3 --> N4
 N4 --> N5
 ```
 
-If activation fails:
-
-```mermaid
-flowchart TD
-
-N1["Restore Previous"]
-N2["Continue Running"]
-
-N1 --> N2
-```
-
-Rollback means reactivating a previous known good Generation.
-
-Previous runtimes should be retained until later garbage collection policy permits deletion.
+If activation fails, the Supervisor restores the previous runtime and continues running on it. Rollback therefore means reactivating a previous known good Generation, and previous runtimes should be retained until later garbage collection policy permits deletion.
 
 ---
 
@@ -826,8 +579,6 @@ Build failure should never corrupt the active Generation.
 
 Development uses the same architecture as production.
 
-Conceptually.
-
 ```mermaid
 flowchart TD
 
@@ -847,25 +598,13 @@ N5 --> N6
 N6 --> N7
 ```
 
-The Development Supervisor may optimise for feedback speed, but it must not introduce runtime plugin loading semantics.
-
-Production and development should share the same static composition model.
-
-The Development Supervisor owns file watching, local source mapping, rebuild requests, development activation and client notification.
-
-The Build Pipeline retains ownership of Build Workspace preparation, generated imports, Go dependency operations and compilation.
-
-[MEG-006](../meg-006-module-platform/index.md) defines the complete Developer Platform and Development Supervisor workflow.
+The Development Supervisor may optimise for feedback speed, but it must not introduce runtime plugin loading semantics, because production and development should share the same static composition model. The Development Supervisor owns file watching, local source mapping, rebuild requests, development activation and client notification, whereas the Build Pipeline retains ownership of Build Workspace preparation, generated imports, Go dependency operations and compilation. [MEG-006](../meg-006-module-platform/index.md) defines the complete Developer Platform and Development Supervisor workflow.
 
 ---
 
 # Generations
 
-A Generation is an immutable installed Mosaic system version.
-
-It contains the artefacts required to activate a coherent Mosaic installation.
-
-Conceptually.
+A Generation is an immutable installed Mosaic system version containing the artefacts required to activate a coherent Mosaic installation.
 
 ```mermaid
 flowchart TD
@@ -886,49 +625,21 @@ N1 --> N6
 N1 --> N7
 ```
 
-Only one Generation is active at a time.
-
-Prepared Generations may exist before activation.
-
-Previous known good Generations should be retained for rollback.
-
-Rollback means activating an earlier Generation.
-
-It should not mean undoing a sequence of mutations.
+Only one Generation is active at a time, though prepared Generations may exist before activation and previous known good Generations should be retained for rollback. Rollback means activating an earlier Generation; it should not mean undoing a sequence of mutations.
 
 ---
 
 # Platform Package
 
-A Platform package is the Platform artefact produced by the Build Pipeline and stored within a Generation.
+A Platform package is the Platform artefact produced by the Build Pipeline and stored within a Generation, and it includes the executable Platform output together with the metadata required for validation and activation.
 
-The package includes the executable Platform output and the metadata required for validation and activation.
-
-The Supervisor owns validation and activation of the package.
-
-The running Platform owns media execution, Module lifecycle, scheduling, workers, Runtime State and business capability execution.
-
-This preserves a clear boundary.
-
-```mermaid
-flowchart LR
-
-N1["Supervisor"]
-N2["Install, Invoke Build Pipeline, Validate, Activate, Upgrade, Recover"]
-N3["Platform"]
-N4["Runtime, Capabilities, Media Execution"]
-
-N1 -->|owns| N2
-N3 -->|owns| N4
-```
+This preserves a clear boundary of ownership. The Supervisor owns install, invoking the Build Pipeline, validation, activation, upgrade and recovery of the package, whereas the running Platform owns Runtime, Capabilities and Media Execution — including Module lifecycle, scheduling, workers, Runtime State and business capability execution.
 
 ---
 
 # Atomic Upgrade Model
 
-The Supervisor should manage upgrades by preparing and activating Generations.
-
-When a Platform upgrade is available, the Supervisor should:
+The Supervisor should manage upgrades by preparing and activating Generations. When a Platform upgrade is available, the Supervisor should:
 
 - discover the available version
 - download or prepare required artefacts
@@ -942,9 +653,7 @@ When a Platform upgrade is available, the Supervisor should:
 - retain the previous known good Generation
 - roll back by reactivating the previous Generation if activation fails
 
-The current Generation should continue serving until the new Generation is prepared.
-
-Upgrade should feel like a safe replacement, not an in-place mutation.
+The current Generation should continue serving until the new Generation is prepared, so an upgrade should feel like a safe replacement rather than an in-place mutation.
 
 ```mermaid
 flowchart TD
@@ -971,9 +680,7 @@ N7 --> N8
 
 # Rollback Authority
 
-Rollback is a core Supervisor capability.
-
-The Supervisor may roll back:
+Rollback is a core Supervisor capability. The Supervisor may roll back:
 
 - failed Generation activation
 - failed Platform package activation
@@ -981,25 +688,13 @@ The Supervisor may roll back:
 - failed configuration activation
 - incompatible Module composition
 
-Rollback should activate the previous known good Generation.
-
-Rollback should not attempt to repair corrupt media data or business state.
-
-Those concerns require explicit recovery workflows.
+Rollback should activate the previous known good Generation, but it should not attempt to repair corrupt media data or business state, because those concerns require explicit recovery workflows.
 
 ---
 
 # Recovery UI
 
-The Supervisor must expose recovery UI capability that does not depend on the Platform.
-
-The preferred recovery UI is rendered by the Shell.
-
-The embedded recovery renderer is a last-resort browser bootstrap path owned by the Supervisor.
-
-The embedded recovery renderer can run when the Shell cannot be used.
-
-Examples include:
+The Supervisor must expose recovery UI capability that does not depend on the Platform. The preferred recovery UI is rendered by the Shell, whereas the embedded recovery renderer is a last-resort browser bootstrap path owned by the Supervisor that can run when the Shell cannot be used. Examples include:
 
 - Shell missing
 - Shell corrupt
@@ -1021,11 +716,7 @@ It must not depend on:
 - frameworks
 - build pipeline
 
-The recovery UI should behave like a firmware or BIOS-style surface.
-
-It should be simple, local and dependable.
-
-It should show:
+The recovery UI should behave like a firmware or BIOS-style surface, which means it should be simple, local and dependable. It should show:
 
 - installed Generations
 - active Generation
@@ -1046,11 +737,7 @@ It should show:
 - rollback options
 - safe restart options
 
-The recovery UI should not become an alternate full administration interface.
-
-It exists to diagnose and recover Mosaic when the normal system is unavailable.
-
-It should know only about:
+The recovery UI should not become an alternate full administration interface, because it exists to diagnose and recover Mosaic when the normal system is unavailable. It should know only about:
 
 - installed Generations
 - logs
@@ -1067,15 +754,7 @@ It must not know media semantics.
 
 # Recovery SDUI
 
-The Supervisor does not emit HTML.
-
-It emits Recovery SDUI.
-
-Recovery SDUI is intentionally smaller than Runtime SDUI.
-
-It should support only recovery and diagnostics.
-
-Examples include:
+The Supervisor does not emit HTML; it emits Recovery SDUI. Recovery SDUI is intentionally smaller than Runtime SDUI because it should support only recovery and diagnostics. Examples include:
 
 - Heading
 - Paragraph
@@ -1086,25 +765,13 @@ Examples include:
 - Table
 - Log
 
-The Shell, embedded recovery renderer and native clients may all render Recovery SDUI.
-
-The Supervisor remains presentation independent.
-
-Recovery SDUI is the only Supervisor-owned presentation contract.
-
-The Supervisor does not produce Runtime SDUI, including during onboarding.
+The Shell, embedded recovery renderer and native clients may all render Recovery SDUI, so the Supervisor remains presentation independent. Recovery SDUI is the only Supervisor-owned presentation contract, and the Supervisor does not produce Runtime SDUI, including during onboarding.
 
 ---
 
 # Embedded Recovery Renderer
 
-The embedded recovery renderer exists only for browser bootstrap and catastrophic Shell failure.
-
-It converts Recovery SDUI into HTML inside the browser.
-
-It should visually communicate control and transparency rather than beauty.
-
-Recommended characteristics include:
+The embedded recovery renderer exists only for browser bootstrap and catastrophic Shell failure, converting Recovery SDUI into HTML inside the browser. It should visually communicate control and transparency rather than beauty. Recommended characteristics include:
 
 - monospace typography
 - minimal colours
@@ -1123,9 +790,7 @@ Native clients do not require the embedded recovery renderer because they alread
 
 # Supervisor State
 
-Supervisor state is host management state.
-
-Examples include:
+Supervisor state is host management state. Examples include:
 
 - installed Supervisor version
 - installed Generations
@@ -1157,7 +822,7 @@ The Supervisor should initially target the following failure modes.
 | Configuration activation fails | Roll back configuration or keep previous active configuration. |
 | Platform repeatedly crashes | Stop restart loops, keep diagnostics and offer rollback or safe restart. |
 
-The Supervisor should prefer preserving a known good system over repeatedly attempting a broken activation.
+Across all of them the Supervisor should prefer preserving a known good system over repeatedly attempting a broken activation.
 
 ---
 
@@ -1198,196 +863,39 @@ The browser, Shell and native clients render whichever state the Supervisor curr
 
 # Startup And Recovery Flows
 
-The Supervisor begins Shell bootstrap as soon as its process starts.
-
-This work should normally complete before the user opens Mosaic.
-
-```mermaid
-flowchart TD
-
-N1["Container Starts"]
-N2["Supervisor Starts"]
-N3["Download Shell"]
-N4["Verify Signature"]
-N5["Install And Start Shell"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
+The Supervisor begins Shell bootstrap as soon as its process starts: once the container starts and the Supervisor starts, it downloads the Shell, verifies the signature, then installs and starts the Shell. This work should normally complete before the user opens Mosaic.
 
 ## First Visit With Shell Ready
 
-```mermaid
-flowchart TD
-
-N1["Browser"]
-N2["Web Renderer In Shell"]
-N3["Supervisor"]
-N4["Recovery SDUI"]
-N5["Onboarding"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
-
-The embedded recovery renderer should not appear.
-
-The Shell renders Supervisor-owned Recovery SDUI until the Platform exists and can provide Runtime SDUI.
+When the Shell is already installed, the browser loads the Web Renderer in the Shell, which connects to the Supervisor, receives Recovery SDUI and presents onboarding. The embedded recovery renderer should not appear, because the Shell renders Supervisor-owned Recovery SDUI until the Platform exists and can provide Runtime SDUI.
 
 ## Shell Not Ready
 
-```mermaid
-flowchart TD
-
-N1["Browser"]
-N2["Embedded Recovery Renderer"]
-N3["Preparing Mosaic"]
-N4["Downloading Shell"]
-N5["Shell Ready"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
-
-The Supervisor should transition into the Shell automatically when the Shell is ready.
-
-The user should not need to refresh or take manual action.
-
-The embedded renderer must not present a manual redirect or `Build Mosaic` button.
-
-Its purpose is to communicate bootstrap progress until the Shell can replace it automatically.
+When the Shell is not yet installed, the browser receives the embedded recovery renderer instead, which reports that Mosaic is preparing and that the Shell is downloading until the Shell is ready. The Supervisor should then transition into the Shell automatically, so the user should not need to refresh or take manual action. The embedded renderer must not present a manual redirect or `Build Mosaic` button; its purpose is to communicate bootstrap progress until the Shell can replace it automatically.
 
 ## Onboarding And Build
 
-```mermaid
-flowchart TD
-
-N1["Shell"]
-N2["Recovery SDUI From Supervisor"]
-N3["Catalogue-Driven Feature Selection"]
-N4["Build Specification"]
-N5["Dependency Resolution"]
-N6["Build Pipeline"]
-N7["Health Checks"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-N5 --> N6
-N6 --> N7
-```
-
-The Shell remains the active presentation layer throughout this flow.
-
-If the build fails, the Supervisor continues emitting Recovery SDUI through the Shell with the failure explanation, diagnostics and safe retry actions.
-
-Build failure must not cause a browser to fall back to the embedded recovery renderer while the Shell remains healthy.
+Onboarding runs inside the Shell against Recovery SDUI from the Supervisor, offering catalogue-driven feature selection that yields a Build Specification, which then drives dependency resolution, the Build Pipeline and health checks. The Shell remains the active presentation layer throughout this flow, so if the build fails the Supervisor continues emitting Recovery SDUI through the Shell with the failure explanation, diagnostics and safe retry actions. Build failure must not cause a browser to fall back to the embedded recovery renderer while the Shell remains healthy.
 
 ## Initial Runtime Switch
 
-```mermaid
-flowchart TD
-
-N1["Platform Passes Health Checks"]
-N2["Supervisor Marks Platform Ready"]
-N3["Shell Switches Backend"]
-N4["Runtime SDUI"]
-N5["Home Screen"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
-
-The Shell remains loaded during this handoff.
-
-Only its active backend and SDUI producer change, from Supervisor-owned Recovery SDUI to Platform-owned Runtime SDUI.
-
-The transition should not require a page refresh or replacement of the Shell.
+Once the Platform passes health checks, the Supervisor marks the Platform ready, the Shell switches backend, and Runtime SDUI replaces Recovery SDUI to present the home screen. The Shell remains loaded during this handoff, and only its active backend and SDUI producer change, from Supervisor-owned Recovery SDUI to Platform-owned Runtime SDUI. The transition should not require a page refresh or replacement of the Shell.
 
 ## Platform Failure
 
-```mermaid
-flowchart TD
-
-N1["Shell"]
-N2["Platform Disconnects"]
-N3["Reconnects To Supervisor"]
-N4["Recovery SDUI"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The Shell should remain visible.
-
-The user may see restart, rollback, progress and log state without losing their interface.
+When the Platform disconnects, the Shell reconnects to the Supervisor and renders Recovery SDUI. The Shell should remain visible, so the user may see restart, rollback, progress and log state without losing their interface.
 
 ## Platform Recovery
 
-```mermaid
-flowchart TD
-
-N1["Supervisor"]
-N2["Platform Ready"]
-N3["Shell Reconnects"]
-N4["Platform Resumes"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The transition should feel seamless.
+When the Supervisor reports the Platform ready again, the Shell reconnects and the Platform resumes. The transition should feel seamless.
 
 ## Shell Failure
 
-For browser access, the Supervisor should fall back to the embedded recovery renderer only when the Shell cannot be used.
-
-The embedded recovery renderer should diagnose or recover the Shell before returning to the richer Shell experience.
-
-Native clients continue to render Recovery SDUI with their own renderer and do not use the embedded HTML document.
+For browser access, the Supervisor should fall back to the embedded recovery renderer only when the Shell cannot be used, and that renderer should diagnose or recover the Shell before returning to the richer Shell experience. Native clients continue to render Recovery SDUI with their own renderer and do not use the embedded HTML document.
 
 ## Atomic Upgrade Recovery
 
-```mermaid
-flowchart TD
-
-N1["Download"]
-N2["Build"]
-N3["Health Check"]
-N4["Switch"]
-N5["Retain Previous"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-N4 --> N5
-```
-
-If the Platform upgrade fails:
-
-```mermaid
-flowchart TD
-
-N1["Rollback"]
-N2["Reconnect Shell"]
-N3["Continue"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The user should remain inside the Shell throughout.
+An upgrade downloads, builds, health checks and switches, then retains the previous Generation. If the Platform upgrade fails, the Supervisor rolls back, the Shell reconnects and the system continues, so the user should remain inside the Shell throughout.
 
 ---
 
@@ -1416,69 +924,43 @@ The following practices are prohibited.
 
 ## Supervisor As Platform
 
-Putting media execution or business capability behaviour into the Supervisor.
-
-The Supervisor manages Mosaic.
-
-It does not become Mosaic's media Platform.
+Putting media execution or business capability behaviour into the Supervisor. The Supervisor manages Mosaic; it does not become Mosaic's media Platform.
 
 ---
 
 ## In-Place Mutation
 
-Changing the active Platform installation directly during upgrade.
-
-The Supervisor should prepare a candidate Generation separately and activate it atomically.
+Changing the active Platform installation directly during upgrade. The Supervisor should instead prepare a candidate Generation separately and activate it atomically.
 
 ---
 
 ## Supervisor As Builder
 
-Embedding compilation, packaging or dependency build mechanics inside the Supervisor.
-
-The Supervisor orchestrates the Build Pipeline.
-
-It does not become the Builder.
+Embedding compilation, packaging or dependency build mechanics inside the Supervisor. The Supervisor orchestrates the Build Pipeline; it does not become the Builder.
 
 ---
 
 ## Shell-Dependent Recovery
 
-Requiring the normal Shell to diagnose Shell failure.
-
-The Shell should render recovery whenever available.
-
-The embedded recovery renderer must remain available when the Shell itself is unavailable.
+Requiring the normal Shell to diagnose Shell failure. The Shell should render recovery whenever available, but the embedded recovery renderer must remain available when the Shell itself is unavailable.
 
 ---
 
 ## Platform As Public UI
 
-Allowing the Platform to serve UI directly.
-
-The Supervisor is the public entry point.
-
-The Platform provides business logic, GraphQL, Runtime SDUI, Event Bus and Capability Managers.
-
-It does not present itself.
+Allowing the Platform to serve UI directly. The Supervisor is the public entry point, whereas the Platform provides business logic, GraphQL, Runtime SDUI, Event Bus and Capability Managers. It does not present itself.
 
 ---
 
 ## Unbounded Restart Loop
 
-Restarting a broken Platform indefinitely.
-
-The Supervisor should detect repeated failure, stop unsafe loops and expose recovery options.
+Restarting a broken Platform indefinitely. The Supervisor should detect repeated failure, stop unsafe loops and expose recovery options.
 
 ---
 
 ## Mutable Supervisor
 
-Allowing the Supervisor to accumulate dependencies, business behaviour or frequent change.
-
-The Supervisor should remain tiny, stable and independently testable.
-
-It should always be capable of recovering the rest of Mosaic.
+Allowing the Supervisor to accumulate dependencies, business behaviour or frequent change. The Supervisor should remain tiny, stable and independently testable, so that it is always capable of recovering the rest of Mosaic.
 
 ---
 
@@ -1486,31 +968,31 @@ It should always be capable of recovering the rest of Mosaic.
 
 Within Mosaic:
 
-- The Supervisor MUST be outside every Platform package and Generation.
-- The Supervisor MUST be the always-running host manager for Mosaic.
-- The Supervisor MUST start before every managed Mosaic component and stop after them.
-- The Supervisor MUST expose the only public HTTP entry point.
-- The Platform MUST NOT serve UI directly.
-- The Supervisor MUST remain intentionally tiny and dependency-light.
-- The Supervisor SHOULD change rarely.
-- The Supervisor MUST be independently testable.
-- The Supervisor SHOULD install and manage the Shell.
-- The Supervisor MUST begin Shell download, signature verification and installation without waiting for user interaction.
-- The Supervisor SHOULD run onboarding through the Shell.
-- The Supervisor SHOULD derive onboarding choices from Module Catalogue and manifest metadata rather than a hardcoded Shell catalogue.
-- The Supervisor MUST convert accepted onboarding choices into a declarative Build Specification.
-- The Supervisor MUST resolve selected Modules before invoking the Build Pipeline.
-- The Supervisor MUST NOT contain build or compilation logic.
-- The Supervisor MUST validate produced Platform packages.
-- The Supervisor MUST activate immutable Generations.
-- The Supervisor MUST support rollback by reactivating a previous known good Generation.
-- The Supervisor MUST emit Recovery SDUI rather than HTML.
-- The Supervisor MUST prefer Shell-rendered recovery when the Shell is available.
-- The Supervisor MUST keep the Shell loaded while transitioning from Recovery SDUI to Runtime SDUI.
-- The Supervisor MUST provide an embedded recovery renderer for browser bootstrap and Shell failure only.
-- The embedded recovery renderer MUST transition to the Shell automatically when the Shell becomes available.
-- The Supervisor MUST keep host management state separate from Runtime State and business state.
-- The Supervisor MUST NOT own media business behaviour.
+- The Supervisor must be outside every Platform package and Generation.
+- The Supervisor must be the always-running host manager for Mosaic.
+- The Supervisor must start before every managed Mosaic component and stop after them.
+- The Supervisor must expose the only public HTTP entry point.
+- The Platform must not serve UI directly.
+- The Supervisor must remain intentionally tiny and dependency-light.
+- The Supervisor should change rarely.
+- The Supervisor must be independently testable.
+- The Supervisor should install and manage the Shell.
+- The Supervisor must begin Shell download, signature verification and installation without waiting for user interaction.
+- The Supervisor should run onboarding through the Shell.
+- The Supervisor should derive onboarding choices from Module Catalogue and manifest metadata rather than a hardcoded Shell catalogue.
+- The Supervisor must convert accepted onboarding choices into a declarative Build Specification.
+- The Supervisor must resolve selected Modules before invoking the Build Pipeline.
+- The Supervisor must not contain build or compilation logic.
+- The Supervisor must validate produced Platform packages.
+- The Supervisor must activate immutable Generations.
+- The Supervisor must support rollback by reactivating a previous known good Generation.
+- The Supervisor must emit Recovery SDUI rather than HTML.
+- The Supervisor must prefer Shell-rendered recovery when the Shell is available.
+- The Supervisor must keep the Shell loaded while transitioning from Recovery SDUI to Runtime SDUI.
+- The Supervisor must provide an embedded recovery renderer for browser bootstrap and Shell failure only.
+- The embedded recovery renderer must transition to the Shell automatically when the Shell becomes available.
+- The Supervisor must keep host management state separate from Runtime State and business state.
+- The Supervisor must not own media business behaviour.
 
 ---
 
@@ -1535,14 +1017,6 @@ The next chapter records architectural decisions affecting Runtime Architecture.
 
 # Summary
 
-The Supervisor should make Mosaic feel self-hostable, recoverable and upgradeable.
-
-A user installs the Supervisor.
-
-The Supervisor installs the Shell, guides onboarding, resolves selected Modules, invokes the Build Pipeline, validates the produced Platform package and activates a Generation.
-
-When upgrades arrive, the Supervisor prepares a new Generation in the background and activates it atomically.
-
-When activation fails, the Supervisor rolls back by activating the previous known good Generation.
+The Supervisor should make Mosaic feel self-hostable, recoverable and upgradeable. A user installs the Supervisor, and the Supervisor installs the Shell, guides onboarding, resolves selected Modules, invokes the Build Pipeline, validates the produced Platform package and activates a Generation. When upgrades arrive, it prepares a new Generation in the background and activates it atomically; when activation fails, it rolls back by activating the previous known good Generation.
 
 When everything else is unavailable, the Supervisor still exposes the recovery UI.

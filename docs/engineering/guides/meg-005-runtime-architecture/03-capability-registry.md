@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-The Mosaic Runtime is intentionally modular.
-
-Capabilities may be:
+The Mosaic Runtime is intentionally modular. A capability may arrive from several directions and may change state at any point in the platform's life, so capabilities may be:
 
 - built into the Platform distribution
 - provided by first-party modules
@@ -24,11 +22,7 @@ Capabilities may be:
 - upgraded
 - removed
 
-The Runtime therefore requires a mechanism for discovering, identifying and managing every capability available to the platform.
-
-This responsibility belongs to the **Capability Registry**.
-
-The Capability Registry provides the Runtime with a single authoritative view of the platform's available capabilities.
+The Runtime therefore requires a mechanism for discovering, identifying and managing every capability available to the platform, and that responsibility belongs to the **Capability Registry**. The Registry provides the Runtime with a single authoritative view of the platform's available capabilities.
 
 ---
 
@@ -40,8 +34,7 @@ Within Mosaic:
 
 The Runtime should never contain hard-coded knowledge such as:
 
-```
-
+```go
 if playbackEnabled {
 
     ...
@@ -49,71 +42,23 @@ if playbackEnabled {
 }
 ```
 
-Instead:
-
-```mermaid
-flowchart TD
-
-N1["Capability Registered"]
-N2["Runtime Discovers Capability"]
-N3["Runtime Integrates Capability"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Runtime grows through discovery.
-
-Not modification.
+Instead a capability registers itself, the Runtime discovers that registration, and the Runtime integrates the capability on that basis. The Runtime therefore grows through discovery rather than through modification.
 
 ---
 
 # What Is A Capability?
 
-Within Mosaic, a capability is a self-contained unit of business functionality.
-
-Examples include:
-
-```
-
-Playback
-```
-
-```
-
-Metadata
-```
-
-```
-
-Library
-```
-
-```
-
-Recommendations
-```
-
-```
-
-Authentication
-```
-
-Capabilities own:
+Within Mosaic, a capability is a self-contained unit of business functionality, such as Playback, Metadata, Library, Recommendations or Authentication. The division of ownership between a capability and the Runtime is strict. The Runtime owns execution, whereas capabilities own:
 
 - business behaviour
 - runtime registration
 - lifecycle participation
 
-The Runtime owns execution.
-
 ---
 
 # What Is The Capability Registry?
 
-The Capability Registry is the Runtime's catalogue of available capabilities.
-
-Conceptually.
+The Capability Registry is the Runtime's catalogue of available capabilities. Every Runtime service discovers capabilities through the Registry, which means no Runtime component should maintain its own capability list.
 
 ```mermaid
 flowchart TD
@@ -134,15 +79,11 @@ N2 --> N7
 N1 --> N2
 ```
 
-Every Runtime service discovers capabilities through the Registry.
-
-No Runtime component should maintain its own capability list.
-
 ---
 
 # Why A Registry Exists
 
-Without a Registry:
+Without a Registry the Runtime reaches for each capability directly, naming Playback, Metadata, Library and Recommendations one by one.
 
 ```mermaid
 flowchart TD
@@ -159,11 +100,7 @@ N3 --> N4
 N4 --> N5
 ```
 
-The Runtime becomes tightly coupled to every capability.
-
-Every new capability requires Runtime modification.
-
-Instead.
+The Runtime then becomes tightly coupled to every capability, so every new capability requires Runtime modification. With a Registry the direction reverses, and the Runtime becomes open for module while remaining closed for modification.
 
 ```mermaid
 flowchart TD
@@ -178,13 +115,11 @@ N2 --> N3
 N3 --> N4
 ```
 
-The Runtime becomes open for module while remaining closed for modification.
-
 ---
 
 # Runtime Source Of Truth
 
-The Capability Registry is the authoritative source for:
+The Capability Registry is the authoritative source of everything the Runtime knows about a capability. Other Runtime components should query the Registry rather than maintain independent copies of that information. The Registry is authoritative for:
 
 - available capabilities
 - capability metadata
@@ -193,76 +128,23 @@ The Capability Registry is the authoritative source for:
 - health
 - version
 
-Other Runtime components should query the Registry.
-
-They should never maintain independent copies of capability information.
-
 ---
 
 # Registration
 
-Capabilities register during startup.
-
-Conceptually.
-
-```mermaid
-flowchart TD
-
-N1["Capability Created"]
-N2["Register"]
-N3["Capability Registry"]
-N4["Runtime Ready"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Registration should occur before capability execution begins.
-
-Capabilities that are not registered do not exist from the Runtime's perspective.
+Capabilities register during startup: a capability is created, it registers itself with the Capability Registry, and only once every registration has completed is the Runtime ready. Registration should therefore occur before capability execution begins, because capabilities that are not registered do not exist from the Runtime's perspective.
 
 ---
 
 # Discovery
 
-Runtime Services discover capabilities through the Registry.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Capability Registry"]
-N3["Scheduled Capability"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Likewise.
-
-```mermaid
-flowchart TD
-
-N1["Runtime Events"]
-N2["Capability Registry"]
-N3["Subscribers"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Discovery should always remain explicit.
+Runtime Services discover capabilities through the Registry. The Scheduler asks the Registry which capabilities are scheduled, and Runtime Events reach their subscribers by the same route, because the Registry knows which capabilities subscribe. Discovery should always remain explicit.
 
 ---
 
 # Capability Metadata
 
-Every registered capability SHOULD expose metadata.
-
-Examples include:
+Every registered capability should expose metadata. The Registry owns that metadata whereas the capability owns its accuracy. The metadata typically includes:
 
 - identifier
 - name
@@ -273,50 +155,23 @@ Examples include:
 - health
 - capabilities provided
 
-The Registry owns this metadata.
-
-The capability owns its accuracy.
-
 Modern service registries similarly maintain metadata describing registered services, allowing runtime discovery without hard-coded dependencies.  [microservices.io](https://microservices.io/patterns/service-registry.html)
 
 ---
 
 # Capability Identity
 
-Every capability MUST possess a globally unique identifier.
-
-Examples.
-
-```
-
-playback
-```
-
-```
-
-metadata
-```
-
-```
-
-library
-```
-
-Identifiers should remain:
+Every capability must possess a globally unique identifier, such as `playback`, `metadata` or `library`. Changing one should be considered a breaking architectural change, which is why identifiers should remain:
 
 - stable
 - immutable
 - human readable
 
-Changing a capability identifier should be considered a breaking architectural change.
-
 ---
 
 # Capability Lifecycle
 
-The Registry tracks lifecycle.
-
-Example.
+The Registry tracks lifecycle. It records each transition, the Runtime coordinates them, and capabilities participate in them.
 
 ```mermaid
 flowchart TD
@@ -335,19 +190,11 @@ N4 --> N5
 N5 --> N6
 ```
 
-The Registry records lifecycle.
-
-The Runtime coordinates it.
-
-Capabilities participate in it.
-
 ---
 
 # Dependency Discovery
 
-Capabilities may depend upon other capabilities.
-
-Example.
+Capabilities may depend upon other capabilities, and Recommendations, Playback and Metadata stand in exactly such a relationship.
 
 ```mermaid
 flowchart TD
@@ -362,204 +209,58 @@ N2 --> N3
 N3 --> N4
 ```
 
-The Registry owns this dependency graph.
-
-Capabilities should declare dependencies.
-
-The Runtime should resolve them.
-
-This keeps dependency knowledge centralised rather than distributed.
+The Registry owns this dependency graph: capabilities should declare their dependencies and the Runtime should resolve them, which keeps dependency knowledge centralised rather than distributed.
 
 ---
 
 # Capability State
 
-The Registry maintains operational state.
-
-Examples include:
-
-```
-
-Running
-```
-
-```
-
-Disabled
-```
-
-```
-
-Failed
-```
-
-```
-
-Waiting
-```
-
-Business state remains outside the Registry.
-
-The Registry tracks only Runtime state.
+The Registry maintains operational state, recording whether a capability is Running, Disabled, Failed or Waiting. Business state remains outside the Registry, which tracks only Runtime state.
 
 ---
 
 # Health
 
-Capabilities SHOULD publish health information.
-
-Example.
-
-```
-
-Healthy
-```
-
-```
-
-Degraded
-```
-
-```
-
-Unavailable
-```
-
-The Capability Registry aggregates this information for Runtime services.
-
-The Registry should never determine health itself.
+Capabilities should publish health information, reporting themselves as Healthy, Degraded or Unavailable. The Capability Registry aggregates this information for Runtime services, but it should never determine health itself.
 
 ---
 
 # Capability Discovery Is Runtime Only
 
-Business capabilities should never query the Registry.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Find Metadata Capability"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Playback"]
-N2["Raise Domain Event"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Runtime"]
-N2["Registry"]
-N3["Metadata Capability"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Registry exists for Runtime coordination.
-
-Not business behaviour.
+Business capabilities should never query the Registry. It is poor practice for Playback to find the Metadata capability for itself; Playback should instead raise a Domain Event, after which the Runtime consults the Registry and reaches the Metadata capability. The Registry exists for Runtime coordination, not for business behaviour.
 
 ---
 
 # Capability Replacement
 
-The Runtime should treat capabilities as interchangeable.
-
-Example.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Local Provider"]
-
-N1 --> N2
-```
-
-Later.
-
-```mermaid
-flowchart TD
-
-N1["Metadata"]
-N2["Cloud Provider"]
-
-N1 --> N2
-```
-
-The Registry records:
-
-```
-
-Metadata Capability
-```
-
-The Runtime remains unaware of implementation differences.
+The Runtime should treat capabilities as interchangeable. Metadata may be served by a local provider today and by a cloud provider later, and in both cases the Registry records only the Metadata capability, so the Runtime remains unaware of implementation differences.
 
 ---
 
 # Module Integration
 
-Modules register exactly like Platform capabilities.
-
-```mermaid
-flowchart TD
-
-N1["Module Loaded"]
-N2["Register Capability"]
-N3["Capability Registry"]
-N4["Runtime Discovers"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-The Registry should make no distinction between:
+Modules register exactly like Platform capabilities: a module is loaded, it registers its capability with the Capability Registry, and the Runtime discovers it there. Everything therefore becomes a capability, and this is one of the architectural foundations enabling Mosaic's module-first design. The Registry should make no distinction between:
 
 - Platform capabilities
 - First-party
 - Third-party
 
-Everything becomes a capability.
-
-This is one of the architectural foundations enabling Mosaic's module-first design.
-
 ---
 
 # Runtime Services
 
-Every Runtime Service should depend upon the Registry.
-
-Examples include:
+Every Runtime Service should depend upon the Registry, which becomes the Runtime's single source of capability knowledge. Those services include:
 
 - Scheduler
 - Worker Manager
 - Lifecycle Manager
 - Execution Engine
 
-The Registry becomes the Runtime's single source of capability knowledge.
-
 ---
 
 # Registry Is Not A Service Locator
 
-This distinction is critical.
-
-Poor.
+This distinction is critical. The poor pattern has a capability ask the Registry to resolve a service and then execute against it.
 
 ```mermaid
 flowchart TD
@@ -574,24 +275,20 @@ N2 --> N3
 N3 --> N4
 ```
 
-The Registry should not provide arbitrary object lookup.
-
-It provides:
+The Registry should not provide arbitrary object lookup. Its remit is narrower, covering only:
 
 - discovery
 - metadata
 - lifecycle
 - dependency information
 
-Dependency injection remains the responsibility of the Composition Root.
-
-Using a registry for runtime discovery is distinct from using a Service Locator for dependency resolution, which obscures dependencies and is generally discouraged.  [Reddit](https://www.reddit.com/r/softwarearchitecture/comments/1241cgj)
+Dependency injection remains the responsibility of the Composition Root. Using a registry for runtime discovery is distinct from using a Service Locator for dependency resolution, which obscures dependencies and is generally discouraged.  [Reddit](https://www.reddit.com/r/softwarearchitecture/comments/1241cgj)
 
 ---
 
 # Observability
 
-The Registry SHOULD expose:
+Observability is what makes the Registry's knowledge usable outside itself. The Registry should expose:
 
 - registered capabilities
 - lifecycle state
@@ -612,14 +309,13 @@ The following practices are prohibited.
 
 ## Hard-Coded Capabilities
 
-```
+Conditions of this form inside the Runtime:
 
+```go
 if playback {
 
 }
 ```
-
-inside the Runtime.
 
 ---
 
@@ -637,15 +333,7 @@ Multiple Runtime components maintaining independent capability lists.
 
 ## Runtime Behaviour
 
-The Registry deciding:
-
-- scheduling
-- retries
-- execution
-
-The Registry owns knowledge.
-
-Not execution.
+The Registry deciding scheduling, retries or execution. The Registry owns knowledge, not execution.
 
 ---
 
@@ -659,32 +347,26 @@ Returning arbitrary dependencies for business code.
 
 Within Mosaic:
 
-- Every capability MUST register with the Capability Registry.
-- The Capability Registry MUST be the Runtime's single source of capability metadata.
-- Runtime Services MUST discover capabilities through the Registry.
-- Capabilities MUST expose metadata and lifecycle information.
-- Business behaviour MUST remain independent of the Registry.
-- The Registry MUST NOT become a dependency injection container.
-- Built-in and module-delivered capabilities MUST register identically.
-- Capability discovery MUST remain explicit and observable.
+- Every capability must register with the Capability Registry.
+- The Capability Registry must be the Runtime's single source of capability metadata.
+- Runtime Services must discover capabilities through the Registry.
+- Capabilities must expose metadata and lifecycle information.
+- Business behaviour must remain independent of the Registry.
+- The Registry must not become a dependency injection container.
+- Built-in and module-delivered capabilities must register identically.
+- Capability discovery must remain explicit and observable.
 
 ---
 
 # Relationship to MEG
 
-The Runtime Kernel owns the Runtime.
-
-The Capability Registry owns knowledge of every capability participating in that Runtime.
-
-The next chapter introduces the **Service Lifecycle**, explaining how registered capabilities progress from discovery to execution and eventually to graceful shutdown.
+The Runtime Kernel owns the Runtime, whereas the Capability Registry owns knowledge of every capability participating in that Runtime. The next chapter introduces the **Service Lifecycle**, explaining how registered capabilities progress from discovery to execution and eventually to graceful shutdown.
 
 ---
 
 # Summary
 
-The Capability Registry is the Runtime's memory.
-
-It knows:
+The Capability Registry is the Runtime's memory. It knows:
 
 - what capabilities exist
 - what they provide
@@ -692,6 +374,4 @@ It knows:
 - whether they are healthy
 - where they are in their lifecycle
 
-It intentionally knows nothing about the business those capabilities perform.
-
-That separation allows the Runtime to remain generic while enabling the platform to grow indefinitely through independently developed capabilities.
+It intentionally knows nothing about the business those capabilities perform, and that separation allows the Runtime to remain generic while enabling the platform to grow indefinitely through independently developed capabilities.

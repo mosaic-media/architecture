@@ -22,9 +22,7 @@ The previous chapters introduced the structural building blocks of the Mosaic Ru
 - Scheduler
 - Resource Manager
 
-This document brings those concepts together into practical modelling guidance.
-
-Its purpose is to help engineers answer one question.
+This document brings those concepts together into practical modelling guidance, so that engineers can answer one question.
 
 > **"Where does this Runtime component belong?"**
 
@@ -36,13 +34,7 @@ Within Mosaic:
 
 > **The Runtime should provide execution, not accumulate business behaviour.**
 
-Every Runtime component should exist because it enables capabilities.
-
-Not because it implements them.
-
-As the platform grows, the Runtime should become more capable.
-
-It should not become more complicated.
+Every Runtime component should exist because it enables capabilities, not because it implements them. As the platform grows the Runtime should therefore become more capable without becoming more complicated.
 
 ---
 
@@ -52,16 +44,7 @@ Before introducing a new Runtime component ask:
 
 > **What single Runtime responsibility does this component own?**
 
-Examples include:
-
-- scheduling
-- worker allocation
-- capability discovery
-- dependency validation
-
-Avoid introducing components that own multiple unrelated responsibilities.
-
-Small Runtime Services compose more effectively than large ones.
+Good answers name one concern — scheduling, worker allocation, capability discovery or dependency validation. Avoid introducing components that own multiple unrelated responsibilities, because small Runtime Services compose more effectively than large ones.
 
 ---
 
@@ -71,38 +54,7 @@ A useful question is:
 
 > **Would this concept still exist if every business capability disappeared?**
 
-If the answer is:
-
-```
-
-Yes
-```
-
-it probably belongs in the Runtime.
-
-Examples.
-
-- Worker Pool
-- Scheduler
-- Resource Manager
-
-If the answer is:
-
-```
-
-No
-```
-
-it probably belongs to a capability.
-
-Examples.
-
-- Playback
-- Library
-- Metadata
-- Recommendations
-
-This distinction should remain one of the strongest modelling heuristics within Mosaic.
+If the answer is Yes it probably belongs in the Runtime, as with the Worker Pool, the Scheduler and the Resource Manager. If the answer is No it probably belongs to a capability, as with Playback, Library, Metadata and Recommendations. This distinction should remain one of the strongest modelling heuristics within Mosaic.
 
 ---
 
@@ -112,189 +64,41 @@ Whenever new operational behaviour appears ask:
 
 > **Can this become an independent Runtime Service?**
 
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Runtime Kernel"]
-N2["Scheduler"]
-N3["Execution Engine"]
-N4["Resource Manager"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Avoid.
-
-```mermaid
-flowchart TD
-
-N1["Runtime Kernel"]
-N2["Everything"]
-
-N1 --> N2
-```
-
-The Kernel should coordinate.
-
-Runtime Services should perform work.
+The preferred shape is a Runtime Kernel that delegates to distinct services such as the Scheduler, the Execution Engine and the Resource Manager, rather than a Runtime Kernel that absorbs Everything. The Kernel should coordinate, whereas Runtime Services should perform the work.
 
 ---
 
 # Protect The Kernel
 
-The Runtime Kernel should remain intentionally small.
-
-Before adding functionality ask:
+The Runtime Kernel should remain intentionally small, so before adding functionality ask:
 
 > **Does the Kernel really need to know this?**
 
-If another Runtime Service could own the responsibility:
-
-Move it there.
-
-The Kernel should evolve slowly.
-
-Runtime Services should evolve freely.
+If another Runtime Service could own the responsibility, move it there. The Kernel should evolve slowly while Runtime Services evolve freely.
 
 ---
 
 # Model Capabilities
 
-The Runtime executes capabilities.
-
-It should never execute arbitrary business objects.
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Capability"]
-N2["Operation"]
-N3["Execution Engine"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Avoid.
-
-```mermaid
-flowchart TD
-
-N1["Random Function"]
-N2["Runtime"]
-
-N1 --> N2
-```
-
-Everything executable within Mosaic should ultimately belong to a registered capability.
-
-This reinforces the platform's capability-oriented architecture.
+The Runtime executes capabilities and should never execute arbitrary business objects. The preferred path runs from a Capability, through an Operation, to the Execution Engine; passing a Random Function directly to the Runtime is to be avoided. Everything executable within Mosaic should ultimately belong to a registered capability, which reinforces the platform's capability-oriented architecture.
 
 ---
 
 # Runtime Contracts
 
-Every Runtime interaction should occur through explicit contracts.
-
-Examples include:
-
-- Lifecycle
-- Scheduling
-- Execution
-- Resource Allocation
-- Capability Registration
-
-Avoid hidden communication between Runtime Services.
-
-Contracts should make Runtime relationships obvious.
+Every Runtime interaction should occur through explicit contracts, covering Lifecycle, Scheduling, Execution, Resource Allocation and Capability Registration. Avoid hidden communication between Runtime Services, because contracts are what make Runtime relationships obvious.
 
 ---
 
 # Avoid Runtime Shortcuts
 
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Needs Worker"]
-
-N1 --> N2
-```
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Worker Pool"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Execution Engine"]
-N3["Worker Manager"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Runtime architecture should remain layered.
-
-Bypassing Runtime Services usually creates long-term coupling.
+Suppose the Scheduler Needs Worker capacity. Reaching straight for the Worker Pool is poor practice; the preferred route runs from the Scheduler through the Execution Engine to the Worker Manager. The Runtime architecture should remain layered, because bypassing Runtime Services usually creates long-term coupling.
 
 ---
 
 # Dependency Direction
 
-Every Runtime dependency should point towards the Runtime Kernel.
-
-Conceptually.
-
-```mermaid
-flowchart TD
-
-N1["Worker Manager"]
-N2["Kernel"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Kernel"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Execution Engine"]
-N2["Kernel"]
-
-N1 --> N2
-```
-
-Runtime Services should not form complex dependency meshes.
-
-The Dependency Graph should remain understandable.
+Every Runtime dependency should point towards the Runtime Kernel: conceptually the Worker Manager, the Scheduler and the Execution Engine each depend upon the Kernel rather than upon one another. Runtime Services should not form complex dependency meshes, so that the Dependency Graph remains understandable.
 
 ---
 
@@ -304,67 +108,23 @@ Before introducing new Runtime state ask:
 
 > **Who owns this information?**
 
-Examples.
-
-Worker utilisation.
-
-↓
-
-Worker Manager.
-
-Capability metadata.
-
-↓
-
-Capability Registry.
-
-Execution progress.
-
-↓
-
-Execution Engine.
-
-Ownership should always remain singular.
+The answer should always be a single component: worker utilisation belongs to the Worker Manager, capability metadata to the Capability Registry, and execution progress to the Execution Engine. Ownership should always remain singular.
 
 ---
 
 # Build For Replacement
 
-Every Runtime Service should be replaceable.
-
-Ask:
+Every Runtime Service should be replaceable, so ask:
 
 > **Could another implementation satisfy the same contract?**
 
-Examples.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler V1"]
-N2["Scheduler V2"]
-
-N1 --> N2
-```
-
-```mermaid
-flowchart TD
-
-N1["Worker Pool A"]
-N2["Worker Pool B"]
-
-N1 --> N2
-```
-
-If replacing the component requires changing the Runtime Kernel:
-
-The abstraction probably needs refinement.
+Scheduler V1 should give way to Scheduler V2, and Worker Pool A to Worker Pool B, without disturbance elsewhere. If replacing the component requires changing the Runtime Kernel, the abstraction probably needs refinement.
 
 ---
 
 # Runtime Growth
 
-The preferred Runtime growth pattern is:
+The preferred Runtime growth pattern adds rather than rewrites.
 
 ```mermaid
 flowchart TD
@@ -381,61 +141,25 @@ N3 --> N4
 N4 --> N5
 ```
 
-Avoid modifying existing Runtime Services unnecessarily.
-
-Growth should occur primarily through composition.
-
-Not modification.
+Avoid modifying existing Runtime Services unnecessarily, because growth should occur primarily through composition rather than modification.
 
 ---
 
 # Runtime Services Should Not Discover Each Other
 
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Find Worker Manager"]
-N3["Execute"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Scheduler"]
-N2["Kernel Contract"]
-N3["Execution Engine"]
-
-N1 --> N2
-N2 --> N3
-```
-
-The Runtime should remain explicitly composed.
-
-Hidden service discovery weakens architectural clarity.
+It is poor practice for the Scheduler to Find Worker Manager and then Execute against it directly. The preferred route sends the Scheduler through a Kernel Contract to the Execution Engine. The Runtime should remain explicitly composed, because hidden service discovery weakens architectural clarity.
 
 ---
 
 # Prefer Determinism
 
-Runtime behaviour should remain deterministic.
-
-Given identical:
+Runtime behaviour should remain deterministic. Given identical:
 
 - configuration
 - capabilities
 - dependency graph
 
-the Runtime should produce identical startup, execution and shutdown behaviour.
-
-Determinism dramatically simplifies:
+the Runtime should produce identical startup, execution and shutdown behaviour. Determinism dramatically simplifies:
 
 - debugging
 - testing
@@ -452,19 +176,13 @@ Every Runtime component should answer:
 - What do I require?
 - Who depends upon me?
 
-If these questions cannot be answered clearly:
-
-The Runtime model probably requires refinement.
+If these questions cannot be answered clearly, the Runtime model probably requires refinement.
 
 ---
 
 # Runtime Diagrams
 
-Before implementing a Runtime Service:
-
-Draw it.
-
-Example.
+Before implementing a Runtime Service, draw it.
 
 ```mermaid
 flowchart TD
@@ -479,15 +197,7 @@ N2 --> N3
 N3 --> N4
 ```
 
-Simple diagrams frequently reveal:
-
-- circular dependencies
-- ownership confusion
-- unnecessary coupling
-
-Architecture should become obvious before code exists.
-
-Good architecture documentation should clearly communicate component responsibilities and interactions while remaining easy to evolve alongside the system.  [Qt](https://www.qt.io/software-insights/best-practices-for-architecture-documentation)
+Simple diagrams frequently reveal circular dependencies, ownership confusion and unnecessary coupling, so architecture should become obvious before code exists. Good architecture documentation should clearly communicate component responsibilities and interactions while remaining easy to evolve alongside the system.  [Qt](https://www.qt.io/software-insights/best-practices-for-architecture-documentation)
 
 ---
 
@@ -505,11 +215,7 @@ Before implementing a Runtime Service ask:
 - [ ] Can it be replaced independently?
 - [ ] Does it strengthen the Runtime rather than complicate it?
 
-If any answer is "no":
-
-Continue modelling.
-
-Implementation should wait.
+If any answer is "no", continue modelling; implementation should wait.
 
 ---
 
@@ -532,14 +238,14 @@ These patterns inevitably produce Runtime monoliths.
 
 Within Mosaic:
 
-- Every Runtime component MUST own one responsibility.
-- Runtime growth SHOULD occur through composition.
-- The Runtime Kernel MUST remain small.
-- Runtime Services SHOULD communicate through contracts.
-- Runtime state MUST have explicit ownership.
-- Capabilities MUST remain separate from Runtime infrastructure.
-- Runtime behaviour SHOULD remain deterministic.
-- Architectural clarity SHOULD always outweigh implementation convenience.
+- Every Runtime component must own one responsibility.
+- Runtime growth should occur through composition.
+- The Runtime Kernel must remain small.
+- Runtime Services should communicate through contracts.
+- Runtime state must have explicit ownership.
+- Capabilities must remain separate from Runtime infrastructure.
+- Runtime behaviour should remain deterministic.
+- Architectural clarity should always outweigh implementation convenience.
 
 ---
 
@@ -561,13 +267,7 @@ The next specification, **[MEG-006](../meg-006-module-platform/index.md) – Mod
 
 # Summary
 
-A well-designed Runtime should disappear into the background.
-
-Engineers should spend their time building capabilities.
-
-Not extending the Runtime itself.
-
-Within Mosaic, every Runtime component should make one thing easier:
+A well-designed Runtime should disappear into the background, so that engineers spend their time building capabilities rather than extending the Runtime itself. Within Mosaic, every Runtime component should make one thing easier:
 
 > **Building independently evolving capabilities.**
 

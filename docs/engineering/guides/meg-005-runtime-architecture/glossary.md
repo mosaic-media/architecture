@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-This glossary defines the terminology used throughout the Mosaic Runtime Architecture.
-
-The definitions contained within this document establish the canonical Runtime vocabulary for:
+This glossary defines the terminology used throughout the Mosaic Runtime Architecture, and the definitions contained within it establish the canonical Runtime vocabulary for:
 
 - Architecture Specifications
 - ADRs
@@ -31,9 +29,7 @@ Where a term has a specific meaning within the Runtime, that definition takes pr
 
 ## Build Specification
 
-The declarative description of the desired Mosaic runtime produced by onboarding.
-
-It records selections such as runtime channel, features, providers and Modules.
+The declarative description of the desired Mosaic runtime produced by onboarding, recording selections such as runtime channel, features, providers and Modules.
 
 The Supervisor uses the Build Specification to orchestrate dependency resolution, compatibility validation, Build Workspace preparation and Build Pipeline invocation.
 
@@ -45,9 +41,7 @@ It describes desired composition and does not contain build mechanics.
 
 An isolated temporary workspace used to assemble a candidate Platform package.
 
-The Build Workspace may contain Platform, SDK, selected Modules and generated integration files.
-
-It protects source repositories and the active Generation from mutation during build preparation.
+The Build Workspace may contain Platform, SDK, selected Modules and generated integration files, and it protects source repositories and the active Generation from mutation during build preparation.
 
 ---
 
@@ -55,9 +49,7 @@ It protects source repositories and the active Generation from mutation during b
 
 The Platform packaging process defined by the [MEG-006 Build Pipeline](../meg-006-module-platform/glossary.md#build-pipeline).
 
-The Supervisor invokes the Build Pipeline.
-
-The Supervisor does not contain build logic.
+The Supervisor invokes the Build Pipeline but does not contain build logic.
 
 The Build Pipeline owns build mechanics such as temporary `go.mod` updates, generated imports, `go mod tidy` and `go build`.
 
@@ -90,9 +82,7 @@ Examples include:
 - Metadata
 - Recommendations
 
-Capabilities own business behaviour.
-
-The Runtime owns execution.
+Capabilities own business behaviour, whereas the Runtime owns execution.
 
 ---
 
@@ -113,9 +103,7 @@ It is the Runtime's authoritative source of capability information.
 
 ## Composition
 
-The process of assembling Runtime Services, Adapters and Capabilities into a functioning Runtime.
-
-Composition occurs inside the Composition Root.
+The process of assembling Runtime Services, Adapters and Capabilities into a functioning Runtime, which occurs inside the Composition Root.
 
 ---
 
@@ -143,9 +131,7 @@ A Supervisor-owned browser fallback that renders Recovery SDUI when the Shell or
 
 The Embedded Recovery Renderer is a single self-contained HTML document with inline CSS and JavaScript only.
 
-It exists for bootstrap and Shell-failure recovery.
-
-It is not the normal Mosaic Web UI.
+It exists for bootstrap and Shell-failure recovery and is not the normal Mosaic Web UI.
 
 During first installation it reports Shell bootstrap progress and automatically yields to the Shell when the Shell becomes available.
 
@@ -171,9 +157,7 @@ It does not execute business behaviour itself.
 
 An immutable installed Mosaic system version containing the Platform package, Shell, Modules, manifests, assets and signatures required for activation.
 
-The Supervisor activates one Generation at a time.
-
-Rollback means activating a previous known good Generation.
+The Supervisor activates one Generation at a time, so rollback means activating a previous known good Generation.
 
 ---
 
@@ -185,24 +169,11 @@ The operational readiness of a Runtime component.
 
 Examples include:
 
-```
+- Healthy
+- Degraded
+- Unavailable
 
-Healthy
-```
-
-```
-
-Degraded
-```
-
-```
-
-Unavailable
-```
-
-Health describes operational capability.
-
-Not business correctness.
+Health describes operational capability rather than business correctness.
 
 ---
 
@@ -259,9 +230,7 @@ Lifecycle ownership belongs to the Runtime Kernel.
 
 The executable Platform output contained within a Platform package.
 
-The Supervisor should not compile the Platform Binary directly.
-
-The Build Pipeline produces it.
+The Supervisor should not compile the Platform Binary directly, because the Build Pipeline produces it.
 
 ---
 
@@ -269,9 +238,7 @@ The Build Pipeline produces it.
 
 The Platform artefact produced by the Build Pipeline and stored within a Generation.
 
-The Supervisor validates and activates Platform packages.
-
-Build mechanics belong to the Build Pipeline.
+The Supervisor validates and activates Platform packages, whereas build mechanics belong to the Build Pipeline.
 
 ---
 
@@ -285,9 +252,7 @@ Recovery UI should normally be rendered by the Shell from Recovery SDUI.
 
 When the Shell is unavailable, the embedded recovery renderer displays Recovery SDUI in the browser.
 
-Recovery UI knows about Generations, logs, health, configuration, storage, network, diagnostics and recovery actions.
-
-It does not know media semantics.
+Recovery UI knows about Generations, logs, health, configuration, storage, network, diagnostics and recovery actions, but it does not know media semantics.
 
 ---
 
@@ -337,9 +302,7 @@ Examples include:
 - connection pools
 - memory budgets
 
-Business capabilities consume resources.
-
-The Runtime owns them.
+Business capabilities consume resources, but the Runtime owns them.
 
 ---
 
@@ -363,17 +326,13 @@ It intentionally owns no business behaviour.
 
 The server-driven UI contract emitted by the Platform for normal Mosaic user interface presentation.
 
-The Shell and client renderers render Runtime SDUI.
-
-The Supervisor does not produce Runtime SDUI.
+The Shell and client renderers render Runtime SDUI, which the Supervisor does not produce.
 
 ---
 
 ## Runtime Kernel
 
-The architectural centre of the Runtime.
-
-Every Runtime Service is coordinated through the Runtime Kernel.
+The architectural centre of the Runtime, through which every Runtime Service is coordinated.
 
 It should remain:
 
@@ -460,9 +419,7 @@ Graceful shutdown preserves business correctness.
 
 The operational facade over the Platform for web onboarding, administration and user interaction.
 
-The Supervisor installs and manages the Shell.
-
-The Platform does not present itself directly.
+The Supervisor installs and manages the Shell, because the Platform does not present itself directly.
 
 The Shell should render Recovery SDUI whenever it is available.
 
@@ -476,9 +433,7 @@ The Shell remains loaded during initial Platform build and activation; it switch
 
 The single public HTTP entry point for Mosaic user access.
 
-All browser traffic enters through the Supervisor.
-
-The Platform never exposes UI directly.
+All browser traffic enters through the Supervisor, so the Platform never exposes UI directly.
 
 ---
 
@@ -515,9 +470,7 @@ Examples include:
 - event handling
 - maintenance work
 
-The Runtime executes Work Units.
-
-Capabilities provide their behaviour.
+The Runtime executes Work Units, whereas capabilities provide their behaviour.
 
 ---
 
@@ -544,9 +497,7 @@ The Runtime Service responsible for:
 - worker health
 - worker replacement
 
-Workers are Runtime resources.
-
-The Worker Manager owns them.
+Workers are Runtime resources, and the Worker Manager owns them.
 
 ---
 
@@ -589,4 +540,4 @@ Definitions should remain consistent across:
 - Contributor Guidance
 - Architecture Specifications
 
-Whenever Runtime terminology evolves, this glossary SHOULD be updated before introducing new terminology elsewhere.
+Whenever Runtime terminology evolves, this glossary should be updated before introducing new terminology elsewhere.

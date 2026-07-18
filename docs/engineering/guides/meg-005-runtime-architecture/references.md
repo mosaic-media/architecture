@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-This document records the primary references that influenced the Runtime Architecture described throughout MEG-005.
-
-Unlike previous specifications, MEG-005 draws inspiration from multiple engineering disciplines, including:
+This document records the primary references that influenced the Runtime Architecture described throughout MEG-005. Unlike previous specifications, MEG-005 draws inspiration from multiple engineering disciplines, including:
 
 - Operating Systems
 - Runtime Design
@@ -23,9 +21,7 @@ Unlike previous specifications, MEG-005 draws inspiration from multiple engineer
 - Domain-Driven Design
 - Distributed Systems
 
-The Runtime is intentionally not modelled after a traditional web framework.
-
-Instead, it is modelled after a lightweight execution platform.
+That breadth follows from the subject matter, because the Runtime is intentionally not modelled after a traditional web framework but after a lightweight execution platform.
 
 ---
 
@@ -43,15 +39,7 @@ Relevant concepts include:
 - message-based coordination
 - replaceable services
 
-Within Mosaic:
-
-- Runtime Kernel
-- Runtime Services
-- Capability Registry
-
-all follow this philosophy.
-
-The Kernel remains intentionally small while Runtime Services own specialised behaviour.
+Within Mosaic the Runtime Kernel, the Runtime Services and the Capability Registry all follow this philosophy, which is why the Kernel remains intentionally small while Runtime Services own specialised behaviour.
 
 ---
 
@@ -66,7 +54,7 @@ General operating system design principles influenced:
 - startup
 - shutdown
 
-The Runtime intentionally behaves more like a lightweight operating system than a conventional backend application.
+Those concerns are the ones an operating system solves rather than the ones an application solves, so the Runtime intentionally behaves more like a lightweight operating system than a conventional backend application.
 
 ---
 
@@ -119,11 +107,7 @@ The Runtime adapts these ideas while remaining capability oriented.
 
 Alistair Cockburn
 
-The Runtime itself remains infrastructure.
-
-Its relationship with the Domain follows the Ports and Adapters principles established in [MEG-004](../meg-004-hexagonal-architecture/index.md).
-
-Runtime Services expose capabilities through contracts rather than direct implementation dependencies.  [Wikipedia](https://en.wikipedia.org/wiki/Hexagonal_architecture_%28software%29)
+The Runtime itself remains infrastructure, so its relationship with the Domain follows the Ports and Adapters principles established in [MEG-004](../meg-004-hexagonal-architecture/index.md). Runtime Services therefore expose capabilities through contracts rather than direct implementation dependencies.  [Wikipedia](https://en.wikipedia.org/wiki/Hexagonal_architecture_%28software%29)
 
 ---
 
@@ -186,9 +170,7 @@ Many Runtime lifecycle decisions align closely with these operational principles
 
 # Go References
 
-The Runtime Architecture intentionally embraces idiomatic Go.
-
-Recommended references include:
+The Runtime Architecture intentionally embraces idiomatic Go, so the following references are recommended.
 
 ## Effective Go
 
@@ -280,9 +262,7 @@ The following specifications complement MEG-005.
 
 # Runtime Principles
 
-The Runtime Architecture established throughout MEG-005 intentionally builds upon several enduring engineering principles.
-
-These include:
+The Runtime Architecture established throughout MEG-005 intentionally builds upon several enduring engineering principles, which include:
 
 - Execution belongs to the Runtime.
 - Business belongs to capabilities.
@@ -302,15 +282,7 @@ These principles should remain significantly more stable than the implementation
 
 # Keeping References Current
 
-Runtime engineering continues to evolve.
-
-Scheduling improves.
-
-Worker models evolve.
-
-Resource management strategies change.
-
-This reference list SHOULD therefore be reviewed periodically to ensure:
+Runtime engineering continues to evolve: scheduling improves, worker models evolve and resource management strategies change. This reference list should therefore be reviewed periodically to ensure:
 
 - architectural guidance remains relevant
 - obsolete operational practices are removed
@@ -322,11 +294,7 @@ The Runtime philosophy should remain stable even as Runtime implementation conti
 
 # Closing Statement
 
-MEG-005 intentionally does not describe a traditional application framework.
-
-Instead, it describes an execution platform specifically designed for Mosaic.
-
-The resulting Runtime Architecture intentionally emphasises:
+MEG-005 intentionally does not describe a traditional application framework; it describes an execution platform specifically designed for Mosaic. The resulting Runtime Architecture therefore emphasises:
 
 - capability execution
 - explicit ownership
@@ -339,6 +307,4 @@ The Runtime exists for one purpose.
 
 > **Provide a stable execution environment in which independently evolving capabilities can safely operate.**
 
-The Runtime should quietly make the platform possible.
-
-The platform itself should remain the focus.
+The Runtime should quietly make the platform possible while the platform itself remains the focus.

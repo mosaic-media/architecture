@@ -12,33 +12,11 @@ Status: Draft
 
 # Purpose
 
-Previous engineering specifications established:
-
-- how software is written
-- how the runtime behaves
-- how the business is modelled
-- how technology is isolated from the business
-
-MEG-005 answers a different question.
+Previous engineering specifications established how software is written, how the runtime behaves, how the business is modelled and how technology is isolated from the business. MEG-005 answers a different question.
 
 > **How is the Runtime itself constructed?**
 
-The Mosaic Runtime is more than an event bus.
-
-It is responsible for:
-
-- capability discovery
-- dependency composition
-- lifecycle management
-- scheduling
-- execution
-- orchestration
-- observability
-- resource ownership
-
-This document defines the internal architecture of the Runtime itself.
-
-Unlike [MEG-002](../meg-002-event-driven-runtime/index.md), which describes **runtime behaviour**, MEG-005 describes **runtime structure**.
+The Mosaic Runtime is more than an event bus. It is responsible for capability discovery, dependency composition, lifecycle management, scheduling, execution, orchestration, observability and resource ownership, which is a far wider remit than event delivery alone. This document therefore defines the internal architecture of the Runtime itself, and unlike [MEG-002](../meg-002-event-driven-runtime/index.md), which describes **runtime behaviour**, MEG-005 describes **runtime structure**.
 
 ---
 
@@ -85,7 +63,7 @@ MEG-005 answers:
 
 # Scope
 
-This specification defines:
+MEG-005 covers the Runtime from its founding philosophy through to its persistence and recovery behaviour. This specification defines:
 
 - Runtime philosophy
 - Runtime composition
@@ -108,15 +86,7 @@ This specification defines:
 - observability, diagnostics and component health
 - persistence, migrations, portability and recovery
 
-This specification intentionally does **not** define:
-
-- Domain modelling
-- Business behaviour
-- Event semantics
-- Module SDKs
-- Storage implementation
-
-Those concerns belong to other MEG specifications.
+It intentionally does **not** define domain modelling, business behaviour, event semantics, module SDKs or storage implementation, because those concerns belong to other MEG specifications.
 
 ---
 
@@ -134,26 +104,7 @@ Within Mosaic:
 
 > **The Runtime is an execution platform, not a business platform.**
 
-The Runtime exists to provide capabilities with an execution environment.
-
-It owns:
-
-- execution
-- coordination
-- lifecycle
-- resources
-
-It does **not** own:
-
-- playback
-- metadata
-- libraries
-- recommendations
-- users
-
-Business belongs to capabilities.
-
-Execution belongs to the Runtime.
+The Runtime exists to provide capabilities with an execution environment, so it owns execution, coordination, lifecycle and resources. It does **not** own playback, metadata, libraries, recommendations or users, because business belongs to capabilities whereas execution belongs to the Runtime.
 
 ---
 
@@ -182,17 +133,13 @@ N6 --> N7
 N7 --> N8
 ```
 
-Each layer owns exactly one responsibility.
-
-The Runtime should resemble a small operating system.
-
-Not a large application.
+Each layer owns exactly one responsibility, which is why the Runtime should resemble a small operating system rather than a large application.
 
 ---
 
 # Expected Outcome
 
-After reading MEG-005 contributors should understand:
+The chapters that follow develop the architecture in order. After reading MEG-005 contributors should understand the following, without discussing individual business capabilities:
 
 - how the Runtime is internally organised
 - how capabilities are discovered
@@ -203,66 +150,37 @@ After reading MEG-005 contributors should understand:
 - how resources are owned
 - how the Runtime evolves without becoming a monolith
 
-without discussing individual business capabilities.
-
 ---
 
 # Repository Structure
 
-```
-
+```text
 engineering/
-
 └── meg/
-
     └── MEG-005 Runtime Architecture/
-
         README.md
-
         00-document-control.md
-
         01-runtime-philosophy.md
-
         02-runtime-kernel.md
-
         03-capability-registry.md
-
         04-service-lifecycle.md
-
         05-dependency-graph.md
-
         06-execution-engine.md
-
         07-worker-manager.md
-
         08-scheduler-architecture.md
-
         09-resource-management.md
-
         10-startup.md
-
         11-shutdown.md
-
         12-runtime-state.md
-
         13-runtime-modelling-guidelines.md
-
         14-supervisor-model.md
-
         15-adrs.md
-
         16-contributor-guidance.md
-
         17-graphql-projection.md
-
         18-configuration-and-secrets.md
-
         19-observability-and-diagnostics.md
-
         20-persistence-and-recovery.md
-
         references.md
-
         glossary.md
 ```
 
@@ -270,14 +188,14 @@ engineering/
 
 # Dependencies
 
-Required reading:
+MEG-005 builds directly on the engineering specifications that precede it. Required reading:
 
 - [MEG-001 — Go Engineering Standards](../meg-001-go-engineering-standards/index.md)
 - [MEG-002 — Event-Driven Runtime](../meg-002-event-driven-runtime/index.md)
 - [MEG-003 — Domain-Driven Design](../meg-003-domain-driven-design/index.md)
 - [MEG-004 — Hexagonal Architecture](../meg-004-hexagonal-architecture/index.md)
 
-Future companion specifications:
+Three further specifications are companions rather than prerequisites. Future companion specifications:
 
 - [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
 - [MEG-007 — Storage Architecture](../meg-007-storage-architecture/index.md)
@@ -287,17 +205,4 @@ Future companion specifications:
 
 # Design Goals
 
-The Runtime Architecture is intended to produce a platform that is:
-
-- Modular
-- Observable
-- Deterministic
-- Extensible
-- Replaceable
-- Resource aware
-- Fault tolerant
-- Operationally simple
-
-The Runtime should feel more like a lightweight operating system than a traditional backend application.
-
-Every new capability should integrate into the Runtime rather than modifying it.
+The Runtime Architecture is intended to produce a platform that is modular, observable, deterministic, extensible, replaceable, resource aware, fault tolerant and operationally simple. Taken together those goals mean the Runtime should feel more like a lightweight operating system than a traditional backend application, and that every new capability should integrate into the Runtime rather than modifying it.

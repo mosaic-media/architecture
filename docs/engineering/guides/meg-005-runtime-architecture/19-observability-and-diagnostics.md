@@ -10,13 +10,13 @@ Status: Draft
 
 ## Signals
 
-Platform writes structured `.log` files locally. The admin UI exposes authorised log views, metrics, traces and diagnostic summaries without requiring an external telemetry service. External export may be added later, but is not a v1 dependency.
+Platform writes structured `.log` files locally, and the admin UI exposes authorised log views, metrics, traces and diagnostic summaries from them without requiring an external telemetry service. External export may be added later, but it is not a v1 dependency.
 
-Logs and traces MUST redact credentials, tokens, media secrets and personal data. Events identify the Platform generation, component, Module and program version where useful.
+Logs and traces must redact credentials, tokens, media secrets and personal data. Events identify the Platform generation, component, Module and program version where useful.
 
 ## Component health
 
-Health is reported per component rather than as one opaque Platform status. At minimum the health tree covers Supervisor, Platform generation, storage, event backbone, GraphQL, each Module and playback.
+Health is reported per component rather than as one opaque Platform status, so at minimum the health tree covers Supervisor, Platform generation, storage, event backbone, GraphQL, each Module and playback.
 
 ```mermaid
 flowchart TD
@@ -37,7 +37,7 @@ Repeated Module failures use criticality-aware policy. A non-critical Module is 
 
 ## Support bundles
 
-Support bundles are fully anonymised by default. They may include program version, Platform generation, Module identifier, component health, redacted logs, event categories and configuration schema/version metadata. They MUST NOT include names, account identifiers, content identifiers, addresses, tokens, credentials or raw configuration values.
+Support bundles are fully anonymised by default. They may include program version, Platform generation, Module identifier, component health, redacted logs, event categories and configuration schema/version metadata. They must not include names, account identifiers, content identifiers, addresses, tokens, credentials or raw configuration values.
 
 ## Guarantees
 

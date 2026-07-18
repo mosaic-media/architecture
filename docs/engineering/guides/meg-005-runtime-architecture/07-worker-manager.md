@@ -12,9 +12,7 @@ Status: Draft
 
 # Purpose
 
-Execution requires workers.
-
-Workers execute:
+Execution requires workers, and within Mosaic those workers execute:
 
 - Runtime Events
 - Scheduled Tasks
@@ -22,20 +20,7 @@ Workers execute:
 - Maintenance Jobs
 - Background Processing
 
-However, workers themselves require management.
-
-They must be:
-
-- created
-- monitored
-- allocated
-- retired
-- replaced
-- observed
-
-Within the Mosaic Runtime, these responsibilities belong to the **Worker Manager**.
-
-The Worker Manager owns the lifecycle and utilisation of every worker participating in the Runtime.
+Workers themselves require management, however, because they must be created, monitored, allocated, retired, replaced and observed. Within the Mosaic Runtime these responsibilities belong to the **Worker Manager**, which owns the lifecycle and utilisation of every worker participating in the Runtime.
 
 ---
 
@@ -45,29 +30,13 @@ Within Mosaic:
 
 > **Workers are Runtime resources. The Worker Manager owns those resources.**
 
-Workers should never:
-
-- create themselves
-- destroy themselves
-- schedule themselves
-- coordinate themselves
-
-The Worker Manager owns:
-
-- worker lifecycle
-- worker allocation
-- worker health
-- worker capacity
-
-Workers simply execute work.
+Workers should never create themselves, destroy themselves, schedule themselves or coordinate themselves. The Worker Manager owns worker lifecycle, worker allocation, worker health and worker capacity, which leaves workers free to simply execute work.
 
 ---
 
 # What Is A Worker?
 
-A Worker is an isolated execution environment capable of executing one Work Unit at a time.
-
-Conceptually.
+A Worker is an isolated execution environment capable of executing one Work Unit at a time. Conceptually it stands between the Execution Engine and the capability whose result it returns.
 
 ```mermaid
 flowchart TD
@@ -82,58 +51,13 @@ N2 --> N3
 N3 --> N4
 ```
 
-Workers understand:
-
-- execution
-- cancellation
-- completion
-
-Workers do not understand:
-
-- playback
-- metadata
-- libraries
-- recommendations
-
-Business meaning remains invisible.
+Workers understand execution, cancellation and completion, but they do not understand playback, metadata, libraries or recommendations, because business meaning remains invisible to them.
 
 ---
 
 # Why A Worker Manager Exists
 
-Without a Worker Manager:
-
-```mermaid
-flowchart TD
-
-N1["Execution Engine"]
-N2["Create Worker"]
-N3["Manage Worker"]
-N4["Destroy Worker"]
-
-N1 --> N2
-N2 --> N3
-N3 --> N4
-```
-
-Execution and resource management become tightly coupled.
-
-Instead.
-
-```mermaid
-flowchart TD
-
-N1["Execution Engine"]
-N2["Worker Manager"]
-N3["Worker"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Execution remains independent.
-
-Resource ownership remains explicit.
+Without a Worker Manager the Execution Engine would have to create the worker, manage the worker and destroy the worker itself, which couples execution and resource management tightly together. Instead the Execution Engine asks the Worker Manager, and the Worker Manager provides the Worker, so execution remains independent and resource ownership remains explicit.
 
 ---
 
@@ -149,14 +73,7 @@ The Worker Manager owns:
 - worker replacement
 - worker pool management
 
-It intentionally does **not** own:
-
-- scheduling
-- execution routing
-- retries
-- business behaviour
-
-These concerns belong elsewhere.
+It intentionally does **not** own scheduling, execution routing, retries or business behaviour, because those concerns belong elsewhere.
 
 ---
 
@@ -179,11 +96,7 @@ N1 --> N4
 N1 --> N5
 ```
 
-The Worker Manager should view workers as a pool of interchangeable execution resources.
-
-Individual workers should rarely matter.
-
-Worker pools are a well-established concurrency pattern because they bound resource usage while allowing work to be processed concurrently.  [Buntime](https://buntime.djalmajr.dev/concepts/worker-pool/)
+The Worker Manager should view workers as a pool of interchangeable execution resources, which means individual workers should rarely matter. Worker pools are a well-established concurrency pattern because they bound resource usage while allowing work to be processed concurrently.  [Buntime](https://buntime.djalmajr.dev/concepts/worker-pool/)
 
 ---
 
@@ -210,15 +123,13 @@ N5 --> N6
 N6 --> N7
 ```
 
-The Worker Manager owns every transition.
-
-Workers should never transition independently.
+The Worker Manager owns every transition, so workers should never transition independently.
 
 ---
 
 # Worker Allocation
 
-When execution is requested:
+When execution is requested, allocation follows a fixed sequence.
 
 ```mermaid
 flowchart TD
@@ -235,113 +146,37 @@ N3 --> N4
 N4 --> N5
 ```
 
-Selection policies are implementation details.
-
-The Execution Engine should simply request execution.
+Selection policies are implementation details of the Worker Manager, which means the Execution Engine should simply request execution.
 
 ---
 
 # Idle Workers
 
-Idle workers represent available capacity.
-
-```mermaid
-flowchart TD
-
-N1["Worker"]
-N2["Idle"]
-N3["Ready"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Idle workers should consume minimal resources while remaining immediately available for work.
-
-Workers should never busy-wait.
+Idle workers represent available capacity, so a Worker that is Idle is Ready. Idle workers should consume minimal resources while remaining immediately available for work, and they should never busy-wait.
 
 ---
 
 # Busy Workers
 
-A busy worker owns one active Work Unit.
-
-```mermaid
-flowchart TD
-
-N1["Worker"]
-N2["Executing"]
-N3["Work Unit"]
-
-N1 --> N2
-N2 --> N3
-```
-
-By default:
-
-One worker executes one Work Unit.
-
-Parallelism is achieved by increasing worker count.
-
-Not by increasing worker complexity.
+A busy worker is one that is Executing, and it owns exactly one active Work Unit. By default one worker executes one Work Unit, so parallelism is achieved by increasing worker count rather than by increasing worker complexity.
 
 ---
 
 # Worker Ownership
 
-Every worker has exactly one owner.
-
-```mermaid
-flowchart TD
-
-N1["Runtime Kernel"]
-N2["Worker Manager"]
-N3["Worker"]
-
-N1 --> N2
-N2 --> N3
-```
-
-Ownership answers:
-
-- who created the worker
-- who retires the worker
-- who monitors the worker
-- who replaces the worker
-
-Ownership should never become ambiguous.
+Every worker has exactly one owner: the Runtime Kernel owns the Worker Manager, and the Worker Manager owns the Worker. Ownership answers who created the worker, who retires it, who monitors it and who replaces it, and it should never become ambiguous.
 
 ---
 
 # Worker Identity
 
-Workers SHOULD possess Runtime identity.
-
-Example.
-
-```
-
-Worker-17
-```
-
-Identity supports:
-
-- diagnostics
-- tracing
-- metrics
-- debugging
-
-Business capabilities should remain unaware of worker identity.
-
-Worker identity belongs exclusively to the Runtime.
+Workers should possess Runtime identity — a name such as Worker-17 — because identity supports diagnostics, tracing, metrics and debugging. Business capabilities should remain unaware of worker identity, which belongs exclusively to the Runtime.
 
 ---
 
 # Worker Health
 
-The Worker Manager SHOULD continuously monitor worker health.
-
-Examples include:
+The Worker Manager should continuously monitor worker health. Examples include:
 
 - responsive
 - idle
@@ -349,102 +184,45 @@ Examples include:
 - degraded
 - failed
 
-Health determines operational readiness.
-
-Not business correctness.
+Health determines operational readiness rather than business correctness.
 
 ---
 
 # Worker Failure
 
-Suppose:
-
-```mermaid
-flowchart TD
-
-N1["Worker"]
-N2["Crash"]
-
-N1 --> N2
-```
-
-The Worker Manager should:
+Suppose a Worker suffers a Crash. The Worker Manager should then:
 
 - detect failure
 - retire worker
 - create replacement
 - notify Runtime
 
-The Execution Engine simply observes:
-
-```
-
-Execution Failed
-```
-
-Worker recovery belongs entirely to the Worker Manager.
-
-This separation mirrors the classic manager/worker pattern, where the manager owns worker lifecycle while workers focus solely on execution.  [fprime.jpl.nasa.gov](https://fprime.jpl.nasa.gov/latest/docs/user-manual/design-patterns/manager-worker/)
+The Execution Engine simply observes that execution failed, because worker recovery belongs entirely to the Worker Manager. This separation mirrors the classic manager/worker pattern, where the manager owns worker lifecycle while workers focus solely on execution.  [fprime.jpl.nasa.gov](https://fprime.jpl.nasa.gov/latest/docs/user-manual/design-patterns/manager-worker/)
 
 ---
 
 # Worker Capacity
 
-Workers represent finite Runtime capacity.
-
-Examples include:
+Workers represent finite Runtime capacity. Examples include:
 
 - available workers
 - active workers
 - idle workers
 - maximum workers
 
-Capacity information should be exposed to:
-
-- Scheduler
-- Execution Engine
-- Resource Manager
-
-The Worker Manager owns these metrics.
+Capacity information should be exposed to the Scheduler, the Execution Engine and the Resource Manager, and the Worker Manager owns these metrics.
 
 ---
 
 # Scaling
 
-Worker pools SHOULD scale deliberately.
-
-Possible strategies include:
-
-```
-
-Static
-```
-
-```
-
-Adaptive
-```
-
-```
-
-Configured
-```
-
-Regardless of strategy:
-
-Scaling should remain bounded.
-
-Unlimited worker creation is prohibited.
-
-Resource usage should remain predictable.
+Worker pools should scale deliberately, and possible strategies include Static, Adaptive and Configured pools. Regardless of strategy, scaling should remain bounded: unlimited worker creation is prohibited, so that resource usage remains predictable.
 
 ---
 
 # Worker Retirement
 
-Workers should not exist indefinitely.
-
-Retirement may occur because of:
+Workers should not exist indefinitely. Retirement may occur because of:
 
 - shutdown
 - failure
@@ -452,13 +230,7 @@ Retirement may occur because of:
 - maintenance
 - runtime upgrade
 
-Retired workers should complete:
-
-- cleanup
-- resource release
-- metric publication
-
-before disposal.
+Retired workers should complete cleanup, resource release and metric publication before disposal.
 
 ---
 
@@ -479,61 +251,25 @@ N2 --> N3
 N3 --> N4
 ```
 
-Capabilities should remain unaware that replacement occurred.
-
-Operational resilience belongs entirely to the Runtime.
+Capabilities should remain unaware that replacement occurred, because operational resilience belongs entirely to the Runtime.
 
 ---
 
 # Worker Affinity
 
-The Runtime SHOULD avoid unnecessary worker affinity.
-
-Poor.
-
-```mermaid
-flowchart TD
-
-N1["Capability"]
-N2["Always Worker 7"]
-
-N1 --> N2
-```
-
-Preferred.
-
-```mermaid
-flowchart TD
-
-N1["Capability"]
-N2["Available Worker"]
-
-N1 --> N2
-```
-
-Workers should remain interchangeable wherever practical.
-
-Affinity should exist only where technically justified.
+The Runtime should avoid unnecessary worker affinity. Binding a Capability to Always Worker 7 is poor practice, whereas routing that Capability to any Available Worker is preferred. Workers should therefore remain interchangeable wherever practical, and affinity should exist only where technically justified.
 
 ---
 
 # Worker Isolation
 
-Workers should remain isolated.
-
-Failure within one worker should not affect:
-
-- neighbouring workers
-- unrelated capabilities
-- Runtime stability
-
-Isolation improves resilience and simplifies recovery.
+Workers should remain isolated, so failure within one worker should not affect neighbouring workers, unrelated capabilities or Runtime stability. Isolation improves resilience and simplifies recovery.
 
 ---
 
 # Worker Metrics
 
-The Worker Manager SHOULD expose:
+The Worker Manager should expose:
 
 - worker count
 - idle workers
@@ -562,13 +298,7 @@ The Worker Manager should expose this information without additional instrumenta
 
 # Worker Creation
 
-Workers should generally be created during Runtime startup.
-
-Later expansion should occur only when justified by Runtime policy.
-
-Worker creation should remain predictable.
-
-Not reactive to every temporary workload spike.
+Workers should generally be created during Runtime startup, and later expansion should occur only when justified by Runtime policy. Worker creation should therefore remain predictable rather than reactive to every temporary workload spike.
 
 ---
 
@@ -616,15 +346,15 @@ Capabilities creating private worker pools outside Runtime control.
 
 Within Mosaic:
 
-- The Worker Manager MUST own every worker.
-- Workers MUST remain interchangeable by default.
-- Worker pools MUST remain bounded.
-- Worker lifecycle MUST be centrally managed.
-- Worker failures MUST trigger controlled replacement.
-- Worker health MUST remain observable.
-- Worker metrics MUST be exposed.
-- Capabilities MUST NOT create their own workers.
-- Business behaviour MUST remain completely independent of worker implementation.
+- The Worker Manager must own every worker.
+- Workers must remain interchangeable by default.
+- Worker pools must remain bounded.
+- Worker lifecycle must be centrally managed.
+- Worker failures must trigger controlled replacement.
+- Worker health must remain observable.
+- Worker metrics must be exposed.
+- Capabilities must not create their own workers.
+- Business behaviour must remain completely independent of worker implementation.
 
 ---
 
@@ -638,9 +368,7 @@ The Worker Manager answers:
 
 > **Which execution resource should perform that work?**
 
-The next chapter introduces the **Scheduler Architecture**, the Runtime subsystem responsible for determining **when** work should become executable.
-
-Together:
+The next chapter introduces the **Scheduler Architecture**, the Runtime subsystem responsible for determining **when** work should become executable. Together these three subsystems divide the problem cleanly:
 
 - Scheduler decides **when**.
 - Execution Engine decides **how**.
@@ -650,23 +378,6 @@ Together:
 
 # Summary
 
-The Worker Manager transforms workers from implementation details into managed Runtime resources.
+The Worker Manager transforms workers from implementation details into managed Runtime resources, owning their lifecycle, health, capacity, allocation and replacement. By centralising worker management, the Mosaic Runtime gains predictable resource usage, resilience, observability and scalability.
 
-It owns:
-
-- lifecycle
-- health
-- capacity
-- allocation
-- replacement
-
-By centralising worker management, the Mosaic Runtime gains:
-
-- predictable resource usage
-- resilience
-- observability
-- scalability
-
-Workers remain simple.
-
-The Worker Manager makes them reliable.
+Workers remain simple, and the Worker Manager makes them reliable.

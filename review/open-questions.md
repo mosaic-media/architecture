@@ -98,6 +98,45 @@ Either those guides are rewritten to sentence case, or MDG-001 chapter 10 record
 
 MEG-004 has already been converted, so the pattern is proven.
 
+MEG-005 has now been converted too, leaving only its Normative Language table uppercase. That table is the same construct MEG-001 uses, so whichever way this is decided, the two should be decided together.
+
+**Resolution:**
+
+## Q-026 — Dependency arrows contradict the stated startup order
+
+**Status:** `Open`
+**Where:** [MEG-005 ch05](../docs/engineering/guides/meg-005-runtime-architecture/05-dependency-graph.md), [ch04](../docs/engineering/guides/meg-005-runtime-architecture/04-service-lifecycle.md)
+
+Chapter 05's *Directed Graph* section states the convention explicitly: an edge from A to B means A depends upon B, and direction communicates dependency, never execution. *Runtime Services* obeys it, drawing `Worker Manager → Execution Engine → Capability Registry`, which makes the Capability Registry a leaf and is consistent with it starting first.
+
+Three other diagrams draw the same components in the opposite direction, `Capability Registry → Execution Engine → Scheduler → Worker Manager`, and the surrounding prose calls that the startup order. Under the chapter's own rule that chain asserts the Capability Registry depends upon the Execution Engine, inverting the dependency the rest of the chapter states. The identical chain also appears in chapter 04 under *Lifecycle Dependencies*.
+
+Resolving it means committing to one convention — edges as dependency, so startup reads leaves-first, or edges as execution order, which would contradict *Directed Graph* as written — and then reversing arrows across two chapters. Both readings are internally coherent and nothing in the repository settles which MEG-005 intends, so every diagram was left exactly as committed and the surrounding prose phrased neutrally.
+
+**Resolution:**
+
+## Q-027 — No Runtime component owns retry policy
+
+**Status:** `Open`
+**Where:** [MEG-005 ch06](../docs/engineering/guides/meg-005-runtime-architecture/06-execution-engine.md), [ch07](../docs/engineering/guides/meg-005-runtime-architecture/07-worker-manager.md), [ch08](../docs/engineering/guides/meg-005-runtime-architecture/08-scheduler-architecture.md)
+
+Chapter 06 states that the Execution Engine does not own retries, then says "The Runtime decides: retry, dead letter, shutdown" without naming which subsystem holds that decision. Every named candidate disclaims it in its own chapter.
+
+Chapter 08 makes the gap sharper still: the Scheduler owns "retry timing" and "delayed execution" but explicitly does not own "retries". The intended split is presumably that something decides *whether* to retry while the Scheduler decides *when*, but the document never says so, and *Delayed Execution*'s only example is a metadata retry, which makes the boundary look self-contradictory.
+
+Either a component not yet described in MEG-005 owns retry policy, or one of these chapters is wrong.
+
+**Resolution:**
+
+## Q-028 — Startup has eleven diagram stages and ten numbered headings
+
+**Status:** `Open`
+**Where:** [MEG-005 ch10](../docs/engineering/guides/meg-005-runtime-architecture/10-startup.md), *Startup Sequence* against *Stage 1* to *Stage 10*
+
+The sequence diagram names `Mark Ready` and `Begin Execution` as separate stages, while the headings collapse readiness and execution into Stage 9 and Stage 10, with `Bootstrap` and `Load Configuration` mapping onto Stages 1 and 2. The mapping from diagram node to numbered stage is not one-to-one.
+
+Deciding which is authoritative means either adding a stage boundary or removing one, so both were left as committed.
+
 **Resolution:**
 
 ---
@@ -176,6 +215,17 @@ A deferred proposal should not claim architectural authority over something the 
 Seven chapters open with "Within MDS, **X** is defined as…". MDP-001 is a deferred, non-authoritative proposal and cannot define terms in the Design System namespace. The phrasing is left over from when this material was an active MDS specification.
 
 Fixing it means rewriting the definitional sentence in seven chapters, which changes what the document claims about itself.
+
+**Resolution:**
+
+## Q-029 — "Runtime Kernel" and "Microkernel Runtime" may be the same thing
+
+**Status:** `Open`
+**Where:** [MEG-005 ch16](../docs/engineering/guides/meg-005-runtime-architecture/16-contributor-guidance.md), [ch15](../docs/engineering/guides/meg-005-runtime-architecture/15-adrs.md), [glossary](../docs/engineering/guides/meg-005-runtime-architecture/glossary.md)
+
+Chapter 16 uses "Runtime Kernel" throughout, including in *Before Modifying The Kernel* and its checklist, while chapter 15's Decision Areas list uses "Microkernel Runtime". These may name the same component, or may be a whole-versus-part distinction.
+
+The glossary does not settle it, because it separately defines both *Kernel* and *Runtime Kernel* — see Q-040. Unifying the terms would assert an architectural identity that cannot be verified from the repository, so all three spellings were left as written.
 
 **Resolution:**
 
@@ -263,6 +313,75 @@ They need contract chapters written, which requires the actual contract.
 
 **Resolution:**
 
+## Q-030 — The Resource Manager is never defined
+
+**Status:** `Open`
+**Where:** [MEG-005 ch09](../docs/engineering/guides/meg-005-runtime-architecture/09-resource-management.md), *Resource Allocation* and *Resource Independence*
+
+The chapter repeatedly assigns behaviour to a Resource Manager — it allocates, it provides resource information, it stays independent of scheduling — but has no "What Is The Resource Manager?" section, unlike every peer chapter. Whether it is a Runtime Service in its own right, a facet of the Runtime Kernel, or a notional grouping of per-owner logic is never stated.
+
+*Resource Ownership* then assigns every concrete resource to some other component — Worker Manager, Scheduler, Execution Engine, Capability Registry — which reads as though the Resource Manager owns nothing directly. That may be deliberate or it may be the gap.
+
+**Resolution:**
+
+## Q-031 — Worker pool scaling strategies are named but undefined
+
+**Status:** `Open`
+**Where:** [MEG-005 ch07](../docs/engineering/guides/meg-005-runtime-architecture/07-worker-manager.md), *Scaling*
+
+`Static`, `Adaptive` and `Configured` appear as the three permitted pool strategies with no definition here or anywhere else in the folder, and the distinction between Static and Configured is not self-evident. All three terms were preserved without gloss.
+
+**Resolution:**
+
+## Q-032 — Priority tiers never connect to admission
+
+**Status:** `Open`
+**Where:** [MEG-005 ch08](../docs/engineering/guides/meg-005-runtime-architecture/08-scheduler-architecture.md), *Priority*; [ch09](../docs/engineering/guides/meg-005-runtime-architecture/09-resource-management.md), *Resource Admission*
+
+Chapter 08 gives three tiers with example workloads and then states "Priority influences admission. Not business semantics." Nothing says what admission does with priority — whether high-priority work preempts, jumps the queue, or is merely evaluated earlier — and chapter 09, which owns admission, does not mention priority at all.
+
+**Resolution:**
+
+## Q-033 — Generation garbage collection policy is defined nowhere
+
+**Status:** `Open`
+**Where:** [MEG-005 ch14](../docs/engineering/guides/meg-005-runtime-architecture/14-supervisor-model.md), *Atomic Runtime Activation* and *Atomic Upgrade Model*
+
+"Previous runtimes should be retained until later garbage collection policy permits deletion", and a `Garbage Collect Later` node, both defer to a retention policy that no document in the repository defines — not MEG-005, not [MEG-006](../docs/engineering/guides/meg-006-module-platform/index.md), not [MOP-001](../docs/engineering/operations/mop-001-observability-operations/index.md). How many previous Generations are kept, and on what trigger, is unresolved.
+
+This matters operationally: Generations carry a Platform, a Shell and Modules, so an undefined retention policy is an unbounded disk commitment on a self-hosted installation.
+
+**Resolution:**
+
+## Q-034 — Configuration precedence and activation turn on two undefined terms
+
+**Status:** `Open`
+**Where:** [MEG-005 ch18](../docs/engineering/guides/meg-005-runtime-architecture/18-configuration-and-secrets.md), *Configuration sources and precedence* and *Schema and activation*
+
+The precedence ordering ends with "explicitly permitted runtime overrides" without saying who grants the permission, what may be overridden, or how the permission is declared. Every other level in the ordering names its owner.
+
+Separately, structural configuration changes get a warm-and-switch path with "restart is the fallback when a seamless transition is unsafe". The entire branch turns on *unsafe*, and no test for it is given.
+
+**Resolution:**
+
+## Q-035 — Migration strategy is hedged into a non-decision
+
+**Status:** `Open`
+**Where:** [MEG-005 ch20](../docs/engineering/guides/meg-005-runtime-architecture/20-persistence-and-recovery.md), *Migration strategy*
+
+`pgroll`-style dual schema views are recommended "where practical", leaving it unclear whether this is the required mechanism, a recommendation or an aspiration, and no decision record covers it. The surrounding text makes a hard normative claim about pre-migration backups, so the softness here reads as unintentional rather than deliberate.
+
+**Resolution:**
+
+## Q-036 — Shutdown deadline value is unattributed
+
+**Status:** `Open`
+**Where:** [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Shutdown Deadlines*
+
+The only concrete number in the chapter, 60 seconds, appeared solely as a diagram node label with no text stating whether it is a default, a recommendation or an illustration, while the timeout is simultaneously described as configurable. It was preserved hedged as an example rather than promoted to a default.
+
+**Resolution:**
+
 ---
 
 # Factual and naming defects
@@ -278,23 +397,27 @@ Used once as `ArtworkProvider`; every other mention across the guide is `Artwork
 
 **Resolution:**
 
-## Q-021 — MEG-004's repository tree describes a layout that no longer exists
+## Q-021 — Stale repository trees describing a layout that no longer exists
 
 **Status:** `Open`
-**Where:** [MEG-004 index](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md), *Repository Structure*
+**Where:** [MEG-004 index](../docs/engineering/guides/meg-004-hexagonal-architecture/index.md), [MEG-005 index](../docs/engineering/guides/meg-005-runtime-architecture/index.md), both *Repository Structure*
 
 The tree names `README.md` as the folder's landing file; the real file is `index.md`. The folder path shown, `engineering/meg/MEG-004 Hexagonal Architecture/`, does not match the real `docs/engineering/guides/meg-004-hexagonal-architecture/`.
 
 Preserved verbatim under the no-invention rule. Other specifications may carry the same stale tree.
+
+MEG-005 confirms this is a pattern rather than a one-off: its tree shows `engineering/meg/MEG-005 Runtime Architecture/` containing `README.md`, with the same two defects. The chapter filenames it lists are all correct, so only the folder path and the landing filename are stale. Whether these trees are meant to be accurate or merely illustrative should be settled once and applied to every specification that carries one.
 
 **Resolution:**
 
 ## Q-022 — MDP-001 listed twice with an identical label
 
 **Status:** `Open`
-**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md)
+**Where:** [MEG-004 references](../docs/engineering/guides/meg-004-hexagonal-architecture/references.md), [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md)
 
 Listed once pointing at `index.md` and once at `14-adaptive-tile-model.md`, both labelled "MDP-001 — Adaptive Composition Runtime". The second entry needs a distinguishing label.
+
+MEG-005's references carry the identical pair, so the fix should be applied to both.
 
 **Resolution:**
 
@@ -333,6 +456,74 @@ Most decision records in this chapter bind only the deferred runtime, but four a
 - **ADR-166** — Adaptive Composition and Authored Layout as peer client consumption modes. Half of this is v1 today.
 
 Extracting them into a MAD would mean *accepting* decisions on the owner's behalf, so nothing was moved.
+
+**Resolution:**
+
+## Q-037 — Diagrams that draw fan-outs and state machines as linear chains
+
+**Status:** `Open`
+**Where:** [MEG-005 index](../docs/engineering/guides/meg-005-runtime-architecture/index.md), [ch01](../docs/engineering/guides/meg-005-runtime-architecture/01-runtime-philosophy.md), [ch03](../docs/engineering/guides/meg-005-runtime-architecture/03-capability-registry.md), [ch14](../docs/engineering/guides/meg-005-runtime-architecture/14-supervisor-model.md)
+
+The MEG-005 counterpart to Q-017. Several retained diagrams draw a straight chain where the structure is plainly not linear, so each asserts relationships the prose never claims:
+
+- ch01 *Runtime Kernel*: `Runtime Kernel → Capability Registry → Execution Engine → Scheduler → Worker Manager → Resource Manager`, while the sentence beneath describes a fan-out — "Every other Runtime component builds upon this foundation". The chain also makes the Registry depend on the Execution Engine, which nothing supports.
+- ch03 *Dependency Discovery*: `Recommendations → Requires → Playback → Metadata` literally asserts that Playback depends on Metadata; the prose says only that Recommendations requires both.
+- ch14 *Supervisor State Machine*: eleven states wired as one chain ending `Healthy → Updating → Rollback → Recovery → Maintenance`, which claims every healthy system proceeds unconditionally to rollback and then to recovery. The real transition set — which states are terminal, what is reachable from `Recovery`, how `Maintenance` is entered — is stated nowhere.
+- ch14 *Atomic Runtime Activation*: a `Healthy?` decision node with no failure edge. The failure path exists only in the following sentence.
+- index *Relationship to MEG*: one chain alternating document identifiers and concept names, so it reads as "Engineering Standards depends on MEG-002". The same defect as Q-023 in MEG-004.
+
+Redrawing any of these asserts a structure that is not recorded, so all were left as committed.
+
+**Resolution:**
+
+## Q-038 — "open for module" is a mangled Open/Closed Principle
+
+**Status:** `Open`
+**Where:** [MEG-005 ch03](../docs/engineering/guides/meg-005-runtime-architecture/03-capability-registry.md), *Why A Registry Exists*
+
+The closing sentence reads "The Runtime becomes open for module while remaining closed for modification." The intended reference is the Open/Closed Principle — open for *extension* — and MDG-001 terminology replaces *Extension* with *Module*, which looks to have been applied mechanically to a fixed external term of art, leaving ungrammatical text.
+
+The fix could be "open for modules", or restoring "extension" as an external term the terminology mapping should not touch, or a rephrase avoiding both. That is a terminology-authority decision, so the sentence was left byte-identical.
+
+**Resolution:**
+
+## Q-039 — Unverifiable citations used for load-bearing claims
+
+**Status:** `Open`
+**Where:** [MEG-005 ch01](../docs/engineering/guides/meg-005-runtime-architecture/01-runtime-philosophy.md), [ch02](../docs/engineering/guides/meg-005-runtime-architecture/02-runtime-kernel.md), [ch12](../docs/engineering/guides/meg-005-runtime-architecture/12-runtime-state.md), [ch13](../docs/engineering/guides/meg-005-runtime-architecture/13-runtime-modelling-guidelines.md)
+
+The operating-system analogy that frames the whole document, and the microkernel claim in chapter 02, both cite `https://operatingsystemsauthority.com/operating-system-kernel` under the link text "Operating Systems". The domain does not correspond to a recognisable standards body, textbook or vendor, unlike the `alistair.cockburn.us` and `microservices.io` citations used elsewhere in the guides.
+
+Chapters 12 and 13 have a milder version of the same problem: a bare Wikipedia "Architectural state" link and a Qt blog post, each appended mid-sentence at the end of a section, reading as filler rather than deliberate references.
+
+All were preserved verbatim. Someone should confirm each source is real and citable, substitute a canonical reference where it is not, and decide whether the surviving ones belong in `references.md` instead of inline.
+
+**Resolution:**
+
+## Q-040 — MEG-005 reference and glossary defects
+
+**Status:** `Open`
+**Where:** [MEG-005 references](../docs/engineering/guides/meg-005-runtime-architecture/references.md), [glossary](../docs/engineering/guides/meg-005-runtime-architecture/glossary.md)
+
+Four small defects, each changing meaning rather than wording, so none were fixed:
+
+- MDP-001 is listed beneath *Mosaic Design Specifications* between MDS entries, but it lives under `docs/engineering/architecture/`, not `docs/design/system/`.
+- MDS-006 and MDS-007 exist in the repository but are absent from that list, while MDS-008 is present.
+- The glossary defines both *Kernel* and *Runtime Kernel* for what appears to be the same component, with overlapping but non-identical content — the *Kernel* entry carries the microkernel comparison and its citation, the *Runtime Kernel* entry carries the small, stable and business-agnostic list. Merging them would drop or relocate a citation.
+- *Recovery UI* refers to "the embedded recovery renderer" in lower case, while Embedded Recovery Renderer is defined elsewhere as a capitalised proper noun.
+
+See also Q-022, which covers the duplicated MDP-001 entry in the same file.
+
+**Resolution:**
+
+## Q-041 — "Version 0.4" refers to a version MEG-005 does not declare
+
+**Status:** `Open`
+**Where:** [MEG-005 ch00](../docs/engineering/guides/meg-005-runtime-architecture/00-document-control.md), *Purpose*
+
+"Version 0.4 records the Supervisor Build Pipeline as an isolated runtime composition and activation flow." MEG-005 declares no version anywhere, and CLAUDE.md forbids a `Version:` metadata field, so the number refers to nothing. Under [MDG-001 ch03](../docs/engineering/documentation/mdg-001-documentation-authority-guide/03-versioning.md) only the contract a MIP defines carries a version.
+
+The sentence is presumably a leftover from a versioned draft, but deleting it would remove a statement about what the document covers.
 
 **Resolution:**
 
