@@ -17,8 +17,8 @@ Guidance
 
 ---
 
-# <Term>
+# Term
 
 <!-- One or two sentences. Define the concept, not its implementation. -->
 
-<Definition.>
+Define the term.

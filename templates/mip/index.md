@@ -38,7 +38,7 @@ A MIP may describe more than one contract version while both remain supported.
 
 MIP-NNN defines the contract used by ...
 
-The engineering practice that builds against this contract is explained by [ID — Canonical Title](relative/path/index.md). This protocol defines what those implementations must preserve.
+The engineering practice that builds against this contract is explained by ID — Canonical Title. This protocol defines what those implementations must preserve.
 
 ---
 

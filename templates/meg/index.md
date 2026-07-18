@@ -30,7 +30,7 @@ MEG-NNN explains how engineers realise ...
 
 <!-- Which MAC this guide implements. This link is what keeps the guide subordinate to the Canon. -->
 
-The architecture this guide realises is defined by [ID — Canonical Title](relative/path/index.md). Where this guide and the Canon disagree, the Canon governs and this guide must be corrected.
+The architecture this guide realises is defined by ID — Canonical Title. Where this guide and the Canon disagree, the Canon governs and this guide must be corrected.
 
 ---
 

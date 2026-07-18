@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/05-implementation-implications.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/05-implementation-implications.md
 Document: MAD-NNN
 Status: Draft
 -->
@@ -18,21 +18,21 @@ Guidance
 
 # For The Platform
 
-- <What changes.>
+- What changes.
 
-The authoritative shape lives in [<ID> — <Canonical Title>](<relative/path/NN-chapter.md>). This record does not restate it.
+The authoritative shape lives in ID — Canonical Title, chapter NN. This record does not restate it.
 
 ---
 
 # For The SDK
 
-- <What changes.>
+- What changes.
 
 ---
 
 # For Module Authors
 
-- <What changes.>
+- What changes.
 
 ---
 
@@ -40,4 +40,4 @@ The authoritative shape lives in [<ID> — <Canonical Title>](<relative/path/NN-
 
 <!-- The observable condition under which this decision is holding. -->
 
-The decision holds when <observable condition>.
+The decision holds when observable condition.

@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/glossary.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/glossary.md
 Document: MAD-NNN
 Status: Draft
 -->
@@ -17,8 +17,8 @@ Guidance
 
 ---
 
-# <Term>
+# Term
 
 <!-- One or two sentences. Define the concept, not its implementation. -->
 
-<Definition.>
+Define the term.

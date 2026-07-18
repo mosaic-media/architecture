@@ -28,7 +28,7 @@ MDS-NNN defines the reusable assets that realise ...
 
 <!-- Which MDL specification this system implements. -->
 
-The design intent these assets realise is defined by [ID — Canonical Title](relative/path/index.md). Where this specification and the Design Language disagree, the Design Language governs.
+The design intent these assets realise is defined by ID — Canonical Title. Where this specification and the Design Language disagree, the Design Language governs.
 
 ---
 

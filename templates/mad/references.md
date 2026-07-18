@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/references.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/references.md
 Document: MAD-NNN
 Status: Draft
 -->

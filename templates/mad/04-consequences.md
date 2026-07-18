@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/04-consequences.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/04-consequences.md
 Document: MAD-NNN
 Status: Draft
 -->
@@ -21,13 +21,13 @@ Guidance
 
 <!-- What this decision cost. Rework, new surface area, migration burden. -->
 
-- <Cost.>
+- State the cost.
 
 # Preserved Properties
 
 <!-- What must still hold after the change. -->
 
-- <Property.>
+- State the property.
 
 ---
 
@@ -35,7 +35,7 @@ Guidance
 
 <!-- Where the decision actually landed. Link the chapter, not just the document. -->
 
-- **[<ID> §NN <Chapter>](<relative/path/NN-chapter.md>)** — <what changed>
+- **ID §NN Chapter** — what changed
 
 ---
 
@@ -43,6 +43,6 @@ Guidance
 
 <!-- Identified during the decision and deliberately not resolved here. -->
 
-## <Follow-up title>
+## Follow-up title
 
-<What it is, who owns it, and why it is out of scope for this record.>
+What it is, who owns it, and why it is out of scope for this record.

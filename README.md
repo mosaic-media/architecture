@@ -89,7 +89,44 @@ The structure is intended to support these document families without another maj
 - `MDG` — Mosaic Documentation Guide
 - `MRM` — Mosaic Roadmap
 
-Each type has an authoritative template under [`templates/`](templates/README.md). The templates are the machine-readable form of [MDG-001](docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md): their chapter skeletons match the type definitions one-to-one, so structure alone keeps the types apart. Start a new specification by copying the matching template rather than by copying an existing document.
+Each type has an authoritative template under [`templates/`](templates/README.md). The templates are the machine-readable form of [MDG-001](docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md): their chapter skeletons match the type definitions one-to-one, so structure alone keeps the types apart.
+
+## Creating a New Document
+
+Scaffold a new specification with `scripts/new_doc.py` rather than copying an existing folder by hand:
+
+```bash
+python3 scripts/new_doc.py --type mad --title "Module Signing Policy"
+```
+
+```text
+MAD-003 — Module Signing Policy
+Created docs/engineering/architecture/mad-003-module-signing-policy/
+  wrote 00-document-control.md
+  wrote 01-context.md
+  ...
+  wrote .pages
+  registered mad-003-module-signing-policy in docs/engineering/architecture/.pages
+```
+
+The script resolves the discipline directory from the type, allocates the next sequential identifier, creates the slugged folder, copies the matching template and stamps `File`, `Document` and `Status: Draft` into every page. It also rewrites the identifier and title placeholders in the body, so the Document Control table agrees with the metadata block, and registers the folder in its discipline `.pages`.
+
+| Flag | Purpose |
+|------|---------|
+| `--type` | One of `mdp`, `mad`, `mac`, `meg`, `mip`, `mop`, `mdg`, `mdl`, `mds`, `mrm`. |
+| `--title` | The specification title. Also becomes the folder slug and the `.pages` title. |
+| `--id` | Optional explicit identifier such as `mad-003`. Omit to allocate the next number. |
+| `--dry-run` | Print what would be created and write nothing. |
+
+Identifiers are allocated as the highest existing number plus one. Gaps are never refilled, because an identifier is a permanent reference and must not be reissued. The script refuses to overwrite an existing folder.
+
+A freshly scaffolded specification passes `scripts/validate_docs.py` as generated. Replace the guidance comments and placeholders, set the `Owner`, then validate again before committing.
+
+Run the scaffolder's own tests with:
+
+```bash
+python3 -m pytest scripts/test_new_doc.py
+```
 
 ## Documentation Conventions
 

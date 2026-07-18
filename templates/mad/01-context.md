@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/01-context.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/01-context.md
 Document: MAD-NNN
 Status: Draft
 -->
@@ -23,7 +23,7 @@ Guidance
 
 <!-- The work that exposed the problem. Link the specification or build step. -->
 
-<Provenance.>
+Describe where the problem surfaced.
 
 ---
 
@@ -31,7 +31,7 @@ Guidance
 
 <!-- What the existing shape was, and why it could not hold. -->
 
-<Description.>
+Describe it.
 
 ---
 
@@ -39,7 +39,7 @@ Guidance
 
 <!-- Which accepted positions the problem collides with. Quote and link them. -->
 
-<Statement.>
+State it.
 
 ---
 
@@ -47,4 +47,4 @@ Guidance
 
 <!-- Narrow the defect. What remains legitimate, so the decision is not over-read. -->
 
-<Clarification.>
+Clarify it.

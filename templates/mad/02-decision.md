@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/02-decision.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/02-decision.md
 Document: MAD-NNN
 Status: Draft
 -->
@@ -21,7 +21,7 @@ Guidance
 
 <!-- The accepted decision, stated plainly. -->
 
-<Decision.>
+State the decision.
 
 ---
 
@@ -29,7 +29,7 @@ Guidance
 
 <!-- The principle or constraint that selected this option over the alternatives. -->
 
-<Reasoning.>
+Give the reasoning.
 
 ---
 
@@ -37,10 +37,10 @@ Guidance
 
 <!-- What this decision does not authorise. -->
 
-<Boundary.>
+State the boundary.
 
 ---
 
 # Status
 
-Accepted. The decision is carried by [<ID> — <Canonical Title>](<relative/path/NN-chapter.md>); this record is its rationale.
+Accepted. The decision is carried by ID — Canonical Title, chapter NN; this record is its rationale.

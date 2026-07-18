@@ -1,5 +1,5 @@
 <!--
-File: docs/engineering/architecture/mad-nnn-<decision-slug>/03-alternatives-considered.md
+File: docs/engineering/architecture/mad-nnn-subject-slug/03-alternatives-considered.md
 Document: MAD-NNN
 Status: Draft
 -->
@@ -22,40 +22,40 @@ Guidance
 
 <!-- The axes every option is weighed on. Three or four is usually right. -->
 
-Each option was weighed on <dimension>, <dimension> and <dimension>.
+Each option was weighed on dimension, dimension and dimension.
 
 ---
 
 # Options
 
-## a. <Option name>
+## a. Option name
 
-<Description.>
+Describe it.
 
-- <Dimension>: <assessment>
-- <Dimension>: <assessment>
-- **Rejected:** <why>
+- Dimension: assessment
+- Dimension: assessment
+- **Rejected:** why
 
-## b. <Option name> *(chosen)*
+## b. Option name *(chosen)*
 
-<Description.>
+Describe it.
 
-- <Dimension>: <assessment>
-- <Dimension>: <assessment>
-- **Chosen:** <why>
+- Dimension: assessment
+- Dimension: assessment
+- **Chosen:** why
 
-## c. <Do nothing>
+## c. Do nothing
 
-<Description of accepting the status quo.>
+Describe accepting the status quo.
 
-- **Rejected:** <why the baseline does not hold>
+- **Rejected:** why the baseline does not hold
 
 ---
 
 # Summary
 
-| Option | <Dimension> | <Dimension> | Outcome |
+| Option | Dimension | Dimension | Outcome |
 |--------|-------------|-------------|---------|
-| a. <name> | <assessment> | <assessment> | Rejected — <reason> |
-| b. <name> | <assessment> | <assessment> | **Chosen** |
-| c. <name> | <assessment> | <assessment> | Rejected — <reason> |
+| a. name | assessment | assessment | Rejected — reason |
+| b. name | assessment | assessment | **Chosen** |
+| c. name | assessment | assessment | Rejected — reason |
