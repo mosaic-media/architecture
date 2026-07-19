@@ -1,7 +1,9 @@
 # 1. Transactional store extensibility
 
-**Status:** Accepted, partially implemented
+**Status:** Superseded by [ADR 0012](0012-capabilities-do-not-own-stores.md)
 **Date:** 2026-07-18
+
+> **Superseded on 2026-07-19.** This record solves for a capability owning durable state it must commit atomically with the outbox. [ADR 0002](0002-module-storage-and-delivery-model.md) rules that case out — capabilities do not own storage or schema — so the premise below does not hold. Retained for the reasoning and the alternatives, which remain a useful record of why a store must never have to ask permission to join a transaction.
 
 ## Context
 
@@ -57,8 +59,6 @@ Each option was weighed on type safety at call sites, atomicity risk, and blast 
 
 ## Implementation status
 
-The **additive half has landed**: `Store[T](tx)` and the `StorageAdapter` port exist in `internal/platform/contracts/`.
+Reverted. `Store[T]` and its resolver reached code and have been removed; `Tx` keeps its named accessors. The `StorageAdapter` port introduced alongside them is retained, because engine replaceability is a separate and still-live concern.
 
-The **subtractive half has not**. `Tx` still declares all six accessors, and `Store[T]` currently delegates to them — it is a shim over the mechanism it is meant to replace. Seven command handlers still call `tx.Foo()`, and `contracts/platform/v1` is still empty.
-
-`resolveStore` is the single place that changes when `Tx` is sealed. `Store[T]`'s signature and every call site stay identical.
+See [ADR 0012](0012-capabilities-do-not-own-stores.md).

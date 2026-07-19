@@ -1,14 +1,16 @@
 # Roadmap
 
-Derived from the real state of `mosaic-platform`, not from a plan written ahead of it. Supersedes MRM-001.
+Derived from the real state of `mosaic-platform`, not from a plan written ahead of it.
 
 ---
 
 ## Where the build actually is
 
-Fourteen slices are complete. The Platform boots against real PostgreSQL, serves a GraphQL schema, runs an outbox worker with retry and dead-lettering, resolves secrets, reports component health, and shuts down gracefully with a final outbox drain. Every slice passes `go build`, `go vet` and `go test -race` against a real database.
+Twelve slices are complete. The Platform boots against real PostgreSQL, serves a GraphQL schema, runs an outbox worker with retry and dead-lettering, resolves secrets, reports component health, and shuts down gracefully with a final outbox drain. Every slice passes `go build`, `go vet` and `go test -race` against a real database.
 
-Two slices remain in the foundation sequence, and both are blocked behind one piece of unfinished work.
+Two further slices — uniform store resolution and its PostgreSQL follow-up — were built and then reverted under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md), which found they solved a case the architecture had already ruled out.
+
+What remains is blocked on something that was never built rather than on something half-finished.
 
 ---
 
@@ -16,28 +18,32 @@ Two slices remain in the foundation sequence, and both are blocked behind one pi
 
 Everything below is one thread. Nothing else should start until it lands, because it is the test of Mosaic's central thesis: **that a developer who is not you can extend Mosaic through the SDK.**
 
-### 1 — Finish the ADR 0001 migration
+### 1 — The content-agnostic object model
 
-The additive half landed: `Store[T](tx)` and the `StorageAdapter` port exist. The subtractive half has not, and until it does the store-resolution mechanism is a delegation shim over the accessors it was meant to replace.
+The node tree, relation graph and per-type attribute storage that [ADR 0002](adr/0002-module-storage-and-delivery-model.md) describes at principle level and nothing implements.
 
-- Seal `Tx` into an opaque marker — remove the six accessors from `internal/platform/contracts/unit_of_work.go`.
-- Repoint `resolveStore` off those accessors onto the `StorageAdapter`'s live-transaction binding. This is the single place that changes; `Store[T]`'s signature and every call site stay byte-for-byte identical.
-- Migrate the seven command handlers still calling `tx.Foo()` — `create_local_user`, `authenticate_local_user`, `revoke_session`, `set_user_status`, `draft_config_version`, `validate_config_version`, `activate_config_version` — plus the GraphQL package's test fake.
-- Populate `contracts/platform/v1`, currently `doc.go` and nothing else.
+The schema today holds identity, sessions, permissions, configuration, events, jobs, diagnostics and a blob registry — twenty-five tables, every one of them infrastructure. `object_records` tracks stored files by id, kind, location and size; it is not content. **There is no node tree and no relation graph, so a capability has nowhere to put an anime.**
 
-ADR 0001 rated this high blast radius and it is. It is also the gate on everything after it.
+This is the real blocker, and it was mistaken for something else. The reference capability was recorded as blocked on an empty `contracts/platform/v1` and a closed `Tx`; both were symptoms of building the extension mechanism before the thing it extends.
+
+Its design is a genuine piece of work — identifiers, how a node carries type-specific attributes, how relations are typed, ordering at scale — all of which ADR 0002 explicitly deferred.
 
 ### 2 — Reference capability path
 
-Already attempted twice and correctly reported as blocked rather than forced. A minimal capability built against *only* `contracts/platform/v1` failed because that package is empty and because `Tx` was closed — a capability had no way to join a transaction without editing Core Platform on its own behalf, violating the rule that the Runtime should require no modification to support a new capability.
+Attempted twice and correctly reported as blocked rather than forced.
 
-Step 1 removes both walls. This slice then proves a capability can own a store, join a transaction, and persist atomically without touching Platform code.
+Its purpose changed under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md). It was to prove a capability could own a store and join a transaction. Since capabilities own no schema, it should now prove what a capability actually does, shaped like the anime module the platform exists to support:
 
-**Exit criteria.** The proven contracts are promoted into `contracts/platform/v1` *first*, then one non-media capability proves the registration and persistence path using only those packages.
+- source metadata from an external provider
+- search existing content
+- create nodes and relations in the generic model
+- publish an event
+
+**Exit criteria.** The proven contracts are promoted into `contracts/platform/v1` *first*, then one capability does all four using only those packages, owning no schema and touching no Platform code.
 
 ### 3 — SDK extraction readiness
 
-Whether the contracts proven across slices 1–14 can leave the Platform repository as a standalone SDK a third party can build against.
+Whether the contracts proven across the completed slices can leave the Platform repository as a standalone SDK a third party can build against.
 
 **Exit criteria.** Import boundaries are enforced, and the promoted `contracts/platform/v1` surface is confirmed to expose no private Platform internals. This slice *verifies* isolation; it does not populate the surface for the first time — that happens in step 2.
 

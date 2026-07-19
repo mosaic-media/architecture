@@ -41,6 +41,7 @@ PAGES = {
     "adr/0009-developer-platform-toolchain/": "ADR-0009-Developer-Platform-Toolchain.pdf",
     "adr/0010-test-harness-as-development-modules/": "ADR-0010-Test-Harness-As-Development-Modules.pdf",
     "adr/0011-platform-transports-events/": "ADR-0011-Platform-Transports-Events.pdf",
+    "adr/0012-capabilities-do-not-own-stores/": "ADR-0012-Capabilities-Do-Not-Own-Stores.pdf",
 }
 
 

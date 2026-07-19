@@ -48,6 +48,7 @@ nav:
       - 9. Developer Platform toolchain: adr/0009-developer-platform-toolchain.md
       - 10. Test Harness as development modules: adr/0010-test-harness-as-development-modules.md
       - 11. Platform transports events: adr/0011-platform-transports-events.md
+      - 12. Capabilities do not own stores: adr/0012-capabilities-do-not-own-stores.md
 
 markdown_extensions:
   - admonition
