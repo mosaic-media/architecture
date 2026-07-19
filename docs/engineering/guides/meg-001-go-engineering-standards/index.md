@@ -175,9 +175,9 @@ engineering/
 
 └── meg/
 
-    └── MEG-001 Go Engineering Standards/
+    └── meg-001-go-engineering-standards/
 
-        README.md
+        index.md
 
         00-document-control.md
 
