@@ -1,6 +1,6 @@
 # Architecture
 
-How Mosaic is built. This document describes the system as it exists in `mosaic-platform` — 162 Go files, ~15,300 lines — not a system that is planned. Where it describes something unbuilt, it says so.
+How Mosaic is built. This document describes the system as it exists in `mosaic-platform` — 175 Go files, ~17,650 lines — not a system that is planned. Where it describes something unbuilt, it says so.
 
 Read this before changing anything. For what Mosaic is and why, see [MOSAIC.md](index.md). For what is being built next, see [ROADMAP.md](roadmap.md).
 
@@ -40,7 +40,7 @@ Arrows mean *depends upon*. Dependencies point inward: transports depend on appl
 
 Trusted, compiled in, defines the rules everything else follows. Imports no module and no transport.
 
-**`domain/`** — business types with no infrastructure knowledge. `User`, `Session`, `Role`, `Grant`, `Permission`, `PasswordCredential`, `PasskeyCredential`, `RecoveryFactor`, `ConfigVersion`, `Event`, `OutboxEvent`, `DeliveryPolicy`, `ComponentHealth`, `LifecycleState`, `Secret`, `SecretRef`, and typed identifiers (`UserID`, `SessionID`, `EventID`, …) over a shared `ID`.
+**`domain/`** — business types with no infrastructure knowledge. `User`, `Session`, `Role`, `Grant`, `Permission`, `PasswordCredential`, `PasskeyCredential`, `RecoveryFactor`, `ConfigVersion`, `Event`, `OutboxEvent`, `DeliveryPolicy`, `ComponentHealth`, `LifecycleState`, `Secret`, `SecretRef`, the content model's `Node`, `Part`, `MediaLocation`, `Relation` and `SourceBinding`, and typed identifiers (`UserID`, `SessionID`, `EventID`, `NodeID`, …) over a shared `ID`.
 
 **`contracts/`** — the ports. Every interface the core needs from the outside world:
 
@@ -50,6 +50,7 @@ Trusted, compiled in, defines the rules everything else follows. Imports no modu
 | `Tx` | Transaction scope. Stores reached through one `Tx` share one transaction |
 | `StorageAdapter` | The storage port an engine implements |
 | `UserStore`, `SessionStore`, `PermissionStore`, `ConfigStore`, `CredentialStore` | Persistence contracts |
+| `NodeStore`, `PartStore`, `RelationStore`, `SourceBindingStore` | The content model — containment tree, bytes, association graph, identity |
 | `EventOutbox`, `EventPublisher` | Event durability and delivery |
 | `SecretBroker` | Secret resolution and rotation |
 | `Clock`, `IDGenerator` | Determinism seams for testing |
@@ -75,7 +76,7 @@ Trusted, compiled in, defines the rules everything else follows. Imports no modu
 
 Infrastructure implementing Platform contracts, using the same registration and manifest shape an external module would use, but compiled in, required and trusted.
 
-`postgres/` is the only one today: `pgx/v5`, eleven embedded SQL migrations, a deterministic migrator, implementations of every store contract, and SQLSTATE-to-category error mapping. **No pgx type, row or SQLSTATE escapes this package.**
+`postgres/` is the only one today: `pgx/v5`, twelve embedded SQL migrations, a deterministic migrator, implementations of every store contract, and SQLSTATE-to-category error mapping. **No pgx type, row or SQLSTATE escapes this package.**
 
 ### `internal/adapters/` — not module-shaped
 
@@ -91,7 +92,7 @@ A `Registry` holding modules that present a `Manifest{ID, Version, Fulfills []st
 
 ### `contracts/platform/v1/` — the public SDK surface
 
-**Currently empty apart from `doc.go`.** Promoting the proven contracts here is the next milestone, and the reason the reference-capability work is blocked.
+**Currently empty apart from `doc.go`.** Promoting the proven contracts here is the next milestone. It was once recorded as the thing blocking the reference capability; [ADR 0012](adr/0012-capabilities-do-not-own-stores.md) found the real blocker was the missing content model, which has since landed.
 
 ---
 
@@ -115,6 +116,10 @@ Break these and the architecture stops holding.
 
 **Secrets are unobservable.** Log fields redact unless explicitly marked safe; an unclassified field fails closed. Support bundles replace any free text not explicitly marked as containing nothing sensitive.
 
+**Adding a media type is rows, not tables.** No schema migration, no new query path, no per-type column. This is the property the content model exists to deliver and the one that makes a community-built module possible without Platform changes.
+
+**Deletion is never a silent cascade.** Removing a node's last source binding leaves it `orphaned`, not deleted. Deleting a node that still has children, parts or bindings is refused, so a subtree is never taken by implication.
+
 ---
 
 ## Cross-cutting behaviour
@@ -128,6 +133,35 @@ Break these and the architecture stops holding.
 **Configuration.** Draft → Validated → Active, with Rejected and Superseded terminal paths. At most one Active version, enforced by a unique partial index rather than application logic.
 
 **Shutdown.** Stop the worker's poll loop, run one final synchronous drain, exit. Proven by a test using a one-hour ticker so only the shutdown drain can deliver.
+
+---
+
+## The content model
+
+Four tables — `nodes`, `parts`, `relations`, `source_bindings` — designed in [ADR 0013](adr/0013-object-graph.md) and [ADR 0014](adr/0014-storage-authority-and-transaction-scope.md). They are the first content in a schema that was otherwise entirely infrastructure.
+
+**Containment is a tree; association is a graph.** `nodes` is one recursive tree of variable depth: a film is Work → Item, a series is Work → Container(season) → Item(episode), a chapter-only manga is Work → Item until a volume layer is inserted later. Nothing may assume a node has a parent or that a Work's children are containers. `relations` carries typed, directed, confidence-scored edges that do not nest. Conflating the two is what makes flat media models accumulate edge cases indefinitely.
+
+**A Part is what plays.** An edition or cut is not a new Node — one Item carries however many cuts exist, because the cut is a property of which bytes play. Multi-disc releases use the same mechanism with `part_role = segment`, so there is one source-selection path rather than two. A Part points at bytes and never contains them; local paths and remote provider references are equally first-class.
+
+**Identity resolution is visible.** A weak match lands as `pending_review` and surfaces to a user rather than silently merging two works that share a title. A merge is a confirmed high-confidence binding; a split moves a binding to a different node without re-fingerprinting the source.
+
+### Four deliberate non-uniformities
+
+Forcing every media type through one shape is its own bug. These four are modelled against the grain on purpose, and each is cheap to normalise away by accident, so each is pinned by a contract test:
+
+- **Artists are not containers of albums.** Box sets, collaborations and various-artist compilations all break single-parent containment. An artist is its own Work joined to album Works by Relation.
+- **Collected editions are their own Work**, related to what they collect by `collection_member` — the same mechanism as any other collection.
+- **An anime and its source manga are two Works** joined by `adaptation`. They have different part structures and diverge in canon, so one tree would corrupt both.
+- **IPTV programme listings never become Nodes.** A channel is a Node; a programme that airs once is not. Running identity, merge and relation machinery over guide data is waste rather than correctness.
+
+### Implementation notes
+
+**`media_type`, `container_type` and `item_type` are unconstrained text.** A `CHECK` listing the known types would make every new media type a schema migration, which is the outcome [ADR 0002](adr/0002-module-storage-and-delivery-model.md) and ADR 0013 exist to prevent. It would also already be wrong: an artist is its own Work and `artist` is not in ADR 0013's illustrative list. The Platform-owned *graph* vocabulary — `node_kind`, `part_role`, relation types, match methods, statuses — is closed and checked. Attribute correctness in the JSONB columns belongs to the writing capability; the schema does not validate it.
+
+**Identifiers are UUIDv7 in native `uuid` columns**, with their own generator alongside the UUIDv4 one that continues to serve the infrastructure tables. Those keep their `text`/UUIDv4 ids and are not migrated.
+
+**Three things ADR 0013 leaves open are unbuilt rather than invented:** the fractional ordering scheme at large scale (`natural_order` is stored as given and nothing rebalances), relation confidence decay or reverification (edges are written once, and `RelationStore` has no `Update` so the absence stays visible), and attribute validation.
 
 ---
 
@@ -165,6 +199,7 @@ Each of these must keep passing. They are the properties that stop the architect
 | GraphQL | Resolvers call services, not database packages |
 | Diagnostics | Health reporting and support-bundle redaction verified |
 | Supervisor | Process exposes readiness, liveness and shutdown behaviour |
+| Content model | Tree, graph, parts and bindings pass the contract suite; the four non-uniformities stay expressible |
 
 ---
 
@@ -172,7 +207,8 @@ Each of these must keep passing. They are the properties that stop the architect
 
 Stated plainly so nothing here is mistaken for a description of something real.
 
-- **The content model.** There is no node tree, no relation graph and no attribute storage. Every table in the schema is infrastructure — identity, sessions, permissions, configuration, events, jobs, diagnostics, and a blob registry that tracks files rather than content. **A capability currently has nowhere to put an anime.** Designed in ADR 0013 and ADR 0014; not implemented.
+- **Command handlers over the content model.** The four stores exist and pass the contract suite against real PostgreSQL, but no application service commands them, so there is no validate → authenticate → authorise → transact path into the graph. The `Tx` fakes in `internal/platform/app` and `internal/transport/graphql` return nil for the content stores for exactly this reason.
+- **IPTV programme listings.** ADR 0013 gives them their own lightweight table keyed to the channel node, deliberately outside the Node machinery. That table is unbuilt.
 - **Module permissions.** The policy engine governs *user* authority. Module authority is undecided and unimplemented.
 - **External modules.** Only the built-in shape exists.
 - **Jobs and diagnostics history.** Tables exist from earlier migrations with no contract or service above them. GraphQL resolvers for them return `Unavailable` rather than faking success.

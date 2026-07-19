@@ -6,11 +6,11 @@ Derived from the real state of `mosaic-platform`, not from a plan written ahead 
 
 ## Where the build actually is
 
-Twelve slices are complete. The Platform boots against real PostgreSQL, serves a GraphQL schema, runs an outbox worker with retry and dead-lettering, resolves secrets, reports component health, and shuts down gracefully with a final outbox drain. Every slice passes `go build`, `go vet` and `go test -race` against a real database.
+Thirteen slices are complete. The Platform boots against real PostgreSQL, serves a GraphQL schema, runs an outbox worker with retry and dead-lettering, resolves secrets, reports component health, shuts down gracefully with a final outbox drain, and holds a content-agnostic object graph. Every slice passes `go build`, `go vet` and `go test -race` against a real database.
 
 Two further slices — uniform store resolution and its PostgreSQL follow-up — were built and then reverted under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md), which found they solved a case the architecture had already ruled out.
 
-What remains is blocked on something that was never built rather than on something half-finished.
+The content model was the last thing blocking the critical path. What remains is the thesis test itself.
 
 ---
 
@@ -18,17 +18,17 @@ What remains is blocked on something that was never built rather than on somethi
 
 Everything below is one thread. Nothing else should start until it lands, because it is the test of Mosaic's central thesis: **that a developer who is not you can extend Mosaic through the SDK.**
 
-### 1 — The content-agnostic object model
+### 1 — The content-agnostic object model — **done**
 
-The node tree, relation graph and per-type attribute storage. Designed in [ADR 0013](adr/0013-object-graph.md), with authority and media linking settled in [ADR 0014](adr/0014-storage-authority-and-transaction-scope.md). Not implemented.
+The node tree and relation graph, designed in [ADR 0013](adr/0013-object-graph.md), with authority and media linking settled in [ADR 0014](adr/0014-storage-authority-and-transaction-scope.md).
 
-The schema today holds identity, sessions, permissions, configuration, events, jobs, diagnostics and a blob registry — twenty-five tables, every one of them infrastructure. `object_records` tracks stored files by id, kind, location and size; it is not content. **There is no node tree and no relation graph, so a capability has nowhere to put an anime.**
+`nodes`, `parts`, `relations` and `source_bindings` shipped with domain types, store contracts, PostgreSQL implementations, the four stores added to `Tx`, and adapter-agnostic contract tests against real PostgreSQL. Identifiers are UUIDv7 in native `uuid` columns; the twenty-five infrastructure tables keep their `text`/UUIDv4 ids and were not migrated. ADR 0013's four deliberate non-uniformities each have a contract test, since each is cheap to normalise away by accident.
 
-This is the real blocker, and it was mistaken for something else. The reference capability was recorded as blocked on an empty `contracts/platform/v1` and a closed `Tx`; both were symptoms of building the extension mechanism before the thing it extends.
+This was the real blocker, and it had been mistaken for something else. The reference capability was recorded as blocked on an empty `contracts/platform/v1` and a closed `Tx`; both were symptoms of building the extension mechanism before the thing it extends. A capability now has somewhere to put an anime.
 
-**Scope of the first slice:** `nodes`, `parts`, `relations` and `source_bindings`, their domain types and store contracts, the stores added to `Tx`, and adapter-agnostic contract tests against real PostgreSQL. Identifiers are UUIDv7 in native `uuid` columns.
+**Deliberately not in the slice, and still unbuilt:** export formats, the filesystem projection, streaming, the job queue, `LISTEN/NOTIFY`, and IPTV listings. None blocks the reference capability.
 
-**Not in this slice:** export formats, the filesystem projection, streaming, the job queue, `LISTEN/NOTIFY`, and IPTV listings. Each is a later slice and none blocks the reference capability.
+**Carried forward:** no application service commands the graph yet. The reference capability should go through application services rather than reaching for `Tx` itself, so command handlers over the content model are the likely first move in step 2.
 
 ### 2 — Reference capability path
 
