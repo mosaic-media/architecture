@@ -151,15 +151,15 @@ The envelope belongs to the runtime.
 
 ---
 
-## Event Visibility
-
-The contract classification of a Module event: public events are integration contracts, whereas private events are implementation details.
-
----
-
 ## Event Payload
 
 The immutable business information carried by an event. Payloads describe business facts, and they never describe runtime behaviour.
+
+---
+
+## Event Visibility
+
+The contract classification of a Module event as either public or private. The two classifications are defined by [Private Event](#private-event) and [Public Event](#public-event).
 
 ---
 
@@ -335,7 +335,6 @@ A bounded collection of workers processing queued tasks. Worker pools provide:
 | ID | Identifier |
 | MEG | Mosaic Engineering Guidelines |
 | SDK | Software Development Kit |
-| SWR | Stale-While-Revalidate |
 
 ---
 

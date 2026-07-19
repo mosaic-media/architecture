@@ -23,7 +23,7 @@ Status: Draft
 
 # Purpose
 
-This document establishes the governance, authority and lifecycle of the Mosaic Event-Driven Runtime specification. Version 0.3 aligns implementation guidance with [MIP-001](../../protocols/mip-001-event-protocol/index.md) event ownership, namespaced events and public/private Module event contracts.
+This document establishes the governance, authority and lifecycle of the Mosaic Event-Driven Runtime specification. It aligns implementation guidance with [MIP-001](../../protocols/mip-001-event-protocol/index.md) event ownership, namespaced events and public/private Module event contracts.
 
 MEG-002 defines the architectural standards governing how independently developed capabilities communicate and coordinate work within the Mosaic Runtime. Unlike implementation documentation, this specification defines **runtime behaviour**, not implementation detail.
 
