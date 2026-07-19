@@ -117,23 +117,39 @@ Before the foundation is considered ready for SDK extraction:
 
 ## What is next
 
-The critical path is complete and the platform runs, so there is no single forced next step — the work branches. Nearest-term threads first, cheapest to hardest.
+The critical path is complete and the platform runs. The **chosen next slice is the first official optional module** — it is the honest end-to-end test of the extension story and it drives the module-system design. The other threads below run around it.
 
-**Harden the SDK toward stable (it is `v0.1.0` on purpose):**
+### The next slice: an official optional module
+
+An **official optional module** is built exactly as a third-party module would be — its own Go module, importing only the SDK and nothing of the Platform's, compiled into the binary and invoked by the Platform. "Official" describes only its authorship (the Mosaic team), not its shape; the discipline is the point, because building it the third-party way is what proves the third-party way exists. The first one is an **Anime module**: source anime metadata from a provider and add it to the library.
+
+The reference capability already proved the *authoring* half — a package can be written against the SDK alone and drive `ContentService`. This slice builds the *composition and invocation* half, which does not exist yet:
+
+- **A capability/registration surface in the SDK** (an `v0.2.0` addition). ADR 0008 always reserved "capability interfaces" and "module registration APIs" for the SDK, but ADR 0016 populated only the content services. The shape: a `Capability` interface a module implements — `Manifest()` plus `Import(ctx, ContentService, Caller, query)` — and a minimal `Manifest`.
+- **A capability registry and an `ImportContent` command in the Platform.** The composition root registers each module's capability; a generic `importContent(capabilityId, query)` command authenticates and authorises the caller, then invokes the named capability, forwarding that caller so the module acts as its invoking user ([ADR 0017](adr/0017-how-a-capability-acts.md)) and passing the Platform itself as the `ContentService`.
+- **The GraphQL `importContent` mutation** over that command, so a user triggers an import over the served API.
+- **Static composition** ([ADR 0007](adr/0007-static-go-module-composition.md)): the composition root imports the module and registers it, standing in for the Supervisor's eventual build-time module *selection*. **Not blocked on the Supervisor** — the mechanism of how a module plugs in is what this defines; the Supervisor automating *which* modules is later.
+
+**Approach: a walking skeleton.** Build the thinnest real vertical end to end — SDK surface → a separate module → static composition → one invocation → real content in PostgreSQL — deciding shapes in code, then capturing what solidifies as ADRs (the module capability/invocation contract, and the composition model), written retrospectively once the code settles rather than as an RFC first.
+
+**Invocation model decided:** the Platform invokes a *registered capability*. The module depends only on the SDK; the Platform owns the invocation surface and routes to it. The alternative — a module contributing its own GraphQL — was rejected because a third party can't import the Platform's transport without breaking the SDK-only boundary.
+
+**Deliberately still deferred by this slice:** the full manifest shape (starts minimal, grows), the `media_types` registry (the Anime module uses known media types), and module-granular permissions (it acts with the invoking user's authority). Those remain future work below.
+
+**Harden the SDK toward stable (it is `v0.1.0` on purpose), in parallel or alongside:**
 
 - **The relation-read gap.** `ContentService` can write edges (`RelateContent`) but has no `ListFrom`/`ListTo` to read them, so a capability can't query the graph it builds. Small and additive — a `v0.x` bump. The most self-contained next thing.
 - **A second capability** — a different media type (music, comics), built against the SDK, to stress the surface from a fresh angle and surface what a real second consumer needs before the surface stabilises. Likely forces the relation-read gap and, if it introduces a novel media type, the `media_types` registry.
 
-**The module system** (larger; several ADRs, and the gate for real third-party modules):
+**The rest of the module system** (the slice above starts it; these follow):
 
-- **The capability manifest shape** — undecided, and it gates two things below.
-- **The `media_types` registry** ([ADR 0015](adr/0015-open-and-closed-vocabularies.md)) — catches a media type that was never real, which normalisation cannot. Waits on the manifest shape and on a capability that introduces a new type.
-- **Module-granular permissions and a system principal** ([ADR 0017](adr/0017-how-a-capability-acts.md)) — authority a module holds distinct from its invoking user, and a no-user identity for background work. (User permissions management is built.)
-- **External-module composition and distribution** — how a community module is discovered, compiled in, selected and pulled. Manifest shape, signing, trust tiers.
+- **The full capability manifest shape.** The module slice starts it minimal (id, version, name) and grows it as needs appear — permissions a module declares, media types it sources, whatever the Supervisor's onboarding surfaces.
+- **The `media_types` registry** ([ADR 0015](adr/0015-open-and-closed-vocabularies.md)) — catches a media type that was never real, which normalisation cannot. Waits on the manifest shape and on a module that introduces a new type (the Anime module does not).
+- **Module-granular permissions and a system principal** ([ADR 0017](adr/0017-how-a-capability-acts.md)) — authority a module holds distinct from its invoking user, and a no-user identity for background work. (User permissions management is built, and the module slice acts with the invoking user's authority.)
+- **Module distribution** — how a community module is discovered, selected and pulled: signing, trust tiers, and the Supervisor's build-time selection on top of the static composition the module slice defines.
 
 **The rest, unplanned in detail, each scoped when it starts:**
 
-- **First real module** — one media format end to end, built the way a community developer would; the honest test of the SDK's ergonomics. Gated on external-module composition above.
 - **Export formats** — NFO for other systems, `.mos` for Mosaic-to-Mosaic portability, generated on demand from authoritative state ([ADR 0014](adr/0014-storage-authority-and-transaction-scope.md)).
 - **Job queue** — the `jobs` tables exist with no service; `SELECT ... FOR UPDATE SKIP LOCKED` is the intended pattern, for import, provider sync and enrichment.
 - **`LISTEN`/`NOTIFY`** — an accelerator over the outbox worker's poll, not a replacement; notifications drop when no listener is connected, so the poll stays the floor.
