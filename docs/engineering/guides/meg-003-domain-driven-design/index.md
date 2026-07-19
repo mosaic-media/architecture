@@ -180,10 +180,10 @@ without discussing runtime implementation or transport infrastructure.
 # Repository Structure
 
 ```text
-engineering/
-└── meg/
-    └── MEG-003 Domain-Driven Design/
-        README.md
+docs/
+└── engineering/guides/
+    └── meg-003-domain-driven-design/
+        index.md
         00-document-control.md
         01-domain-philosophy.md
         02-ubiquitous-language.md
@@ -217,11 +217,11 @@ Required reading:
 - [MDL-002 — Principles](../../../design/language/mdl-002-principles/index.md)
 - [MDL-003 — Mental Model](../../../design/language/mdl-003-mental-model/index.md)
 
-Future companion specifications:
+Companion specifications:
 
 - [MEG-004 — Hexagonal Architecture](../meg-004-hexagonal-architecture/index.md)
-- [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
 - [MEG-005 — Runtime Architecture](../meg-005-runtime-architecture/index.md)
+- [MEG-006 — Module Platform](../meg-006-module-platform/index.md)
 
 ---
 

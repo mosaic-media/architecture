@@ -303,7 +303,7 @@ Construction should establish a valid Aggregate immediately, because invalid Agg
 
 # Identity
 
-The identity of the Aggregate is the identity of its Root, which for a Playback Session is the PlaybackSessionID. Internal Entities may possess local identities if required, but those identities should never escape the Aggregate boundary, so the Aggregate Root alone has global identity.  [Baeldung on Kotlin](https://www.baeldung.com/cs/aggregate-root-ddd)
+The identity of the Aggregate is the identity of its Root, which for a Playback Session is the PlaybackSessionID. Internal Entities may possess local identities if required, but those identities should never escape the Aggregate boundary, so the Aggregate Root alone has global identity.  [Baeldung on Computer Science](https://www.baeldung.com/cs/aggregate-root-ddd)
 
 ---
 
