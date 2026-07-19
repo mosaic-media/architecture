@@ -111,16 +111,27 @@ Add to this table whenever a word starts carrying two meanings. Removing an ambi
 
 ---
 
+## Settled In Code
+
+The `mosaic-platform` repository has built fourteen slices. Where code exists, **the code is authoritative** and this repository does not restate it. Questions the old corpus argued about for chapters are already answered:
+
+| Question | Answer, in code |
+|---|---|
+| Shutdown sequencing | Stop the worker's poll loop, run one final synchronous outbox drain, then exit. Proven by a test that starts a one-hour ticker so only the shutdown drain can deliver |
+| Retry and dead-lettering | Exponential backoff capped at one hour, dead-letter after eight attempts, failure bookkeeping recorded per event |
+| Delivery semantics | At-least-once. Subscribers must be idempotent; a retry redelivers to every subscriber of that type |
+| Error taxonomy | Seven categories — `InvalidArgument`, `Unauthenticated`, `PermissionDenied`, `NotFound`, `Conflict`, `Unavailable`, `Internal`. No driver type escapes a module boundary |
+| Command boundary | Validate, authenticate, authorise, open `UnitOfWork`, load, apply, persist state and outbox in one transaction, return a Platform type |
+| Storage extensibility | `Store[T](tx)` resolves any store uniformly; `StorageAdapter` is a port. MAD-001 |
+| Package tiers | Core Platform, built-in module, external module. Postgres is a built-in module, not an adapter |
+| User authorisation | Real ABAC-shaped policy engine, default-deny, enforced at the application service |
+
 ## Deliberately Undecided
 
-These belong to implementation. Recording them as undecided is the correct state; the previous repository invented answers for all of them.
-
-- Shutdown sequencing, deadlines and retry policy
-- Backpressure thresholds and queue bounds
-- Whether a human operator approves module permissions at install, or the Supervisor grants declared permissions automatically
-- The manifest's exact shape and whether it is declared per module or per capability
-- Real SDK signatures and contract surfaces
-- Event ordering and idempotency mechanisms
+- **Module permissions.** The policy engine governs *user* authority. What a *module* may do — who grants it, whether an operator approves at install, and what a declaration commits to — is not built and not decided.
+- **The module manifest's shape**, and whether the declared unit is the module or the capability. A built-in registry exists at `internal/composition/builtin/` mirroring external discovery, but the external form is unwritten.
+- **Backpressure thresholds and queue bounds.**
+- **The public SDK surface.** `contracts/platform/v1` is still empty; promoting the proven contracts into it is the next real milestone.
 
 ---
 
