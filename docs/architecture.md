@@ -48,7 +48,6 @@ Trusted, compiled in, defines the rules everything else follows. Imports no modu
 |---|---|
 | `UnitOfWork` | `WithinTx(ctx, fn)` — the transaction boundary |
 | `Tx` | Transaction scope. Stores reached through one `Tx` share one transaction |
-| `Store[T](tx)` | Uniform, type-safe store resolution |
 | `StorageAdapter` | The storage port an engine implements |
 | `UserStore`, `SessionStore`, `PermissionStore`, `ConfigStore`, `CredentialStore` | Persistence contracts |
 | `EventOutbox`, `EventPublisher` | Event durability and delivery |
@@ -120,7 +119,7 @@ Break these and the architecture stops holding.
 
 ## Cross-cutting behaviour
 
-**Transactions.** `Store[T](tx)` resolves any store uniformly. *Currently a delegation shim* — it forwards to `Tx`'s six named accessors, which still exist. Sealing `Tx` and repointing resolution onto the `StorageAdapter` binding is outstanding work; `resolveStore` is the single place that changes.
+**Transactions.** `Tx` enumerates the Platform's stores by name, and every store reached through one `Tx` writes to the same database transaction. The store set is Platform-owned and closed: capabilities own no schema, so there is nothing to register and nothing to resolve at runtime ([ADR 0012](adr/0012-capabilities-do-not-own-stores.md)). Growing the set means editing `Tx`, which is deliberate Platform evolution rather than a cost. One transaction spans one bounded context's stores plus the shared outbox ([ADR 0014](adr/0014-storage-authority-and-transaction-scope.md)); work crossing contexts is two transactions joined by an event.
 
 **Events.** Writers append to the outbox inside the business transaction. The worker drains it, publishes through the bus, and marks published or records failure. Failure applies an exponential backoff capped at one hour and dead-letters after eight attempts. Events carry a full envelope: identity, type, timestamps, actor, correlation and causation identifiers, payload, redaction class.
 
