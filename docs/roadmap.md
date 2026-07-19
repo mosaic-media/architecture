@@ -93,6 +93,15 @@ The reference capability landed against `contracts/platform/v1` alone, enforced 
 
 **Step 3 was the thesis test, and it passed; step 4 extracted the surface it proved.** A capability can be built entirely against the published contract surface, and that surface is now a standalone module a third party depends on rather than a package inside this repository. The extension model is real, end to end.
 
+### Since the thesis: the platform runs
+
+Beyond the critical path, the Platform is now a usable process rather than only a tested library:
+
+- **GraphQL is served over HTTP** — a hand-written handler on `:8081/graphql` (Supervisor handoff stays on `:8080`), and the composition root constructs `app.Service` for the first time. Content is exposed: search, node read, external-id lookup, and the six content mutations, each projecting the published SDK's models.
+- **Real password auth** — an Argon2id hasher (`internal/adapters/crypto`), so sign-in actually verifies.
+- **Permissions can be assigned through the Platform** — `PermissionStore` gained `CreateRole`/`GrantRole`, with commands and GraphQL mutations. `PermissionStore` was read-only before; authority could only be seeded by raw SQL.
+- **The first admin bootstraps itself** — `bootstrap.EnsureAdmin`, env-gated and idempotent, so a human can start the binary and use it. Proven end to end over HTTP against real PostgreSQL: sign in with a password, import a work and a season, query them back.
+
 ### Acceptance baseline
 
 Before the foundation is considered ready for SDK extraction:
@@ -106,16 +115,28 @@ Before the foundation is considered ready for SDK extraction:
 
 ---
 
-## After the thesis holds
+## What is next
 
-Deliberately unplanned in detail. These follow only once the extension mechanism is proven, and each should be scoped when it starts rather than now.
+The critical path is complete and the platform runs, so there is no single forced next step — the work branches. Nearest-term threads first, cheapest to hardest.
 
-- **First real module** — one media format end to end, built the way a community developer would build it. The first honest test of the SDK's ergonomics.
-- **Module permissions** — what a module declares, who grants it, what enforcement means given modules compile into the binary. See the isolation tradeoff in [the overview](index.md); this is a declaration and audit mechanism, not containment.
-- **Module distribution** — how the Supervisor discovers, selects and pulls a community module. Manifest shape, signing, trust tiers.
-- **Export formats** — NFO for other systems, `.mos` for Mosaic-to-Mosaic portability. Generated on demand from authoritative state ([ADR 0014](adr/0014-storage-authority-and-transaction-scope.md)).
-- **Job queue** — the `jobs` tables exist with no service on them. `SELECT ... FOR UPDATE SKIP LOCKED` is the intended pattern, for import, provider sync and enrichment.
-- **`LISTEN`/`NOTIFY`** — an accelerator over the outbox worker's existing poll, not a replacement for it. Notifications are dropped when no listener is connected, so the poll stays as the floor.
+**Harden the SDK toward stable (it is `v0.1.0` on purpose):**
+
+- **The relation-read gap.** `ContentService` can write edges (`RelateContent`) but has no `ListFrom`/`ListTo` to read them, so a capability can't query the graph it builds. Small and additive — a `v0.x` bump. The most self-contained next thing.
+- **A second capability** — a different media type (music, comics), built against the SDK, to stress the surface from a fresh angle and surface what a real second consumer needs before the surface stabilises. Likely forces the relation-read gap and, if it introduces a novel media type, the `media_types` registry.
+
+**The module system** (larger; several ADRs, and the gate for real third-party modules):
+
+- **The capability manifest shape** — undecided, and it gates two things below.
+- **The `media_types` registry** ([ADR 0015](adr/0015-open-and-closed-vocabularies.md)) — catches a media type that was never real, which normalisation cannot. Waits on the manifest shape and on a capability that introduces a new type.
+- **Module-granular permissions and a system principal** ([ADR 0017](adr/0017-how-a-capability-acts.md)) — authority a module holds distinct from its invoking user, and a no-user identity for background work. (User permissions management is built.)
+- **External-module composition and distribution** — how a community module is discovered, compiled in, selected and pulled. Manifest shape, signing, trust tiers.
+
+**The rest, unplanned in detail, each scoped when it starts:**
+
+- **First real module** — one media format end to end, built the way a community developer would; the honest test of the SDK's ergonomics. Gated on external-module composition above.
+- **Export formats** — NFO for other systems, `.mos` for Mosaic-to-Mosaic portability, generated on demand from authoritative state ([ADR 0014](adr/0014-storage-authority-and-transaction-scope.md)).
+- **Job queue** — the `jobs` tables exist with no service; `SELECT ... FOR UPDATE SKIP LOCKED` is the intended pattern, for import, provider sync and enrichment.
+- **`LISTEN`/`NOTIFY`** — an accelerator over the outbox worker's poll, not a replacement; notifications drop when no listener is connected, so the poll stays the floor.
 - **Shell and SDUI** — the server-driven interface.
 - **Mosaic Design Language** — acrylic with weight, artwork as the light source.
 
