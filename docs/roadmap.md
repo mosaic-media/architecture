@@ -10,7 +10,7 @@ The Platform boots against real PostgreSQL, serves a GraphQL schema, runs an out
 
 Two further slices — uniform store resolution and its PostgreSQL follow-up — were built and then reverted under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md), which found they solved a case the architecture had already ruled out.
 
-The content model and its published surface were the things blocking the critical path. What remains is the thesis test itself: a capability that uses only that surface.
+The content model, its published surface, and a capability that uses only that surface have all landed — **the thesis test passes.** What remains is extracting the surface into a standalone SDK repository a third party builds against.
 
 ---
 
@@ -41,9 +41,15 @@ Two shapes were decided in the building. A child inherits its work id and media 
 
 It was scheduled ahead of the reference capability because it is needed under every resolution of the boundary problem below, so none of it could be wasted. It did **not** resolve either blocker: every content command still authorises on a user session, and the contracts still reference `domain` types under `internal/`.
 
-### 3 — Reference capability path
+### 3 — Reference capability path — **done**
 
-Attempted twice and correctly reported as blocked rather than forced. It was blocked a third time on two things neither attempt had reached — both decided (ADR 0016, ADR 0017), and the first half of the build has now landed.
+Attempted twice and correctly reported as blocked rather than forced, then blocked a third time on two things neither attempt had reached — both decided (ADR 0016, ADR 0017) and built. The capability now exists and passes: **the thesis holds.** A package that imports only `contracts/platform/v1`, owns no schema and touches no Platform internals sources an anime over HTTP, searches by provider id to avoid duplicating, creates the work with a source binding, builds its season/episode/part tree, and — honouring ADR 0013 — creates the source manga as its own Work joined by an adaptation edge rather than folding it into one tree. It runs against real PostgreSQL through the postgres harness: a fake provider serves canned metadata over `httptest`, and the test asserts the work is findable by external id, the tree is where it belongs, the edge and both bindings landed, every command emitted its event, and a second import is idempotent.
+
+`capabilities/reference/` lives outside `internal/` and a boundary test parses its imports to keep it to `v1` and the standard library — the stop point made executable. It owns its provider integration outright (an HTTP metadata source on `net/http`), since the Platform offers no HTTP contract and does not need to (ADR 0007).
+
+Two findings from building it. The published surface was **sufficient** — no private import was needed, which is the proof the contracts are ready. And one gap: `ContentService` has no *read* for relations (`ListFrom`/`ListTo`), so the test reads the adaptation edge through the store; the capability's own flow does not need it, so it is a candidate addition to `v1`, not a blocker.
+
+The remainder of this section records how the block was cleared.
 
 #### Done: the published surface ([ADR 0016](adr/0016-published-contract-surface.md))
 
@@ -55,22 +61,17 @@ The block was that every contract signature references a `domain` type under `in
 
 A capability does not originate authority. The Platform invokes it within a context carrying a principal, and it forwards that context to every service it calls. For the reference capability the principal is the invoking user, so nothing in the policy engine changes and every created node traces to the person who caused it. This is realised as the `Caller`: a session reference the capability forwards, only as authoritative as the session behind it. A system principal for background work, and module-granular authority, are named future decisions rather than machinery built now.
 
-#### Remaining: the capability itself, and the registry
+#### How the block was cleared
 
-The surface is published; what is left is a capability that uses it. `test/sdkprobe` is *shaped* like one — it compiles against `v1` — but it is a build-time stand-in, not a capability wired to a running Platform.
+Its purpose changed under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md). It was to prove a capability could own a store and join a transaction. Since capabilities own no schema, it proves instead what a capability actually does, shaped like the anime module the platform exists to support: source metadata from an external provider, search existing content, create nodes and relations, and cause events. All four are done.
 
-The capability's purpose changed under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md). It was to prove a capability could own a store and join a transaction. Since capabilities own no schema, it should now prove what a capability actually does, shaped like the anime module the platform exists to support:
+Sourcing metadata needs no Platform HTTP contract, which is worth stating because it looks like a gap and is not one. Capabilities compile into the binary with trust established before the build ([ADR 0007](adr/0007-static-go-module-composition.md)), so a capability imports `net/http` itself — as the reference capability's metadata source does. A Platform-provided client is worth having eventually for rate limiting and secret handling; it is not a prerequisite.
 
-- source metadata from an external provider
-- search existing content
-- create nodes and relations in the generic model
-- publish an event
+#### Not carried here after all: the `media_types` registry
 
-Sourcing metadata needs no Platform HTTP contract, which is worth stating because it looks like a gap and is not one. Capabilities compile into the binary with trust established before the build ([ADR 0007](adr/0007-static-go-module-composition.md)), so a capability imports `net/http` itself. A Platform-provided client is worth having eventually for rate limiting and secret handling; it is not a prerequisite.
+The original plan ([ADR 0015](adr/0015-open-and-closed-vocabularies.md)) had this slice carry the registry that catches a media type which was never real (a missing separator or a misspelling, which normalisation cannot recover). It did not, and ADR 0015 is amended to say why: the reference capability is an anime importer that uses only known media types, so it never introduces a novel one, and the registry depends on the capability manifest shape, which is still undecided. The registry now waits on that manifest mechanism and on a capability that genuinely introduces a new type. Until then normalisation is the whole of the enforcement.
 
-**It also carries the `media_types` registry** ([ADR 0015](adr/0015-open-and-closed-vocabularies.md)). Media types are an open vocabulary, and normalisation already collapses spelling variants, but nothing yet catches a value that was never a real type. The fix is a Platform-owned table a module contributes to through its manifest — which is precisely the "declare through the manifest, Platform acts on it" shape this slice exists to prove, so the consumer and the mechanism should land together rather than one retrofitting the other.
-
-**Exit criteria.** The surface of [ADR 0016](adr/0016-published-contract-surface.md) is published into `contracts/platform/v1` — done — and then one capability does all four using only those packages, acting as its invoking user ([ADR 0017](adr/0017-how-a-capability-acts.md)), owning no schema and touching no Platform code.
+**Exit criteria — met.** The surface of [ADR 0016](adr/0016-published-contract-surface.md) is published into `contracts/platform/v1`, and one capability does all four using only those packages, acting as its invoking user ([ADR 0017](adr/0017-how-a-capability-acts.md)), owning no schema and touching no Platform code.
 
 ### 4 — SDK extraction readiness
 
@@ -80,15 +81,15 @@ Whether the contracts proven across the completed slices can leave the Platform 
 
 The standing check is the one ADR 0016 makes an enforcement: a throwaway module compiled against the published package builds only if the surface is importable and self-contained, so an `internal/` leak fails the build rather than being rediscovered by hand.
 
-### The stop point
+### The stop point — cleared
 
 > **The Platform is ready for SDK work when the reference capability uses only published contract packages and no private Platform internals.**
 >
 > **If the reference capability requires a private import, the contracts are not ready to publish.**
 
-This is the rule to hold the line on. A private import that gets waved through is the moment the ecosystem becomes second-class — the community developer hits a wall the built-in modules never hit, and the extension model quietly stops being real.
+The reference capability landed against `contracts/platform/v1` alone, enforced by a boundary test that parses its imports. It needed no private import, so the line held rather than being waved through — which is what makes the surface ready to extract.
 
-**Steps 3 and 4 together are the thesis test.** If a capability can be built entirely against the published contract surface, the module ecosystem works. If it cannot, the extension model needs rethinking — and better to learn that now than after building media formats on top of it.
+**Step 3 was the thesis test, and it passed.** A capability can be built entirely against the published contract surface. Step 4 confirms the surface can leave this repository as that same standalone thing a third party depends on.
 
 ### Acceptance baseline
 

@@ -134,7 +134,7 @@ The `mosaic-platform` repository has thirteen slices standing, with two more bui
 - **Module-granular permissions.** A capability acts as its invoking user ([ADR 0017](adr/0017-how-a-capability-acts.md)), so the acting-principal question is decided. What a *module* may do *differently* from that user — who grants it, whether an operator approves at install, what a declaration commits to — is scoped to its own future ADR, triggered by the first capability that needs authority distinct from its user's.
 - **The module manifest's shape**, and whether the declared unit is the module or the capability. A built-in registry exists at `internal/composition/builtin/` mirroring external discovery, but the external form is unwritten.
 - **Backpressure thresholds and queue bounds.**
-- **The public SDK surface** is published ([ADR 0016](adr/0016-published-contract-surface.md)): `contracts/platform/v1` carries the content services, models and an opaque `Caller`, with the store contracts kept internal, and an external module compiles against it in the test suite. What remains is a real capability that uses it — the thesis test — and its extraction to a standalone SDK repository.
+- **The public SDK surface** is published ([ADR 0016](adr/0016-published-contract-surface.md)) and proven: `contracts/platform/v1` carries the content services, models and an opaque `Caller`, with the store contracts kept internal; an external module compiles against it in the test suite, and the reference capability uses only it to import an anime end to end against a real database. What remains is extracting the surface into a standalone SDK repository a third party builds against.
 
 ---
 
