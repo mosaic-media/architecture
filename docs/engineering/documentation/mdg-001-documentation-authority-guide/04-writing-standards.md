@@ -122,6 +122,8 @@ For example:
 
 When terminology evolves, older documents should be updated unless historical accuracy requires the original wording.
 
+This mapping governs Mosaic's own vocabulary and nothing else. It must not be applied to fixed external terms of art, to the titles of external sources, or to URLs. Substituting *Module* into the Open/Closed Principle produces "open for module", which names no principle, and substituting it into a vendor documentation URL produces a dead link. Where an external term collides with a Mosaic term, the external term stands and the surrounding prose should make the distinction clear.
+
 ---
 
 # Concept Definitions
