@@ -116,7 +116,7 @@ Break these and the architecture stops holding.
 
 **Secrets are unobservable.** Log fields redact unless explicitly marked safe; an unclassified field fails closed. Support bundles replace any free text not explicitly marked as containing nothing sensitive.
 
-**Adding a media type is rows, not tables.** No schema migration, no new query path, no per-type column. This is the property the content model exists to deliver and the one that makes a community-built module possible without Platform changes.
+**Adding a media type is rows, not tables.** No schema migration, no new query path, no per-type column. This is the property the content model exists to deliver and the one that makes a community-built module possible without Platform changes. Vocabulary the Platform branches on is the exception and stays closed ([ADR 0015](adr/0015-open-and-closed-vocabularies.md)).
 
 **Deletion is never a silent cascade.** Removing a node's last source binding leaves it `orphaned`, not deleted. Deleting a node that still has children, parts or bindings is refused, so a subtree is never taken by implication.
 
@@ -157,7 +157,7 @@ Forcing every media type through one shape is its own bug. These four are modell
 
 ### Implementation notes
 
-**`media_type`, `container_type` and `item_type` are unconstrained text.** A `CHECK` listing the known types would make every new media type a schema migration, which is the outcome [ADR 0002](adr/0002-module-storage-and-delivery-model.md) and ADR 0013 exist to prevent. It would also already be wrong: an artist is its own Work and `artist` is not in ADR 0013's illustrative list. The Platform-owned *graph* vocabulary — `node_kind`, `part_role`, relation types, match methods, statuses — is closed and checked. Attribute correctness in the JSONB columns belongs to the writing capability; the schema does not validate it.
+**`media_type`, `container_type` and `item_type` are unconstrained text; the graph vocabulary is not.** [ADR 0015](adr/0015-open-and-closed-vocabularies.md) draws the line: vocabulary the Platform *branches on* — `node_kind`, `part_role`, relation types, match methods, statuses — is closed and `CHECK`-constrained, because an unrecognised value there is a traversal that does not know what it is looking at. Vocabulary that only *describes content* is open, because a `CHECK` would make every new media type a schema migration. Enforcement on the open columns is currently nothing, so a typo fragments a library silently; a `media_types` registry is the anticipated fix, triggered when something other than Platform code can introduce a type. Attribute correctness in the JSONB columns belongs to the writing capability on the same terms.
 
 **Identifiers are UUIDv7 in native `uuid` columns**, with their own generator alongside the UUIDv4 one that continues to serve the infrastructure tables. Those keep their `text`/UUIDv4 ids and are not migrated.
 

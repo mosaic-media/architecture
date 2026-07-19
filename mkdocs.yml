@@ -51,6 +51,7 @@ nav:
       - 12. Capabilities do not own stores: adr/0012-capabilities-do-not-own-stores.md
       - 13. The object graph: adr/0013-object-graph.md
       - 14. Storage authority and transaction scope: adr/0014-storage-authority-and-transaction-scope.md
+      - 15. Open and closed vocabularies: adr/0015-open-and-closed-vocabularies.md
 
 markdown_extensions:
   - admonition

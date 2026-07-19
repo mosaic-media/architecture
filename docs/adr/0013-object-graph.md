@@ -1,6 +1,6 @@
 # 13. The object graph: Node, Part, Relation
 
-**Status:** Accepted
+**Status:** Accepted. Refined by [ADR 0015](0015-open-and-closed-vocabularies.md), which settles whether the type vocabularies below are open or closed.
 **Date:** 2026-07-19
 
 ## Context
