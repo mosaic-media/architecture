@@ -2,7 +2,7 @@
 
 How Mosaic is built. This document describes the system as it exists in `mosaic-platform` — 162 Go files, ~15,300 lines — not a system that is planned. Where it describes something unbuilt, it says so.
 
-Read this before changing anything. For what Mosaic is and why, see [MOSAIC.md](MOSAIC.md). For what is being built next, see [ROADMAP.md](ROADMAP.md).
+Read this before changing anything. For what Mosaic is and why, see [MOSAIC.md](index.md). For what is being built next, see [ROADMAP.md](roadmap.md).
 
 ---
 
@@ -12,14 +12,25 @@ Mosaic is a self-hosted media server built as a single Go binary. A Supervisor s
 
 The Platform is hexagonal. Its core defines contracts — interfaces describing what it needs — and everything technological satisfies them from outside. PostgreSQL is not privileged; it is a module that implements the storage port and could be replaced by another.
 
-```
-GraphQL / HTTP  ─┐
-                 ├─→  Application services  ─→  Contracts  ←─  Modules  ─→  PostgreSQL
-Health endpoints ─┘                                  ↑
-                                                  Domain
+```mermaid
+flowchart LR
+    GQL["GraphQL"]
+    HTTP["Health endpoints"]
+    APP["Application services"]
+    CON["Contracts"]
+    DOM["Domain"]
+    MOD["Modules"]
+    PG[("PostgreSQL")]
+
+    GQL --> APP
+    HTTP --> APP
+    APP --> CON
+    CON --> DOM
+    MOD --> CON
+    MOD --> PG
 ```
 
-Dependencies point inward. The domain imports nothing.
+Arrows mean *depends upon*. Dependencies point inward: transports depend on application services, which depend on contracts, which depend on the domain. Modules depend on contracts too, from the outside. **The domain imports nothing.**
 
 ---
 

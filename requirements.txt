@@ -1,0 +1,3 @@
+# Documentation site and PDF export. Nothing else.
+mkdocs-material==9.7.6
+playwright==1.49.1

@@ -69,7 +69,7 @@ Before the foundation is considered ready for SDK extraction:
 Deliberately unplanned in detail. These follow only once the extension mechanism is proven, and each should be scoped when it starts rather than now.
 
 - **First real module** — one media format end to end, built the way a community developer would build it. The first honest test of the SDK's ergonomics.
-- **Module permissions** — what a module declares, who grants it, what enforcement means given modules compile into the binary. See the isolation tradeoff in `MOSAIC.md`; this is a declaration and audit mechanism, not containment.
+- **Module permissions** — what a module declares, who grants it, what enforcement means given modules compile into the binary. See the isolation tradeoff in [the overview](index.md); this is a declaration and audit mechanism, not containment.
 - **Module distribution** — how the Supervisor discovers, selects and pulls a community module. Manifest shape, signing, trust tiers.
 - **Shell and SDUI** — the server-driven interface.
 - **Mosaic Design Language** — acrylic with weight, artwork as the light source.

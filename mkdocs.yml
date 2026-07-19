@@ -1,0 +1,67 @@
+site_name: Mosaic
+site_description: Mosaic architecture and direction.
+site_url: https://mosaic-media.github.io/mosaic-architecture/
+
+repo_name: mosaic-media/mosaic-architecture
+repo_url: https://github.com/mosaic-media/mosaic-architecture
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - content.code.copy
+    - navigation.footer
+    - navigation.top
+    - search.highlight
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+nav:
+  - Mosaic: index.md
+  - Architecture: architecture.md
+  - Roadmap: roadmap.md
+  - Decisions:
+      - Transactional store extensibility: adr/0001-transactional-store-extensibility.md
+      - Module storage and delivery: adr/0002-module-storage-and-delivery-model.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  # Mermaid diagrams render natively through Material's superfences.
+  # A ```mermaid block becomes a rendered diagram; no plugin required.
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+
+extra_javascript:
+  - path: assets/js/mermaid-init.js
+    type: module
+
+plugins:
+  - search

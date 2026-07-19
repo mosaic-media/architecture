@@ -8,13 +8,16 @@ This repository holds Mosaic's architecture and direction. The implementation li
 
 ## Read these
 
-| Document | What it answers |
-|---|---|
-| **[MOSAIC.md](MOSAIC.md)** | What Mosaic is, why it exists, what has been decided, and what has deliberately not been |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** | How the platform is built. Written from the source, not from a plan |
-| **[ROADMAP.md](ROADMAP.md)** | What is being built next, and what is blocking it |
+Published at **[mosaic-media.github.io/mosaic-architecture](https://mosaic-media.github.io/mosaic-architecture/)**, where every page is also downloadable as a PDF.
 
-Three documents. That is the whole repository.
+| Page | What it answers |
+|---|---|
+| **[Mosaic](docs/index.md)** | What Mosaic is, why it exists, what has been decided, and what has deliberately not been |
+| **[Architecture](docs/architecture.md)** | How the platform is built. Written from the source, not from a plan |
+| **[Roadmap](docs/roadmap.md)** | What is being built next, and what is blocking it |
+| **[Decisions](docs/adr/)** | Architecture decision records |
+
+Three pages and two decision records. That is the whole repository.
 
 ---
 
