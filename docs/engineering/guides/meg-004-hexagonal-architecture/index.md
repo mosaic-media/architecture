@@ -107,10 +107,10 @@ After reading MEG-004 contributors should understand why Hexagonal Architecture 
 # Repository Structure
 
 ```text
-engineering/
-└── meg/
-    └── MEG-004 Hexagonal Architecture/
-        README.md
+docs/
+└── engineering/guides/
+    └── meg-004-hexagonal-architecture/
+        index.md
         00-document-control.md
         01-hexagonal-philosophy.md
         02-ports.md

@@ -115,7 +115,7 @@ Infrastructure changes frequently; Ports should not. Changing a Port affects the
 Ports should remain focused. Good:
 
 ```go
-type ArtworkProvider interface {
+type ArtworkStore interface {
 
     Artwork(...)
 }
