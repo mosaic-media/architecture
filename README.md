@@ -1,242 +1,41 @@
-# Mosaic Architecture
+# Mosaic
 
-This repository holds internal Mosaic documentation: architecture notes, design specifications, decision records, and supporting reference material.
+A self-hosted media server that covers every format in one place — music, television, film, anime, comics, manga, audiobooks — without requiring the user to run three separate systems, or to become their own IT support.
 
-It is the source of truth for how Mosaic is understood, designed, and evolved before implementation work is planned or built. The repository is also configured as a Material for MkDocs documentation portal published through GitHub Pages.
+This repository holds Mosaic's architecture and direction. The implementation lives in [`mosaic-platform`](https://github.com/mosaic-media/mosaic-platform).
 
-## Contributing
+---
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before making a change. It covers the proposal lifecycle, scaffolding a new document, the Status model, the review process and the checks that run in CI.
+## Read these
 
-The short version: architecture changes through an accepted proposal and a recorded decision, never by editing the Canon directly; new specifications are scaffolded from `templates/` rather than copied; and `python3 scripts/validate_docs.py` must pass before you open a pull request.
+| Document | What it answers |
+|---|---|
+| **[MOSAIC.md](MOSAIC.md)** | What Mosaic is, why it exists, what has been decided, and what has deliberately not been |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | How the platform is built. Written from the source, not from a plan |
+| **[ROADMAP.md](ROADMAP.md)** | What is being built next, and what is blocking it |
 
-Each document's `Owner` in Document Control is its steward, and `.github/CODEOWNERS` is generated from that field by `scripts/generate_codeowners.py`, so the right reviewer is requested automatically.
+Three documents. That is the whole repository.
 
-## Documentation Website
+---
 
-The generated site uses [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+## How this repository works
 
-Local development:
+**Code is authoritative.** Where `mosaic-platform` has built something, the code decides and these documents describe it. They do not specify it in advance and they do not contradict it. If a document disagrees with the source, the document is wrong.
 
-```bash
-python -m pip install -r requirements.txt
-python scripts/validate_docs.py
-mkdocs serve
-```
+**Documentation follows implementation.** Roadmaps may look forward; descriptions of the system may not. Documentation written for unbuilt software has nothing pushing back on it, which is how contradictions survive indefinitely.
 
-Production validation:
+**Superseded content is deleted, not annotated.** Git keeps every abandoned idea permanently, so deleting costs nothing and leaving stale material costs a great deal. A note saying "this section is out of date" does not outweigh the pages around it that still assert the old thing.
 
-```bash
-mkdocs build --strict
-```
+**One authoritative statement per fact.** If two documents answer the same question, a reader picks one, and the choice is arbitrary.
 
-Build the portal with one combined PDF per specification:
+---
 
-```bash
-python -m playwright install chromium
-ENABLE_PDF_DOWNLOADS=true mkdocs build --strict
-python scripts/build_pdfs.py
-```
+## History
 
-The PDF build discovers specification folders automatically and follows each
-folder's `.pages` chapter order. Generated files are written to
-`site/downloads/`; authored Markdown remains the source of truth.
+This repository previously held over two hundred specification documents under a bespoke taxonomy — MDL, MDS, MEG, MAC, MIP, MOP, MAD, MDP. Most of it was generated across many AI sessions and never validated. It accumulated contradictions faster than anyone could resolve them, and eventually began producing wrong work: a roadmap built against a storage model that had been abandoned, and a transport layer the architecture explicitly forbids.
 
-GitHub Actions builds and deploys the site to GitHub Pages on every push to `main`.
+The cause was structural. The repository was serving as both memory across sessions and source of truth, and those want opposite things — memory accumulates, truth replaces. Memory won by volume, so abandoned ideas were retrieved as current architecture.
 
-## Repository Structure
+The full prior corpus is preserved at tag `pre-reset-2026-07-19` and can be recovered in whole or in part at any time.
 
-```text
-docs/
-  design/
-    language/    Mosaic Design Language specifications
-    system/      Mosaic Design System specifications
-  engineering/
-    documentation/  Documentation governance and authoring standards
-    architecture/  Platform and system architecture specifications
-    guides/        Mosaic Engineering Guidelines specifications
-    protocols/     Integration and interoperability protocol specifications
-    operations/    Runtime, support, and operational specifications
-  roadmaps/        Cross-disciplinary Mosaic Roadmaps
-templates/         Authoritative starting point for each document type
-review/            Open questions and documentation defects, not published
-```
-
-`templates/` sits outside `docs/` deliberately: MkDocs never renders it and `scripts/validate_docs.py` never scans it, so placeholder identifiers do not register as defects. See [templates/README.md](templates/README.md).
-
-`review/` sits outside `docs/` for the same reason. [review/open-questions.md](review/open-questions.md) records contradictions, underspecified passages and duplication found during documentation work — problems that cannot be fixed by editing prose because resolving them requires knowing what Mosaic actually does. Keeping it unpublished means an open contradiction can be named plainly without appearing on the site as though it were content.
-
-The current imported specification set lives in:
-
-- `docs/design/language` for MDL documents
-- `docs/design/system` for MDS documents
-- `docs/engineering/documentation` for MDG documents
-- `docs/engineering/architecture` for MAC, MAD and MDP documents
-- `docs/engineering/guides` for MEG documents
-- `docs/engineering/protocols` for MIP documents
-- `docs/engineering/operations` for MOP documents
-- `docs/roadmaps` for MRM documents
-
-[MEG-006](docs/engineering/guides/meg-006-module-platform/index.md) contains the Module Platform and its integrated Developer Platform guidance, including SDK, CLI, local development, deterministic Test Harness Modules and publication workflow boundaries.
-
-[MIP-003](docs/engineering/protocols/mip-003-uv-light-frame-protocol/index.md) defines the canonical artwork-light frame exchanged between artwork analysis, MOS Cache and client renderers.
-
-[MEG-014](docs/engineering/guides/meg-014-refraction-engine/index.md) defines how CSS, Flutter and two-dimensional shader clients resolve that source into stable Acrylic rendering without mesh geometry.
-
-[MEG-015](docs/engineering/guides/meg-015-platform-foundation-implementation/index.md) defines the implementation-grade first build path for the Mosaic Platform foundation before SDK extraction.
-
-## Document Types
-
-The structure is intended to support these document families without another major reorganisation:
-
-- `MDP` — Mosaic Design Proposal
-- `MAD` — Mosaic Architecture Decision
-- `MAC` — Mosaic Architecture Canon
-- `MEG` — Mosaic Engineering Guide
-- `MIP` — Mosaic Integration Protocol
-- `MOP` — Mosaic Operations & Playbook
-- `MDL` — Mosaic Design Language
-- `MDS` — Mosaic Design System
-- `MDG` — Mosaic Documentation Guide
-- `MRM` — Mosaic Roadmap
-
-Each type has an authoritative template under [`templates/`](templates/README.md). The templates are the machine-readable form of [MDG-001](docs/engineering/documentation/mdg-001-documentation-authority-guide/02-document-types.md): their chapter skeletons match the type definitions one-to-one, so structure alone keeps the types apart.
-
-Each type is a branded profile of an established open standard rather than an invention: decisions follow ADR and MADR, proposals follow the RFC and PEP process, the MAC/MEG/MOP split follows Diátaxis modes, normative language follows RFC 2119, protocol contracts use major compatibility versioning, and revision histories follow Keep a Changelog. The mapping and every deliberate deviation are recorded in [10 — Standards Mapping](docs/engineering/documentation/mdg-001-documentation-authority-guide/10-standards-mapping.md).
-
-## Creating a New Document
-
-Scaffold a new specification with `scripts/new_doc.py` rather than copying an existing folder by hand:
-
-```bash
-python3 scripts/new_doc.py --type mad --title "Module Signing Policy"
-```
-
-```text
-MAD-003 — Module Signing Policy
-Created docs/engineering/architecture/mad-003-module-signing-policy/
-  wrote 00-document-control.md
-  wrote 01-context.md
-  ...
-  wrote .pages
-  registered mad-003-module-signing-policy in docs/engineering/architecture/.pages
-```
-
-The script resolves the discipline directory from the type, allocates the next sequential identifier, creates the slugged folder, copies the matching template and stamps `File`, `Document` and `Status: Draft` into every page. It also rewrites the identifier and title placeholders in the body, so the Document Control table agrees with the metadata block, and registers the folder in its discipline `.pages`.
-
-| Flag | Purpose |
-|------|---------|
-| `--type` | One of `mdp`, `mad`, `mac`, `meg`, `mip`, `mop`, `mdg`, `mdl`, `mds`, `mrm`. |
-| `--title` | The specification title. Also becomes the folder slug and the `.pages` title. |
-| `--id` | Optional explicit identifier such as `mad-003`. Omit to allocate the next number. |
-| `--dry-run` | Print what would be created and write nothing. |
-
-Identifiers are allocated as the highest existing number plus one. Gaps are never refilled, because an identifier is a permanent reference and must not be reissued. The script refuses to overwrite an existing folder.
-
-A freshly scaffolded specification passes `scripts/validate_docs.py` as generated. Replace the guidance comments and placeholders, set the `Owner`, then validate again before committing.
-
-Run the scaffolder's own tests with:
-
-```bash
-python3 -m pytest scripts/test_new_doc.py
-```
-
-## Documentation Conventions
-
-Each specification is stored as its own folder with one Markdown file per chapter.
-
-Most specification folders follow this shape:
-
-```text
-index.md
-00-document-control.md
-01-...
-02-...
-...
-references.md
-glossary.md
-```
-
-Folder names are URL-safe slugs such as `meg-001-go-engineering-standards`. The generated site uses `.pages` files so navigation presents human-readable titles such as `Go Engineering Standards` while the document ID remains visible on the page.
-
-Chapter-level files are preferred over large monolithic documents because they are easier to review, diff, discuss, and evolve independently.
-
-References should appear near the end of a specification and glossary should remain the final authored chapter.
-
-Every authored Markdown page begins with exactly three metadata fields: `File`, `Document`, and `Status`. The schema is defined by [MDG-001 — Documentation Authority Guide](docs/engineering/documentation/mdg-001-documentation-authority-guide/07-repository-organisation.md).
-
-`Status` is one of `Draft`, `Review`, `Active`, `Deprecated`, or `Superseded`, with `Deferred`, `Accepted`, `Rejected`, and `Withdrawn` additionally available to MDP proposals. Prose documents carry no version number; only the contracts defined by MIP documents carry a major compatibility version such as `Event Protocol v1`, declared in the document body.
-
-A document identifier is never reused. When a specification is withdrawn, its identifier keeps a Superseded record at the original location naming the authoritative replacement, so references written against it still resolve. Retired identifiers are listed in `chapter-registry.yml`.
-
-Source pages do not carry review-status summaries or manual previous/next links; document authority comes from `Status` and page transitions come from MkDocs.
-
-Every reference to another published Mosaic document is a relative Markdown hyperlink. Identifier-only references link to the target specification's `index.md`; named references use the catalogued `ID — Canonical Title`, while chapter-specific references may link directly to the relevant chapter or anchor. Unpublished identifiers remain unlinked and are marked `planned; not yet published` or `deferred; not yet published`.
-
-Relationship diagrams use Mermaid rather than ASCII arrows or hierarchy glyphs. Text fences remain appropriate for literal fixed-width material such as repository trees, commands, configuration, logs, templates, notation and interface wireframes.
-
-## Decision Records
-
-Decision records live inside the relevant specification folder, usually in `*-adrs.md`.
-
-Place decisions close to the system they govern:
-
-- MDL decisions belong under `docs/design/language`
-- MDS decisions belong under `docs/design/system`
-- MDG decisions belong under `docs/engineering/documentation`
-- MEG decisions belong under `docs/engineering/guides`
-- MAC decisions belong under `docs/engineering/architecture`
-- MIP decisions belong under `docs/engineering/protocols`
-- MOP decisions belong under `docs/engineering/operations`
-- MRM documents reference decisions and owning specifications but do not own architectural decisions
-- cross-cutting decisions should reference the upstream specification they depend on
-
-When a decision changes the meaning of an existing specification, update both the ADR section and the affected chapter.
-
-## Website Features
-
-The MkDocs portal is configured with:
-
-- full-text search with suggestions and highlighting
-- dark and light theme toggle
-- Mermaid diagram rendering
-- admonitions
-- code copy buttons
-- previous and next navigation
-- table of contents
-- section index pages
-- one-click, whole-specification PDF downloads
-- GitHub repository and edit-page links
-
-Metadata comments are preserved in source files. A MkDocs hook renders the document identity and Status visibly in the generated site at build time, along with a legacy Version row where one is still declared.
-
-## Landing Pages and Navigation
-
-The portal uses landing pages as a concise orientation layer over the authoritative specifications:
-
-- `docs/index.md` provides a short overview and goal-based starting points.
-- discipline landing pages route readers into Design or Engineering.
-- document-family landing pages catalogue the specifications they contain with one-sentence summaries and reading guidance.
-- specification `index.md` pages introduce the purpose and scope of the authoritative document before its detailed chapters.
-
-Landing-page summaries must link to the specification that owns each concept and must not become a second source of normative requirements. When a specification is added, removed, renamed or materially changes purpose, update its nearest catalogue and any affected reading path in the same change. Keep `.pages` navigation and this README synchronised when the visible structure changes.
-
-## Branding
-
-Light Mosaic branding is configured through `mkdocs.yml` and `docs/stylesheets/mosaic.css`.
-
-The temporary header logo is stored at `docs/assets/images/mosaic-logo-dark.jpg`. Keep this first branding layer intentionally small: Material for MkDocs remains responsible for typography, layout, navigation, and component styling.
-
-## Working Guidelines
-
-- Keep documents focused on durable reasoning, not transient implementation details.
-- Keep ownership explicit in Document Control and keep page metadata synchronised.
-- Preserve links between vision, principles, design language, design system, and implementation-facing guidance.
-- Use Mermaid diagrams where they clarify relationships, and validate Mermaid syntax before committing.
-- Commit each major specification folder independently so history remains reviewable.
-
-## Current Status
-
-Most of the library is `Status: Draft`. [MDG-001 — Documentation Authority Guide](docs/engineering/documentation/mdg-001-documentation-authority-guide/index.md) is `Active` and governs the rest. [MDP-001](docs/engineering/architecture/mdp-001-adaptive-composition-runtime/index.md) and [MDP-002](docs/engineering/architecture/mdp-002-tile-framework/index.md) are `Deferred` research, and [MDS-006](docs/design/system/mds-006-composition-engine/index.md) and [MDS-007](docs/design/system/mds-007-tile-framework/index.md) are `Superseded` records at retired identifiers.
-
-Draft does not mean disposable. Treat these documents as evolving architecture: changes should be intentional, reviewed, and traceable.
+The `docs/` directory is what remains of it. It is **legacy and not authoritative**. It is being retired as its remaining useful content is absorbed here.
