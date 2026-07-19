@@ -207,9 +207,9 @@ engineering/
 
 └── meg/
 
-    └── MEG-008 Observability/
+    └── meg-008-observability/
 
-        README.md
+        index.md
 
         00-document-control.md
 
