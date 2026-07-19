@@ -54,6 +54,7 @@ nav:
       - 15. Open and closed vocabularies: adr/0015-open-and-closed-vocabularies.md
       - 16. The published contract surface: adr/0016-published-contract-surface.md
       - 17. How a capability acts: adr/0017-how-a-capability-acts.md
+      - 18. First-administrator bootstrap: adr/0018-first-admin-bootstrap.md
 
 markdown_extensions:
   - admonition

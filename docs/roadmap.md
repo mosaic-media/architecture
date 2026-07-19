@@ -100,7 +100,7 @@ Beyond the critical path, the Platform is now a usable process rather than only 
 - **GraphQL is served over HTTP** — a hand-written handler on `:8081/graphql` (Supervisor handoff stays on `:8080`), and the composition root constructs `app.Service` for the first time. Content is exposed: search, node read, external-id lookup, and the six content mutations, each projecting the published SDK's models.
 - **Real password auth** — an Argon2id hasher (`internal/adapters/crypto`), so sign-in actually verifies.
 - **Permissions can be assigned through the Platform** — `PermissionStore` gained `CreateRole`/`GrantRole`, with commands and GraphQL mutations. `PermissionStore` was read-only before; authority could only be seeded by raw SQL.
-- **The first admin bootstraps itself** — `bootstrap.EnsureAdmin`, env-gated and idempotent, so a human can start the binary and use it. Proven end to end over HTTP against real PostgreSQL: sign in with a password, import a work and a season, query them back.
+- **The first admin bootstraps itself** — `bootstrap.EnsureAdmin`, env-gated and idempotent, so a human can start the binary and use it ([ADR 0018](adr/0018-first-admin-bootstrap.md), a deliberate bridge until Supervisor onboarding owns it). Proven end to end over HTTP against real PostgreSQL: sign in with a password, import a work and a season, query them back.
 
 ### Acceptance baseline
 
