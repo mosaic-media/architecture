@@ -214,9 +214,9 @@ engineering/
 
 └── meg/
 
-    └── MEG-010 Performance Engineering/
+    └── meg-010-performance-engineering/
 
-        README.md
+        index.md
 
         00-document-control.md
 
