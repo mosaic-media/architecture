@@ -290,7 +290,7 @@ Separately, `ctx.BlobStore()` is used as the worked permissions example but is n
 
 ## Q-082 — MEG-002 and MEG-005 order the shutdown stages incompatibly
 
-**Status:** `Open`
+**Status:** `Resolved`
 **Where:** [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md), *Shutdown Sequence*; [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Shutdown Sequence*
 
 The two documents specify the same procedure in two different orders:
@@ -302,7 +302,9 @@ MEG-002 releases resources *before* it stops workers; MEG-005 stops workers *bef
 
 These cannot both be right, and MEG-002's order releases database transactions, file handles and network connections that its own chapter 10 says workers may still hold. This is the highest-consequence contradiction found in this document: implemented as written, it is a use-after-release during every shutdown.
 
-**Resolution:**
+**Resolution:** MEG-005's order is correct — workers stop, then resources release. MEG-002's ordering is a use-after-release and its "the order is deliberate" claim is wrong. MEG-002's competing sequence diagram is deleted rather than corrected, because Q-088 makes MEG-005 chapter 11 the sole owner of the shutdown sequence.
+
+Consultancy decision on best-practice grounds; no implementation exists. Owner delegated design authority for entries answerable from industry practice.
 
 ## Q-083 — Chapter 20 mandates a deduplication key that chapter 12 makes optional
 
@@ -345,6 +347,34 @@ More fundamentally, **Correlation ID and Causation ID appear nowhere in MEG-008 
 **Where:** [MEG-002 ch15](../docs/engineering/guides/meg-002-event-driven-runtime/15-backpressure.md), *Priority* and *Mosaic Guidelines*
 
 The body says the scheduler *may* prioritise work; the guidelines say high-priority work *should* remain responsive. An optional mechanism cannot deliver a recommended outcome, so one of the two normative levels is wrong. Related to Q-032, which records that MEG-005's priority tiers never connect to admission.
+
+**Resolution:**
+
+## Q-102 — Shutdown Runtime Event names diverge across three documents
+
+**Status:** `Open`
+**Where:** [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Observability*; [MEG-002 ch16](../docs/engineering/guides/meg-002-event-driven-runtime/16-correlation-and-observability.md); [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md); [MEG-006 ch07](../docs/engineering/guides/meg-006-module-platform/07-module-lifecycle.md)
+
+Surfaced while resolving Q-088. The three documents emit different Runtime Event names for the same shutdown, and no document reconciles them:
+
+- `WorkerStopped` appears only in MEG-002 chapter 16. `WorkerDraining` appears only in MEG-005 chapter 11. Whether these are one event renamed or two genuinely distinct events — a worker entering drain against a worker having exited — is unstated, and the two documents never cite each other on the point.
+- `CooldownStarted` is MEG-005 only; `QueueDrained` and `ModuleStopped` are MEG-002 only, with `ModuleStopped` also used by MEG-006 chapter 07.
+
+Runtime Event names are an observability contract that operators and dashboards depend upon, so this is the same class of defect as Q-080's `logging.write` / `logs.write` split in the permission namespace. Deciding it requires knowing which events the Runtime actually emits, and whether MIP-004 or MEG-008 owns the name set.
+
+**Resolution:**
+
+## Q-103 — MEG-002 and MEG-005 give different crash recovery sequences
+
+**Status:** `Open`
+**Where:** [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Restart Recovery*; MEG-002 ch17 *Crash Recovery*, as committed before Q-088 was applied
+
+Surfaced while resolving Q-088. The two chapters described restart recovery with different stage counts and different stages:
+
+- **MEG-005:** Startup → Recover Durable Runtime State → Resume Scheduling → Resume Execution.
+- **MEG-002:** Recover Durable State → Restore Schedules → Resume Queues → Restart Workers → Continue Processing.
+
+MEG-002's sequence names two stages MEG-005 has no counterpart for — `Resume Queues` and `Restart Workers` — and neither document cites the other. Under the Q-088 decision MEG-005 owns the procedure, so MEG-002's version was deleted rather than reconciled; whether the two missing stages were substantive or merely finer-grained was not decided and is recorded here instead. The deleted text is recoverable from the commit that resolved Q-088.
 
 **Resolution:**
 
@@ -562,7 +592,7 @@ MEG-002 chapter 16 also parallels MEG-005 chapter 19, whose redaction list is si
 
 ## Q-088 — MEG-002 chapter 17 and MEG-005 chapter 11 are the same chapter
 
-**Status:** `Open`
+**Status:** `Resolved`
 **Where:** [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md), [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md)
 
 Both cover runtime shutdown at the same depth: signals, the initiating-request list, admission closure, worker cancellation, the resource-ownership rule, forced-shutdown fallback, health progression, restart recovery, testing and the anti-pattern set all appear in both.
@@ -571,7 +601,7 @@ Deciding which document owns runtime shutdown is an authority decision, and it m
 
 MEG-002 chapter 17 additionally contains no cross-references at all: it names MEG-002 once as bare text and links nothing, despite depending on retry, idempotency and observability material owned by its own chapters 12, 13 and 16, and on durable retry state described by chapter 20.
 
-**Resolution:**
+**Resolution:** Option 1. MEG-005 owns runtime shutdown; MEG-002 keeps only the event-specific obligations. MEG-005 chapter 11 stands as written and becomes the authority for the shutdown sequence, stage order, per-service obligations and deadlines. MEG-002 chapter 17 is reduced to the event-specific material — retry queue persistence, delivery of already-accepted events, and Module shutdown parity — and opens with a link to MEG-005 chapter 11 for everything else.
 
 ## Q-089 — Chapter 20 restates chapters 07 and 12 to 15
 
@@ -730,14 +760,16 @@ Separately, structural configuration changes get a warm-and-switch path with "re
 
 ## Q-036 — Shutdown deadline value is unattributed
 
-**Status:** `Open`
+**Status:** `Resolved`
 **Where:** [MEG-005 ch11](../docs/engineering/guides/meg-005-runtime-architecture/11-shutdown.md), *Shutdown Deadlines*
 
 The only concrete number in the chapter, 60 seconds, appeared solely as a diagram node label with no text stating whether it is a default, a recommendation or an illustration, while the timeout is simultaneously described as configurable. It was preserved hedged as an example rather than promoted to a default.
 
 **MEG-002 states a different number for what appears to be the same budget.** [MEG-002 ch17](../docs/engineering/guides/meg-002-event-driven-runtime/17-runtime-shutdown.md) *Timeouts* gives **30 seconds**, also only inside a Mermaid node label, also unattributed, also described as configurable. Either the two documents disagree, or these are two nested budgets that nothing distinguishes. See Q-088, which records that the two chapters are otherwise the same chapter, and Q-082, which records that they also order the shutdown stages incompatibly.
 
-**Resolution:**
+**Resolution:** One budget, not two nested ones — nothing in either document suggested nesting. The default is **30 seconds**, stated as a default rather than an illustration, and configurable. 30 rather than 60 because Kubernetes' default `terminationGracePeriodSeconds` is 30, and a shutdown budget exceeding its orchestrator's grace period is SIGKILLed mid-drain, defeating the chapter. MEG-005 chapter 11 states it and records that raising it requires raising the orchestrator grace period to match. The 60-second node is deleted.
+
+Consultancy decision on best-practice grounds; no implementation exists. Owner delegated design authority for entries answerable from industry practice.
 
 ## Q-049 — Nobody owns transaction scope
 
