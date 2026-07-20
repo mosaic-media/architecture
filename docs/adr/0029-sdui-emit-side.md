@@ -1,6 +1,6 @@
 # 29. The Platform's SDUI emit-side
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-07-20
 
 ## Context
