@@ -51,16 +51,23 @@ GraphQL operations.**
   results of [ADR 0027](0027-modules-as-typed-capability-providers.md) — not from
   module-supplied `UINode`s. A module extends *what content exists*; the Platform
   owns *how it is shown*.
-- **Actions bind to the slice-3 operations.** The search screen's `SearchBar`
-  submit is a `Query` action running `searchAvailableContent` into the
-  results-grid region; each result card is `Invoke: importContent(ref)` to
-  materialise, or `Navigate` to a detail screen. The collection browser lists
-  `moduleCatalogs`/`catalogItems`; publishing a selection is `importContent`.
+- **Actions bind to the slice-3 operations.** Every result card is a `Navigate`
+  to a **detail** screen — a virtual item carrying its `ContentRef`, an in-library
+  item its node id. Materialising is not a card click but the *Add to library*
+  action on a virtual item's detail (`Invoke: importContent`), so a virtual item
+  is explored before it is added; the `search` chrome drives a fresh search. The
+  collection browser lists `moduleCatalogs`/`catalogItems`; publishing a selection
+  is the same detail-then-add path.
+  An action-invoked mutation both **accepts** its argument as `input: JSON` and
+  **returns a scalar**: the runtime issues `mutation { name(input: $input) }` with
+  no sub-selection, which a field returning an object type would require. So
+  `importContent` returns the JSON scalar carrying its result, not an object type.
 - **The virtual/materialized split is visible.** A result carries `InLibrary`
   ([ADR 0028](0028-virtual-and-materialized-content.md)); the builder renders an
-  in-library item differently from a virtual one (a badge, and an *open* action
-  rather than a *materialise* one), so the two planes read as one list without
-  the user needing to know the model.
+  in-library item with a badge and its node detail, a virtual one as a metadata
+  preview (read through the module's `MetadataProvider` via a `PreviewContent`
+  query) whose only library affordance is *Add to library* — so the two planes
+  read as one list without the user needing to know the model.
 - **Auth is uniform.** `screen` carries the caller like every other query; each
   builder authorises through the services it calls, so a screen shows exactly
   what its caller may see.
