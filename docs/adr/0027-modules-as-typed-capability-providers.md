@@ -1,6 +1,6 @@
 # 27. Modules as typed capability providers
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-07-20
 
 ## Context

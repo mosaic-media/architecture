@@ -1,6 +1,6 @@
 # 28. Virtual browse and materialized library
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-07-20
 
 ## Context
