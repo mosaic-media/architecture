@@ -59,6 +59,8 @@ nav:
       - 20. Optional-module composition: adr/0020-optional-module-composition.md
       - 21. User-managed module settings: adr/0021-module-settings.md
       - 22. Licensing: adr/0022-licensing.md
+      - 23. Server-Driven UI and the Shell: adr/0023-server-driven-ui-and-the-shell.md
+      - 24. Primitives and definitions: adr/0024-primitives-and-definitions.md
 
 markdown_extensions:
   - admonition

@@ -110,6 +110,12 @@ It carries the content models (`Node`, `Part`, `Relation`, `SourceBinding` and t
 
 Known gap: `ContentService` exposes no *read* for relations (`ListFrom`/`ListTo`), so a capability can create edges but not query them back through the surface. The reference capability does not need it; it is a candidate addition rather than a defect.
 
+### The Shell — its own repository
+
+The human-facing surface, [`mosaic-shell`](https://github.com/mosaic-media/mosaic-shell), is a **client of the Platform over GraphQL** — not a Module, not part of the binary — in its own first-party repository (React + TypeScript + Vite), AGPL-3.0-only ([ADR 0022](0022-licensing.md)). It is **Server-Driven** ([ADR 0023](0023-server-driven-ui-and-the-shell.md)): the Platform sends a tree of typed `UINode`s carrying declarative `Action` envelopes, and the Shell renders it. The vocabulary is open (an unknown node type degrades to a placeholder) and the contract is technology-agnostic, so a future Flutter client for TV, desktop and mobile renders the same payloads.
+
+Its components are **primitives or definitions** ([ADR 0024](0024-primitives-and-definitions.md)): a small, irreducible set of native primitives (the cross-client vocabulary, styled from tokens) and everything else — containers included — as `ComponentDefinition` data a module can author. The Shell rebuilds its own component set from the primitives as proof. The SDUI contract and the tokens live in the Shell for now and extract to a neutral home when the second client makes them shared, the same discipline as the SDK ([ADR 0016](0016-published-contract-surface.md)). The Shell runs on mock SDUI payloads until the Platform emits real ones.
+
 ---
 
 ## Invariants
@@ -228,4 +234,5 @@ Stated plainly so nothing here is mistaken for a description of something real.
 - **External modules.** Only the built-in shape exists.
 - **Jobs and diagnostics history.** Tables exist from earlier migrations with no contract or service above them. GraphQL resolvers for them return `Unavailable` rather than faking success.
 - **Session refresh and device pairing.** No backing service.
-- **Shell, SDUI, design language.** Nothing.
+- **The Platform's SDUI surface.** The Shell and its Server-Driven-UI runtime exist ([ADR 0023](adr/0023-server-driven-ui-and-the-shell.md), [ADR 0024](adr/0024-primitives-and-definitions.md)), but the Platform does not yet *emit* screens or their queries — the Shell runs on mock payloads of the shape the Platform will send.
+- **The Mosaic Design Language.** The Shell ships a neutral, token-driven skin; the design language that will replace those token values — acrylic with weight, artwork as the light source — is not built.

@@ -12,7 +12,7 @@ The repositories are public and licensed ([ADR 0022](adr/0022-licensing.md)): th
 
 Two further slices — uniform store resolution and its PostgreSQL follow-up — were built and then reverted under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md), which found they solved a case the architecture had already ruled out.
 
-The content model, its published surface, a capability that uses only that surface, and the surface's extraction into a standalone SDK module have all landed — **the thesis test passes and the critical path is complete.** Since then the first optional module (the **Stremio** addon source) has been composed into the binary and invoked through a capability registry, so the composition-and-invocation half of the extension story works too ([ADR 0019](adr/0019-module-capability-and-invocation.md), [ADR 0020](adr/0020-optional-module-composition.md)). What follows (a second module, media formats, module distribution, the Shell) builds on a foundation that is proven rather than assumed.
+The content model, its published surface, a capability that uses only that surface, and the surface's extraction into a standalone SDK module have all landed — **the thesis test passes and the critical path is complete.** Since then the first optional module (the **Stremio** addon source) has been composed into the binary and invoked through a capability registry, so the composition-and-invocation half of the extension story works too ([ADR 0019](adr/0019-module-capability-and-invocation.md), [ADR 0020](adr/0020-optional-module-composition.md)). The Shell — a Server-Driven-UI client in its own repository ([ADR 0023](adr/0023-server-driven-ui-and-the-shell.md), [ADR 0024](adr/0024-primitives-and-definitions.md)) — is built too, though the Platform does not yet emit the screens it renders. What follows (a second module, media formats, module distribution, the Platform's SDUI surface) builds on a foundation that is proven rather than assumed.
 
 ---
 
@@ -162,8 +162,8 @@ The reference capability already proved the *authoring* half — a package can b
 - **Export formats** — NFO for other systems, `.mos` for Mosaic-to-Mosaic portability, generated on demand from authoritative state ([ADR 0014](adr/0014-storage-authority-and-transaction-scope.md)).
 - **Job queue** — the `jobs` tables exist with no service; `SELECT ... FOR UPDATE SKIP LOCKED` is the intended pattern, for import, provider sync and enrichment.
 - **`LISTEN`/`NOTIFY`** — an accelerator over the outbox worker's poll, not a replacement; notifications drop when no listener is connected, so the poll stays the floor.
-- **Shell and SDUI** — the server-driven interface. **Now underway** in `mosaic-shell`: a React/TypeScript/Vite component library with a first skin — the human-facing surface the Platform has so far lacked, since everything built to date is reachable only through the GraphQL API.
-- **Mosaic Design Language** — acrylic with weight, artwork as the light source.
+- **The Platform's SDUI surface** — the server half of the server-driven interface. The client half exists: [`mosaic-shell`](https://github.com/mosaic-media/mosaic-shell) is a React/TypeScript/Vite Server-Driven-UI client ([ADR 0023](adr/0023-server-driven-ui-and-the-shell.md)) whose whole component set is primitives + `ComponentDefinition` data ([ADR 0024](adr/0024-primitives-and-definitions.md)), on a neutral token-driven skin, technology-agnostic so a future Flutter client renders the same payloads. What is unbuilt is the server emitting screens and their queries — until it does, the Shell runs on mock payloads. This is the human-facing surface everything built to date has lacked, the Platform being reachable only through the GraphQL API.
+- **Mosaic Design Language** — the values that replace the Shell's neutral tokens: acrylic with weight, artwork as the light source.
 
 ---
 
