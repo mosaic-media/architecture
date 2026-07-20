@@ -67,6 +67,7 @@ nav:
       - 26. The React SDUI runtime: adr/0026-react-sdui-runtime.md
       - 27. Modules as typed capability providers: adr/0027-modules-as-typed-capability-providers.md
       - 28. Virtual browse and materialized library: adr/0028-virtual-and-materialized-content.md
+      - 29. The Platform's SDUI emit-side: adr/0029-sdui-emit-side.md
 
 markdown_extensions:
   - admonition
