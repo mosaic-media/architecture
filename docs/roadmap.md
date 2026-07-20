@@ -138,6 +138,11 @@ The reference capability already proved the *authoring* half — a package can b
 
 **Deliberately still deferred by this slice:** the full manifest shape (starts minimal, grows), the `media_types` registry (the Stremio module uses known media types), module-granular permissions (it acts with the invoking user's authority), and play-time stream *resolution*/transcoding (the future Remote Media module — the Stremio module only snapshots a stream location). Those remain future work below.
 
+**Modules are the forcing function for the SDK.** Building the Stremio module is how the SDK's gaps get found. Two are identified so far:
+
+- **User-managed module settings — done ([ADR 0021](adr/0021-module-settings.md)).** A user adds a Stremio addon by manifest URL at runtime rather than by an env var at composition time. A Platform-owned `ModuleSettingsStore` (one jsonb document per module id), generic `configureModule`/`moduleSettings` commands and GraphQL, and SDK `v0.3.0` handing a module its settings through `ImportRequest`. Retired the `MOSAIC_STREMIO_ADDONS` bridge.
+- **Module-declared cron/jobs — identified, not built.** A module needs to register recurring work the Platform runs (cleanup, periodic refresh). This converges three deferred pieces at once: the jobs runner (tables exist, no service), a scheduler/recurrence layer (none), and the **system principal** ([ADR 0017](adr/0017-how-a-capability-acts.md)'s named gap — a no-user job has no session to forward). It is the "Background work" thread below, now with a concrete trigger.
+
 **Harden the SDK toward stable (it is `v0.1.0` on purpose), in parallel or alongside:**
 
 - **The relation-read gap.** `ContentService` can write edges (`RelateContent`) but has no `ListFrom`/`ListTo` to read them, so a capability can't query the graph it builds. Small and additive — a `v0.x` bump. The most self-contained next thing.
