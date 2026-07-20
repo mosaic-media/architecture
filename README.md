@@ -42,3 +42,7 @@ The cause was structural. The repository was serving as both memory across sessi
 The full prior corpus is preserved at tag `pre-reset-2026-07-19` and can be recovered in whole or in part at any time.
 
 The `docs/` directory is what remains of it. It is **legacy and not authoritative**. It is being retired as its remaining useful content is absorbed here.
+
+## License
+
+Documentation in this repository is licensed under the **Creative Commons Attribution 4.0 International** license (CC-BY-4.0, see [`LICENSE`](LICENSE)). Code snippets embedded in the documentation are provided under the license of the repository they describe — the Platform's AGPL-3.0-with-exception, or the SDK's Apache-2.0.
