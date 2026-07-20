@@ -2,7 +2,7 @@
 
 A self-hosted media server that covers every format in one place — music, television, film, anime, comics, manga, audiobooks — without requiring the user to run three separate systems, or to become their own IT support.
 
-This repository holds Mosaic's architecture and direction. The implementation lives across sibling repositories: the Platform ([`mosaic-platform`](https://github.com/mosaic-media/mosaic-platform)), the published SDK modules build against ([`mosaic-sdk`](https://github.com/mosaic-media/mosaic-sdk)), optional modules in their own repositories (the first is [`mosaic-module-stremio`](https://github.com/mosaic-media/mosaic-module-stremio)), the Shell (the server-driven web client, [`mosaic-shell`](https://github.com/mosaic-media/mosaic-shell)), and the Server-Driven-UI contract those share ([`mosaic-sdui`](https://github.com/mosaic-media/mosaic-sdui)).
+This repository holds Mosaic's architecture and direction. The implementation lives across sibling repositories: the Platform ([`mosaic-platform`](https://github.com/mosaic-media/mosaic-platform)), the published SDK modules build against ([`mosaic-sdk`](https://github.com/mosaic-media/mosaic-sdk)), optional modules in their own repositories (the first is [`mosaic-module-stremio`](https://github.com/mosaic-media/mosaic-module-stremio)), the Shell (the server-driven web client, [`mosaic-shell`](https://github.com/mosaic-media/mosaic-shell)), the Server-Driven-UI contract those share ([`mosaic-sdui`](https://github.com/mosaic-media/mosaic-sdui)), its React runtime ([`mosaic-sdui-react`](https://github.com/mosaic-media/mosaic-sdui-react)), and the component storybook ([`mosaic-storybook`](https://github.com/mosaic-media/mosaic-storybook)).
 
 ---
 
