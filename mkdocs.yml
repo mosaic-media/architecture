@@ -78,6 +78,7 @@ nav:
       - 37. Completing the Stremio source surface: adr/0037-completing-the-stremio-source-surface.md
       - 38. Module-contributed settings UI: adr/0038-module-contributed-settings-ui.md
       - 39. Server-owned navigation: adr/0039-server-owned-navigation.md
+      - 40. Server-delivered definitions and skin: adr/0040-server-delivered-definitions-and-skin.md
 
 markdown_extensions:
   - admonition
