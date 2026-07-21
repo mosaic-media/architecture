@@ -82,6 +82,7 @@ nav:
       - 41. Cross-client transport (proposed): adr/0041-cross-client-transport-two-lane-rpc.md
       - 42. Frontend workspace (proposed): adr/0042-frontend-workspace.md
       - 43. Repository naming convention: adr/0043-repository-naming-convention.md
+      - 44. Contracts as protobuf (proposed): adr/0044-contracts-protobuf-workspace.md
 
 markdown_extensions:
   - admonition
