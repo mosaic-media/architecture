@@ -75,6 +75,8 @@ nav:
       - 34. Rich metadata preview: adr/0034-rich-metadata-preview.md
       - 35. Metadata as a required capability: adr/0035-metadata-as-required-capability.md
       - 36. Capability-gated affordances: adr/0036-capability-gated-affordances.md
+      - 37. Completing the Stremio source surface: adr/0037-completing-the-stremio-source-surface.md
+      - 38. Module-contributed settings UI: adr/0038-module-contributed-settings-ui.md
 
 markdown_extensions:
   - admonition
