@@ -1,6 +1,7 @@
 # 41. Cross-client transport: protobuf and two lanes
 
-**Status:** Proposed
+**Status:** Accepted — Platform side built (the Connect `SessionService`
+supersedes the WebSocket; first-party clients not yet ported)
 **Date:** 2026-07-21
 
 ## Context

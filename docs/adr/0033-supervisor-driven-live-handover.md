@@ -1,6 +1,9 @@
 # 33. Supervisor-driven live-session handover
 
-**Status:** Proposed (design recorded; deferred — not built in the live-client thread's slice 3)
+**Status:** Superseded by [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
+— its bespoke going-away/reconnect handover folds into ADR 0041's stream resume
+(the `Subscribe` cursor replays or rebuilds across a rolling upgrade). Recorded
+here for the reasoning; not built as a separate mechanism.
 **Date:** 2026-07-20
 
 ## Context
