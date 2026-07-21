@@ -80,6 +80,7 @@ nav:
       - 39. Server-owned navigation: adr/0039-server-owned-navigation.md
       - 40. Server-delivered definitions and skin: adr/0040-server-delivered-definitions-and-skin.md
       - 41. Cross-client transport (proposed): adr/0041-cross-client-transport-two-lane-rpc.md
+      - 42. Frontend workspace (proposed): adr/0042-frontend-workspace.md
 
 markdown_extensions:
   - admonition
