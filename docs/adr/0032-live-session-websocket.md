@@ -1,6 +1,9 @@
 # 32. The live session over a bidirectional WebSocket
 
-**Status:** Accepted
+**Status:** Superseded by [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
+— its goals (streaming input, server push, region updates, a
+technology-agnostic client) are unchanged and carried forward; only the wire
+changed, from a bespoke WebSocket to a two-lane Connect/gRPC surface.
 **Date:** 2026-07-20
 
 ## Context
