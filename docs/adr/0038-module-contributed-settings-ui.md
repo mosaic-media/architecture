@@ -1,6 +1,6 @@
 # 38. Module-contributed settings UI
 
-**Status:** Proposed
+**Status:** Accepted (built)
 **Date:** 2026-07-21
 
 ## Context
@@ -98,12 +98,27 @@ narrow: a module's own settings, in a bounded host, only.
 
 ## Implementation implications
 
-SDK: `RoleSettingsUI` + `SettingsUIProvider` returning `[]byte`. Module: an
-`addon_catalog` client, a `SettingsUIProvider` that builds the settings screen
-with the `mosaic-sdui` producer binding, the new `mosaic-sdui` require, and the
-boundary-test widening. Platform: a module-settings host screen in the emit-side
-that fetches a module's settings UI and renders it in a bounded slot, Shell
-navigation to a module-settings area, and schema validation of the contributed
-`UINode`. Sequenced after [ADR 0037](0037-completing-the-stremio-source-surface.md)
-as the next Stremio slice; it completes the Stremio module's *product* surface
-(addon management) once the source surface is done.
+SDK: `RoleSettingsUI` + `SettingsUIProvider` returning `[]byte` (`v0.7.0`).
+Module (`v0.5.0`): an `addon_catalog` client, a `SettingsUIProvider` that builds
+the settings screen with the `mosaic-sdui` producer binding, the new
+`mosaic-sdui` require, and the boundary-test widening. Platform: `ModuleSettingsUI`
+(resolve the provider, read settings, validate the `UINode`) hosted by a
+`settings` screen in the emit-side, a Settings nav item, and `configureModule`
+made invoke-compatible (an `input: JSON` envelope, a JSON-scalar return) so the
+contributed form's actions drive it. Runtime (`@mosaic-media/sdui-react@0.1.5`):
+a `SubmitField` primitive that substitutes a typed value for `$value` in its
+action — the input binding the add-by-URL form needs, closing a known gap.
+
+**Built and verified live.** The Stremio settings page renders in the Platform's
+settings host: add an addon by manifest URL (the typed URL flows into
+`configureModule`), view and remove installed addons, toggle the bundled Cinemeta
+default, and browse installable addons — the `addon_catalog` works out of the box
+because Cinemeta's manifest serves a community-addons catalog. Add, remove and
+browse all round-trip live. One robustness fix fell out of verification: an
+unreachable or mis-typed addon is now **skipped** rather than failing the whole
+operation, so a bad addon added through the UI cannot blank search, browse, or
+metadata.
+
+Sequenced after [ADR 0037](0037-completing-the-stremio-source-surface.md); it
+completes the Stremio module's *product* surface (addon management) now that the
+source surface is done.
