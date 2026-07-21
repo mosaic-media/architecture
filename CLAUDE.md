@@ -1,6 +1,6 @@
 # Claude Instructions
 
-This repository holds Mosaic's architecture and direction in three documents. The implementation lives in `mosaic-platform`, alongside this repository on disk.
+This repository holds Mosaic's architecture and direction in three documents. The implementation lives in `platform`, alongside this repository on disk.
 
 - **[docs/index.md](docs/index.md)** — what Mosaic is, the decisions, the tradeoffs, the controlled vocabulary
 - **[docs/architecture.md](docs/architecture.md)** — how the platform is built
@@ -10,7 +10,7 @@ This repository holds Mosaic's architecture and direction in three documents. Th
 
 ## The source is authoritative, not this repository
 
-`mosaic-platform` is ~15,300 lines of Go and it is the truth. These documents describe it.
+`platform` is ~15,300 lines of Go and it is the truth. These documents describe it.
 
 **Read the code before writing about it.** Do not describe a contract, package or behaviour from what a document says it is. Open the file. This repository previously contained two hundred documents describing a system nobody had checked against the source, and the result was a roadmap built against an abandoned storage model.
 
@@ -50,7 +50,7 @@ The previous system's tooling — Vale, lychee, markdownlint, the structure vali
 
 ## Working expectations
 
-- Verify claims against `mosaic-platform` rather than against another document.
+- Verify claims against `platform` rather than against another document.
 - Prefer deleting to adding. This repository got into trouble by growing.
 - When something is undecided, say so. An honest gap is worth more than a plausible invention that reads as settled.
 - Commit with a message explaining what changed and why. If a change corrects something the previous documentation got wrong, say what it got wrong.

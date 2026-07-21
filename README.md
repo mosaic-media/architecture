@@ -2,13 +2,13 @@
 
 A self-hosted media server that covers every format in one place — music, television, film, anime, comics, manga, audiobooks — without requiring the user to run three separate systems, or to become their own IT support.
 
-This repository holds Mosaic's architecture and direction. The implementation lives across sibling repositories: the Platform ([`mosaic-platform`](https://github.com/mosaic-media/mosaic-platform)), the published SDK modules build against ([`mosaic-sdk`](https://github.com/mosaic-media/mosaic-sdk)), optional modules in their own repositories (the first is [`mosaic-module-stremio`](https://github.com/mosaic-media/mosaic-module-stremio)), the Shell (the server-driven web client, [`mosaic-shell`](https://github.com/mosaic-media/mosaic-shell)), the Server-Driven-UI contract those share ([`mosaic-sdui`](https://github.com/mosaic-media/mosaic-sdui)), its React runtime ([`mosaic-sdui-react`](https://github.com/mosaic-media/mosaic-sdui-react)), and the component storybook ([`mosaic-storybook`](https://github.com/mosaic-media/mosaic-storybook)).
+This repository holds Mosaic's architecture and direction. The implementation lives across sibling repositories: the Platform ([`platform`](https://github.com/mosaic-media/platform)), the published SDK modules build against ([`sdk`](https://github.com/mosaic-media/sdk)), optional modules in their own repositories (the first is [`module-stremio-addons`](https://github.com/mosaic-media/module-stremio-addons)), the Shell (the server-driven web client, [`mosaic-shell`](https://github.com/mosaic-media/mosaic-shell)), the Server-Driven-UI contract those share ([`sdui`](https://github.com/mosaic-media/sdui)), its React runtime ([`mosaic-sdui-react`](https://github.com/mosaic-media/mosaic-sdui-react)), and the component storybook ([`mosaic-storybook`](https://github.com/mosaic-media/mosaic-storybook)).
 
 ---
 
 ## Read these
 
-Published at **[mosaic-media.github.io/mosaic-architecture](https://mosaic-media.github.io/mosaic-architecture/)**, where every page is also downloadable as a PDF.
+Published at **[mosaic-media.github.io/architecture](https://mosaic-media.github.io/architecture/)**, where every page is also downloadable as a PDF.
 
 | Page | What it answers |
 |---|---|
@@ -23,7 +23,7 @@ Three pages and a numbered series of decision records. That is the whole reposit
 
 ## How this repository works
 
-**Code is authoritative.** Where `mosaic-platform` has built something, the code decides and these documents describe it. They do not specify it in advance and they do not contradict it. If a document disagrees with the source, the document is wrong.
+**Code is authoritative.** Where `platform` has built something, the code decides and these documents describe it. They do not specify it in advance and they do not contradict it. If a document disagrees with the source, the document is wrong.
 
 **Documentation follows implementation.** Roadmaps may look forward; descriptions of the system may not. Documentation written for unbuilt software has nothing pushing back on it, which is how contradictions survive indefinitely.
 
