@@ -1,9 +1,9 @@
 site_name: Mosaic
 site_description: Mosaic architecture and direction.
-site_url: https://mosaic-media.github.io/mosaic-architecture/
+site_url: https://mosaic-media.github.io/architecture/
 
-repo_name: mosaic-media/mosaic-architecture
-repo_url: https://github.com/mosaic-media/mosaic-architecture
+repo_name: mosaic-media/architecture
+repo_url: https://github.com/mosaic-media/architecture
 edit_uri: edit/main/docs/
 
 docs_dir: docs
