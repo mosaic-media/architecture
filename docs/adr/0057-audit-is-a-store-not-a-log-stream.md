@@ -138,7 +138,7 @@ does not control, which is where a SIEM integration would take them.
 
 ## Implementation implications
 
-Migration `0015_audit.sql` — the table, its indexes, and the role grants. An
+Migration `0016_audit.sql` — the table, its indexes, and the role grants. An
 `AuditStore` contract on `Tx` beside the existing accessors, implemented in
 `internal/modules/postgres`. Emission from the persist step of the command
 handler order. `ActionAuditRead`/`ActionAuditExport` in `internal/platform/app`,
