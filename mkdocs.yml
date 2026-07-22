@@ -91,6 +91,12 @@ nav:
       - 50. Probing and the per-stream playback decision (proposed): adr/0050-probing-and-the-per-stream-playback-decision.md
       - 51. Modules as anti-corruption layers (proposed): adr/0051-modules-as-anti-corruption-layers.md
       - 52. Cache-first rendering and source health (proposed): adr/0052-cache-first-rendering-and-source-health.md
+      - 53. Telemetry is ambient in context (proposed): adr/0053-telemetry-is-ambient-in-context.md
+      - 54. The correlation ID is the trace ID (proposed): adr/0054-the-correlation-id-is-the-trace-id.md
+      - 55. Instrument at the seams (proposed): adr/0055-instrument-at-the-seams.md
+      - 56. Redaction classes are the PII boundary (proposed): adr/0056-redaction-classes-are-the-pii-boundary.md
+      - 57. Audit is a store, not a log stream (proposed): adr/0057-audit-is-a-store-not-a-log-stream.md
+      - 58. Telemetry storage, retention and expert mode (proposed): adr/0058-telemetry-storage-retention-and-expert-mode.md
 
 markdown_extensions:
   - admonition
