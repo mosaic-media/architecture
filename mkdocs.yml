@@ -87,6 +87,7 @@ nav:
       - 46. Playback state is Platform-owned (proposed): adr/0046-playback-state-is-platform-owned.md
       - 47. The player is a client primitive (proposed): adr/0047-player-as-client-primitive.md
       - 48. Stream selection against a client profile (proposed): adr/0048-stream-selection-against-a-client-profile.md
+      - 49. Resolution cache and capability classes (proposed): adr/0049-resolution-cache-and-capability-classes.md
 
 markdown_extensions:
   - admonition

@@ -43,11 +43,24 @@ owns it.**
   State is keyed by **(user, node)**, not by part: a user resumes *an episode*,
   not *the 1080p Torrentio release of an episode*. Which Part served the bytes is
   a property of a session, not of the position, exactly as Stremio's split has it.
-- **The state is small and closed**: position, duration, a finished marker, and
-  when it was last touched. It is a closed vocabulary
+- **The state is small and closed**: position, duration, a finished marker, when
+  it was last touched, and the release last played. It is a closed vocabulary
   ([ADR 0015](0015-open-and-closed-vocabularies.md)) — unlike media types, there
   is no per-format variation to absorb, and an open document here would be a
   place for modules to smuggle schema.
+- **Position is device-independent; the release is not.** The state records the
+  Part last played so a resume returns to the *same release*, which matters more
+  than it sounds: two encodes of one film differ by however much their intros
+  differ, so resuming a different release lands the viewer at the wrong moment.
+  When the device asking is a different one and cannot play that release,
+  selection falls back to what it can ([ADR 0048](0048-stream-selection-against-a-client-profile.md))
+  and the small drift is accepted knowingly — the alternative is making a phone
+  stream a 4K HDR remux to keep a timestamp exact.
+- **This is the only per-user tier.** Content, its tree and its candidate
+  releases are install-global, and a resolved URL belongs to the bytes and the
+  screen rather than the viewer ([ADR 0049](0049-resolution-cache-and-capability-classes.md)).
+  Position is the one thing that is genuinely personal, which is what makes
+  (user, node) the right key here and the wrong key anywhere else.
 - **Written through `ContentService`**, as commands with the same handler order
   as every other write: validate, authenticate, authorise, transact state and an
   outbox event together. A consumer module records progress **as its invoking

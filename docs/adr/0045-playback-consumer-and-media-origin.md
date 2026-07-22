@@ -127,9 +127,27 @@ mainstream real-world path and it proves the entire chain. **The torrent engine
 is a named, deferred slice**, and until it lands a magnet Part that no debrid
 service resolves is honestly unplayable rather than silently broken.
 
-**Transcoding is out of scope**, named rather than omitted. Direct play only; the
-ticket carries container and codec detail so a client can refuse a file it cannot
-decode and say so. An ffmpeg subsystem would swallow this thread.
+**Transcoding is out of scope**, named rather than omitted. An ffmpeg subsystem
+would swallow this thread.
+
+**Amended in the building — a container rewrite is a serving-side transform, and
+it does not fit `Served`.** Stream-copy remux
+([ADR 0048](0048-stream-selection-against-a-client-profile.md)) landed on the
+Platform's origin rather than in a module, and that is the right place by this
+record's own rule: a module resolves and never serves, so putting ffmpeg behind
+a module would hand it the byte path this contract keeps away from it. Two
+consequences worth recording plainly:
+
+- **`Served` does not describe it.** That variant promises an
+  `io.ReadSeekCloser`, and an ffmpeg pipe has neither an index nor a length. The
+  remux path therefore answers `200` and never `206`, and reports
+  `Accept-Ranges: none` rather than claiming ranges it cannot serve. **A remuxed
+  stream cannot be seeked**; making it seekable means HLS segmenting or
+  restarting the encoder at an offset, both later slices.
+- **The origin is the natural home for recovery too.** Because it fetches
+  upstream before writing anything to the response, it can re-resolve a dead
+  link and continue without the client noticing
+  ([ADR 0049](0049-resolution-cache-and-capability-classes.md)).
 
 ## Alternatives considered
 

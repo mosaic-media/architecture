@@ -51,10 +51,26 @@ container mismatch. Transcoding is deferred, not designed around.**
   already parses — resolution, size, swarm health. The best playable candidate
   becomes the ticket.
 - **Selection happens per playback, never at import.** The profile differs
-  between two clients of one install, and a debrid link is short-lived anyway
-  (ADR 0045). The Part's stored location is an identity hint; the candidate list
-  is re-resolved every time. This is what [ADR 0036](0036-capability-gated-affordances.md)
+  between two clients of one install, so which release wins is not a property of
+  the library. This is what [ADR 0036](0036-capability-gated-affordances.md)
   meant by "play-time resolution".
+- **Candidates persist as Parts; only the resolved URL is transient.** The
+  source's whole candidate set is written at import — the technical fields on
+  `Part` exist precisely so something can choose between several Parts of one
+  item — so selection reads the library rather than calling the source. The
+  perishable half, the resolved URL, is cached separately and keyed by capability
+  class ([ADR 0049](0049-resolution-cache-and-capability-classes.md)). An earlier
+  draft called the Part's location an identity hint to be ignored; splitting
+  durable candidate from perishable link is the better answer, and it is what
+  keeps the aggregator off the play path.
+- **Profiles reduce to a class.** Two clients declaring the same containers and
+  codecs are one class, so caching and precomputation do not fragment per device
+  or per person (ADR 0049).
+- **Needing a remux is a ranking cost, not just a flag.** A candidate that must
+  be piped through ffmpeg starts a second or two later than one that direct-plays
+  and cannot be seeked at all, so an acceptable-quality MP4 should outrank a
+  marginally better Matroska. Compatibility decides what is *possible*; this
+  decides what is *pleasant*.
 - **`StreamLink` grows the technical fields selection needs** — container, video
   codec, audio codec — completing what ADR 0037 started when it added quality,
   size and seeders "so a future source-picker can rank and display candidates".
