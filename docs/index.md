@@ -104,6 +104,7 @@ Each of these words must carry exactly one meaning, everywhere.
 | **Transport** | Reserved. Do not use unqualified. Say *inbound adapter* for HTTP/GraphQL, *light transport* for the material system | Anything to do with modules |
 | **Module** | A Go library compiled into the Platform Binary, extending Mosaic | A plugin, an extension, a separate process |
 | **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built (ADR 0043) | An inbound source, or anything Mosaic *consumes* |
+| **Stale-while-revalidate** | Serving the last known-good *read* from a snapshot while a fresh one is fetched, then replacing it (ADR 0052) | *Optimistic UI*, which renders a predicted **write** outcome before the server confirms it. Mosaic predicts nothing |
 | **Platform** | Mosaic's own code and contracts | The binary; say *Platform Binary* for that |
 | **Supervisor** | The component that selects modules, builds the binary and manages the running system | The Platform, or the Runtime |
 | **Store** | A typed persistence contract resolved within a transaction | The database |

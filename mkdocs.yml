@@ -90,6 +90,7 @@ nav:
       - 49. Resolution cache and capability classes (proposed): adr/0049-resolution-cache-and-capability-classes.md
       - 50. Probing and the per-stream playback decision (proposed): adr/0050-probing-and-the-per-stream-playback-decision.md
       - 51. Modules as anti-corruption layers (proposed): adr/0051-modules-as-anti-corruption-layers.md
+      - 52. Cache-first rendering and source health (proposed): adr/0052-cache-first-rendering-and-source-health.md
 
 markdown_extensions:
   - admonition

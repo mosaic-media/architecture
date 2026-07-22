@@ -10,12 +10,25 @@ and [ADR 0047](0047-player-as-client-primitive.md) plays them. Neither answers
 the question that decides whether playback actually *works*: **the bytes a source
 offers are frequently ones the client cannot decode.**
 
-The constraint is sharper than it first looks. A browser plays media through
-Media Source Extensions, and MSE accepts only fragmented MP4 and WebM —
-**Matroska cannot pass through it at all**, whatever codec sits inside. So a
-1080p h264 release in an MKV container is as unplayable in a browser as an HEVC
-one. Codec support then narrows it further: Chrome will not decode AC3 or EAC3
-audio, and HEVC support varies by platform and build.
+The constraint is sharper than it first looks — though **less sharp than this
+record originally claimed, and the correction matters.** A browser has *two*
+media paths, and they have different limits:
+
+- **Media Source Extensions** (what Shaka and any adaptive stream use) accepts
+  only fragmented MP4 and WebM. Matroska cannot pass through it whatever codec
+  sits inside.
+- **A plain `<video src>`** goes through the browser's own demuxer, which is far
+  more permissive. Chromium's handles Matroska directly.
+
+This record was written asserting the first as if it were the whole story, and a
+live test proved otherwise: Chrome played a 4K HEVC Matroska over the direct-play
+path without complaint. **So container is not the blocker for progressive
+playback** — it becomes one only when MSE enters the picture.
+
+Codec support is the real constraint, and it is narrower than container. HEVC
+decodes where the platform supports it (Chrome on Windows 11, via the OS
+extension). **AC3 and E-AC3 do not decode in Chrome at all**, in any container —
+which is what actually stops a typical release playing.
 
 The conventional answer is a transcoder. Jellyfin does it, and so does
 [remux](https://github.com/lostb1t/remux), whose `playback/decision.rs` reads a

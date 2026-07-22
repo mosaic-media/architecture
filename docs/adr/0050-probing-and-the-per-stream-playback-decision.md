@@ -45,6 +45,34 @@ works.
 Its `playback/probe.rs` shows the source of truth it uses instead of parsing:
 ffprobe, run against the remote URL, cached in the database.
 
+**A live test then corrected the premise underneath both records.** The chain was
+run against a real release and ffprobe reported it exactly:
+
+```
+container: matroska  ·  31.98 GB
+video: hevc 3840x2160 Main 10
+audio: eac3 6ch (hin) · eac3 (tam) · eac3 (tel) · eac3 (eng)
+subs:  subrip x4
+```
+
+Chrome **played it** — video, no audio. Three things follow, and each narrows the
+problem:
+
+- **The container was never the blocker on this path.** MSE takes only fMP4 and
+  WebM, but a plain `<video src>` uses the browser's own demuxer, which handles
+  Matroska. The MSE limit binds Shaka and adaptive streaming, not direct play,
+  and [ADR 0048](0048-stream-selection-against-a-client-profile.md) overstated it.
+- **The container rewrite therefore solves less than it appeared to.** It earns
+  its place for MSE later; it is not what stands between a user and audio.
+- **One codec is the whole failure.** E-AC3 does not decode in Chrome in any
+  container. Copy the HEVC video untouched, re-encode only that audio — on a
+  32 GB 4K file, the difference between near-free and unusable.
+
+And a requirement that only a real file surfaces: **there are four audio tracks
+and the first is Hindi.** Mapping `0:a:0` gives Hindi audio on an English film,
+so track *selection by language* is not a refinement to add later — it is part
+of the plan or the plan is wrong.
+
 ## Decision
 
 **Probe the bytes rather than parse their name, and decide per stream rather than
@@ -67,12 +95,16 @@ HLS when anything is encoded so the result stays seekable.**
   about to be played, not the whole list: the ACL's parsed metadata
   ([ADR 0051](0051-modules-as-anti-corruption-layers.md)) is good enough to
   *rank*, and the probe confirms the *winner* before a ticket is minted.
-- **The decision is per stream.** Each of video, audio and subtitles is
-  independently copy-or-encode against the client's declared profile
-  ([ADR 0047](0047-player-as-client-primitive.md)). The common real case —
-  h264 video the browser accepts, AC3/EAC3/DTS audio it does not — is a video
-  copy and an audio encode, and treating it as a whole-file transcode would burn
-  CPU re-encoding a stream that needed nothing.
+- **The decision is per stream, and includes *which* stream.** Each of video,
+  audio and subtitles is independently copy-or-encode against the client's
+  declared profile ([ADR 0047](0047-player-as-client-primitive.md)). The common
+  real case — video the browser accepts, AC3/EAC3/DTS audio it does not — is a
+  video copy and an audio encode; treating it as a whole-file transcode would
+  burn CPU re-encoding a stream that needed nothing.
+- **Track selection is part of the plan.** A release routinely carries several
+  audio tracks in several languages, and the first is not the likely one. The
+  plan names the track by language preference before it decides how to carry it,
+  because a perfect encode of the wrong language is still the wrong film.
 - **Anything encoded is emitted as HLS.** This supersedes the fragmented-MP4-down-
   a-pipe approach and its worst property. A pipe has no index, so ADR 0045
   recorded that a remuxed stream cannot be seeked; segments fix that, because a
