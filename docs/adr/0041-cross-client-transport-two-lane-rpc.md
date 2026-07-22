@@ -1,7 +1,9 @@
 # 41. Cross-client transport: protobuf and two lanes
 
-**Status:** Accepted — Platform side built (the Connect `SessionService`
-supersedes the WebSocket; first-party clients not yet ported)
+**Status:** Accepted — built on both sides. **Partly superseded:** the
+"split by audience" answer to the GraphQL question below was reversed by
+[ADR 0061](0061-one-client-transport.md), which retired GraphQL entirely; the
+rest of this record stands.
 **Date:** 2026-07-21
 
 ## Context
@@ -192,6 +194,14 @@ foundation the four-client goal needs. Honest costs, all acceptable but real:
    met; only the wire changes.
 
 ### The GraphQL question
+
+> **Superseded by [ADR 0061](0061-one-client-transport.md).** The recommendation
+> below — split by audience — was taken, and did not hold: the retained surface
+> attracted no caller, the Shell used one operation of it, and three commands
+> ended up implemented twice. ADR 0061 takes the *consolidate* option this
+> record deferred as "the largest migration"; it turned out to be small, because
+> almost nothing was using what had been kept. The reasoning below is preserved
+> as the record of why the split looked right at the time.
 
 The Platform serves a GraphQL HTTP API today, and ADR 0032's socket reuses its
 mutation resolvers. Three coexistence options:

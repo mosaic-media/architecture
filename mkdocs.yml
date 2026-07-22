@@ -99,6 +99,7 @@ nav:
       - 58. Telemetry storage, retention and expert mode (proposed): adr/0058-telemetry-storage-retention-and-expert-mode.md
       - 59. Modules observe through the SDK (proposed): adr/0059-modules-observe-through-the-sdk.md
       - 60. The Supervisor observes independently (proposed): adr/0060-the-supervisor-observes-independently.md
+      - 61. One client transport (accepted): adr/0061-one-client-transport.md
 
 markdown_extensions:
   - admonition
