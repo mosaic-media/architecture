@@ -1,6 +1,6 @@
 # 59. Modules observe through the SDK
 
-**Status:** Proposed
+**Status:** Accepted (built)
 **Date:** 2026-07-22
 
 ## Context
@@ -49,12 +49,22 @@ the Platform implements it. The SDK stays dependency-free.**
   every one of them already takes a `context.Context`. A field on `ImportRequest`
   would cover one of eight.
 - **A small interface, declared by the SDK, not re-exported from anywhere.**
-  Levelled logging with redaction-classed fields; `Span(ctx, name)` returning a
-  child context and an end function; a counter and a histogram. That is the whole
-  surface. It is what a module needs, which is not the same as what the Platform
-  uses.
+  Levelled logging with redaction-classed fields, and `Span(ctx, name)` returning
+  a child context and a `Span` with `SetAttributes`/`Fail`/`End`. That is what
+  a module needs, which is not the same as what the Platform uses.
+
+  *As built, the counter and histogram this record originally listed are
+  **absent**.* The Platform has no metrics yet, and publishing a counter that
+  silently discards is worse than publishing nothing: a module author would
+  instrument against it and get no data with no indication why. They join the
+  surface when the Platform can back them.
 - **`v1.Field` mirrors the Platform's redaction classes** — `String`,
-  `Sensitive`, `Secret`, `Identifier` — with the same fail-closed default. The
+  `Sensitive`, `Secret`, `Identifier` — with the same fail-closed default.
+  `Sensitive` and `Secret` drop their value at construction exactly as the
+  Platform's do. **`Identifier` is the one asymmetry, discovered while
+  building:** it must carry its value across, because only the Platform holds
+  the install salt and that salt must never reach a module. The Platform
+  digests it at the boundary. The
   containment property must cross the boundary or it does not exist: module text
   lands in the Platform's telemetry store and is rendered into an administrator's
   browser, and third-party code is exactly where an unclassified value is most
@@ -70,9 +80,12 @@ the Platform implements it. The SDK stays dependency-free.**
   long it lives and who may read it. This is what "the Platform manages the
   observability platform" means in practice, and it is the difference between a
   hook and a delegation.
-- **Quota, enforced per module.** Telemetry volume is bounded per invocation and
-  per interval; over-quota records are dropped and counted, with the drop
-  attributed to the module that caused it. Third-party code must not be able to
+- **Quota, enforced per module.** Telemetry volume is bounded per invocation;
+  over-quota records are dropped, and the exhaustion is recorded exactly once at
+  the boundary rather than per dropped record — a module in a tight loop would
+  otherwise turn the warning into the flood it exists to prevent. Per invocation
+  rather than per interval, so a chatty module degrades its own call and nothing
+  else. Third-party code must not be able to
   fill the telemetry store, stall a request, or drown another module's records.
 - **A module that never mentions telemetry is still fully traced.** Its
   invocation is spanned at the seam, the `context.Context` it receives already
@@ -120,8 +133,9 @@ carry a telemetry channel it otherwise has no reason to know about.
 - **A bug that crosses into a module stops being opaque.** This is the single
   largest practical gain in the whole telemetry thread, because the module
   boundary is also a repository boundary and it is where a trace currently ends.
-- **The SDK bumps to `v0.13.0`** and modules adopt it at their own pace. Nothing
-  breaks for a module that does not.
+- **The SDK bumped to `v0.13.0`** and modules adopt it at their own pace.
+  Nothing breaks for a module that does not. `module-stremio-addons` `v0.17.0`
+  is the first, converting the `log.Printf` quoted above.
 - **The Platform now persists third-party-authored strings.** Redaction classes
   are the containment for personal data; separately, the expert-mode viewer must
   treat module-supplied text as untrusted content when rendering it — escaped,
@@ -142,10 +156,13 @@ carry a telemetry channel it otherwise has no reason to know about.
 
 ## Implementation implications
 
-`contracts/platform/v1/telemetry.go` in the SDK: the `Telemetry` interface,
-`Field` and its four constructors, `TelemetryFrom`, and the no-op. The Platform
-implements it in `internal/platform/telemetry` as an adapter over its own logger,
-tracer and meter, and seeds it into the context at
-[ADR 0055](0055-instrument-at-the-seams.md)'s seam 8, where module attribution
-and quota are applied. The Stremio module's `log.Printf` is the first conversion
-and the worked example. Tag the SDK `v0.13.0`; bump the Platform's require.
+`contracts/platform/v1/telemetry.go` in the SDK holds the `Telemetry` and
+`Span` interfaces, `Field` with its constructors, `WithTelemetry`,
+`TelemetryFrom` and the no-op.
+
+The Platform implements it in **`internal/platform/app/module_telemetry.go`**,
+not in `internal/platform/telemetry` as this record first said. The adapter has
+to import the SDK, and `internal/platform/telemetry` is deliberately kept to the
+standard library ([ADR 0053](0053-telemetry-is-ambient-in-context.md)); putting
+it in `app` also places it beside `moduleSpan`, the seam that installs it, which
+is the only place it is installed.
