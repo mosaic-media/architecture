@@ -98,9 +98,10 @@ nav:
       - 56. Redaction classes are the PII boundary (proposed): adr/0056-redaction-classes-are-the-pii-boundary.md
       - 57. Audit is a store, not a log stream (proposed): adr/0057-audit-is-a-store-not-a-log-stream.md
       - 58. Telemetry storage, retention and expert mode (proposed): adr/0058-telemetry-storage-retention-and-expert-mode.md
-      - 59. Modules observe through the SDK (proposed): adr/0059-modules-observe-through-the-sdk.md
+      - 59. Modules observe through the SDK (built): adr/0059-modules-observe-through-the-sdk.md
       - 60. The Supervisor observes independently (proposed): adr/0060-the-supervisor-observes-independently.md
       - 61. One client transport (accepted): adr/0061-one-client-transport.md
+      - 62. Two module tiers (proposed): adr/0062-two-module-tiers.md
 
 markdown_extensions:
   - admonition
