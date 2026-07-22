@@ -168,7 +168,7 @@ operator and a real obstacle to an illegitimate one.
 
 ## Implementation implications
 
-Migration `0015_telemetry.sql` — partitioned `telemetry_logs` and
+Migration `0014_telemetry.sql` — partitioned `telemetry_logs` and
 `telemetry_spans`, a `telemetry_metrics` rollup, BRIN indexes on time, and the
 partition helpers. A bounded ring buffer and background writer in
 `internal/platform/telemetry`, fed by the seams of
