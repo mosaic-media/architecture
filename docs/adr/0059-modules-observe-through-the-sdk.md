@@ -53,18 +53,16 @@ the Platform implements it. The SDK stays dependency-free.**
   a child context and a `Span` with `SetAttributes`/`Fail`/`End`. That is what
   a module needs, which is not the same as what the Platform uses.
 
-  *As built, the counter and histogram this record originally listed are
-  **absent**.* The Platform has no metrics yet, and publishing a counter that
-  silently discards is worse than publishing nothing: a module author would
-  instrument against it and get no data with no indication why. They join the
-  surface when the Platform can back them.
+  **No counter and no histogram.** The Platform has no metrics yet, and
+  publishing a counter that silently discards is worse than publishing nothing:
+  a module author would instrument against it and get no data with no
+  indication why. They join the surface when the Platform can back them.
 - **`v1.Field` mirrors the Platform's redaction classes** — `String`,
   `Sensitive`, `Secret`, `Identifier` — with the same fail-closed default.
   `Sensitive` and `Secret` drop their value at construction exactly as the
-  Platform's do. **`Identifier` is the one asymmetry, discovered while
-  building:** it must carry its value across, because only the Platform holds
-  the install salt and that salt must never reach a module. The Platform
-  digests it at the boundary. The
+  Platform's do. **`Identifier` is the one asymmetry:** it carries its value
+  across, because only the Platform holds the install salt and that salt must
+  never reach a module, so the digest happens at the boundary. The
   containment property must cross the boundary or it does not exist: module text
   lands in the Platform's telemetry store and is rendered into an administrator's
   browser, and third-party code is exactly where an unclassified value is most
@@ -160,9 +158,9 @@ carry a telemetry channel it otherwise has no reason to know about.
 `Span` interfaces, `Field` with its constructors, `WithTelemetry`,
 `TelemetryFrom` and the no-op.
 
-The Platform implements it in **`internal/platform/app/module_telemetry.go`**,
-not in `internal/platform/telemetry` as this record first said. The adapter has
-to import the SDK, and `internal/platform/telemetry` is deliberately kept to the
-standard library ([ADR 0053](0053-telemetry-is-ambient-in-context.md)); putting
-it in `app` also places it beside `moduleSpan`, the seam that installs it, which
-is the only place it is installed.
+The Platform implements it in **`internal/platform/app/module_telemetry.go`**.
+The adapter has to import the SDK, and `internal/platform/telemetry` is
+deliberately kept to the standard library
+([ADR 0053](0053-telemetry-is-ambient-in-context.md)); `app` also places it
+beside `moduleSpan`, the seam that installs it, which is the only place it is
+installed.

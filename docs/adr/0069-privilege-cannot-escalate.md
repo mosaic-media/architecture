@@ -92,8 +92,7 @@ string, and a rename would change permissions silently. The name is a label; the
 grants are the authority.
 
 **Fixed tiers, with administrators structurally unable to hold certain
-actions.** *Rejected*, and it is what this record's first draft proposed. It
-cannot express "an administrator who may also read traces", which is an ordinary
+actions.** *Rejected.* It cannot express "an administrator who may also read traces", which is an ordinary
 thing to want, and it puts the boundary in the wrong place: the danger was never
 that an administrator might hold `telemetry.read`, it was that anyone could
 *give themselves* anything.
