@@ -1,6 +1,6 @@
 # 34. Rich metadata: the descriptive surface grows a preview
 
-**Status:** Accepted
+**Status:** Accepted. Partly superseded by [ADR 0071](0071-content-artwork-is-stored-on-the-node.md): artwork (poster, backdrop, logo) is now stored on the node at materialisation rather than re-derived live; the live re-derivation of the textual descriptive surface (cast, overview, rating, episode preview) stands.
 **Date:** 2026-07-20
 
 ## Context
