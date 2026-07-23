@@ -1,6 +1,13 @@
 # 58. Telemetry storage, retention, and expert mode
 
-**Status:** Proposed
+**Status:** Accepted (built for logs and spans). Both sinks exist, the
+PostgreSQL side lands in migrations `0014` and `0015`, and expert mode serves the
+log viewer and the trace waterfall behind `telemetry.read`, with the affordance
+hidden from anyone without it. **Unbuilt:** the metrics and audit surfaces, since
+neither signal is produced yet
+([ADR 0057](0057-audit-is-a-store-not-a-log-stream.md)); and retention deletion,
+which is declared and floored in configuration with nothing enforcing it, because
+it needs the jobs runner and the system principal.
 **Date:** 2026-07-22
 
 ## Context

@@ -74,30 +74,30 @@ nav:
       - 32. The live session over a WebSocket: adr/0032-live-session-websocket.md
       - 33. Supervisor-driven live handover: adr/0033-supervisor-driven-live-handover.md
       - 34. Rich metadata preview: adr/0034-rich-metadata-preview.md
-      - 35. Metadata as a required capability: adr/0035-metadata-as-required-capability.md
+      - 35. Metadata as a required capability (built, mechanism differs): adr/0035-metadata-as-required-capability.md
       - 36. Capability-gated affordances: adr/0036-capability-gated-affordances.md
       - 37. Completing the Stremio source surface: adr/0037-completing-the-stremio-source-surface.md
       - 38. Module-contributed settings UI: adr/0038-module-contributed-settings-ui.md
-      - 39. Server-owned navigation: adr/0039-server-owned-navigation.md
-      - 40. Server-delivered definitions and skin: adr/0040-server-delivered-definitions-and-skin.md
-      - 41. Cross-client transport (proposed): adr/0041-cross-client-transport-two-lane-rpc.md
-      - 42. Frontend workspace (proposed): adr/0042-frontend-workspace.md
+      - 39. Server-owned navigation (proposed; not what is built): adr/0039-server-owned-navigation.md
+      - 40. Server-delivered definitions and skin (built in part): adr/0040-server-delivered-definitions-and-skin.md
+      - 41. Cross-client transport (built): adr/0041-cross-client-transport-two-lane-rpc.md
+      - 42. Frontend workspace (executed): adr/0042-frontend-workspace.md
       - 43. Repository naming convention: adr/0043-repository-naming-convention.md
-      - 44. Contracts as protobuf (proposed): adr/0044-contracts-protobuf-workspace.md
-      - 45. Playback consumer and media origin (proposed): adr/0045-playback-consumer-and-media-origin.md
+      - 44. Contracts as protobuf (built): adr/0044-contracts-protobuf-workspace.md
+      - 45. Playback consumer and media origin (built for Direct): adr/0045-playback-consumer-and-media-origin.md
       - 46. Playback state is Platform-owned (proposed): adr/0046-playback-state-is-platform-owned.md
-      - 47. The player is a client primitive (proposed): adr/0047-player-as-client-primitive.md
-      - 48. Stream selection against a client profile (proposed): adr/0048-stream-selection-against-a-client-profile.md
+      - 47. The player is a client primitive (built in part): adr/0047-player-as-client-primitive.md
+      - 48. Stream selection against a client profile (built in part): adr/0048-stream-selection-against-a-client-profile.md
       - 49. Resolution cache and capability classes (proposed): adr/0049-resolution-cache-and-capability-classes.md
-      - 50. Probing and the per-stream playback decision (proposed): adr/0050-probing-and-the-per-stream-playback-decision.md
-      - 51. Modules as anti-corruption layers (proposed): adr/0051-modules-as-anti-corruption-layers.md
+      - 50. Probing and the per-stream playback decision (built, except HLS): adr/0050-probing-and-the-per-stream-playback-decision.md
+      - 51. Modules as anti-corruption layers (built): adr/0051-modules-as-anti-corruption-layers.md
       - 52. Cache-first rendering and source health (proposed): adr/0052-cache-first-rendering-and-source-health.md
-      - 53. Telemetry is ambient in context (proposed): adr/0053-telemetry-is-ambient-in-context.md
-      - 54. The correlation ID is the trace ID (proposed): adr/0054-the-correlation-id-is-the-trace-id.md
-      - 55. Instrument at the seams (proposed): adr/0055-instrument-at-the-seams.md
-      - 56. Redaction classes are the PII boundary (proposed): adr/0056-redaction-classes-are-the-pii-boundary.md
+      - 53. Telemetry is ambient in context (built): adr/0053-telemetry-is-ambient-in-context.md
+      - 54. The correlation ID is the trace ID (built): adr/0054-the-correlation-id-is-the-trace-id.md
+      - 55. Instrument at the seams (built): adr/0055-instrument-at-the-seams.md
+      - 56. Redaction classes are the PII boundary (built in part): adr/0056-redaction-classes-are-the-pii-boundary.md
       - 57. Audit is a store, not a log stream (proposed): adr/0057-audit-is-a-store-not-a-log-stream.md
-      - 58. Telemetry storage, retention and expert mode (proposed): adr/0058-telemetry-storage-retention-and-expert-mode.md
+      - 58. Telemetry storage, retention and expert mode (built in part): adr/0058-telemetry-storage-retention-and-expert-mode.md
       - 59. Modules observe through the SDK (built): adr/0059-modules-observe-through-the-sdk.md
       - 60. The Supervisor observes independently (proposed): adr/0060-the-supervisor-observes-independently.md
       - 61. One client transport (accepted): adr/0061-one-client-transport.md
@@ -109,6 +109,7 @@ nav:
       - 67. Three authorization mechanisms (proposed): adr/0067-three-authorization-mechanisms.md
       - 68. One principal, many credentials (proposed): adr/0068-one-principal-many-credentials.md
       - 69. Privilege cannot escalate through delegation (built): adr/0069-privilege-cannot-escalate.md
+      - 70. The web player is the browser (built): adr/0070-the-web-player-is-the-browser.md
 
 markdown_extensions:
   - admonition

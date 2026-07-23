@@ -1,6 +1,7 @@
 # 53. Telemetry is ambient in context
 
-**Status:** Proposed
+**Status:** Accepted (built) — no constructor takes a logger, `telemetry.From(ctx)`
+is the call, and two `Printf`s survive in non-test code.
 **Date:** 2026-07-22
 
 ## Context

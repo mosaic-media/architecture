@@ -1,6 +1,16 @@
 # 35. Metadata is a required capability with a default provider
 
-**Status:** Proposed
+**Status:** Accepted (the requirement is met; the mechanism differs from the one
+specified here). Metadata and search work on first boot with zero configuration,
+but the default Cinemeta addon is **bundled inside `module-stremio-addons`**,
+opted out with a `disableDefaultAddons` setting and ordered below a user's own
+addons — rather than seeded into the Platform's
+[ADR 0021](0021-module-settings.md) settings document at bootstrap as this record
+specifies. Whether the default belongs to the Platform or to the module is a
+question this record answers one way and the code answers the other; it is
+unresolved rather than decided. Also amended by
+[ADR 0062](0062-two-module-tiers.md), which makes a metadata provider a *core*
+module under its guarantee clause.
 **Date:** 2026-07-21
 
 ## Context

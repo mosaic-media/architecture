@@ -1,6 +1,14 @@
 # 50. Probing, and the per-stream playback decision
 
-**Status:** Proposed
+**Status:** Accepted (built, except HLS). The probe, the per-stream plan and the
+audio-encode-video-copy path are built, and implementation added one thing this
+record does not anticipate: HDR is tone-mapped rather than copied, because
+passing HDR10 metadata to an SDR browser decoder produces a purple-and-green
+picture. **Unbuilt: the HLS emission below.** Encoded output is fragmented MP4
+down a pipe, which has no index and no length, so the origin answers
+`Accept-Ranges: none` and a remuxed stream cannot be seeked — this record's
+claim to retire ADR 0045's non-seekable caveat is therefore not yet true. The
+probe result is sealed into the ticket rather than persisted on the Part.
 **Date:** 2026-07-22
 
 ## Context

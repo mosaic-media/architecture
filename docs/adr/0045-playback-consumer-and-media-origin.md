@@ -1,6 +1,14 @@
 # 45. The playback consumer contract and the Platform-hosted media origin
 
-**Status:** Proposed
+**Status:** Accepted (built for `Direct`). `RolePlayback`/`PlaybackProvider`,
+the sealed session-bound ticket and the `GET /playback/{ticket}` origin are
+built, and `module-remote-playback` resolves against them. **`Served` — the
+`io.ReadSeekCloser` half — is declared nowhere and implemented by nothing**,
+since the torrent engine that would produce one is unbuilt. The "ranges and
+seeking come free" property below holds for a relayed stream and **not** for the
+remuxed one [ADR 0048](0048-stream-selection-against-a-client-profile.md) and
+[ADR 0050](0050-probing-and-the-per-stream-playback-decision.md) introduced;
+those records own that consequence.
 **Date:** 2026-07-22
 
 ## Context

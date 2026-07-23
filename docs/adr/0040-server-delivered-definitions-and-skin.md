@@ -1,6 +1,11 @@
 # 40. Definitions and the skin are server-delivered data
 
-**Status:** Proposed
+**Status:** Accepted (built for definitions, not for the skin). The session
+pushes the component-definition library on connect, before the shell, and the
+client falls back to its bundled definitions if the payload is malformed. **The
+token set is still baked into the client** (`sdui-react`'s `tokens.css`), so the
+skin tier below is unbuilt and the negotiation and versioning that go with it are
+untested.
 **Date:** 2026-07-21
 
 ## Context

@@ -1,6 +1,11 @@
 # 56. Redaction classes are the PII boundary
 
-**Status:** Proposed
+**Status:** Accepted (built, except its enforcement). Redaction happens at
+construction and `Identifier` carries a salted hash, so a sensitive value is
+never buffered. **The vet-style check below is unbuilt**, which leaves the rule
+as developer discipline — the arrangement
+[ADR 0066](0066-authorization-is-carried-in-the-type.md) demonstrated does not
+hold. The `licenseheader` tool remains the model to copy.
 **Date:** 2026-07-22
 
 ## Context

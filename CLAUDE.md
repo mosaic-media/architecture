@@ -10,7 +10,7 @@ This repository holds Mosaic's architecture and direction in three documents. Th
 
 ## The source is authoritative, not this repository
 
-`platform` is ~15,300 lines of Go and it is the truth. These documents describe it.
+`platform` is ~37,500 lines of Go and it is the truth. These documents describe it. The SDK, the two modules, `sdui` and `web` are the truth about themselves in the same way.
 
 **Read the code before writing about it.** Do not describe a contract, package or behaviour from what a document says it is. Open the file. This repository previously contained two hundred documents describing a system nobody had checked against the source, and the result was a roadmap built against an abandoned storage model.
 
@@ -26,7 +26,16 @@ If a document here disagrees with the source, **the document is wrong** — fix 
 
 **One authoritative statement per fact.** Never explain the same thing in two places. If something belongs in the architecture page, it is not also summarised in the overview.
 
-**Do not create new documents.** Three is the number. A fourth needs a reason that survives being asked "why does this not belong in one of the existing three?" Decision records are the one sanctioned exception — `docs/adr/0001-kebab-case-title.md`, sequential, in the standard Context / Decision / Alternatives / Consequences form.
+**Do not create new documents.** Three is the number, plus the [unreachable capability](docs/unreachable-capability.md) register. A fifth needs a reason that survives being asked "why does this not belong in one of the existing four?" Decision records are the one sanctioned exception — `docs/adr/0001-kebab-case-title.md`, sequential, in the standard Context / Decision / Alternatives / Consequences form.
+
+**Decision records are append-only.** This is the rule most easily broken with good intentions, and breaking it costs the thing an ADR is for — a faithful account of what was decided, at a time, unedited afterwards.
+
+- **Never rewrite a record's body to match what was built**, to correct it, or to annotate it with "as built, this differs". That turns a record into a running commentary.
+- **State changes go in the `**Status:**` line and nowhere else** — built, built in part (naming the part), or superseded, wholly ("Superseded by ADR N") or partly ("Partly superseded: X was reversed by ADR N; the rest stands").
+- **A changed decision earns a new record that supersedes it.** If the code deliberately does what a record decided against, that is a decision: write it as one, and point both records at each other through their Status lines. The old body stays exactly as it was.
+- **An unbuilt decision is not a superseded one.** "Not done yet" belongs in the Status line and the roadmap; only a reversal earns a new record.
+
+**The roadmap is derived, and it is maintained here.** `docs/roadmap.md` is the single record of where the build is, for every repository. It is written from the code rather than from the plan that preceded it, so a slice is marked landed with whatever it left out named in the same breath, and an implementation that departed from its ADR says where it departed. A change in any sibling repository that dates the roadmap is a change to the roadmap, in the same session. Nothing else — no `CLAUDE.md`, no README — carries a second copy of "what is built".
 
 **Do not resurrect the old taxonomy.** No MDL, MDS, MEG, MAC, MIP, MOP, MAD, MDP or MRM identifiers. No document-type system, no chapter numbering, no cross-reference discipline, no metadata blocks. Conventional filenames only.
 

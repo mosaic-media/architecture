@@ -1,6 +1,8 @@
 # 55. Instrument at the seams
 
-**Status:** Proposed
+**Status:** Accepted (built) — all nine seams, including seam nine:
+`netguard.ModuleClient` is handed to every module in place of `nil`, which closed
+the SSRF gap alongside the tracing.
 **Date:** 2026-07-22
 
 ## Context

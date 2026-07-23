@@ -1,6 +1,9 @@
 # 44. The SDUI and session contracts are protobuf in one workspace
 
-**Status:** Proposed
+**Status:** Accepted (built) — the `sdui` repository carries the `proto`
+workspace with generated Go and TypeScript, and encoding option (b) landed: the
+typed `mosaic.sdui.v1.UINode` rides the session envelope directly, with no JSON
+step.
 **Date:** 2026-07-21
 
 ## Context

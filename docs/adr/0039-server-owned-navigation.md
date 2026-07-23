@@ -1,6 +1,12 @@
 # 39. Server-owned navigation: a screen-agnostic client
 
-**Status:** Proposed
+**Status:** Proposed, and **not** what is built. The Shell maps URLs to screens
+itself — `history.ts` parses `location.pathname` into a `{screen, params}` route
+and renders routes back to paths — which is the ADR 0032-era arrangement this
+record exists to replace, and the opposite of the opaque tokens it requires. What
+does hold is the surrounding behaviour: the client re-declares its current route
+on connect, and nav actions are the ones the server authored. Treat the gap as
+open rather than as this record being partly built.
 **Date:** 2026-07-21
 
 ## Context
