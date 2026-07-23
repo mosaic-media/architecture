@@ -122,10 +122,23 @@ restructuring of `Service` around a boundary that has not yet been shown to leak
 - **The suite states what it does not check.** It catches omission of a gate, not
   the naming of a wrong action. Omission is the failure that actually happens;
   claiming more than that would make the suite worse than useless.
-- **`FirstPlayablePart` is the one remaining instance of the pattern**, and it is
-  recorded in the exemption list rather than quietly passed over: it re-enters
-  `ListNodeParts` once per child of a work. It should lose its `v1.Caller`
-  parameter and become an inner read, at which point its exemption goes away.
+- **`FirstPlayablePart` was the worst instance of the pattern**, and is fixed.
+  It is an entry point — the screens transport calls it directly to decide
+  whether to offer Play ([ADR 0036](0036-capability-gated-affordances.md)) — so
+  it keeps its `v1.Caller` and clears the boundary itself, once, then reads
+  stores directly. It previously re-entered `GetContentNode` and then
+  `ListNodeParts` per child, so a work whose playable item was its fifth child
+  cost six session reads and six policy evaluations to learn one Part id; the
+  node read was spent on a value it discarded, since only the children were
+  used. Eighteen store and policy operations became eight.
+- **Its signature grew an error, and that is a behaviour change.** It returned
+  `(Part, bool)` and swallowed everything into `false`, so a caller denied
+  `content.read` — or one whose session had expired — saw a detail screen with
+  no Play button, indistinguishable from a work that genuinely has no bytes. A
+  boundary failure is now returned. A *store* read that fails still degrades to
+  "nothing playable", because a transient blip should omit one button rather
+  than fail a screen whose metadata already arrived. The exemption list is
+  consequently empty: every caller-bearing method is covered by behaviour.
 - **Two telemetry defects were fixed alongside**, both from the same shadowing
   mistake: `search_available_content.go` and `import_content.go` reassigned `ctx`
   from `moduleSpan` and kept using it after `span.End()`. Everything the Platform
