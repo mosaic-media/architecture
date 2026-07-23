@@ -138,7 +138,7 @@ Break these and the architecture stops holding.
 
 **Seven error categories.** `InvalidArgument`, `Unauthenticated`, `PermissionDenied`, `NotFound`, `Conflict`, `Unavailable`, `Internal`. Modules may keep driver errors internally; nothing above sees them.
 
-**One command order.** Validate shape → authenticate → authorise via policy → open `UnitOfWork` → load through contracts → apply domain rules → persist state *and* outbox events in the same transaction → return a Platform type.
+**One command order.** Validate shape → authenticate → authorise via policy → open `UnitOfWork` → load through contracts → apply domain rules → persist state *and* outbox events in the same transaction → return a Platform type. Authenticate and authorise are one call, `Service.enter`, returning an `authorized` ([ADR 0066](adr/0066-authorization-is-carried-in-the-type.md)) — an internal helper takes that value and reads stores directly, so only an entry point takes a `v1.Caller`. Enforced by a conformance suite that asserts every caller-bearing method refuses an unknown session and an ungranted caller, and fails the build when a new one is added without a row.
 
 **State and events commit together.** Structural, not conventional: `WithinTx` shares one `pgx.Tx` across every store. Proven by a test that fails mid-transaction and queries raw tables to confirm neither row persists.
 

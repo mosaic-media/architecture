@@ -102,6 +102,7 @@ nav:
       - 60. The Supervisor observes independently (proposed): adr/0060-the-supervisor-observes-independently.md
       - 61. One client transport (accepted): adr/0061-one-client-transport.md
       - 62. Two module tiers (proposed): adr/0062-two-module-tiers.md
+      - 66. Authorization is carried in the type (built): adr/0066-authorization-is-carried-in-the-type.md
 
 markdown_extensions:
   - admonition
