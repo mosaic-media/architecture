@@ -103,6 +103,8 @@ nav:
       - 61. One client transport (accepted): adr/0061-one-client-transport.md
       - 62. Two module tiers (proposed): adr/0062-two-module-tiers.md
       - 66. Authorization is carried in the type (built): adr/0066-authorization-is-carried-in-the-type.md
+      - 67. Three authorization mechanisms (proposed): adr/0067-three-authorization-mechanisms.md
+      - 68. One principal, many credentials (proposed): adr/0068-one-principal-many-credentials.md
 
 markdown_extensions:
   - admonition
