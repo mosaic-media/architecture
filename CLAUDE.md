@@ -51,9 +51,43 @@ If a document here disagrees with the source, **the document is wrong** — fix 
 
 - **Diagrams are Mermaid**, in a ```` ```mermaid ```` fence. They render on the site and in GitHub's own Markdown view. Do not draw structure with ASCII arrows — it renders as a code block and reads as noise. A fenced text block is still right when fixed-width layout *is* the subject, such as a directory tree.
 - **Adding a page means editing `nav:` in `mkdocs.yml` and `PAGES` in `scripts/build_pdfs.py`.** That friction is deliberate. It is a reminder that a fourth page needs justifying.
-- `mkdocs build --strict` fails on a broken internal link, which is the only automated check this repository keeps.
+- `mkdocs build --strict` fails on a broken internal link, which is the only automated check this repository keeps. **It runs in a container** — see below.
 
 The previous system's tooling — Vale, lychee, markdownlint, the structure validator, the chapter registry, the document templates — is gone and stays gone. One of those rules mechanically rewrote *Extension* to *Module* everywhere, which destroyed the Open/Closed Principle in prose and turned vendor documentation URLs into dead links. Linters that rewrite terminology across a corpus cause more damage than they prevent.
+
+---
+
+## The build runs in a container, nothing runs on the host
+
+**Do not run `pip install`, `mkdocs` or `python scripts/build_pdfs.py` directly
+on this machine.** The check runs inside this repository's container:
+
+```bash
+docker compose -f docker-compose.test.yml run --rm test
+```
+
+That installs the pinned `requirements.txt` and runs `mkdocs build --strict`.
+Append `bash` for a shell in the same environment.
+
+The rule is the same in all seven repositories, and it costs least here — but
+the check is also the one most likely to be skipped, because running it on the
+host means installing a Python toolchain to lint some Markdown. Skipping it
+costs exactly what this repository exists to prevent: a document pointing at a
+page or an anchor that no longer exists, which is the ordinary consequence of
+"delete, do not annotate" and which nothing else will catch.
+
+The PDF export is a **separate service**, because it downloads a Chromium and
+its system libraries — minutes and hundreds of megabytes — to produce artefacts
+CI publishes anyway:
+
+```bash
+docker compose -f docker-compose.test.yml run --rm pdfs
+```
+
+Run it when changing `scripts/build_pdfs.py`, or to check that a Mermaid diagram
+renders as a diagram rather than as a code block. That is the whole reason the
+export drives a browser instead of a Markdown-to-PDF converter: the diagrams are
+drawn by JavaScript.
 
 ---
 

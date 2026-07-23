@@ -1,0 +1,83 @@
+# The architecture site's build container.
+#
+#   docker compose -f docker-compose.test.yml run --rm test
+#
+# This is the sanctioned way to run this repository's one automated check.
+# Nothing is installed or built on the host — no virtualenv, no pip install, no
+# mkdocs on PATH.
+#
+# `mkdocs build --strict` is the only check this repository keeps, and what it
+# actually catches is a **broken internal link**: a document pointing at a page
+# or anchor that no longer exists. That is the failure mode of a repository
+# whose rule is "delete, do not annotate", so it is worth more than its size
+# suggests. It is also the check most likely to be skipped, because running it
+# on the host means installing a Python toolchain to lint some Markdown.
+#
+# For a shell in the same environment:
+#
+#   docker compose -f docker-compose.test.yml run --rm test bash
+name: mosaic-architecture-test
+
+services:
+  test:
+    # Matches the python-version in .github/workflows/docs.yml. Bump together.
+    image: python:3.12-slim
+    working_dir: /src/architecture
+    environment:
+      # Set in CI too. Without it the build prints a forward-compatibility
+      # warning that --strict is entitled to treat as a failure.
+      DISABLE_MKDOCS_2_WARNING: "true"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    volumes:
+      - .:/src/architecture
+      # pip's cache in a volume so the install is a download once rather than a
+      # download per run. requirements.txt is fully pinned, so a warm cache
+      # cannot drift from a cold one.
+      - mosaic-architecture-pip:/root/.cache/pip
+    command:
+      - bash
+      - -eu
+      - -o
+      - pipefail
+      - -c
+      - |
+        python -m pip install -r requirements.txt
+        mkdocs build --strict
+
+  # The PDF export, kept as a separate service because it is expensive and not
+  # a gate: it downloads a Chromium and its system libraries, which is minutes
+  # and hundreds of megabytes, to produce artefacts CI publishes anyway.
+  #
+  #   docker compose -f docker-compose.test.yml run --rm pdfs
+  #
+  # Worth running locally only when changing scripts/build_pdfs.py or checking
+  # that a Mermaid diagram renders as a diagram rather than as a code block —
+  # which is the whole reason this goes through a browser instead of a
+  # Markdown-to-PDF converter.
+  pdfs:
+    image: python:3.12-slim
+    working_dir: /src/architecture
+    environment:
+      DISABLE_MKDOCS_2_WARNING: "true"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    volumes:
+      - .:/src/architecture
+      - mosaic-architecture-pip:/root/.cache/pip
+      # The browser download survives the container, which is the difference
+      # between a one-minute run and a five-minute one.
+      - mosaic-architecture-playwright:/root/.cache/ms-playwright
+    command:
+      - bash
+      - -eu
+      - -o
+      - pipefail
+      - -c
+      - |
+        python -m pip install -r requirements.txt
+        python -m playwright install --with-deps chromium
+        mkdocs build --strict
+        python scripts/build_pdfs.py
+
+volumes:
+  mosaic-architecture-pip:
+  mosaic-architecture-playwright:
