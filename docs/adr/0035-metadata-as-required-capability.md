@@ -8,7 +8,9 @@ addons — rather than seeded into the Platform's
 [ADR 0021](0021-module-settings.md) settings document at bootstrap as this record
 specifies. Whether the default belongs to the Platform or to the module is a
 question this record answers one way and the code answers the other; it is
-unresolved rather than decided. Also amended by
+**now resolved by [ADR 0072](0072-the-guaranteed-metadata-provider-needs-no-credential.md)**,
+which puts the default in a zero-configuration core module and rejects the
+bootstrap seed specified here. Also amended by
 [ADR 0062](0062-two-module-tiers.md), which makes a metadata provider a *core*
 module under its guarantee clause.
 **Date:** 2026-07-21

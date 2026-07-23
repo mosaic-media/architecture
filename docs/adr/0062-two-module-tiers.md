@@ -1,6 +1,10 @@
 # 62. Two module tiers
 
-**Status:** Proposed
+**Status:** Proposed; the classification half is built (two core metadata
+modules exist). The guarantee clause is refined by
+[ADR 0072](0072-the-guaranteed-metadata-provider-needs-no-credential.md), which
+finds that "no install step that can fail" and "no configuration that can be
+omitted" are different properties and that the clause needs both.
 **Date:** 2026-07-22
 
 Amends [ADR 0002](0002-module-storage-and-delivery-model.md) §1 and §3, and

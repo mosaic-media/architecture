@@ -111,6 +111,7 @@ nav:
       - 69. Privilege cannot escalate through delegation (built): adr/0069-privilege-cannot-escalate.md
       - 70. The web player is the browser (built): adr/0070-the-web-player-is-the-browser.md
       - 71. Content artwork is stored on the node (built): adr/0071-content-artwork-is-stored-on-the-node.md
+      - 72. The guaranteed metadata provider needs no credential (built in part): adr/0072-the-guaranteed-metadata-provider-needs-no-credential.md
 
 markdown_extensions:
   - admonition
