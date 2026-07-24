@@ -201,7 +201,7 @@ Recorded so nobody reading the deleted schema rebuilds them.
 | `contentNode` | The detail screen (`GetContentNode`) |
 | `searchAvailableContent` | The search screen |
 | `moduleCatalogs` / `catalogItems` | The collections and catalog screens |
-| `moduleSettingsUI` | The settings screen ([ADR 0038](adr/0038-module-contributed-settings-ui.md)) |
+| `moduleSettingsUI` | The settings screen ([ADR 0038](adr/0038-module-contributed-settings-ui.md)) — for *every* module that fills the role since [ADR 0076](adr/0076-a-curated-stream-provider-beside-the-addon-host.md) added the index. Until then the host named one module by constant, so `module-tmdb`'s credential form was reachable only by hand-crafting a `moduleId` param: the operation was reachable, one of its answers was not. |
 
 ## Never worked
 

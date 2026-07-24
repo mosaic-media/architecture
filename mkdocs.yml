@@ -115,6 +115,7 @@ nav:
       - '73. Stream resolution is decoupled from metadata provenance': adr/0073-stream-resolution-is-decoupled-from-metadata-provenance.md
       - 74. Artwork is a candidate set (proposed): adr/0074-artwork-is-a-candidate-set.md
       - 75. The artwork provider role (proposed): adr/0075-the-artwork-provider-role.md
+      - 76. A curated stream provider beside the addon host (built): adr/0076-a-curated-stream-provider-beside-the-addon-host.md
 
 markdown_extensions:
   - admonition
