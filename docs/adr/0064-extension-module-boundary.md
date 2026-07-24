@@ -1,6 +1,14 @@
 # 64. The extension module boundary
 
-**Status:** Proposed
+**Status:** Accepted; built in part. The wire, the harness, the Platform-side
+host and the invocation-scoped `Caller` handle are built and exercised against a
+module in its own process over a Unix socket. **The callback-chattiness question
+this record left open is measured and answered: a callback costs ~700µs, so a
+25-call season import spends ~17.5ms crossing the boundary and the coarser
+batched verbs are not needed.** Still unbuilt: the egress forward proxy and its
+deny list, OS-level network denial, process lifecycle (restart, backoff,
+crash-loop policy), and moving `module-stremio-addons` out of process — it can
+run as one, and the Platform still composes it statically.
 **Date:** 2026-07-22
 
 Depends on [ADR 0062](0062-two-module-tiers.md). Supersedes

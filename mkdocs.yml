@@ -103,7 +103,7 @@ nav:
       - 61. One client transport (accepted): adr/0061-one-client-transport.md
       - 62. Two module tiers (proposed): adr/0062-two-module-tiers.md
       - 63. The Platform binary is built by CI (proposed): adr/0063-platform-binary-built-by-ci.md
-      - 64. The extension module boundary (proposed): adr/0064-extension-module-boundary.md
+      - 64. The extension module boundary (built in part): adr/0064-extension-module-boundary.md
       - 65. Module distribution and trust (proposed): adr/0065-module-distribution-and-trust.md
       - 66. Authorization is carried in the type (built): adr/0066-authorization-is-carried-in-the-type.md
       - 67. Three authorization mechanisms (proposed): adr/0067-three-authorization-mechanisms.md
