@@ -127,6 +127,7 @@ nav:
       - 85. Module types are namespaced: adr/0085-module-types-are-namespaced.md
       - 86. Bindable props: adr/0086-bindable-props.md
       - 87. State scopes: adr/0087-state-scopes.md
+      - 88. Fields and forms: adr/0088-fields-and-forms.md
 
 markdown_extensions:
   - admonition
