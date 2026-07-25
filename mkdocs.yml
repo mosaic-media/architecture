@@ -122,6 +122,7 @@ nav:
       - 80. Deployment topologies (proposed): adr/0080-deployment-topologies.md
       - 81. Extension installation is user-initiated and persistent (proposed): adr/0081-extension-installation-is-user-initiated-and-persistent.md
       - 82. Components are authored only in the contract: adr/0082-components-are-authored-only-in-the-contract.md
+      - 83. One generated SDUI vocabulary: adr/0083-one-generated-sdui-vocabulary.md
 
 markdown_extensions:
   - admonition

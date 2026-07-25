@@ -1,7 +1,10 @@
 # 61. One client transport: retire GraphQL
 
 **Status:** Accepted — built (the GraphQL transport is deleted; `AuthService`
-mints sessions over Connect)
+mints sessions over Connect). Partly superseded: the removal of the `query`
+action kind was reversed by [ADR 0083](0083-one-generated-sdui-vocabulary.md),
+which declares a `query` carrying a screen name rather than a GraphQL string;
+the rest stands.
 **Date:** 2026-07-22
 
 ## Context
