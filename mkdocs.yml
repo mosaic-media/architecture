@@ -132,6 +132,7 @@ nav:
       - 90. Lifecycle triggers and the absent telemetry lane: adr/0090-lifecycle-triggers-and-the-absent-telemetry-lane.md
       - 91. Accessibility in the contract: adr/0091-accessibility-in-the-contract.md
       - 92. Focus and spatial navigation: adr/0092-focus-and-spatial-navigation.md
+      - 93. Lazy lists: adr/0093-lazy-lists.md
 
 markdown_extensions:
   - admonition
