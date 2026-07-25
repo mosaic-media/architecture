@@ -125,6 +125,7 @@ nav:
       - 83. One generated SDUI vocabulary: adr/0083-one-generated-sdui-vocabulary.md
       - 84. Vocabulary negotiation and deliberate degradation: adr/0084-vocabulary-negotiation-and-deliberate-degradation.md
       - 85. Module types are namespaced: adr/0085-module-types-are-namespaced.md
+      - 86. Bindable props: adr/0086-bindable-props.md
 
 markdown_extensions:
   - admonition
