@@ -137,6 +137,7 @@ nav:
       - 95. Browse roles rank their providers: adr/0095-browse-roles-rank-their-providers.md
       - 95. The generated vocabulary reference: adr/0095-the-generated-vocabulary-reference.md
       - 96. Retiring $value, and the merge rule it hid: adr/0096-retiring-value.md
+      - 97. The pre-session tree, and what a locked door may say: adr/0097-the-pre-session-tree.md
 
 markdown_extensions:
   - admonition
