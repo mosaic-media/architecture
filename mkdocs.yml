@@ -134,6 +134,7 @@ nav:
       - 92. Focus and spatial navigation: adr/0092-focus-and-spatial-navigation.md
       - 93. Lazy lists: adr/0093-lazy-lists.md
       - 94. The conformance corpus: adr/0094-the-conformance-corpus.md
+      - 95. The generated vocabulary reference: adr/0095-the-generated-vocabulary-reference.md
 
 markdown_extensions:
   - admonition
