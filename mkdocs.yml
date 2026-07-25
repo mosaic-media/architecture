@@ -123,6 +123,7 @@ nav:
       - 81. Extension installation is user-initiated and persistent (proposed): adr/0081-extension-installation-is-user-initiated-and-persistent.md
       - 82. Components are authored only in the contract: adr/0082-components-are-authored-only-in-the-contract.md
       - 83. One generated SDUI vocabulary: adr/0083-one-generated-sdui-vocabulary.md
+      - 84. Vocabulary negotiation and deliberate degradation: adr/0084-vocabulary-negotiation-and-deliberate-degradation.md
 
 markdown_extensions:
   - admonition
