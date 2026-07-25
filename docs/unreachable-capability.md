@@ -246,6 +246,28 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     exists, a user's choice needs marking as theirs or the next enrichment pass
     will overwrite it.
 
+- **`recordImpression` has nothing that can cause one.** The action is
+  implemented, authorised against the session it arrived on, and it writes a
+  telemetry record naming the node that was seen
+  ([ADR 0090](adr/0090-lifecycle-triggers-and-the-absent-telemetry-lane.md)).
+  Reaching it requires a screen carrying an `onAppear` trigger, and no screen
+  carries one — the emit-side has the helpers and uses none of them. So the
+  Platform can record what a user actually looked at, and nothing in Mosaic can
+  make it do so.
+
+    It belongs here rather than in the roadmap's unbuilt column because the
+    distinction this register draws is exactly this one: the capability is
+    *finished*. It was demonstrated end to end against a running stack — a
+    search grid mounted 29 cards, 15 were at least half on screen, and 15
+    impressions arrived — with an emit that was reverted afterwards because it
+    was a probe. A capability proven to work and then left with no caller is the
+    most convincing kind of "done" there is, and the least true.
+
+    The rest of that vocabulary's trailing edge shares the shape without being
+    rows here, because they are contract surfaces rather than Platform services:
+    nothing emits an `onDisappear`, an accessibility prop or a focus prop
+    either. The roadmap's fifth thread names them.
+
 ---
 
 ## How a row is discharged
