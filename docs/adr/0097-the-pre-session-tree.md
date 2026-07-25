@@ -1,9 +1,23 @@
 # 97. The pre-session tree, and what a locked door may say
 
-**Status:** Accepted (built). `AuthService.SignInScreen` serves the sign-in tree,
-the Platform emits it, and the Shell renders it in place of its hard-coded
-development sign-in. The profile row, the library counts and the server name the
-mockup draws are **deliberately not served** — see Consequences.
+**Status:** Accepted, built, and **withdrawn on 2026-07-25** — the code was
+removed in contracts v0.48.0 and the Platform and Shell commits that used it were
+reverted. The decision stands and the implementation did not: a pre-session tree
+names components (`SignInPanel`) whose *definitions the client has never been
+given*, because the definition library is pushed on connect — that is, after a
+session exists. The Platform served exactly the right tree and the Shell drew
+"SignInPanel — not registered in this Shell".
+
+This record did not answer where a pre-session tree gets its vocabulary, and that
+is the gap. Three ways out, none yet chosen: the screen endpoint returns the
+definitions it needs alongside the tree; a pre-session screen is built from
+primitives only; or the library becomes an unauthenticated fetch. Whichever is
+taken belongs in a new record that supersedes this one.
+
+The failure is also a lesson about verification. The server half was checked end
+to end and the browser half was declared blocked and skipped — and the browser
+half was where the defect was. A screen that has not been rendered has not been
+verified.
 
 **Date:** 2026-07-25
 

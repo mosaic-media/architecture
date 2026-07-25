@@ -1,9 +1,19 @@
 # 98. Claiming an unclaimed server
 
-**Status:** Accepted (built for the claim itself). `AuthService.ClaimServer`
-creates the first administrator and returns a session, and the pre-session
-screen endpoint serves the setup tree while the server is unclaimed. The
-mockup's other five setup steps are not built — see Consequences.
+**Status:** Accepted, built, and **withdrawn on 2026-07-25**, with the
+pre-session surface it rides on ([ADR 0097](0097-the-pre-session-tree.md)).
+`ClaimServer` and the setup tree were removed in contracts v0.48.0.
+
+Withdrawn for two reasons and only one of them is technical. The setup tree could
+not render, for the reason ADR 0097's status line now carries. And an
+unauthenticated endpoint that mints a superuser should not sit mounted on a
+surface nobody is ready to ship — the endpoint was live, and on any server with
+an empty database it would have handed ownership to whoever asked first, which is
+the accepted threat below arriving before the feature it belongs to.
+
+The decision itself is not reversed. The environment-variable bootstrap is once
+again the only way to create the first administrator, which is the state this
+record was written to end, and the reasoning here is what to pick back up from.
 
 **Date:** 2026-07-25
 
