@@ -130,6 +130,7 @@ nav:
       - 88. Fields and forms: adr/0088-fields-and-forms.md
       - 89. Validation and the symmetric rejection: adr/0089-validation-and-the-symmetric-rejection.md
       - 90. Lifecycle triggers and the absent telemetry lane: adr/0090-lifecycle-triggers-and-the-absent-telemetry-lane.md
+      - 91. Accessibility in the contract: adr/0091-accessibility-in-the-contract.md
 
 markdown_extensions:
   - admonition
