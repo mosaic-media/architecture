@@ -135,6 +135,7 @@ nav:
       - 93. Lazy lists: adr/0093-lazy-lists.md
       - 94. The conformance corpus: adr/0094-the-conformance-corpus.md
       - 95. The generated vocabulary reference: adr/0095-the-generated-vocabulary-reference.md
+      - 96. Retiring $value, and the merge rule it hid: adr/0096-retiring-value.md
 
 markdown_extensions:
   - admonition
