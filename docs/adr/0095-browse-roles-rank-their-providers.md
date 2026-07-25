@@ -58,7 +58,7 @@ Four things follow.
 
 **The tier is declared at composition, not by the module.** `moduleDescriptor`
 carries a `fallback` flag and the composition root sets it, which keeps it a
-static-composition decision ([ADR 0007](0007-static-composition.md)). A module
+static-composition decision ([ADR 0007](0007-static-go-module-composition.md)). A module
 asserting primacy over its peers would be a claim no module is in a position to
 make: it cannot see the others, and a third-party module could assert it about
 itself.
@@ -111,7 +111,7 @@ work with no key, which is the whole of that record.
 **Make it a user setting — "preferred metadata source".** *Deferred, not
 rejected.* It is a reasonable thing to want, and the tier here is the mechanism
 it would be built on. It needs a place to live that is neither operator config
-nor module settings ([ADR 0021](0021-module-settings-are-user-managed.md)), and
+nor module settings ([ADR 0021](0021-module-settings.md)), and
 inventing one for a preference nobody has asked for yet is the wrong order.
 
 ## Consequences
