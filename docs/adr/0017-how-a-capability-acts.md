@@ -1,6 +1,9 @@
 # 17. How a capability acts
 
-**Status:** Accepted. Refines [ADR 0008](0008-sdk-as-public-contract-language.md).
+**Status:** Accepted and built. Refines [ADR 0008](0008-sdk-as-public-contract-language.md).
+The deferred **system principal** was built in M0.1: it is a caller like any
+other, minted per process, resolved before any session read and allowed by the
+policy decision point. Module-granular authority stays deferred and unbuilt.
 **Date:** 2026-07-19
 
 ## Context

@@ -42,12 +42,12 @@ remote source requires the user to name one.
 | 2 | Support several users, sharing one library | Engine only — no user has ever been created through a client | M1 |
 | 2a | Each with their own progress, history and home screen | Progress is already per user; nothing else is | M1, M2 |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Nothing on disk | M4 |
-| 4 | Sign in with a username and password | Engine built; the screen was built and withdrawn | M0, M1 |
+| 4 | Sign in with a username and password | Engine built; the pre-session doorway now renders, and the form is M1 | M1 |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
-| 6 | Stay signed in after a long absence | Fixed 24-hour session, no refresh, nothing persisted client-side | M0 |
+| 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
 | 8 | Ask-and-receive, plus unprompted server push | Built — the two-lane transport | — |
-| 9 | Run asynchronous work to maintain itself | Tables only; no runner, no scheduler, no system principal | M0 |
+| 9 | Run asynchronous work to maintain itself | Built — runner, interval scheduler and system principal; two of six queued callers wired | — |
 | 10 | A library an administrator builds from queries and collections | Not built, and not designed | M2 |
 | 11 | Search across every provider and the library at once | Built | — |
 | 12 | Add an item, or play it without adding | Add built; play-without-adding deferred | M3 |
@@ -59,11 +59,12 @@ remote source requires the user to name one.
 | 18 | A Shell that is its own binary, decoupled from the Platform | A Vite bundle with no server | M4 |
 
 Five requirements are not in that list because they were not asked for and the
-release is not credible without them: **signing out** (the RPC exists and
-nothing calls it), **seek and resume on a remuxed stream** (impossible today —
-see M3), **subtitles** (a module fills the role and nothing consumes it), **a
-durable metadata cache** (every detail render asks the provider again), and
-**backup and restore**.
+release is not credible without them: **signing out** — the device list added in
+M0.3 ends *other* devices and deliberately offers no control for the one you are
+looking at, so signing yourself out is still owed — **seek and resume on a
+remuxed stream** (impossible today — see M3), **subtitles** (a module fills the
+role and nothing consumes it), **a durable metadata cache** (every detail render
+asks the provider again), and **backup and restore**.
 
 ---
 
@@ -96,10 +97,13 @@ cannot compile if a public signature leaks an `internal/` type.
 `seq` with a bounded replay buffer for resume, and the full `RegionUpdate`
 op-set. `AuthService` mints the session; GraphQL was deleted outright. The
 Shell reconnects with backoff and jitter, re-declares its route, and has
-browser history and deep links. Nine actions are the complete list of what any
+browser history and deep links. Ten actions are the complete list of what any
 client can invoke: `importContent`, `configureModule`, `installExtension`,
-`uninstallExtension`, `setPreference`, `playPart`, `reportProgress`,
-`recordImpression`, `setWatched`.
+`uninstallExtension`, `revokeSession`, `setPreference`, `playPart`,
+`reportProgress`, `recordImpression`, `setWatched`. Every call on the session
+service now authenticates at the transport, and a session's live state is keyed
+by session id rather than by the credential, which rotates
+([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
 
 **The SDUI vocabulary.** All thirteen slices of the vocabulary overhaul landed
 ([ADR 0083](adr/0083-one-generated-sdui-vocabulary.md)–[ADR 0095](adr/0095-the-generated-vocabulary-reference.md)):
@@ -115,8 +119,11 @@ is served too — 124 token values, both themes, changed without a client build
 ([ADR 0040](adr/0040-server-delivered-definitions-and-skin.md)).
 
 **The screens.** `home`, `search`, `collections`, `catalog`, `detail`,
-`settings`, `extensions`, the expert-mode diagnostics screens, a real 404, and
-the Shell's two no-session states. Home rotates a full-viewport hero over rails
+`settings`, `extensions`, the expert-mode diagnostics screens — logs, traces and
+now the background-work queue behind its own `job.read` — the pre-session
+doorway, a device list on the account panel, a real 404, and the Shell's one
+remaining hand-written state (a Platform that could not describe its own door;
+the other became the doorway). Home rotates a full-viewport hero over rails
 that ride its floor, with continue-watching carrying resume progress and time
 remaining. Detail emits hero, episodes, cast, a technical-facts grid and
 related rails. Settings is one frame with a Platform-owned nav that a module's
@@ -164,7 +171,9 @@ construction by class, stored to both a file and PostgreSQL, and readable inside
 Mosaic as logs and a trace waterfall behind `telemetry.read`
 ([ADR 0053](adr/0053-telemetry-is-ambient-in-context.md)–[ADR 0060](adr/0060-the-supervisor-observes-independently.md)).
 Modules observe through a dependency-free SDK interface the Platform attributes
-and quota-bounds.
+and quota-bounds. Retention is a scheduled job as of M0.1 rather than a
+goroutine that only existed while the process did — a Platform down for a month
+used to come back with a month of records it had intended to drop.
 
 **Authorization.** Argon2id password verification, ABAC roles, an `authorized`
 value only the boundary can construct with a reflection-enforced conformance
@@ -204,52 +213,76 @@ M4 depends on M0 only for the session model it fronts, so it can run beside
 M1–M3. M5 must follow M4: a passkey is bound to an origin, and the origin is
 M4's to decide.
 
-### M0 — Foundations
+### M0 — Foundations — **landed**
 
-Three things that nothing else lands cleanly without. Each is already waited on
-by more than one caller, which is why they come first rather than when the
-feature that wants them is scheduled.
+Three things that nothing else lands cleanly without. Each was already waited on
+by more than one caller, which is why they came first rather than when the
+feature that wants them was scheduled. All three are built; what each left out
+is named below.
 
-1. **The jobs runner, a scheduler, and the system principal — one slice.** The
-   `jobs`, `job_attempts` and `job_logs` tables exist with no service, and
-   `SELECT … FOR UPDATE SKIP LOCKED` is the intended pattern. Background work
-   has no session to forward, so it needs the system principal
-   [ADR 0017](adr/0017-how-a-capability-acts.md) reserved — which also fixes a
-   live wrong outcome: recording a probe authorises `content.bind`, so a
-   read-only viewer plays but never warms the cache and re-probes every time.
-   **Six callers are already queued**: telemetry retention deletion and
-   partition management ([ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md)),
-   the resolution-cache URL refresh ([ADR 0049](adr/0049-resolution-cache-and-capability-classes.md)),
-   the watch-provider refresh, library maintenance (M2), and later torrent
-   eviction and module-declared cron.
-   *Exit: a recurring job runs with no user behind it, retries with backoff,
-   dead-letters, appears in expert mode, survives a restart, and telemetry
-   retention actually deletes rows.*
-2. **The pre-session bootstrap** ([ADR 0101](adr/0101-the-pre-session-bootstrap.md),
-   superseding [ADR 0097](adr/0097-the-pre-session-tree.md)). Sign-in and
-   onboarding were built and withdrawn on the same day: the Platform served
-   exactly the right tree and the browser drew "SignInPanel — not registered in
-   this Shell", because **definitions and the token set are pushed on connect**
-   and a pre-session client has neither — no components, and no skin. One
-   unauthenticated RPC on `AuthService` now answers with the skin, the
-   transitively-closed definition subset the tree needs, and the tree, carrying
-   the same vocabulary declaration `Attach` carries so negotiation applies
-   unchanged. The server picks the tree: setup while unclaimed, sign-in once
-   claimed.
-   *Exit: an unauthenticated screen renders in a browser, styled, with no
-   client-side fallback vocabulary.*
-3. **Sessions that survive being away** ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
-   `sessions.Manager` has `Issue`/`Validate`/`Revoke`, a fixed 24-hour lifetime
-   and no refresh; the Shell holds the session id in memory and re-authenticates
-   on boot from build-time environment variables. A session becomes a **bearer
-   pair** — a minutes-long opaque access token on every call, and a long-lived
-   refresh token rotated on every use with reuse detection revoking the chain —
-   stored in `localStorage` on the web and the platform keystore elsewhere, with
-   idle expiry inside absolute expiry and revocation per device. Not a cookie:
-   three of the four clients the transport was chosen against have no use for
-   one, and the credential must not depend on a front door that does not exist.
-   *Exit: close the browser for two weeks, return signed in; revoke that device
-   from another and it ends immediately.*
+1. ~~**The jobs runner, a scheduler, and the system principal — one slice.**~~
+   **Built.** `internal/platform/jobs` claims with `SELECT … FOR UPDATE SKIP
+   LOCKED`, retries with a capped exponential backoff, dead-letters and keeps
+   the row, and reclaims a job whose runner died once its lease lapses. The
+   scheduler holds no state between ticks: the occurrence a moment belongs to is
+   the moment truncated to the interval, and that is the key a partial unique
+   index makes the enqueue idempotent on — so every tick, every process and
+   every boot enqueue the same row and a restart needs no recovery step. The
+   **system principal** is a caller like any other: a per-process reference
+   drawn from `crypto/rand`, resolved before any session read, and allowed by
+   the policy engine through the one unconditional rule it now carries. That
+   also fixed the live wrong outcome — the playback transport records a probe as
+   the system principal, so a read-only viewer warms the cache instead of
+   re-probing every play.
+
+   **Left out:** it is an *interval* scheduler, not cron — module-declared cron
+   is still its own piece of work. Two of the six queued callers are wired
+   (telemetry retention, and the expired-credential sweep M0.3 added); the
+   resolution-cache refresh, the watch-provider refresh, library maintenance and
+   torrent eviction are not. `JobStore` is deliberately not on `Tx`, so a job
+   enqueued from inside a command would not commit with it; nothing enqueues
+   from a command today and the honest fix when one does is an `Enqueue` on
+   `Tx`, not one that pretends.
+2. ~~**The pre-session bootstrap**~~ ([ADR 0101](adr/0101-the-pre-session-bootstrap.md),
+   superseding [ADR 0097](adr/0097-the-pre-session-tree.md)). **Built.**
+   `AuthService.Bootstrap` answers with the token set, the definition subset and
+   the tree in one response. The subset is transitively closed over the tree and
+   nothing more — three definitions for today's doorway out of forty-three — and
+   the request carries `mosaic.session.v1.VocabularyProfile` itself, so
+   [ADR 0084](adr/0084-vocabulary-negotiation-and-deliberate-degradation.md)'s
+   negotiation applies unchanged rather than through a second declaration that
+   could drift. The server picks the tree and nothing on the wire says which.
+   The Shell renders it in place of a hand-written state, so the client's only
+   self-drawn UI is now the one case that is genuinely its own: a Platform that
+   could not describe its own door.
+
+   **Left out: the form.** This slice delivered the doorway's *vocabulary*, not
+   the doorway. Each state says what it is and offers nothing it cannot do,
+   because a control wired to nothing is the dead end
+   [ADR 0036](adr/0036-capability-gated-affordances.md) names; sign-in and claim
+   are M1. The payload is deliberately not cached, per the ADR.
+3. ~~**Sessions that survive being away**~~ ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
+   **Built.** A ten-minute opaque access token on every call and a ninety-day
+   refresh token bound to the device, rotated on every use, with reuse detection
+   revoking the chain; thirty-day idle expiry sitting inside the absolute
+   lifetime; only hashes stored. The Shell holds the pair in `localStorage`,
+   refreshes ahead of an expiry and once after an `Unauthenticated`, and a
+   device list on the account panel ends any of them. `refreshSession` stops
+   being *never worked*.
+
+   **Two defects only the browser found, both recorded because the shape
+   recurs.** An expired credential used to reach the screen builders and come
+   back as an error *rendered into the content region* — a successful call
+   carrying a picture of a failure, with nothing for a client to retry on; the
+   transport authenticates now, and live sessions are keyed by session id rather
+   than by the rotating value a client presents. And reuse detection revoked the
+   chain *inside* the transaction that detected it, which the rollback then
+   undid, so a replayed token was refused and the thief's chain survived — found
+   by the wire test the first defect motivated, and invisible to any in-memory
+   store.
+
+   **Left out:** native keystore storage (there is no native client yet), and
+   passkeys, which change what *mints* the pair and not what it is (M5).
 
 ### M1 — Identity, and the doors on multi-user
 
@@ -272,8 +305,12 @@ is the largest single block in the register and no other row gates as much.
    identity is written to a durable file outside PostgreSQL, so a server name
    survives the Platform and the database being down. The environment-variable
    bootstrap stays for automated deployments.
-2. **Sign in, sign out, switch account.** `SignOut` is implemented, tested and
-   has no caller. A shared device without it is unusable.
+2. **Sign in, sign out, switch account.** The doorway M0.2 built is where the
+   sign-in form goes: the tree, its components and its skin already arrive in one
+   pre-session response, so the form is a definition and a dispatch case rather
+   than anything structural. `SignOut` now has a caller for *other* devices (the
+   device list M0.3 added) and still none for the one in front of you, which is
+   the half a shared device cannot do without.
 3. **User and role administration.** `CreateLocalUser`, `ListUsers`,
    `GetUserByID`, `SetUserStatus`, `CreateRole`, `GrantRole`,
    `GetRolesForUser`, `GetGrantsForUser` and `GetEffectivePermissions` are all
@@ -321,7 +358,8 @@ individual users happened to press Add on.
    and never remove**: a title that leaves a catalog stays, because a source's
    churn is not a household's decision and silently deleting something somebody
    watched half of is the worst thing this feature could do.
-3. **The maintenance job** (needs M0.1): run each rule as the system principal,
+3. **The maintenance job** (M0.1 landed, so this is now only the rule-running
+   half): run each rule as the system principal,
    materialise new matches, refresh metadata and artwork, top up Parts — the
    enrichment fan-out is already idempotent and only fills items with none — and
    record what it did where a person can read it. Bounded, and its schedule is
@@ -336,7 +374,8 @@ individual users happened to press Add on.
    ([ADR 0071](adr/0071-content-artwork-is-stored-on-the-node.md)) and the same
    question has not been asked of genre.
 5. **The watch-provider refresh**, which is what makes grouping by streaming
-   service correct rather than confidently wrong. Both halves of the grouping
+   service correct rather than confidently wrong, and which M0.1 unblocked: it
+   is now a `Schedule` and a handler rather than a runner that does not exist. Both halves of the grouping
    are built — `module-tmdb` writes availability at import and
    `SearchContentQuery.AttributesContain` filters on it by containment — and the
    surface was deliberately withheld because nothing refreshes a thing that
@@ -616,7 +655,7 @@ stated language behind it is not written.
 
 ## Findings worth keeping
 
-Eight failure shapes that recurred, none of which a gate caught.
+Nine failure shapes that recurred, none of which a gate caught.
 
 1. **A screen that has not been rendered has not been verified.** Sign-in was
    verified end to end on the server, declared blocked in the browser, and the
@@ -656,6 +695,16 @@ Eight failure shapes that recurred, none of which a gate caught.
    `tt99999999`.
 8. **"The code has no path for this" is not "the architecture forbids it".** The
    two-chrome app shell was recorded as blocked and was a five-line change.
+9. **A rollback undoes a security action as readily as a business one.** Reuse
+   detection revoked a refresh chain from inside the transaction that detected
+   the replay, and the error reporting it rolled that revocation back: the
+   replay was correctly refused and the attacker's chain survived. Nothing was
+   wrong with the detection, the revocation or the refusal — only with which
+   transaction the write landed in. No unit test could see it, because an
+   in-memory store has no rollback; it took a test over the real wire, written
+   only because [finding 1](#findings-worth-keeping) had just produced the
+   defect above it. **A write that must outlive a failure has to happen outside
+   the unit of work that fails.**
 
 ---
 

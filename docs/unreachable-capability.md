@@ -165,9 +165,12 @@ rather than schedule.**
 Both halves work. A TMDB import records which services carry a title in the
 configured region, `SearchContent` will filter on it by containment against an
 indexed document, and the contract suite proves any `StorageAdapter` must answer
-that. What does not exist is anything that *refreshes* it — the jobs runner,
-scheduler and system principal are all named-and-unbuilt
-([ADR 0017](adr/0017-how-a-capability-acts.md), [ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md)).
+that. What does not exist is anything that *refreshes* it. The runner, scheduler and
+system principal it was waiting on all landed with M0.1
+([ADR 0017](adr/0017-how-a-capability-acts.md),
+[ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md)), so what
+remains is a `Schedule` and a handler rather than a mechanism — this row is now
+owed work rather than blocked work.
 
 Streaming availability churns monthly. A group that says "on Netflix" for
 something that left in March is **actively wrong**, which is a worse failure
@@ -211,9 +214,9 @@ nothing, and building the feature is what the roadmap should say.
 
 | Removed operation | Underlying gap |
 |---|---|
-| `jobs` / `job` / `jobLogs` / `retryJob` | The jobs runner. Tables exist (`jobs`, `job_attempts`, `job_logs`); no service. Wanted by four callers now — retention deletion, partition management, resolution-cache refresh, torrent eviction. |
+| ~~`jobs` / `job` / `jobLogs`~~ | **Discharged.** The runner landed with M0.1, and a Jobs screen behind `job.read` shows the queue, each job's attempt history and the lines it recorded — reachable by a human in expert mode. `retryJob` is *not* discharged: a dead-lettered job is visible and there is no way to ask for another attempt, which is the row that remains. |
 | `componentHealth` | No cross-component diagnostics query service. |
-| `refreshSession` | `sessions.Manager` has `Issue`/`Validate`/`Revoke` and no refresh. |
+| ~~`refreshSession`~~ | **Discharged.** `AuthService.Refresh` exchanges a refresh token for a new pair (M0.3, [ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)), and the Shell calls it — ahead of an expiry, and once after an `Unauthenticated`. |
 | `remoteSignInChallengeStatus` | No device-pairing or challenge flow exists. |
 
 ## Also owed, though never removed
@@ -223,10 +226,17 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
 - **`CreateLocalUser` never had a transport at all** — see the permissions
   section above. Listed twice deliberately: it is the register's clearest case.
-- **`SignOut` has no caller.** The RPC is implemented and tested. The Shell signs
-  in on boot and has no sign-out affordance, so nothing calls it.
-- **There is no sign-in UI.** `devSignIn` authenticates on boot with credentials
-  from build-time environment variables. A real login form is unbuilt.
+- **`SignOut` has a caller for other devices and none for this one.** The device
+  list on the account panel (M0.3) ends any *other* session, and deliberately
+  draws no control for the session you are looking through — signing out belongs
+  on its own affordance rather than inside a list of devices, and that
+  affordance is unbuilt. A shared device still cannot be handed over.
+- **There is no sign-in UI.** The pre-session doorway renders (M0.2,
+  [ADR 0101](adr/0101-the-pre-session-bootstrap.md)) and carries no form: the
+  Shell still signs in on boot with credentials from build-time environment
+  variables. What M0.2 removed is the *structural* blocker — a client with no
+  vocabulary before a session — so the form is now a definition and a dispatch
+  case rather than anything that needs deciding.
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and
   transactional; the artwork enrichment pass calls it

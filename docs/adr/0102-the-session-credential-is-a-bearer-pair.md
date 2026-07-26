@@ -1,6 +1,10 @@
 # 102. The session credential is a bearer pair every client can hold
 
-**Status:** Accepted. Not built — roadmap M0. Extends
+**Status:** Accepted and built in part (M0.3): the pair, rotation, reuse
+detection, the device binding, idle expiry inside absolute expiry, per-device
+revocation and the device list all landed, and the web client stores the pair in
+`localStorage`. **Native keystore storage did not** — there is no native client
+yet. Extends
 [ADR 0068](0068-one-principal-many-credentials.md), which decides how a
 credential resolves to a principal and says nothing about how a session is
 carried or renewed.
