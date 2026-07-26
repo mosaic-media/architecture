@@ -139,6 +139,7 @@ nav:
       - 96. Retiring $value, and the merge rule it hid: adr/0096-retiring-value.md
       - 97. The pre-session tree, and what a locked door may say: adr/0097-the-pre-session-tree.md
       - 98. Claiming an unclaimed server: adr/0098-claiming-an-unclaimed-server.md
+      - 99. The development module repository: adr/0099-the-development-module-repository.md
 
 markdown_extensions:
   - admonition
