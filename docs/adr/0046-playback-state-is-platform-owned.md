@@ -10,7 +10,10 @@ started" from "started and at zero", which a detail screen renders as Play
 versus Restart. Building it also surfaced something outside its scope: a preset
 is snapshotted into a role row at creation, so `playback.write` never reached an
 account seeded before the action existed; the bootstrap now reconciles the owner
-account's role on every boot.
+account's role on every boot. The multi-user visibility question this record
+opens and does not answer is answered by
+[ADR 0103](0103-one-library-many-viewers.md): the library is shared, the
+continue-watching rail is not.
 **Date:** 2026-07-22
 
 ## Context

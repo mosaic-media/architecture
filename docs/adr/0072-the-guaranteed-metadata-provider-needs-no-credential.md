@@ -6,7 +6,10 @@ bundled Cinemeta default. Verified live: a fresh session's home screen renders
 Cinemeta's catalogs and search returns its results with no configuration.
 Resolves the question [ADR 0035](0035-metadata-as-required-capability.md)'s
 Status line records as open. Refines
-[ADR 0062](0062-two-module-tiers.md)'s guarantee clause.
+[ADR 0062](0062-two-module-tiers.md)'s guarantee clause. **Partly superseded:
+the "ship a Mosaic-held TMDB key" alternative rejected below was reversed by
+[ADR 0105](0105-project-credentials-in-official-builds.md); the rest of this record stands,
+and `module-cinemeta` remains the core zero-configuration floor.**
 **Date:** 2026-07-23
 
 ## Context

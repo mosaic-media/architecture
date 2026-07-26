@@ -134,12 +134,17 @@ nav:
       - 92. Focus and spatial navigation: adr/0092-focus-and-spatial-navigation.md
       - 93. Lazy lists: adr/0093-lazy-lists.md
       - 94. The conformance corpus: adr/0094-the-conformance-corpus.md
-      - 95. Browse roles rank their providers: adr/0095-browse-roles-rank-their-providers.md
       - 95. The generated vocabulary reference: adr/0095-the-generated-vocabulary-reference.md
       - 96. Retiring $value, and the merge rule it hid: adr/0096-retiring-value.md
       - 97. The pre-session tree, and what a locked door may say: adr/0097-the-pre-session-tree.md
       - 98. Claiming an unclaimed server: adr/0098-claiming-an-unclaimed-server.md
       - 99. The development module repository: adr/0099-the-development-module-repository.md
+      - 100. Browse roles rank their providers: adr/0100-browse-roles-rank-their-providers.md
+      - 101. The pre-session bootstrap: adr/0101-the-pre-session-bootstrap.md
+      - 102. The session credential is a bearer pair: adr/0102-the-session-credential-is-a-bearer-pair.md
+      - 103. One library, many viewers: adr/0103-one-library-many-viewers.md
+      - 104. The library is built from rules: adr/0104-the-library-is-built-from-rules.md
+      - 105. Project credentials in official builds: adr/0105-project-credentials-in-official-builds.md
 
 markdown_extensions:
   - admonition

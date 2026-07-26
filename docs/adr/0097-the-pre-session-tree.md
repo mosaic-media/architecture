@@ -14,6 +14,9 @@ definitions it needs alongside the tree; a pre-session screen is built from
 primitives only; or the library becomes an unauthenticated fetch. Whichever is
 taken belongs in a new record that supersedes this one.
 
+**Superseded by [ADR 0101](0101-the-pre-session-bootstrap.md)**, which takes the
+first of those three and carries the skin with it.
+
 The failure is also a lesson about verification. The server half was checked end
 to end and the browser half was declared blocked and skipped — and the browser
 half was where the defect was. A screen that has not been rendered has not been

@@ -1,4 +1,4 @@
-# 95. The browse roles rank their providers; they do not union them
+# 100. The browse roles rank their providers; they do not union them
 
 **Status:** Built. `CapabilityRegistry.RegisterFallback` and `fanOutPreferred`
 are in the Platform, and the composition root registers `module-cinemeta` as the
