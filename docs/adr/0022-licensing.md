@@ -1,6 +1,6 @@
 # 22. Licensing
 
-**Status:** Accepted
+**Status:** Accepted; the licensing is unchanged. Only the repositories it names have moved: `mosaic-shell`, `mosaic-sdui-react` and `mosaic-storybook` are packages in the `web` workspace ([ADR 0042](0042-frontend-workspace.md)) and `mosaic-sdui` is `contracts` ([ADR 0043](0043-repository-naming-convention.md), [ADR 0044](0044-contracts-protobuf-workspace.md)). AGPL-3.0-only for the first-party clients, Apache-2.0 for the contract, applies to them where they now live
 **Date:** 2026-07-20
 
 ## Context

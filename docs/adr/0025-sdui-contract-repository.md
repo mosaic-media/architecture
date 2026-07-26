@@ -1,6 +1,6 @@
 # 25. The SDUI contract repository
 
-**Status:** Accepted
+**Status:** Accepted; the extraction stands. The repository has been renamed twice since — `mosaic-sdui` → `sdui` ([ADR 0043](0043-repository-naming-convention.md)) → `contracts` ([ADR 0044](0044-contracts-protobuf-workspace.md), which also made the wire protobuf). The contract itself did not move with it: `mosaic.sdui.v1`, the `sdui` package and the npm name `@mosaic-media/sdui` are unchanged
 **Date:** 2026-07-20
 
 ## Context

@@ -1,6 +1,6 @@
 # 23. Server-Driven UI and the Shell
 
-**Status:** Accepted
+**Status:** Accepted; built. Two particulars have moved since — the Shell is a package in the `web` workspace rather than its own repository ([ADR 0042](0042-frontend-workspace.md)), and it reaches the Platform over Connect, not GraphQL, which was deleted outright ([ADR 0061](0061-one-client-transport.md)). Server-Driven UI itself is unchanged
 **Date:** 2026-07-20
 
 ## Context
