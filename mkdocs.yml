@@ -145,6 +145,7 @@ nav:
       - 103. One library, many viewers: adr/0103-one-library-many-viewers.md
       - 104. The library is built from rules: adr/0104-the-library-is-built-from-rules.md
       - 105. Project credentials in official builds: adr/0105-project-credentials-in-official-builds.md
+      - 106. The pre-session action lane: adr/0106-the-pre-session-action-lane.md
 
 markdown_extensions:
   - admonition

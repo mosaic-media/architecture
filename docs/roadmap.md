@@ -39,10 +39,10 @@ remote source requires the user to name one.
 | # | The release must | State today | Lands in |
 |---|---|---|---|
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
-| 2 | Support several users, sharing one library | Engine only — no user has ever been created through a client | M1 |
-| 2a | Each with their own progress, history and home screen | Progress is already per user; nothing else is | M1, M2 |
+| 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
+| 2a | Each with their own progress, history and home screen | Progress and watch history are per user; the home screen is not | M2 |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Nothing on disk | M4 |
-| 4 | Sign in with a username and password | Engine built; the pre-session doorway now renders, and the form is M1 | M1 |
+| 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
@@ -58,13 +58,14 @@ remote source requires the user to name one.
 | 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) | — |
 | 18 | A Shell that is its own binary, decoupled from the Platform | A Vite bundle with no server | M4 |
 
-Five requirements are not in that list because they were not asked for and the
-release is not credible without them: **signing out** — the device list added in
-M0.3 ends *other* devices and deliberately offers no control for the one you are
-looking at, so signing yourself out is still owed — **seek and resume on a
-remuxed stream** (impossible today — see M3), **subtitles** (a module fills the
-role and nothing consumes it), **a durable metadata cache** (every detail render
-asks the provider again), and **backup and restore**.
+Five requirements were not in that list because they were not asked for and the
+release is not credible without them. **Signing out** landed in M1 — it is on
+the account cluster of every screen, it revokes the refresh chain and it ends
+the live session, so a shared device can be handed over. The other four stand:
+**seek and resume on a remuxed stream** (impossible today — see M3),
+**subtitles** (a module fills the role and nothing consumes it), **a durable
+metadata cache** (every detail render asks the provider again), and **backup and
+restore**.
 
 ---
 
@@ -106,7 +107,16 @@ by session id rather than by the credential, which rotates
 ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
 
 **The SDUI vocabulary.** All thirteen slices of the vocabulary overhaul landed
-([ADR 0083](adr/0083-one-generated-sdui-vocabulary.md)–[ADR 0095](adr/0095-the-generated-vocabulary-reference.md)):
+([ADR 0083](adr/0083-one-generated-sdui-vocabulary.md)–[ADR 0095](adr/0095-the-generated-vocabulary-reference.md)), and one
+addition since: `visibleWhen` on `Box` took it to **3.1.0**. The prop already
+existed on the six field primitives with the same type and meaning; on a
+container it hides a branch, which is what makes a multi-step form expressible
+at all — without it a wizard is one long page or a round trip per step, and a
+round trip per step sends the password the second step collects back down inside
+the third step's tree. Three definitions were also found unable to be form
+fields: `TextField`, `Select` and `Toggle` each bound the props their label
+needs and none of them bound `name`, so the input inside each wrote to local
+state nothing collects.
 one `ui.spec.json` generating the Go and TypeScript authoring layers, the
 registries and a conformance fixture; negotiation and deliberate degradation;
 namespaced module types; bindable props; state scopes; fields, forms and the
@@ -119,10 +129,11 @@ is served too — 124 token values, both themes, changed without a client build
 ([ADR 0040](adr/0040-server-delivered-definitions-and-skin.md)).
 
 **The screens.** `home`, `search`, `collections`, `catalog`, `detail`,
-`settings`, `extensions`, the expert-mode diagnostics screens — logs, traces and
-now the background-work queue behind its own `job.read` — the pre-session
-doorway, a device list on the account panel, a real 404, and the Shell's one
-remaining hand-written state (a Platform that could not describe its own door;
+`settings`, `extensions`, `history`, the expert-mode diagnostics screens — logs,
+traces and now the background-work queue behind its own `job.read` — the
+pre-session doorway with its setup wizard and its sign-in form, the People
+panels behind `user.read`, a device list on the account panel, a real 404, and
+the Shell's one remaining hand-written state (a Platform that could not describe its own door;
 the other became the doorway). Home rotates a full-viewport hero over rails
 that ride its floor, with continue-watching carrying resume progress and time
 remaining. Detail emits hero, episodes, cast, a technical-facts grid and
@@ -180,6 +191,10 @@ value only the boundary can construct with a reflection-enforced conformance
 suite ([ADR 0066](adr/0066-authorization-is-carried-in-the-type.md)), and
 delegation that intersects with what the granter holds so `role.create` is no
 longer "hold every permission" ([ADR 0069](adr/0069-privilege-cannot-escalate.md)).
+Suspension enforces itself as of M1 — it wrote a column nothing read, so a
+suspended account could sign in and one already signed in stayed so for ninety
+days — and a session carries the caller's flattened authority at issue time, for
+a client to omit affordances from rather than to check against.
 
 **The acceptance baseline** — the standing gate every slice passes before the
 next begins:
@@ -284,62 +299,125 @@ is named below.
    **Left out:** native keystore storage (there is no native client yet), and
    passkeys, which change what *mints* the pair and not what it is (M5).
 
-### M1 — Identity, and the doors on multi-user
+### M1 — Identity, and the doors on multi-user — **landed**
 
-Mosaic has never had a second account. `bootstrap.EnsureAdmin` seeds exactly one
-administrator from environment variables and that is the entire user story. This
-is the largest single block in the register and no other row gates as much.
+Mosaic had never had a second account. `bootstrap.EnsureAdmin` seeded exactly
+one administrator from environment variables and that was the entire user story;
+this was the largest single block in the register and no other row gated as
+much. Four accounts now exist on a box that was claimed through a browser, with
+no environment variable set anywhere.
 
-1. **Claiming and onboarding** ([ADR 0098](adr/0098-claiming-an-unclaimed-server.md),
-   decided, withdrawn with the pre-session tree). First-to-arrive on a server
-   with no administrator, gated on none existing; the audit record of the claim
-   and a claim window that closes after start-up are named as later increments
-   rather than built. Four steps — server, administrator, a stream source,
-   review — with the concept's library and playback steps dropped, because
-   Mosaic has no filesystem scanner and decides playback per stream, and with no
-   metadata credential to collect: official builds carry project credentials for
-   the providers that need one
-   ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) and Cinemeta
-   is the floor underneath them, so the only thing a household must name is where
-   its streams come from. Instance
-   identity is written to a durable file outside PostgreSQL, so a server name
-   survives the Platform and the database being down. The environment-variable
-   bootstrap stays for automated deployments.
-2. **Sign in, sign out, switch account.** The doorway M0.2 built is where the
-   sign-in form goes: the tree, its components and its skin already arrive in one
-   pre-session response, so the form is a definition and a dispatch case rather
-   than anything structural. `SignOut` now has a caller for *other* devices (the
-   device list M0.3 added) and still none for the one in front of you, which is
-   the half a shared device cannot do without.
-3. **User and role administration.** `CreateLocalUser`, `ListUsers`,
-   `GetUserByID`, `SetUserStatus`, `CreateRole`, `GrantRole`,
-   `GetRolesForUser`, `GetGrantsForUser` and `GetEffectivePermissions` are all
-   complete commands whose only callers are tests. Discharging them is a screen,
-   a dispatch case and a route each. **Role presets are snapshotted into role
-   rows at creation**, so an account created today does not gain an action added
-   tomorrow — the owner account is reconciled on every boot and nothing else is.
-   Presets need versioning or reconciliation before there is a second account to
-   get it wrong for.
-4. **The capability set on the session.** `domain.Session.Capabilities` is
-   never populated, so [ADR 0036](adr/0036-capability-gated-affordances.md)'s
-   affordance gate is currently a server-side omission decision rather than
-   something a client can make. This is also the playback thread's unbuilt
-   affordance gate: "consumer absent" is testable now that "consumer present"
-   exists.
-5. **The per-user pass** ([ADR 0103](adr/0103-one-library-many-viewers.md),
-   answering the question [ADR 0046](adr/0046-playback-state-is-platform-owned.md)
-   opens). **The library is one shared graph; everything about how a person
-   experiences it is theirs alone** — position and finished state (already
-   keyed by user, node), watch history, and home composition. Watch history is
-   this milestone's share of it; home composition is M2's, because it is a
-   browse surface. A household never shares a continue-watching rail.
+1. ~~**Claiming and onboarding**~~ ([ADR 0098](adr/0098-claiming-an-unclaimed-server.md),
+   decided, withdrawn with the pre-session tree, **rebuilt here**). **Built.**
+   `ClaimServer` is the one write no caller authorises, and the only one that
+   can be: emptiness stands in for authorisation, checked again inside the
+   transaction so two people arriving together produce one owner and one
+   Conflict. It creates the owner, its Superuser role, the grant and its first
+   session together — claiming signs you in — and then does two things allowed
+   to fail without failing the claim: writing the server's name, and installing
+   the stream source that was chosen. **Four steps rather than the one ADR 0098
+   could support:** the jobs runner has landed since, and a server-name field
+   and a stream-source connection turned out to be buildable, so three of the
+   five steps that record dropped came back. **Instance identity is a durable
+   file outside PostgreSQL**, so a server's name outlives its database — which
+   is the moment somebody most needs it. The environment-variable bootstrap
+   stays for automated deployments and the dev stack no longer sets it, so first
+   boot shows the doorway exactly as a household's would.
 
-*Exit: four accounts on one box, each signing in on their own device with no
-environment variable anywhere, each with their own continue-watching, an
-administrator creating and suspending the others.*
+   **Left out:** the claim audit record and the claim window, both named in
+   ADR 0098 as later increments and both still unbuilt — the accepted threat is
+   unchanged, and the mitigations for it remain operational. The steps are one
+   tree with one State scope, stepped by `visibleWhen`, which costs the
+   client-side validation of off-screen fields: a hidden `Box` unmounts its
+   inputs and their rules leave the scope, so a multi-step form is validated by
+   the server and its rejections have to stand alone in the form-level message.
+   That is the price of not sending the password back down inside the next
+   step's tree.
+2. ~~**Sign in, sign out, switch account.**~~ **Built.** The doorway carries
+   both forms, on a pre-session action lane of its own
+   ([ADR 0106](adr/0106-the-pre-session-action-lane.md)) — a doorway's controls
+   emit ordinary SDUI actions and there is no push lane for the outcome, so it
+   rides the unary response as one of three: a minted session, a replacement
+   door, or the fields that were refused. **The client interprets none of them**,
+   which is what let a four-step wizard be added without a line in the Shell.
+   Signing out is on the account cluster of every screen, revokes the refresh
+   chain, and ends the live session — without that last part it took ten minutes
+   to notice, because the push stream makes no call to be refused. Switching
+   account is the same path: sign out, and the door comes back.
 
-**Discharges:** every row of the register's permissions-and-users block, plus
-"there is no sign-in UI" and "`SignOut` has no caller".
+   **Left out:** the Shell no longer signs in from `VITE_DEV_USERNAME` /
+   `VITE_DEV_PASSWORD`, which is the removal that mattered, and a third doorway
+   state was added that ADR 0098 did not name — a server that cannot read its
+   own accounts says the lock is broken rather than drawing a form that refuses
+   every attempt with "invalid credentials".
+3. ~~**User and role administration.**~~ **Built.** Settings › People lists the
+   accounts, leads into each one, and adds a viewer or an administrator; a
+   person's panel shows their roles, their flattened authority and the two
+   things that can be done to them. **The offer is computed from what the caller
+   holds** ([ADR 0069](adr/0069-privilege-cannot-escalate.md)) — an
+   administrator creating another administrator sees which permissions are
+   withheld because they do not hold them. Presets are snapshotted, and
+   **a role's name is unique across the install**, so a preset role is an
+   install-wide named role that several people hold rather than a copy per
+   account; the snapshot belongs to the role.
+
+   **Left out:** `GetGrantsForUser` is the one command in the block still
+   without a door — roles and effective permissions answer "what may they do"
+   and the grant rows surface nowhere. Creating an account is three commands and
+   they do not share a transaction, so a failure between them leaves an account
+   holding no role; it cannot sign in, its panel says so, and it offers the step
+   that was missed. Nothing edits a role after it is created, so narrowing
+   somebody's authority means suspending the account.
+4. ~~**The capability set on the session.**~~ **Built.**
+   `domain.Session.Capabilities` is populated at issue time and re-resolved on
+   every refresh, so a grant changed during a ninety-day session reaches the
+   client's gate within a rotation rather than never, and
+   `mosaic.auth.v1.Session` carries it. It is a *drawing* decision and never a
+   check: every call re-authorises against the grants as they are then.
+
+   **Left out:** the playback thread's "consumer absent" gate. What landed
+   instead is the gating the second account made urgent — the settings nav, the
+   People affordances and the detail screen's library controls are each drawn
+   only for a caller who could use them.
+5. ~~**The per-user pass**~~ ([ADR 0103](adr/0103-one-library-many-viewers.md)).
+   **Built, for its M1 share.** Watch history is a Platform query and
+   deliberately **not** on the SDK's `ContentService`: no module needs to read a
+   person's viewing back, and the one list ADR 0103 is most emphatic is private
+   should not sit on the surface every installed extension holds. It takes no
+   user parameter, so there is no version of the screen that shows somebody
+   else's.
+
+   **Left out:** home composition, which is M2's because it is a browse surface.
+
+*Exit, met: four accounts on one box, each signing in on their own device with
+no environment variable anywhere, each with their own history over one shared
+library, and an administrator who is not the owner suspending another account.*
+
+**Discharges:** the register's whole permissions-and-users block except
+`GetGrantsForUser`, plus "there is no sign-in UI" and "`SignOut` has no caller".
+
+**What discharging it cost, because this is the argument for the register.**
+Every service behind those doors was complete, tested and transactional, and
+putting doors on them found seven defects that no gate could have. An ordinary
+account could not sign in (`session.create` was administrator-only), could not
+sign itself out (`user.session.revoke` was required of everybody and held by
+administrators), and could not read its own name (`GetCurrentUser` required
+`user.read`, so the account cluster drew a question mark for every viewer).
+Settings would not open for one at all, because the nav reads the module list
+and the error took the whole screen. "Add to library" was drawn for people who
+cannot import. Creating four accounts produced three with no authority, because
+a role name is unique and the fakes had no such index. And a claimed server
+never reconciled its owner's role, because that only ran under the
+environment-variable bootstrap. Each one is a service that worked perfectly and
+a product that did not; each one was found by clicking.
+
+Two more of the same kind, worth naming because the shape recurs: the claim
+resolved its stream source's repository *after* committing, from a catalogue
+read gated on the server still being claimable, so it answered "Mosaic no longer
+offers aiostreams" on the very claim that chose it. And the People list's rows
+carried an `action` that `SettingsRow` reads nothing of, so the list could not be
+clicked — while a test asserting the prop passed. A test that asserts a prop is
+set proves nothing about whether anything reads it.
 
 ### M2 — The library becomes a managed thing
 
@@ -527,9 +605,7 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    settled means every user registers twice. No JWT anywhere — a claims-carrying
    token makes a tightened limit take effect only when the token expires.
 2. **Backup and restore.** One PostgreSQL and no documented restore path.
-3. **The hardening sweep.** Field-level rejection is routed and nothing calls it
-   (`contracts.RejectFields`), so a server refusal cannot yet land on the field
-   it belongs to. The redaction-class vet check was decided and not built, which
+3. **The hardening sweep.** The redaction-class vet check was decided and not built, which
    leaves the PII boundary as developer discipline
    ([ADR 0056](adr/0056-redaction-classes-are-the-pii-boundary.md)) — an
    arrangement [ADR 0066](adr/0066-authorization-is-carried-in-the-type.md)
@@ -655,11 +731,13 @@ stated language behind it is not written.
 
 ## Findings worth keeping
 
-Nine failure shapes that recurred, none of which a gate caught.
+Eleven failure shapes that recurred, none of which a gate caught.
 
 1. **A screen that has not been rendered has not been verified.** Sign-in was
    verified end to end on the server, declared blocked in the browser, and the
-   defect was in the browser. This is now part of the acceptance baseline.
+   defect was in the browser. This is now part of the acceptance baseline, and
+   M1 is its largest demonstration: seven defects in services that were
+   complete, tested and green, every one found by clicking.
 2. **The invisible wrapper.** Three slices shipped code that compiled, passed
    every gate and did nothing — a visibility observer, a focus host and a
    next-focus target, each pointed at a `display: contents` element that
@@ -695,7 +773,19 @@ Nine failure shapes that recurred, none of which a gate caught.
    `tt99999999`.
 8. **"The code has no path for this" is not "the architecture forbids it".** The
    two-chrome app shell was recorded as blocked and was a five-line change.
-9. **A rollback undoes a security action as readily as a business one.** Reuse
+9. **A prop nobody reads is exactly as absent as no prop at all**, and a test
+   that asserts the prop cannot tell the two apart. `ui.Subtitle` on a `Stack`
+   drew nothing for a screen's whole life; M1 added three more in one session —
+   an `action` on a `SettingsRow`, and `meta` and `progressLabel` on a
+   `PosterCard` — each caught only by looking. Three shipped definitions turned
+   out to have the same defect from the other side: `TextField`, `Select` and
+   `Toggle` never bound `name`, so no form could collect one. The rule that
+   follows is mechanical: assert on the rendered control, never on the prop.
+10. **A fake with a weaker constraint than the schema certifies code the
+    database will refuse.** The role table's name column is unique; the fakes
+    were not, so creating four accounts passed every test and produced three
+    with no authority on a real install.
+11. **A rollback undoes a security action as readily as a business one.** Reuse
    detection revoked a refresh chain from inside the transaction that detected
    the replay, and the error reporting it rolled that revocation back: the
    replay was correctly refused and the attacker's chain survived. Nothing was

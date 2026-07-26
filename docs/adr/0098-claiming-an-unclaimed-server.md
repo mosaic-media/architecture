@@ -1,19 +1,18 @@
 # 98. Claiming an unclaimed server
 
-**Status:** Accepted, built, and **withdrawn on 2026-07-25**, with the
-pre-session surface it rides on ([ADR 0097](0097-the-pre-session-tree.md)).
-`ClaimServer` and the setup tree were removed in contracts v0.48.0.
+**Status:** Accepted, built, **withdrawn on 2026-07-25** with the pre-session
+surface it rode on ([ADR 0097](0097-the-pre-session-tree.md)), and **rebuilt on
+2026-07-27** (M1.1) over
+[ADR 0101](0101-the-pre-session-bootstrap.md)'s bootstrap and
+[ADR 0106](0106-the-pre-session-action-lane.md)'s action lane.
 
-Withdrawn for two reasons and only one of them is technical. The setup tree could
-not render, for the reason ADR 0097's status line now carries. And an
-unauthenticated endpoint that mints a superuser should not sit mounted on a
-surface nobody is ready to ship — the endpoint was live, and on any server with
-an empty database it would have handed ownership to whoever asked first, which is
-the accepted threat below arriving before the feature it belongs to.
-
-The decision itself is not reversed. The environment-variable bootstrap is once
-again the only way to create the first administrator, which is the state this
-record was written to end, and the reasoning here is what to pick back up from.
+Built in part, and the parts are worth naming. The claim, the setup screen and
+the durable instance identity landed; the **claim audit record** and the **claim
+window** are still unbuilt, exactly as the Consequences below name them. The
+setup screen has **four steps rather than the one** this record could support
+when it was written: the jobs runner has landed since, and a server-name field
+and a stream-source connection turned out to be buildable, so three of the five
+steps this record dropped came back.
 
 **Date:** 2026-07-25
 

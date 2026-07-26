@@ -1,6 +1,11 @@
 # 103. One library, many viewers
 
-**Status:** Accepted. Not built — roadmap M1 and M2. **Answers the multi-user
+**Status:** Accepted and built in part. **Watch history landed in M1**, as a
+Platform query deliberately kept off the SDK's `ContentService` — no module
+needs to read a person's viewing back, and the one list this record is most
+emphatic is private should not sit on the surface every installed extension
+holds. **Home composition is still unbuilt** and is M2's, because it is a browse
+surface. **Answers the multi-user
 visibility question [ADR 0046](0046-playback-state-is-platform-owned.md) opens
 and does not resolve.** Applies
 [ADR 0067](0067-three-authorization-mechanisms.md)'s separation of roles, scope

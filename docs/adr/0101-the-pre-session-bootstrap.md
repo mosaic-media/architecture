@@ -1,9 +1,11 @@
 # 101. The pre-session bootstrap carries its own vocabulary
 
-**Status:** Accepted and built in part (M0.2): the RPC, the transitively-closed
-definition subset, the skin and the negotiated tree all landed, and the doorway
-renders in a browser. The **form** did not — each doorway state says what it is
-and offers no control, so signing in and claiming are M1. **Supersedes
+**Status:** Accepted and built. M0.2 landed the RPC, the transitively-closed
+definition subset, the skin and the negotiated tree; the **forms** landed in M1,
+on the action lane [ADR 0106](0106-the-pre-session-action-lane.md) adds. A third
+doorway state joined the two below: a server that cannot read its own accounts
+says so, rather than drawing a sign-in form that refuses every attempt.
+**Supersedes
 [ADR 0097](0097-the-pre-session-tree.md)**, which decided that a locked door may
 speak, was built, was withdrawn the same day, and named the gap it did not
 answer: where a pre-session tree gets its vocabulary. Carries

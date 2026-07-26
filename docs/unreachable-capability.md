@@ -27,7 +27,10 @@ register at any length.
 settings, permissions management, config versioning — each of these landed as a
 real slice, was demonstrated working, and was correctly recorded as complete.
 They *are* complete as Platform capability. The slice that was never scheduled
-is the one that puts a door on them.
+is the one that puts a door on them. Permissions management is the worked
+example, in both directions: it sat here for the whole life of the project, and
+the milestone that finally put doors on it found seven defects in services that
+had been passing every test throughout.
 
 So there is no automated signal, and the written record reads like success. The
 only thing standing between "deferred" and "forgotten" is a list somebody
@@ -54,50 +57,6 @@ clicked it.
 ---
 
 ## Owed
-
-### Permissions and users
-
-The Platform has full ABAC authority management. None of it is reachable.
-
-| Removed operation | Application service | What it does |
-|---|---|---|
-| *(never exposed)* | `CreateLocalUser` | Provision a user with a password credential — see below |
-| `createRole` | `CreateRole` | Define a role and its permission set |
-| `grantRole` | `GrantRole` | Grant a role to a user |
-| `rolesForUser` | `GetRolesForUser` | Read a user's roles |
-| `grantsForUser` | `GetGrantsForUser` | Read a user's grants |
-| `effectivePermissions` | `GetEffectivePermissions` | Resolve a user's flattened authority |
-| `users` / `user` | `ListUsers` / `GetUserByID` | Read the user directory |
-| `setUserStatus` | `SetUserStatus` | Suspend or reactivate a user |
-
-**Consequence, stated plainly: Mosaic is effectively single-user.**
-`bootstrap.EnsureAdmin` ([ADR 0018](adr/0018-first-admin-bootstrap.md)) seeds
-exactly one administrator from environment variables, idempotently, and that is
-the entire user story. Roles and grants can only be established by that bootstrap
-or by raw SQL. ADR 0018 anticipated this: it justifies the bootstrap as the
-bridge over the fact that every command able to grant the first authority is
-itself policy-gated. It was never meant to be the only path *permanently*.
-
-This is the largest single gap in the register and the one most likely to be
-misread, because "permissions management" is recorded as a landed slice in the
-roadmap. It landed. It has no door.
-
-**`CreateLocalUser` is the exemplar this whole document exists for**, and it is
-worth looking at directly. `app.CreateLocalUser` provisions a user with a
-password credential. It is a complete command: shape validation, caller
-authentication, `user.create` policy authorisation, a `UnitOfWork`, and an
-outbox event in the same transaction. It has dedicated tests for command-boundary
-order, for policy denial not mutating state, and for rejecting an unauthenticated
-session. It is exercised against real PostgreSQL in the integration suite.
-
-**Its only callers are tests.** No transport has ever exposed it — not the
-session transport, and not GraphQL before it. It did not appear in the deleted
-schema, so it is not a casualty of
-[ADR 0061](adr/0061-one-client-transport.md); it has been unreachable since the
-day it was written, behind a permanently green build and a suite that asserts it
-works. Nothing in the repository will ever tell you this. That is precisely the
-failure mode this register is here to catch, and if it can hide a whole
-command it can hide anything else on this page.
 
 ### Configuration versioning
 
@@ -189,6 +148,40 @@ reading anything stored. `module-tmdb`'s custom catalogs already do it with a
 `with_watch_providers` query. That is a different feature (browse the source's
 catalogue, with library items marked) and it is reachable today.
 
+## Discharged in M1 — permissions and users
+
+The whole permissions-and-users block left this register on 2026-07-27, and it
+is recorded rather than deleted because it was the largest gap here and the one
+most likely to be re-read as still open.
+
+| Application service | Where a human reaches it |
+|---|---|
+| `CreateLocalUser` | Settings › People › Add a viewer / Add an administrator |
+| `CreateRole` / `GrantRole` | The same form, and "Grant User"/"Grant Administrator" on a person's panel |
+| `GetRolesForUser` / `GetEffectivePermissions` | A person's panel: the roles they hold and the flattened set the policy engine decides with |
+| `ListUsers` / `GetUserByID` | Settings › People, and each row's Manage |
+| `SetUserStatus` | Suspend / Reactivate on a person's panel |
+| `GrantablePermissions` | What the create form says it will grant, computed from the grantor's own authority (ADR 0069) |
+
+`CreateLocalUser` was this document's stated exemplar — "unreachable since the
+day it was written, behind a permanently green build and a suite that asserts it
+works". Four accounts now exist on a box that was claimed through a browser, and
+three of them were made through that form.
+
+**`GetGrantsForUser` is the one row of the block that is not discharged.** A
+person's panel shows their roles and their effective permissions, which is what
+answers "what may they do"; the grant rows themselves — the join between a user
+and a role — surface nowhere, and nothing yet needs them to. It stays owed.
+
+**What discharging it cost is worth reading**, because it is the argument for
+this register existing. Every service above was complete, tested and
+transactional, and putting doors on them found seven defects that no gate could
+have: an ordinary account could not sign in, could not sign itself out, and
+could not read its own name; settings would not open for one at all; "Add to
+library" was drawn for people who cannot import; creating four accounts produced
+three with no authority; and a claimed server never reconciled its owner's role.
+Each one is a service that worked perfectly and a product that did not.
+
 ---
 
 ## Migrated
@@ -197,7 +190,7 @@ Recorded so nobody reading the deleted schema rebuilds them.
 
 | Removed operation | Now reached by |
 |---|---|
-| `signIn` / `signOut` | `mosaic.auth.v1.AuthService` ([ADR 0061](adr/0061-one-client-transport.md)) |
+| `signIn` / `signOut` | `mosaic.auth.v1.AuthService` ([ADR 0061](adr/0061-one-client-transport.md)), and since M1 the doorway's own form and the account cluster's Sign out |
 | `screen(name, params)` | The session push lane — the Platform renders and pushes region updates ([ADR 0041](adr/0041-cross-client-transport-two-lane-rpc.md)) |
 | `importContent` | The `importContent` action, via session `Invoke` |
 | `configureModule` | The `configureModule` action, via session `Invoke` |
@@ -224,19 +217,6 @@ nothing, and building the feature is what the roadmap should say.
 These belong on this register though GraphQL never carried them, because the
 honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
-- **`CreateLocalUser` never had a transport at all** — see the permissions
-  section above. Listed twice deliberately: it is the register's clearest case.
-- **`SignOut` has a caller for other devices and none for this one.** The device
-  list on the account panel (M0.3) ends any *other* session, and deliberately
-  draws no control for the session you are looking through — signing out belongs
-  on its own affordance rather than inside a list of devices, and that
-  affordance is unbuilt. A shared device still cannot be handed over.
-- **There is no sign-in UI.** The pre-session doorway renders (M0.2,
-  [ADR 0101](adr/0101-the-pre-session-bootstrap.md)) and carries no form: the
-  Shell still signs in on boot with credentials from build-time environment
-  variables. What M0.2 removed is the *structural* blocker — a client with no
-  vocabulary before a session — so the form is now a definition and a dispatch
-  case rather than anything that needs deciding.
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and
   transactional; the artwork enrichment pass calls it
@@ -295,18 +275,18 @@ RPCs. Concretely, discharging a row means:
 3. **A route** the shell screen can navigate to, so the screen is reachable by
    pressing something rather than only by an intent a developer sends by hand.
 4. **Capability gating** ([ADR 0036](adr/0036-capability-gated-affordances.md)):
-   an affordance the caller could not exercise should not be rendered. Note the
-   open problem — `mosaic.auth.v1.Session` carries no capability set, because
-   nothing populates `domain.Session.Capabilities` at issue time, so gating is
-   currently a server-side omission decision rather than something a client can
-   make.
+   an affordance the caller could not exercise should not be rendered. The open
+   problem this step used to name is closed — `domain.Session.Capabilities` is
+   populated at issue time and re-resolved on every refresh, and
+   `mosaic.auth.v1.Session` carries it — so a client that composes its own
+   chrome can make the same omission the emit-side makes. It remains a
+   *drawing* decision and never a check: every call re-authorises against the
+   grants as they are then.
 5. **Exercised end to end** in a running Mosaic, then struck from this register
    in the same change.
 
 The order the rows should be discharged in is a roadmap question, not this
-document's. One observation belongs here, though: **permissions and user
-management gate everything multi-user about the product**, and no other row
-blocks as much.
+document's.
 
 ## Rules
 
