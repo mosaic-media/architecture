@@ -8,3 +8,6 @@ output/
 node_modules/
 .pytest_cache/
 .lycheecache
+
+# macOS junk
+.DS_Store
