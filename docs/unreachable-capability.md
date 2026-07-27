@@ -295,6 +295,17 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     exists, a user's choice needs marking as theirs or the next enrichment pass
     will overwrite it.
 
+    **M2b removed the last thing that could be mistaken for the blocker.**
+    `module-fanart-tv`'s project credential had never been linked into any build,
+    so an obvious reading was that artwork enrichment was simply unconfigured.
+    It is now linked and guarded — and it changes nothing a user can see, which
+    is the point. A real library of 152 works already carries a logo on 130 of
+    them, a backdrop on 151 and a poster on 152, all from TMDB. What fanart adds
+    is *alternatives*: forty variants where TMDB returns one. Those are exactly
+    what [ADR 0074](adr/0074-artwork-is-a-candidate-set.md) stores and what this
+    row says nobody can choose between. **The credential was a prerequisite, not
+    the gap.**
+
 - **`recordImpression` has nothing that can cause one.** The action is
   implemented, authorised against the session it arrived on, and it writes a
   telemetry record naming the node that was seen

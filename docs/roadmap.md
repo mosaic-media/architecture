@@ -727,10 +727,29 @@ have not.
    `FANART_PROJECT_KEY` from `platform/.env` into the extension binary it
    publishes to the local signed index.
 
-   **Not done: the clearlogo on a hero.** The chain is built and the key links,
-   and nobody has yet looked at fanart artwork on a screen — which is precisely
-   the step this slice existed to force, and precisely the step a green build
-   cannot stand in for. It stays open until someone has.
+   **The demonstration this slice asked for was dropped, and the reason is a
+   correction to the slice rather than a skipped step.** "Put a fanart clearlogo
+   on a hero and look at it" assumed fanart is what puts a clearlogo on a hero.
+   It is not: on a real library of 152 works, **130 already carry a logo, 151 a
+   backdrop and 152 a poster**, every one of them an `image.tmdb.org` URL. A hero
+   renders a clearlogo today and has for as long as TMDB has been the metadata
+   provider. Looking at one would have demonstrated TMDB.
+
+   So what remains unproven about this module is narrower and more honest than
+   "nobody looked": **no fanart-sourced image has ever reached a screen**, and the
+   module is not installed on any box that has been looked at. What its key
+   unblocks is not "artwork" — that works — but *better* artwork and, more to the
+   point, **artwork a user can choose between**: fanart returns forty variants
+   where TMDB returns one, which is [ADR 0074](adr/0074-artwork-is-a-candidate-set.md)'s
+   candidate set and the picker that
+   [does not exist](unreachable-capability.md#also-owed-though-never-removed).
+   That is where this credential earns its keep, and it is scheduled behind the
+   picker rather than here.
+
+   **What is proven** is the part that was actually broken: the symbol resolves,
+   the workflow injects it, the guard fails when the path breaks, and a
+   deployment that sets `FANART_PROJECT_KEY` gets a keyed module instead of one
+   answering "API key not set".
 
 *Exit: an administrator builds the library from two rules, a job keeps it
 current, and each user browses by genre and by streaming service, on a home
@@ -740,14 +759,26 @@ screen they arranged, having configured nothing beyond their stream source.*
 schedule, new matches appear on the Library screen without anyone pressing Add,
 a second run adds no duplicates, and the run log says what happened.*
 
-*Exit for M2b, partly met. **Browsing the library by genre is demonstrated** —
-a facet row over 82 works, ordered by what the shelf actually carries, with
-"Sci-Fi & Fantasy" beside "Action & Adventure" because two sources say so. The
-availability refresh runs on its schedule and its answers are stored. **Two
-things are not done**: nobody has yet put a fanart clearlogo on a hero, which is
-what 9 existed to force; and browsing by streaming service has no surface, having
-had one built and removed — see 5. What remains beyond that is 6 (cache-first
-rendering) and 8 (home composition).*
+*Exit for M2b, partly met, and two of its three exits moved rather than being
+missed.*
+
+***Browsing by genre is demonstrated***, on both surfaces: a library-scoped facet
+over what the shelf actually carries — "Sci-Fi & Fantasy" beside "Action &
+Adventure", because two sources say so — and a cross-source one on a provider's
+catalogue.
+
+***Browsing by streaming service is not*,** and the exit was wrong rather than
+unmet. A library facet was built, shown, and removed: availability spans what the
+library holds and what it does not, so answering it over the shelf alone gives
+the small half while looking like the whole. The cross-source affordance exists
+(4's `with_watch_providers` filter, asked live); what does not is the **union**
+that would use the stored projection. See 5.
+
+***Fanart artwork on a screen is not***, and that exit was also wrong: TMDB
+already supplies the clearlogo it named. What is unproven is fanart specifically,
+and it lands with the artwork picker. See 9.
+
+*What remains beyond M2b is 6 (cache-first rendering) and 8 (home composition).*
 
 ### M3 — Playback completion
 
