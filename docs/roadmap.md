@@ -939,34 +939,66 @@ perfectly, and one thing the release was asked for outright.
    heaviest remaining engineering item in the whole release, and it is **in** the
    release: resume that works only on some releases is not resume.
 
-   **Scoped, not started, and blocked on one measurement.** Two things were
-   established before any of it was built, and the second is why nothing was.
+   **Measured. The premise above is wrong in two places, and the slice is
+   smaller than it looks.**
 
-   *The origin has two paths and only one is a pipe.* `Handler` already forwards
-   `Range` and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges`
-   and the `206` back; `serveRemuxed` is the pipe. So "resume is exact only on a
-   directly relayed stream" is right, and carries an unstated condition — a
-   relayed stream is seekable **only if the upstream ranges**, which has never
-   been checked against a real debrid CDN. The sentence has been read as a
-   property of the source and describes the implementation.
+   *The upstream honours Range.* Measured live against two AIOStreams
+   resolutions of the same 4K release through a TorBox profile
+   (`platform/tools/rangeprobe`): both answered `206` with a correct
+   `Content-Range` and mid-file bytes that differ from the head, over a 61 GB and
+   a 48 GB file. One of the two refuses `HEAD` with `405` and ranges perfectly
+   well anyway. So a directly relayed stream **is** seekable, and the origin
+   already forwards `Range` and relays the `206` — that half of the slice needs
+   nothing built, and `ffmpeg -ss` can seek the source over HTTP for the cost of
+   one ranged fetch, which decides the segmenter's architecture in favour of the
+   cheap one.
 
-   *That condition selects between two incompatible designs*, which is why it is
-   worth blocking on rather than guessing. If the resolved URL honours Range,
-   ffmpeg can seek the source over HTTP and a keyframe-aligned segment costs one
-   ranged fetch — roughly what `seanime` and `remux` do against a local file, and
-   their designs port across. If it does not, every `-ss` re-downloads from byte
-   zero, `remux`'s restart-per-seek becomes catastrophic rather than merely
-   wasteful, and the only workable shape is a file-backed cache accumulating the
-   source once — which is what `seanime`'s own *non-local* path does, and it is
-   the one reference written for a remote URL rather than a file.
+   *Matroska is not the irreducible case, because the player is not MSE.* The
+   Shell plays a bare `<video src>`, whose native demuxer handles Matroska — the
+   client profile declares `containers: []` deliberately and says why. Nothing in
+   the decision consults the container at all: `Plan.DirectPlay` is
+   `Video == Copy && Audio == Copy`, and **`ShouldRemux` is dead code, called
+   from nowhere in production**. The remux path is entered on *codec and HDR*
+   grounds only. "MSE takes only fMP4 and WebM so Matroska cannot pass through"
+   is true of MSE and describes a player Mosaic does not have.
 
-   `platform/tools/rangeprobe` makes the measurement and is validated; it needs
-   an AIOStreams instance URL backed by a debrid service, which is a credential
-   and is not on the development machine, so **the measurement has not been
-   made**. Note what does *not* change either way: **Matroska is irreducible.**
-   MSE cannot take it whatever codec is inside, so that subset needs segmenting
-   under both branches. What the answer changes is everything else in the slice,
-   and the architecture of the segmenter itself.
+   So what actually needs segmenting is not a container subset but the set of
+   releases that go through ffmpeg at all: an undecodable video codec, or HDR
+   needing a tone-map, or audio the client cannot decode. That is still a real
+   and common set — the 4K HDR release tested here is in it — and it is still
+   unseekable, which `TestRemuxedResponseIsNotSeekable` now pins.
+
+   *Two defects found on the way, both fixed.* Playing that release produced
+   "format not supported" in the browser and `status=200` in the log. The
+   decision copied an 8-channel FLAC track — decodable by Chrome, refused by the
+   MP4 muxer — so ffmpeg died at header-write; and `serveRemuxed` wrote its `200`
+   before reading a byte, so a dead ffmpeg was indistinguishable from a working
+   one that had nothing to say. **The container is a second constraint on the
+   audio decision and only the client's decoder was being asked.**
+
+   **Still to build:** the segmenter itself, for the ffmpeg-path releases. Its
+   architecture is now settled by the measurement rather than guessed.
+
+   *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
+   and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the
+   `206` back; `serveRemuxed` is the pipe. "Resume is exact only on a directly
+   relayed stream" was right and carried an unstated condition — seekable *only
+   if the upstream ranges* — which is now measured and true.
+   `TestRemuxedResponseIsNotSeekable` pins the other half so the difference
+   cannot go back to being a reading of the code.
+
+   *Demonstrated in the browser, which is where the real surprise was.* The 4K
+   HDR release plays and **cannot be seeked**: `video.seekable` is `[[0, 0]]` and
+   a seek to 120 s is silently refused. It also **does not keep up** —
+   `currentTime` stays at `0` while ffmpeg burns two cores. That second finding
+   is not a seeking problem and a segmenter would not fix it: `maxHeight` comes
+   from `screen.height × devicePixelRatio`, so a Retina laptop declares 2400 and
+   a 2160p source falls *under* the cap, leaving the Platform tone-mapping and
+   encoding 4K h264 in real time on a 3-core box. The profile's doc explains the
+   phone case that motivated device pixels and nobody considered the desktop case
+   in the other direction. **Deciding the encode cap from the same number as the
+   selection cap is the bug**, and it gates whether a segmented release is
+   watchable at all — so it is owed alongside the segmenter, not after it.
 5. **Subtitles end to end.** **The addressing half landed; nothing consumes it
    yet.** `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
    the same two coordinates `StreamRequest` took under
