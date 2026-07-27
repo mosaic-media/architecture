@@ -1,6 +1,13 @@
 # 52. Cache-first rendering, and telling the truth when a source is down
 
-**Status:** Proposed
+**Status:** Accepted and built (roadmap M2.6). **Built in part in one respect:**
+only home and its catalogs render cache-first, as this record scopes them; a
+drill-down that pages or narrows a catalog still asks live. The pending
+indicator this record expected a stale-while-revalidating screen to reuse was
+not reused — the client's flag is driven by its own in-flight intents and a
+server-scheduled revalidation is not one — so a screen served because
+revalidation failed states its age in the standing notice and in a banner
+instead.
 **Date:** 2026-07-22
 
 ## Context

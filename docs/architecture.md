@@ -76,7 +76,7 @@ Trusted, compiled in, defines the rules everything else follows. Imports no modu
 
 Infrastructure implementing Platform contracts, using the same registration and manifest shape an external module would use, but compiled in, required and trusted.
 
-`postgres/` is the only one today: `pgx/v5`, twelve embedded SQL migrations, a deterministic migrator, implementations of every store contract, and SQLSTATE-to-category error mapping. **No pgx type, row or SQLSTATE escapes this package.**
+`postgres/` is the only one today: `pgx/v5`, twenty-seven embedded SQL migrations, a deterministic migrator, implementations of every store contract, and SQLSTATE-to-category error mapping. **No pgx type, row or SQLSTATE escapes this package.**
 
 ### `internal/adapters/` — not module-shaped
 

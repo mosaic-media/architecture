@@ -40,7 +40,7 @@ remote source requires the user to name one.
 |---|---|---|---|
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
-| 2a | Each with their own progress, history and home screen | Progress and watch history are per user; the home screen is not | M2 |
+| 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Nothing on disk | M4 |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
@@ -48,13 +48,13 @@ remote source requires the user to name one.
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
 | 8 | Ask-and-receive, plus unprompted server push | Built — the two-lane transport | — |
 | 9 | Run asynchronous work to maintain itself | Built — runner, interval scheduler and system principal; two of six queued callers wired | — |
-| 10 | A library an administrator builds from queries and collections | Not built, and not designed | M2 |
+| 10 | A library an administrator builds from queries and collections | Collections built, with a scheduled pass keeping them current ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)); the query kind is stored, validated and run by the same code and has no surface to create one from | M2 |
 | 11 | Search across every provider and the library at once | Built | — |
 | 12 | Add an item, or play it without adding | Add built; play-without-adding deferred | M3 |
 | 13 | Playing something unowned adds it, so it can be tracked | Not built | M3 |
 | 14 | A device declaring what it can physically play | Built — `ClientProfile` on Attach | — |
 | 15 | Remote playback that feels instant | Built — 3.75 s cold, 11 ms warm | — |
-| 16 | Browse by streaming service or genre without involved setup | Neither is reachable | M2 |
+| 16 | Browse by streaming service or genre without involved setup | Genre is reachable on both surfaces — a facet over the shelf and a filter on a source's catalogue; streaming service is browsable as a source's catalogue asked live, and the union with what the library already holds is unbuilt | M2 |
 | 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) | — |
 | 18 | A Shell that is its own binary, decoupled from the Platform | A Vite bundle with no server | M4 |
 
@@ -99,17 +99,28 @@ cannot compile if a public signature leaks an `internal/` type.
 `seq` with a bounded replay buffer for resume, and the full `RegionUpdate`
 op-set. `AuthService` mints the session; GraphQL was deleted outright. The
 Shell reconnects with backoff and jitter, re-declares its route, and has
-browser history and deep links. Ten actions are the complete list of what any
-client can invoke: `importContent`, `configureModule`, `installExtension`,
-`uninstallExtension`, `revokeSession`, `setPreference`, `playPart`,
-`reportProgress`, `recordImpression`, `setWatched`. Every call on the session
+browser history and deep links. Eighteen actions are the complete list of what
+any client can invoke: `importContent`, `configureModule`, `installExtension`,
+`uninstallExtension`, `revokeSession`, `signOut`, `createAccount`,
+`setUserStatus`, `grantPreset`, `setPreference`, `playPart`, `reportProgress`,
+`recordImpression`, `createLibraryRule`, `setLibraryRuleEnabled`,
+`deleteLibraryRule`, `runLibraryMaintenance`, `setWatched`. The count had been
+stale since M1; `setPreference` now carries a viewer's home arrangement as well
+as the expert-mode flag, which is why no nineteenth was needed. Every call on the session
 service now authenticates at the transport, and a session's live state is keyed
 by session id rather than by the credential, which rotates
 ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
 
 **The SDUI vocabulary.** All thirteen slices of the vocabulary overhaul landed
-([ADR 0083](adr/0083-one-generated-sdui-vocabulary.md)–[ADR 0095](adr/0095-the-generated-vocabulary-reference.md)), and one
-addition since: `visibleWhen` on `Box` took it to **3.1.0**. The prop already
+([ADR 0083](adr/0083-one-generated-sdui-vocabulary.md)–[ADR 0095](adr/0095-the-generated-vocabulary-reference.md)):
+one `ui.spec.json` generating the Go and TypeScript authoring layers, the
+registries and a conformance fixture; negotiation and deliberate degradation;
+namespaced module types; bindable props; state scopes; fields, forms and the
+retirement of `$value`; validation with a symmetric field-error envelope;
+accessibility and focus props; lazy lists; a 76-case cross-client conformance
+corpus; and a generated 525-line vocabulary reference.
+
+One addition since: `visibleWhen` on `Box` took it to **3.1.0**. The prop already
 existed on the six field primitives with the same type and meaning; on a
 container it hides a branch, which is what makes a multi-step form expressible
 at all — without it a wizard is one long page or a round trip per step, and a
@@ -117,13 +128,7 @@ round trip per step sends the password the second step collects back down inside
 the third step's tree. Three definitions were also found unable to be form
 fields: `TextField`, `Select` and `Toggle` each bound the props their label
 needs and none of them bound `name`, so the input inside each wrote to local
-state nothing collects.
-one `ui.spec.json` generating the Go and TypeScript authoring layers, the
-registries and a conformance fixture; negotiation and deliberate degradation;
-namespaced module types; bindable props; state scopes; fields, forms and the
-retirement of `$value`; validation with a symmetric field-error envelope;
-accessibility and focus props; lazy lists; a 76-case cross-client conformance
-corpus; and a generated 525-line vocabulary reference. Components are authored
+state nothing collects. Components are authored
 **only** in the contract and the client bundles none
 ([ADR 0082](adr/0082-components-are-authored-only-in-the-contract.md)); the skin
 is served too — 124 token values, both themes, changed without a client build
@@ -137,7 +142,14 @@ panels behind `user.read`, a device list on the account panel, a real 404, and
 the Shell's one remaining hand-written state (a Platform that could not describe its own door;
 the other became the doorway). Home rotates a full-viewport hero over rails
 that ride its floor, with continue-watching carrying resume progress and time
-remaining. Detail emits hero, episodes, cast, a technical-facts grid and
+remaining. **It renders cache-first** ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)):
+the rows come from a durable snapshot of what each source last said, the live
+answer arrives behind them as a `RegionUpdate`, and a source that is not
+answering earns a standing notice rather than an empty screen blaming the
+install. **Which rows appear, and in what order, is each viewer's own**
+([ADR 0103](adr/0103-one-library-many-viewers.md)), stored as the decisions they
+made so a row nobody has decided about still appears. Detail emits hero,
+episodes, cast, a technical-facts grid and
 related rails. Settings is one frame with a Platform-owned nav that a module's
 own form renders inside ([ADR 0038](adr/0038-module-contributed-settings-ui.md)),
 with a drill-down arrangement on a phone carried in the same payload. `library`
@@ -397,7 +409,8 @@ no environment variable set anywhere.
    user parameter, so there is no version of the screen that shows somebody
    else's.
 
-   **Left out:** home composition, which is M2's because it is a browse surface.
+   **Left out at the time:** home composition, which was M2's because it is a
+   browse surface, and which landed there (M2.8).
 
 *Exit, met: four accounts on one box, each signing in on their own device with
 no environment variable anywhere, each with their own history over one shared
@@ -429,14 +442,16 @@ carried an `action` that `SettingsRow` reads nothing of, so the list could not b
 clicked — while a test asserting the prop passed. A test that asserts a prop is
 set proves nothing about whether anything reads it.
 
-### M2 — The library becomes a managed thing
+### M2 — The library becomes a managed thing — **landed**
 
 Home renders provider catalogs and a continue-watching rail; `collections` and
 `catalog` browse a *module's* collections; search unions the library with
 providers. Until M2a, nothing browsed what the install owns and nothing anywhere
 stated what it should contain — the library was whatever individual users
-happened to press Add on. **M2a (1–3) and M2b (4, 5, 9) have landed**; 6 and 8
-have not.
+happened to press Add on. **M2 has landed in full** — M2a (1–3), M2b (4, 5, 9)
+and M2c (6, 8) — with 7 pulled forward into M2a. What each slice left out is
+named in its own entry, and the one exit demonstrated in a test rather than in a
+browser is named at the end.
 
 1. ~~**A Library screen over the materialised graph**, paged, with an item count
    and the real name of what is being shown.~~ **Built.** `screenLibrary` is the
@@ -646,14 +661,62 @@ have not.
    **Also left out:** the region is stored per record but no screen states it,
    and the `checkedAt` the refresh sorts by is not rendered, so a user could not
    tell a fresh answer from one eleven days old if they were shown either.
-6. **Cache-first rendering** ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)).
-   Found by restarting the Platform under a live client: every cold catalog call
-   failed, the emit-side discards catalog errors, and a full library rendered
-   *"Nothing to show yet — try adding an addon in Settings"*. Source-backed
-   screens render from a durable snapshot of **items, never trees** — artwork and
-   playback URLs are signed with process-scoped keys — revalidate in the
-   background, and push the live result as a `RegionUpdate`. A source that stays
-   unreachable earns a persistent notification, not a toast.
+6. ~~**Cache-first rendering**~~
+   ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)). **Built.**
+   The defect reproduced exactly as written: the Platform restarted with its
+   upstreams blackholed rendered *"Nothing to show yet — try adding an addon in
+   Settings"* over a library of 152 titles and a configured source.
+
+   Source-backed reads serve the last good answer and revalidate behind it.
+   `source_snapshots` holds **items, never trees**, which is the design and not
+   an optimisation — a cached tree comes back after a restart full of URLs signed
+   by a process-scoped key that no longer exists, so the images fail and the page
+   *looks* right. **The catalog list is snapshotted as well as its contents**,
+   which the ADR did not name and the reproduction did: an addon's catalogs come
+   out of a manifest fetched over the network, so a cold source has no catalogs at
+   all and a home with no catalogs renders the same lie one level up.
+   **In-library is re-derived, never restored** — it is a fact about this
+   install's graph rather than about the source's answer, and the read is local.
+
+   **The empty state is split in two**, which is the whole slice in one sentence:
+   "nothing configured" is advice and "your sources are not answering" is a
+   report, and only the first is the user's to act on.
+
+   **The `RegionUpdate` op-set is exercised for the first time.** Every region
+   update before this was the answer to a navigate; a revalidation is the first
+   genuinely unsolicited push. It runs in the requesting session's context, so
+   ADR 0017's reserved system-principal gap stays reserved, and it re-reads the
+   route *after* rendering — a fan-out takes seconds, and replacing the content
+   region of a screen somebody has already left is worse than not refreshing.
+   The plumbing held; the surprise was elsewhere (below).
+
+   **The persistent notice is a `Toast` with a lifetime**, not a second surface
+   (`contracts v0.59.0`: `id`, `persistent`, `cleared`). One place to look for
+   "something is wrong", because the surface that appears less often is the one
+   people stop checking. It is named so a repeat updates the standing notice
+   rather than stacking a fifth copy, and so recovery clears the exact one it
+   fixed. The notice set is per **session** rather than per process: a source's
+   health is global and "has this viewer been told" is not.
+
+   **Two defects the browser found and no test did.** The **degraded home cropped
+   its own first rail** — with no hero, the sheet's negative `overlap` pulled it
+   under the brand bar. That branch had been unreachable, because every catalog
+   failing short-circuited to the empty state before it, and this slice makes it
+   the ordinary degraded screen. And a **concurrent-refresh race in the Shell**
+   signed the user out on the very restart this slice exists to survive: the
+   refresh token is rotated by the exchange that spends it, so the reconnect and
+   an in-flight intent refreshing together meant the second presented a burned
+   token, which the Platform correctly reads as a replay. Concurrent callers now
+   share one exchange.
+
+   **Left out:** the freshness window (five minutes, past which a served snapshot
+   asks to be revalidated) is a constant rather than configuration; the
+   drill-down catalog screen still asks live, because a snapshot exists for the
+   screen a session lands on rather than for every page of every narrowing; a
+   revalidation that fails does not retry, the next navigation does; and the
+   client's own pending indicator is not reused for an in-flight revalidation,
+   because that flag is driven by the client's own intents and a server-scheduled
+   refresh is not one — the notice carries the statement instead, with its age.
 7. ~~**A durable metadata cache.**~~ **Built**
    ([ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)), pulled
    forward into M2a because M2.1 made it urgent: a Library card opens its node by
@@ -695,13 +758,52 @@ have not.
    which is a cache degrading rather than data lost. And **`module-tmdb` files an
    episode still under `Poster` rather than `Landscape`** — the read takes either,
    and the module filing it correctly is a change in that repository.
-8. **Home composition, per user** ([ADR 0103](adr/0103-one-library-many-viewers.md)).
-   Which rows appear, in what order, and which are hidden. It is a **preference,
-   not a scope**: a hidden row stays reachable by search and by link, and
-   anything that must not be reachable is the content scope, which stays
-   unbuilt. A user who has expressed no preference takes the server's default,
-   and a newly available row appears for everyone who has not decided about it —
-   the trap role presets already fell into.
+8. ~~**Home composition, per user**~~ ([ADR 0103](adr/0103-one-library-many-viewers.md)).
+   **Built.** Which rows appear, in what order, and which are hidden — a
+   **preference, not a scope**: a hidden row stays reachable by search, by the
+   Library screen and by link, and anything that must not be reachable is the
+   content scope, which stays unbuilt.
+
+   **The stored document holds decisions and nothing else** — the rows this
+   viewer hid, and the leading run they arranged. A row in neither is one nobody
+   has decided about, so it appears. `Order` is a *prefix* rather than a total
+   order for exactly that reason: a total order is a snapshot, fixing the
+   position of rows the viewer never touched and leaving a new one nowhere to go.
+   It is the leading run **up to and including** the pair that moved, so the
+   screen keeps the shape the viewer was looking at when they pressed the
+   control — recording only the two rows involved is a smaller decision and a
+   worse one, because moving the bottom row up one place would send it and its
+   neighbour to the top.
+
+   **One read, in the pass that builds home**, and applied *before* the items are
+   fetched — a row this viewer turned off must not cost a provider round trip to
+   draw nothing with. Capability omission composes ahead of preference
+   ([ADR 0036](adr/0036-capability-gated-affordances.md)). The hero and the
+   "Trending now" rail follow the arrangement rather than being arranged
+   separately, because both are drawn from the first catalog that has items: one
+   decision, not three.
+
+   **It needed no new action.** The panel computes the document each control
+   would produce, where the row list is already in hand, and the control carries
+   it as `setPreference`'s value — so the client echoes a decision rather than
+   authoring one, and no command has to re-derive the row list with a provider
+   fan-out per press.
+
+   **The defect this slice contributed, found on sight in a browser:** every
+   settings row was labelled with the row above it, and one catalog vanished.
+   `Arrange` returned its caller's slice when there was nothing to arrange, and
+   `Swap` arranges and then reorders in place — so building the first row's move
+   control silently reversed the list every other row was read from. It compiled
+   and every unit test passed.
+
+   **Left out:** the move controls are worded Up and Down rather than chevrons,
+   because the client's glyph set has `chevron-down` and no `chevron-up` and an
+   unknown icon name renders as *nothing* — an invisible control that still
+   works, which is a defect shape this project has shipped before. And the
+   `Switch` primitive has no accessible name in the contract
+   ([ADR 0091](adr/0091-accessibility-in-the-contract.md)), so the text beside a
+   switch is a sibling rather than a label; this screen surfaces that gap rather
+   than causing it, and closing it is a vocabulary change.
 9. ~~**The project-credential chain, end to end**~~
    ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)). **Built for
    the chain; the demonstration is not done** — see below, and it is the half
@@ -778,7 +880,32 @@ that would use the stored projection. See 5.
 already supplies the clearlogo it named. What is unproven is fanart specifically,
 and it lands with the artwork picker. See 9.
 
-*What remains beyond M2b is 6 (cache-first rendering) and 8 (home composition).*
+*Exit for M2c (6, 8, and the confirmation of 7), met in two of three parts and
+demonstrated in a browser rather than asserted.*
+
+***A restart with every upstream unreachable renders the library it had***, with
+the banner "Showing what was saved 3 hours ago. Your sources are not answering,
+so this may be out of date." and a standing notice reading "tmdb is not
+responding, so some rows may be out of date." The notice outlived the toast
+timer, appeared once across several renders, and was retracted by name when the
+sources came back — at which point the live result arrived as a `RegionUpdate`
+and the hero returned.
+
+***A library detail opens with the provider unreachable***, complete: title,
+rating, year, certification, runtime, genres, synopsis, director and cast, drawn
+from `node_metadata`. This is 7 confirmed rather than built — it landed in M2a,
+and the exit had never been demonstrated against a blackholed upstream. Only the
+artwork is missing, which is the artwork proxy being unable to reach the CDN
+rather than anything about the metadata path.
+
+***Two accounts seeing two different homes was proven in a test, not in two
+browsers.*** One account's home was rearranged live — a row hidden, another
+moved up, and the hero following the arrangement onto the row that became first
+— and `TestTwoViewersGetTwoDifferentHomes` renders home for two callers and
+asserts they differ. The second browser was not available: the install's other
+account was created by a previous session and its credential is lost. That is a
+gap in the demonstration and not in the mechanism, and it is written here rather
+than smoothed over.
 
 ### M3 — Playback completion
 
@@ -1015,7 +1142,7 @@ stated language behind it is not written.
 
 ## Findings worth keeping
 
-Eleven failure shapes that recurred, none of which a gate caught.
+Twelve failure shapes that recurred, none of which a gate caught.
 
 1. **A screen that has not been rendered has not been verified.** Sign-in was
    verified end to end on the server, declared blocked in the browser, and the
@@ -1079,6 +1206,17 @@ Eleven failure shapes that recurred, none of which a gate caught.
    only because [finding 1](#findings-worth-keeping) had just produced the
    defect above it. **A write that must outlive a failure has to happen outside
    the unit of work that fails.**
+12. **A pure-looking accessor that hands back its caller's own slice.**
+    `HomeComposition.Arrange` returned its argument unchanged when there was
+    nothing to arrange — an obvious short-circuit — and `Swap` arranged and then
+    reordered in place. The settings panel builds every row's control from one
+    key list, so drawing the *first* row's "Down" button reversed the list every
+    other row was read from: every row after the first was labelled with the row
+    above it, and one catalog vanished from the screen entirely. It compiled,
+    every unit test passed, and it was wrong on sight the moment the panel was
+    opened. **A method that returns a slice returns a copy, or it is not the
+    accessor it looks like** — and the aliasing is invisible until a second
+    caller mutates.
 
 ---
 
