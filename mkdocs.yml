@@ -146,6 +146,7 @@ nav:
       - 104. The library is built from rules: adr/0104-the-library-is-built-from-rules.md
       - 105. Project credentials in official builds: adr/0105-project-credentials-in-official-builds.md
       - 106. The pre-session action lane: adr/0106-the-pre-session-action-lane.md
+      - 107. The Platform keeps what a source told it: adr/0107-the-platform-keeps-what-a-source-told-it.md
 
 markdown_extensions:
   - admonition

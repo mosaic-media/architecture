@@ -63,9 +63,10 @@ release is not credible without them. **Signing out** landed in M1 — it is on
 the account cluster of every screen, it revokes the refresh chain and it ends
 the live session, so a shared device can be handed over. The other four stand:
 **seek and resume on a remuxed stream** (impossible today — see M3),
-**subtitles** (a module fills the role and nothing consumes it), **a durable
-metadata cache** (every detail render asks the provider again), and **backup and
-restore**.
+**subtitles** (a module fills the role and nothing consumes it) and **backup and
+restore**. The fourth, **a durable metadata cache**, landed in M2a
+([ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)): a library
+detail now renders from the object graph rather than asking the provider again.
 
 ---
 
@@ -511,15 +512,11 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    failed **on the rule itself**, where the administrator managing the rules
    reads it, and a line per rule beside the job, where the trace is.
 
-   **Left out, and it is the gap most likely to be misread as done: a series that
-   gains a season is refreshed and does not grow the new season.** Every module
-   dedups before writing and returns `AlreadyKnown` for a title it has already
-   materialised, so a re-import re-merges artwork and tops up Parts (ADR 0073's
-   pass, only filling items with none) and never extends the tree. Closing it
-   needs a refresh path through the module, which is an SDK change and its own
-   slice — the Platform building the tree from `ContentMetadata.Episodes` would
-   put tree-building in the kernel, which ADR 0028 and ADR 0051 both refuse.
-   Also left out: "Run maintenance now" is **synchronous**, so the caller waits
+   **A series that gains a season now grows**, which it did not when this slice
+   first landed — see 7 below, where the repair is recorded with the metadata
+   cache it shares a decision with.
+
+   **Left out:** "Run maintenance now" is **synchronous**, so the caller waits
    for the pass. Enqueuing the same job kind instead needs an `Enqueue` reachable
    from inside a command, which `JobStore` deliberately does not offer (M0.1
    named the seam rather than pretending), and the schedule is what makes the
@@ -547,12 +544,38 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    playback URLs are signed with process-scoped keys — revalidate in the
    background, and push the live result as a `RegionUpdate`. A source that stays
    unreachable earns a persistent notification, not a toast.
-7. **A durable metadata cache.** A library detail is re-derived from the provider
-   on every render. With one user that is freshness; with four on a credential
-   shared by every default install it is latency and failure — and the shared
-   project credential
-   ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) is what makes
-   this a requirement rather than a refinement.
+7. ~~**A durable metadata cache.**~~ **Built**
+   ([ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)), pulled
+   forward into M2a because M2.1 made it urgent: a Library card opens its node by
+   **id** and ADR 0034's detail is keyed by a **ref**, so the two never met and
+   a library detail rendered a title, a media type and a grid of blank cards.
+
+   What a metadata provider says about a materialised title is stored in
+   `node_metadata`, refreshed by the maintenance pass and read back to render, so
+   **a library detail opens with no provider installed, no credential and no
+   network**. A third enrichment pass beside streams and artwork, so it cost no
+   SDK change and no change in any module. A table rather than a column on
+   `nodes`: artwork is on the node because it is read on every card of every
+   list, and this is read one screen at a time and has a lifecycle — a
+   fetched-at, and therefore a staleness question — that the node does not.
+
+   **The same pass grows the tree**, which is the repair for 3's gap. It reads
+   the episode preview it was already given and adds the seasons and episodes
+   the tree is missing — building a tree, which ADR 0028 gave to the module, on
+   ADR 0073's ground that season and episode are facts about television the
+   Platform already models. It composes no provider's addressing: it reads two
+   integers the SDK carries neutrally. It adds and never removes, so an episode
+   that leaves a source's listing stays.
+
+   **Left out:** a module rebuilding its own tree, which is the better answer and
+   needs a refresh verb on the SDK's `Capability` and a release of every module —
+   this reconciles from a projection where a module could reconcile precisely.
+   The document is marshalled with Go field names, because a hand-written DTO of
+   nineteen fields would be a second copy of `ContentMetadata` that drifts; a
+   field renamed in the SDK therefore reads empty until the next run rewrites it,
+   which is a cache degrading rather than data lost. And **`module-tmdb` files an
+   episode still under `Poster` rather than `Landscape`** — the read takes either,
+   and the module filing it correctly is a change in that repository.
 8. **Home composition, per user** ([ADR 0103](adr/0103-one-library-many-viewers.md)).
    Which rows appear, in what order, and which are hidden. It is a **preference,
    not a scope**: a hidden row stays reachable by search and by link, and
