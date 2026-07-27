@@ -567,6 +567,15 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    integers the SDK carries neutrally. It adds and never removes, so an episode
    that leaves a source's listing stays.
 
+   **A library detail reads one season at a time**, and that is load-bearing
+   rather than an optimisation. Following five TMDB catalogs produced 37,365
+   episode nodes — which is 16 MB and nothing PostgreSQL minds — but a daily
+   news programme among them has 75 seasons and 21,428 episodes, and reading its
+   tree whole to draw seven rows measured **1054 ms**. The query takes the season
+   and reads the work's children and that season's children: ~360 rows, both
+   indexed scans. The season selector is built from the season *containers*, so
+   it offers all seventy-five having read one.
+
    **Left out:** a module rebuilding its own tree, which is the better answer and
    needs a refresh verb on the SDK's `Capability` and a release of every module —
    this reconciles from a projection where a module could reconcile precisely.
