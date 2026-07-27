@@ -442,11 +442,19 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    of its own beside Collections — the install's shelf and a module's catalogue
    are adjacent and are not the same room. **The count is real**, which is the
    thing a provider-backed screen cannot do: `NodeStore` gained `Count` and
-   `NodeQuery` gained `Offset`, so the screen says "140 titles · showing 61–120"
-   where the catalog screen has to say "128+". Cards open **by node id, not by
-   ref**, so a title still opens when the source that provided it is down. It is
-   the first emitter of the vocabulary's `Pagination`, which had existed and been
-   used by nothing.
+   `NodeQuery` gained `Offset`, so the screen says "81 titles" over rows it can
+   count, where the catalog screen has to say "128+". Cards open **by node id,
+   not by ref**, so a title still opens when the source that provided it is down.
+
+   **It scrolls rather than pages**, on the lazy-list mechanism
+   ([ADR 0093](adr/0093-lazy-lists.md)): the grid states
+   `hasMore` and `loadMore`, and the client asks for the next window as the end
+   comes into view. `hasMore` is computed from the total rather than from the
+   page being full, which is the property that mechanism exists for. Because a
+   `query` action *replaces* the content region, each further window re-renders
+   everything above it, so the scroll stops at 600 titles and **says so** rather
+   than going quiet — a lazy list that silently stops is indistinguishable from
+   one that reached the end.
 
    **Left out, and it is a departure from the plan:** the paged read is a new
    Platform query (`ListLibrary`) and deliberately **not** `SearchContent`. One
@@ -457,6 +465,19 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    history off `ContentService`. `SearchContent` itself therefore still has no
    client path. There is no media-type or genre narrowing on the screen: that is
    faceting, and it is 4.
+
+   **A vocabulary defect this slice found and did not fix.** The screen was
+   first built on the vocabulary's `Pagination` definition, which had shipped,
+   been drift-guarded and conformance-tested, and been emitted by **nothing**.
+   Both its controls are permanently disabled and always have been: the template
+   writes `"disabled": {"$ifNot": {"$bind": "hasNext"}}`, but `$if`/`$ifNot` are
+   *node guards* that drop a subtree, not value expressions — so the client's
+   binding resolver walks the object, resolves the `$bind` inside it, and hands
+   `Pressable` the object `{$ifNot: true}`, which is truthy. It is the mirror of
+   the failure that has bitten this project twice already: not a prop nothing
+   reads, but a prop shape nothing evaluates, and equally silent. Found by
+   clicking Next and watching nothing happen. Fixing it is a `contracts` change
+   and a release, and nothing emits `Pagination` now.
 2. ~~**Library rules**~~ ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)).
    **Built.** A Platform-owned store — its own table, contract and contract-suite
    rows — of rules an administrator manages from Settings › Library. **Rules add
