@@ -992,7 +992,29 @@ perfectly, and one thing the release was asked for outright.
    asserting on ffmpeg's own argument list, because every request in isolation
    was correct. Only a real decoder assembling the responses could show it.
 
-   The path is unwired and the honest pipe restored;
+   **The spool architecture replaced it and fixed that failure**: one ffmpeg per
+   playback writing to one spool, ranges served from it, so every reader sees the
+   same bytes. Verified live — `MEDIA_ERR_DECODE` gone, `error: null`,
+   `readyState: 4`, a non-empty `seekable`, and the process fleet bounded to a
+   single ffmpeg where a scrubbing viewer previously left one per range. Seeks
+   forward and back are accepted and land on the clock (120 s → 30 s → 150 s,
+   each firing `seeked`).
+
+   **What still does not work is playing from a seek.** Zero frames decode after
+   one and the clock does not advance. The cause is an agreement failure, not a
+   plumbing one: the client derives byte-to-time from the length the origin
+   advertises divided by the duration it infers from the fragments, and the
+   origin inverts the same length against the *probed* duration. A flat 2 MB/s
+   estimate put those two mappings a factor of twenty-two apart on a 4K release,
+   so a seek resolved to a timestamp nobody asked for. Advertising the source's
+   own probed size instead is committed and unit-tested; it is **not yet
+   confirmed live**, and it is the next thing to check.
+
+   A downstream symptom worth keeping: progress is recorded against the inferred
+   duration, so 150 s of a 66-minute episode showed as 83% watched on the
+   continue-watching rail.
+
+   The superseded path is unwired and the honest pipe restored;
    [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
    line records which half of it was wrong. **Still to build:** one transcode per
    session writing to a file, with ranges served out of that file so every reader
