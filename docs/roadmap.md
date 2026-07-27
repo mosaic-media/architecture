@@ -977,7 +977,14 @@ perfectly, and one thing the release was asked for outright.
    audio decision and only the client's decoder was being asked.**
 
    **Still to build:** the segmenter itself, for the ffmpeg-path releases. Its
-   architecture is now settled by the measurement rather than guessed.
+   source-side architecture is settled by the measurement rather than guessed
+   ([ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)), and its
+   *client*-side one is the open question: a bare `<video>` seeks by asking for a
+   byte range, so a live transcode can only answer with an estimated byte-to-time
+   mapping and an ffmpeg restarted at the mapped timestamp. HLS would be the
+   conventional answer and needs a client library
+   ([ADR 0070](adr/0070-the-web-player-is-the-browser.md) deliberately has none),
+   so that is a client decision rather than an origin one and is left open.
 
    *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
    and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the
