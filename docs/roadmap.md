@@ -938,20 +938,54 @@ perfectly, and one thing the release was asked for outright.
    is inside it. Resume is exact only on a directly relayed stream. This is the
    heaviest remaining engineering item in the whole release, and it is **in** the
    release: resume that works only on some releases is not resume.
-5. **Subtitles end to end.** `module-aiostreams` fills the `subtitles` role,
-   `SubtitlesRequest` gained no coordinates when import was split in two, and
-   nothing consumes it. Remote sources without subtitles are a daily-use gap.
+5. **Subtitles end to end.** **The addressing half landed; nothing consumes it
+   yet.** `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
+   the same two coordinates `StreamRequest` took under
+   [ADR 0073](adr/0073-stream-resolution-is-decoupled-from-metadata-provenance.md),
+   with `module.proto` fields and converter lines in each direction — and both
+   modules filling the role now pass them through instead of composing an
+   address from two literal zeroes. A subtitles provider handed a foreign ref
+   could previously answer for a film and for nothing else, which was the whole
+   of the gap on the source side.
+
+   What is left is the consumer, and it is all of it: **no application service
+   calls `Subtitles`.** `CapabilityRegistry.SubtitlesProvider` resolves one and
+   nothing asks it to; the enrichment pass
+   (`internal/platform/app/enrich_streams.go`) resolves streams and not
+   subtitles. The role is filled, now correctly addressable, and unreached — an
+   [unreachable capability](unreachable-capability.md) in the strict sense, and
+   one this release is what finally gives a consumer. Remote sources without
+   subtitles are a daily-use gap until then.
 6. **Audio and subtitle track selection at play time.** The probe stores the
    whole track list as a versioned document on the Part — it must, because a
    release whose first audio track is Hindi cannot be described by one codec
    column — and the plan picks one. The user cannot.
-7. **`StreamLink` cannot say what it knows.** A module parses container, codec,
-   resolution and swarm health at its boundary; the link carries neither
-   container nor codec, so a Part materialised through the enrichment fan-out
-   loses every field selection reads and the probe becomes the only source of
-   them. An additive SDK bump plus a pass-through — and, per the lesson below, a
-   `module.proto` field and a converter line in each direction, or it is dropped
-   silently.
+7. **`StreamLink` cannot say what it knows.** **The SDK half landed; the
+   pass-through did not.** `StreamLink` gained `Container`, `VideoCodec` and
+   `AudioCodec` in SDK `v0.26.0`, named and spelled as `Part`'s are, with
+   `module.proto` fields and converter lines in each direction. Both stream
+   modules fill them from the parse they were already doing and discarding:
+   `streamLinkFrom` in each had been narrowing `container`, `videoCodec` and
+   `audioCodec` out of its own result because the link had nowhere to put them,
+   so the same walk over the same text produced a richer answer for a Part than
+   for a link.
+
+   **`attachResolvedStreams` still drops them.** The enrichment pass
+   (`internal/platform/app/enrich_streams.go`) attaches only the edition label,
+   the natural order, the location and the size, so a Part materialised through
+   the fan-out still loses container and codec — along with quality and seeders,
+   which it dropped before this too — and the probe is still the only source of
+   them. `AttachContentPartCommand` has held every one of these fields all
+   along; what was missing was a provider-side field to carry them, and now what
+   is missing is four lines in one function. Until those land, item 6's
+   selection reads nothing a module told it.
+
+   Two fields from the same family were deliberately left out rather than
+   forgotten: **HDR format and audio channel count**. Both are real properties a
+   release names and both are things ADR 0048's decision would eventually want —
+   `Part` already has `HDRFormat` — but neither module parses either today, so
+   adding them would have shipped a field every source leaves empty. They are a
+   later additive bump, on the same terms as these three.
 
 *Exit: press play on anything search returns, from any device profile; resume
 anywhere, on a remuxed stream as exactly as on a relayed one; override the
@@ -1163,7 +1197,13 @@ Twelve failure shapes that recurred, none of which a gate caught.
    were added against a `module.proto` with no fields to hold them; `sdk/host`
    dropped all three silently. A field added to the SDK's virtual-content DTOs
    needs a proto field and a line in each direction of the converter, and there
-   is no compiler that says so.
+   is no compiler that says so. **It happened a third time and the same shape
+   caught it**: `v0.26.0`'s five fields were added the other way round — proto
+   first, then both converters, then a test that asserts each of them on the far
+   side of a real gRPC round trip *and* across a real child process. The two
+   directions need separate assertions, because a field a caller sets travels
+   the way the fields a provider answers with do not, and a converter can carry
+   one while dropping the other.
 5. **Staleness is silent in four different ways.** `docker compose restart` does
    not rebuild `go run` against changed *embedded* files; npm installs a
    published package over a workspace link when a dependency range drifts; a

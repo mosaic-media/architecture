@@ -207,6 +207,34 @@ maintained capability with no reader — and whether it should be carried at all
 rather than deleted and rebuilt when that surface is scheduled, is an open
 question this register should not pretend to settle.
 
+### The subtitles provider role
+
+| Capability | Where it lives | Reachable? |
+|---|---|---|
+| Subtitle tracks resolved for an item | `v1.SubtitlesProvider`, filled by `module-stremio-addons` and `module-aiostreams`, resolvable through `CapabilityRegistry.SubtitlesProvider` | **No.** No application service calls it, so there is nothing for a client to reach. |
+
+**This row was added when the role stopped being incomplete, not when it stopped
+being reachable** — it was never reachable. The role landed under
+[ADR 0037](adr/0037-completing-the-stremio-source-surface.md) ahead of the player
+that would consume it, which was the deliberate and correct order; what it did
+not have until SDK `v0.26.0` was the ability to name an episode.
+`SubtitlesRequest` carried no season or episode, so a provider asked about
+content it did not source — the only way `module-aiostreams` is ever asked
+anything — could answer for a film and for nothing else. Both modules composed
+their addressing from two literal zeroes and said so in a comment.
+
+That half is now closed and the role is complete: filled by two modules,
+correctly addressable, verified across a real process boundary. **And nothing
+calls it.** The registry can resolve a subtitles provider and no caller asks it
+to; the enrichment pass that reaches stream providers for foreign content
+(`internal/platform/app/enrich_streams.go`) resolves streams only.
+
+**What discharges it** is the player — M3's track-selection work, which is where
+a subtitle track is first something a person can choose. Until then this is the
+register's purest example of its own thesis: a capability made *more* correct in
+a change that brought it no closer to anyone being able to use it, with every
+gate green throughout.
+
 ## Discharged in M1 — permissions and users
 
 The whole permissions-and-users block left this register on 2026-07-27, and it
