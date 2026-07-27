@@ -155,44 +155,57 @@ be changed by a module. That is a real product gap — it is roughly "no manual
 library editing" — but it is **not** the same gap as the permissions one, and
 restoring an RPC would not fix it. What fixes it is an editing surface, which is
 a design question before it is a transport question.
-
 ### Grouping the library by streaming service
+
+**The refresh is built. The surface was built, put in front of somebody, and
+taken back out** — and that is the most useful thing this row has ever recorded.
 
 | Capability | Where it lives | Reachable? |
 |---|---|---|
-| Filter the library by a module's attributes | `SearchContentQuery.AttributesContain` → `NodeQuery.AttributesContain` (SDK `v0.19.0`) | No client path. |
-| Streaming availability per work | `module-tmdb` writes the `tmdbWatch` attribute at import (`v0.4.0`) | Stored, queryable, never read by a screen. |
+| Filter the library by streaming service | `NodeQuery.WatchProviders` → `node_watch_availability` (M2b) | **No client path**, and now deliberately so. |
+| Keeping that answer true | `library.availability`, daily, never-asked first then oldest | Built and running; nothing reads what it maintains. |
+| Streaming availability per work, as a module records it | `module-tmdb`'s `tmdbWatch` attribute (`v0.4.0`) | Still stored, still read by nothing. The Platform's own projection replaced it as the thing a screen would query. |
 
-**This row is different from every other one here, and the difference is worth
-stating: it was left unreachable on purpose, and the reason is correctness
-rather than schedule.**
+**Why this row stayed open so long is worth keeping**, because it is the only
+entry here that was left unreachable on purpose and the reason was correctness
+rather than schedule. Both halves worked for a long time: a TMDB import recorded
+which services carry a title in the configured region, and the store filtered on
+it. What did not exist was anything that *refreshed* it — and availability churns
+monthly, so a group saying "on Netflix" for something that left in March is
+**actively wrong**, which is a worse failure than an absent group: a user can see
+that a feature is missing, and cannot see that a feature is lying.
 
-Both halves work. A TMDB import records which services carry a title in the
-configured region, `SearchContent` will filter on it by containment against an
-indexed document, and the contract suite proves any `StorageAdapter` must answer
-that. What does not exist is anything that *refreshes* it. The runner, scheduler and
-system principal it was waiting on all landed with M0.1
-([ADR 0017](adr/0017-how-a-capability-acts.md),
-[ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md)), so what
-remains is a `Schedule` and a handler rather than a mechanism — this row is now
-owed work rather than blocked work.
+**M2b built the refresh, and it departed from what this row predicted.**
+Refreshing the module's own attribute would need the Platform writing into a
+document [ADR 0013](adr/0013-object-graph.md) says it never interprets, or a
+refresh verb on the SDK and a release of every module. What landed reads
+`ContentMetadata.Watch` — a typed contract field
+[ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)'s pass already
+fetches — and projects it into the Platform's own indexed store. The facet is
+therefore not TMDB's: any metadata provider that fills `Watch` populates it.
 
-Streaming availability churns monthly. A group that says "on Netflix" for
-something that left in March is **actively wrong**, which is a worse failure
-than an absent group: a user can see that a feature is missing, and cannot see
-that a feature is lying. So the storage and the query landed and the surface did
-not, deliberately, with the `checkedAt` timestamp written alongside every record
-so the eventual refresh knows what to re-fetch first.
+**Then the surface went on the Library screen and was wrong on sight.**
+Availability answers *"what could I watch on this service"*, and that question
+spans what the library holds **and what it does not**. Answering it over the
+shelf alone hands a user the small half while looking like the whole — a subtler
+version of the same failure this row was already about. It was removed. Genre
+stays on that screen, because a genre *is* a property of what you own, so
+narrowing the shelf by one has a complete answer.
 
-**What discharges this row** is a scheduled refresh, and then a browse surface
-over it — in that order. Building the surface first would put a confidently
-wrong answer in front of a user, which is the one outcome worth avoiding.
+The cross-source affordance exists and needs none of this: a source's catalogue
+browsed with library items marked, where `module-tmdb` now declares a
+`with_watch_providers` filter on its discover-backed catalogs from the configured
+region's own provider list. It asks TMDB live, exactly as this row's closing note
+always said it would.
 
-Adjacent and *not* blocked: a provider **catalog** — "what's on Netflix" as a
-discover-backed rail — needs none of this, because it asks TMDB live rather than
-reading anything stored. `module-tmdb`'s custom catalogs already do it with a
-`with_watch_providers` query. That is a different feature (browse the source's
-catalogue, with library items marked) and it is reachable today.
+**So what discharges this row is narrower than it was.** Not a facet over the
+library, but a **union**: an "on Netflix" surface showing the source's catalogue
+and the titles you already own on that service together. The stored projection is
+what answers the second half without a provider round trip per title, which is
+the one thing a live query cannot do. Until something builds it, this is a
+maintained capability with no reader — and whether it should be carried at all,
+rather than deleted and rebuilt when that surface is scheduled, is an open
+question this register should not pretend to settle.
 
 ## Discharged in M1 — permissions and users
 

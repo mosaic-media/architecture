@@ -622,10 +622,30 @@ have not.
    with a fresh timestamp and a stale answer, which is the confidently-wrong
    outcome arriving through the machinery built to prevent it.
 
-   **Left out:** the region is stored per record but no screen states it, so a
-   user cannot see that "on Netflix" means "in GB". And there is no staleness on
-   the screen — the `checkedAt` the refresh sorts by is not rendered, so a user
-   cannot tell a fresh answer from one eleven days old.
+   **The surface it earned was then taken back out, and that is the finding.**
+   A streaming-service facet went onto the Library screen, drew correctly against
+   a real library, and was wrong on sight: availability answers "what could I
+   watch on this service", and that spans what the library holds *and* what it
+   does not. Over the shelf alone it hands a user the small half of the answer
+   while looking like the whole. Genre stays on that screen because a genre *is*
+   a property of what you own; availability is a property of the world.
+
+   The cross-source affordance is 4's work rather than this slice's:
+   `module-tmdb` declares a `with_watch_providers` filter on its discover-backed
+   catalogs, so "what's on Netflix" is browsed as a source's catalogue with
+   library items marked — and it needs none of the stored availability, because
+   it asks live.
+
+   **So the refresh maintains something nothing reads.** What would use it is a
+   *union* — an "on Netflix" surface showing the source's catalogue and the
+   titles you already own on that service together, where the stored projection
+   answers the second half without a provider round trip per title. That is the
+   one thing a live query cannot do, and it is unbuilt. The register carries the
+   row.
+
+   **Also left out:** the region is stored per record but no screen states it,
+   and the `checkedAt` the refresh sorts by is not rendered, so a user could not
+   tell a fresh answer from one eleven days old if they were shown either.
 6. **Cache-first rendering** ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)).
    Found by restarting the Platform under a live client: every cold catalog call
    failed, the emit-side discards catalog errors, and a full library rendered
@@ -720,13 +740,14 @@ screen they arranged, having configured nothing beyond their stream source.*
 schedule, new matches appear on the Library screen without anyone pressing Add,
 a second run adds no duplicates, and the run log says what happened.*
 
-*Exit for M2b, met in code and **not yet demonstrated**: 4, 5 and 9 are built
-and their gates are green in every repository they touch. What has not happened
-is somebody pressing them in a running Mosaic — a genre chip, a streaming-service
-chip, and a fanart clearlogo on a hero. Three of those are the discharge
-conditions this project has written down twice over, in the register's rules and
-in ADR 0105, and a passing suite is explicitly not evidence for any of them. What
-remains after that is 6 (cache-first rendering) and 8 (home composition).*
+*Exit for M2b, partly met. **Browsing the library by genre is demonstrated** —
+a facet row over 82 works, ordered by what the shelf actually carries, with
+"Sci-Fi & Fantasy" beside "Action & Adventure" because two sources say so. The
+availability refresh runs on its schedule and its answers are stored. **Two
+things are not done**: nobody has yet put a fanart clearlogo on a hero, which is
+what 9 existed to force; and browsing by streaming service has no surface, having
+had one built and removed — see 5. What remains beyond that is 6 (cache-first
+rendering) and 8 (home composition).*
 
 ### M3 — Playback completion
 
