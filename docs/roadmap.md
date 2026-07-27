@@ -976,15 +976,34 @@ perfectly, and one thing the release was asked for outright.
    one that had nothing to say. **The container is a second constraint on the
    audio decision and only the client's decoder was being asked.**
 
-   **Still to build:** the segmenter itself, for the ffmpeg-path releases. Its
-   source-side architecture is settled by the measurement rather than guessed
-   ([ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)), and its
-   *client*-side one is the open question: a bare `<video>` seeks by asking for a
-   byte range, so a live transcode can only answer with an estimated byte-to-time
-   mapping and an ffmpeg restarted at the mapped timestamp. HLS would be the
-   conventional answer and needs a client library
-   ([ADR 0070](adr/0070-the-web-player-is-the-browser.md) deliberately has none),
-   so that is a client decision rather than an origin one and is left open.
+   **A seekable origin was built and disproved live, which is the most useful
+   thing this slice has produced.** The origin advertised a length from the
+   probed duration, mapped a byte offset to a timestamp, and restarted ffmpeg
+   there with `-ss` before `-i` and `-copyts`. It got as far as a real
+   `Content-Length` (8.25 GB for a 66-minute episode) and a **non-empty
+   `video.seekable`** — the browser accepted the contract.
+
+   Then it would not decode. A media element does not read a byte stream
+   sequentially; it issues overlapping, opportunistic ranges, and each one was
+   answered by *a fresh transcode from a different timestamp*. One playback ran
+   two ffmpeg processes at `-ss 0.156` and `-ss 6.031` whose output the browser
+   concatenated into what it believed was one file: disjoint buffered slivers and
+   `MEDIA_ERR_DECODE`. **Six unit tests passed throughout**, including ones
+   asserting on ffmpeg's own argument list, because every request in isolation
+   was correct. Only a real decoder assembling the responses could show it.
+
+   The path is unwired and the honest pipe restored;
+   [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
+   line records which half of it was wrong. **Still to build:** one transcode per
+   session writing to a file, with ranges served out of that file so every reader
+   sees the same bytes. That is `seanime`'s non-local path, which ADR 0108
+   dismissed as the fallback for upstreams that cannot range — the correction is
+   that it is required by the *client's* range behaviour whatever the upstream
+   does. The byte-to-time mapping, the `-ss`/`-copyts` flags and the range
+   arithmetic all survive into it and keep their tests.
+
+   Also owed: bounding the process fleet, which the live run showed is real —
+   two ffmpegs for one playback and nothing killing the first.
 
    *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
    and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the

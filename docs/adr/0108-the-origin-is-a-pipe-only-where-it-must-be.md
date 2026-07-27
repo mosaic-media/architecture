@@ -1,7 +1,14 @@
 # 108. The origin is a pipe only where it must be
 
-**Status:** Accepted. The measurement is made and the two defects it exposed are
-fixed; the segmenter it scopes is **not built**.
+**Status:** Accepted, and **partly wrong as written**. The measurement stands.
+Decision point 2's inference does not: a ranging upstream makes an offset
+restart *cheap*, and does not make per-range restart *correct*. Serving each
+client range from its own ffmpeg was built, tested and disproved live — a media
+element issues overlapping ranges, so one playback drew bytes from two
+transcodes at different timestamps and would not decode. The file-backed design
+this record dismisses as unnecessary is required by the client's range
+behaviour, not by the upstream's. Superseding record owed with the built design;
+the segmenter remains **not built**.
 **Date:** 2026-07-27
 
 ## Context
