@@ -147,6 +147,7 @@ nav:
       - 105. Project credentials in official builds: adr/0105-project-credentials-in-official-builds.md
       - 106. The pre-session action lane: adr/0106-the-pre-session-action-lane.md
       - 107. The Platform keeps what a source told it: adr/0107-the-platform-keeps-what-a-source-told-it.md
+      - 108. The origin is a pipe only where it must be: adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md
 
 markdown_extensions:
   - admonition
