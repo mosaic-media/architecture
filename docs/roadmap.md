@@ -938,6 +938,35 @@ perfectly, and one thing the release was asked for outright.
    is inside it. Resume is exact only on a directly relayed stream. This is the
    heaviest remaining engineering item in the whole release, and it is **in** the
    release: resume that works only on some releases is not resume.
+
+   **Scoped, not started, and blocked on one measurement.** Two things were
+   established before any of it was built, and the second is why nothing was.
+
+   *The origin has two paths and only one is a pipe.* `Handler` already forwards
+   `Range` and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges`
+   and the `206` back; `serveRemuxed` is the pipe. So "resume is exact only on a
+   directly relayed stream" is right, and carries an unstated condition — a
+   relayed stream is seekable **only if the upstream ranges**, which has never
+   been checked against a real debrid CDN. The sentence has been read as a
+   property of the source and describes the implementation.
+
+   *That condition selects between two incompatible designs*, which is why it is
+   worth blocking on rather than guessing. If the resolved URL honours Range,
+   ffmpeg can seek the source over HTTP and a keyframe-aligned segment costs one
+   ranged fetch — roughly what `seanime` and `remux` do against a local file, and
+   their designs port across. If it does not, every `-ss` re-downloads from byte
+   zero, `remux`'s restart-per-seek becomes catastrophic rather than merely
+   wasteful, and the only workable shape is a file-backed cache accumulating the
+   source once — which is what `seanime`'s own *non-local* path does, and it is
+   the one reference written for a remote URL rather than a file.
+
+   `platform/tools/rangeprobe` makes the measurement and is validated; it needs
+   an AIOStreams instance URL backed by a debrid service, which is a credential
+   and is not on the development machine, so **the measurement has not been
+   made**. Note what does *not* change either way: **Matroska is irreducible.**
+   MSE cannot take it whatever codec is inside, so that subset needs segmenting
+   under both branches. What the answer changes is everything else in the slice,
+   and the architecture of the segmenter itself.
 5. **Subtitles end to end.** **The addressing half landed; nothing consumes it
    yet.** `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
    the same two coordinates `StreamRequest` took under
