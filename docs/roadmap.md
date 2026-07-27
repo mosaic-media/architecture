@@ -128,7 +128,7 @@ corpus; and a generated 525-line vocabulary reference. Components are authored
 is served too — 124 token values, both themes, changed without a client build
 ([ADR 0040](adr/0040-server-delivered-definitions-and-skin.md)).
 
-**The screens.** `home`, `search`, `collections`, `catalog`, `detail`,
+**The screens.** `home`, `search`, `library`, `collections`, `catalog`, `detail`,
 `settings`, `extensions`, `history`, the expert-mode diagnostics screens — logs,
 traces and now the background-work queue behind its own `job.read` — the
 pre-session doorway with its setup wizard and its sign-in form, the People
@@ -139,7 +139,16 @@ that ride its floor, with continue-watching carrying resume progress and time
 remaining. Detail emits hero, episodes, cast, a technical-facts grid and
 related rails. Settings is one frame with a Platform-owned nav that a module's
 own form renders inside ([ADR 0038](adr/0038-module-contributed-settings-ui.md)),
-with a drill-down arrangement on a phone carried in the same payload.
+with a drill-down arrangement on a phone carried in the same payload. `library`
+is the one screen over the object graph rather than over a provider, so it is
+the only one that can state a real total rather than "128+".
+
+**What the library should contain** ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)).
+Rules are Platform state — a table, a contract and its own contract-suite rows —
+and a scheduled pass reconciles the library against them as the system principal,
+bounded and best-effort, recording created, refreshed, skipped and failed on each
+rule. Rules add and never remove: deleting a rule deletes nothing it added, and a
+rule outlives its module being uninstalled, degraded and visibly so.
 
 **Modules and the two tiers.** Roles, not verbs
 ([ADR 0027](adr/0027-modules-as-typed-capability-providers.md)): metadata,
@@ -251,10 +260,10 @@ is named below.
    re-probing every play.
 
    **Left out:** it is an *interval* scheduler, not cron — module-declared cron
-   is still its own piece of work. Two of the six queued callers are wired
-   (telemetry retention, and the expired-credential sweep M0.3 added); the
-   resolution-cache refresh, the watch-provider refresh, library maintenance and
-   torrent eviction are not. `JobStore` is deliberately not on `Tx`, so a job
+   is still its own piece of work. Three of the six queued callers are wired
+   (telemetry retention, the expired-credential sweep M0.3 added, and library
+   maintenance as of M2a); the resolution-cache refresh, the watch-provider
+   refresh and torrent eviction are not. `JobStore` is deliberately not on `Tx`, so a job
    enqueued from inside a command would not commit with it; nothing enqueues
    from a command today and the honest fix when one does is an `Enqueue` on
    `Tx`, not one that pretends.
@@ -421,28 +430,79 @@ set proves nothing about whether anything reads it.
 
 ### M2 — The library becomes a managed thing
 
-Nothing in Mosaic browses what the install owns. Home renders provider catalogs
-and a continue-watching rail; `collections` and `catalog` browse a *module's*
-collections; search unions the library with providers. `SearchContent` — the
-library-only query — has no client path at all. The library is whatever
-individual users happened to press Add on.
+Home renders provider catalogs and a continue-watching rail; `collections` and
+`catalog` browse a *module's* collections; search unions the library with
+providers. Until M2a, nothing browsed what the install owns and nothing anywhere
+stated what it should contain — the library was whatever individual users
+happened to press Add on. **M2a (1–3) has landed**; the rest has not.
 
-1. **A Library screen over the materialised graph**, paged, with an item count
-   and the real name of what is being shown.
-2. **Library rules** ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)).
-   A Platform-owned store of rules an administrator manages from settings, where
-   a rule is a module collection or a saved provider search, and the library is
-   the union of its rules' results plus everything added by hand. **Rules add
-   and never remove**: a title that leaves a catalog stays, because a source's
-   churn is not a household's decision and silently deleting something somebody
-   watched half of is the worst thing this feature could do.
-3. **The maintenance job** (M0.1 landed, so this is now only the rule-running
-   half): run each rule as the system principal,
-   materialise new matches, refresh metadata and artwork, top up Parts — the
-   enrichment fan-out is already idempotent and only fills items with none — and
-   record what it did where a person can read it. Bounded, and its schedule is
-   configuration: rules turn upstream load from bursty and human-triggered into
-   continuous, which is a new way to exhaust a rate limit.
+1. ~~**A Library screen over the materialised graph**, paged, with an item count
+   and the real name of what is being shown.~~ **Built.** `screenLibrary` is the
+   first screen that reads the object graph rather than a provider, on a nav row
+   of its own beside Collections — the install's shelf and a module's catalogue
+   are adjacent and are not the same room. **The count is real**, which is the
+   thing a provider-backed screen cannot do: `NodeStore` gained `Count` and
+   `NodeQuery` gained `Offset`, so the screen says "140 titles · showing 61–120"
+   where the catalog screen has to say "128+". Cards open **by node id, not by
+   ref**, so a title still opens when the source that provided it is down. It is
+   the first emitter of the vocabulary's `Pagination`, which had existed and been
+   used by nothing.
+
+   **Left out, and it is a departure from the plan:** the paged read is a new
+   Platform query (`ListLibrary`) and deliberately **not** `SearchContent`. One
+   answers "do I already have this?" for a capability about to source something;
+   the other is a browse. Paging and a total are what a browse needs and what
+   nothing sourcing content has ever asked for, so they did not grow the SDK
+   surface every installed extension holds — the same reasoning that kept watch
+   history off `ContentService`. `SearchContent` itself therefore still has no
+   client path. There is no media-type or genre narrowing on the screen: that is
+   faceting, and it is 4.
+2. ~~**Library rules**~~ ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)).
+   **Built.** A Platform-owned store — its own table, contract and contract-suite
+   rows — of rules an administrator manages from Settings › Library. **Rules add
+   and never remove** is enforced in three places rather than asserted in one:
+   reconciliation only materialises, deleting a rule deletes nothing it added,
+   and a rule whose module has been uninstalled is kept and marked degraded on
+   its own row and in a banner above the list.
+
+   **Nothing is created before its consequence is shown.** Following a collection
+   opens a confirmation that has *evaluated* the rule — matched, already here,
+   what the first run will add, the first few titles by name, and the bound as
+   chips that re-evaluate — because ADR 0104 calls the first run the one most
+   likely to surprise its author. Preview and reconcile walk one implementation,
+   so a preview cannot disagree with the run it previews.
+
+   **Left out: the query kind has no client path.** A saved provider search is
+   stored, validated, evaluated and run by exactly the same code as a collection
+   rule; what is missing is a surface to create one from, because the natural
+   place is a "save this search" affordance on the search screen and that is a
+   different screen's work. Also left out: editing a rule after it is created —
+   the bound and the name are fixed at creation, and changing either means
+   deleting and following the collection again.
+3. ~~**The maintenance job**~~ (M0.1 landed, so this was only the rule-running
+   half). **Built.** `library.maintenance` on the M0.1 runner, six-hourly by
+   default. It **acts as the system principal whoever triggered it**: the outer
+   boundary authorises the person who pressed the button and every write beneath
+   it attributes to the install, so a maintenance write cannot fail because that
+   person's authority changed. Bounded per run and per rule, both configuration
+   (`library.maintenance.interval_hours` is Restart-class, `items_per_run` is
+   Hot). Best-effort per item. Every run records created, refreshed, skipped and
+   failed **on the rule itself**, where the administrator managing the rules
+   reads it, and a line per rule beside the job, where the trace is.
+
+   **Left out, and it is the gap most likely to be misread as done: a series that
+   gains a season is refreshed and does not grow the new season.** Every module
+   dedups before writing and returns `AlreadyKnown` for a title it has already
+   materialised, so a re-import re-merges artwork and tops up Parts (ADR 0073's
+   pass, only filling items with none) and never extends the tree. Closing it
+   needs a refresh path through the module, which is an SDK change and its own
+   slice — the Platform building the tree from `ContentMetadata.Episodes` would
+   put tree-building in the kernel, which ADR 0028 and ADR 0051 both refuse.
+   Also left out: "Run maintenance now" is **synchronous**, so the caller waits
+   for the pass. Enqueuing the same job kind instead needs an `Enqueue` reachable
+   from inside a command, which `JobStore` deliberately does not offer (M0.1
+   named the seam rather than pretending), and the schedule is what makes the
+   button unnecessary.
 4. **Facets: genre and streaming service.** Two independent halves. Provider-side
    browsing by genre needs a filter argument on `CatalogItemsRequest`, which
    carries only `Skip` today; that is an additive SDK bump, a `module.proto`
@@ -495,6 +555,12 @@ individual users happened to press Add on.
 *Exit: an administrator builds the library from two rules, a job keeps it
 current, and each user browses by genre and by streaming service, on a home
 screen they arranged, having configured nothing beyond their stream source.*
+
+*Exit for M2a, met: an administrator creates two rules, the job runs on its
+schedule, new matches appear on the Library screen without anyone pressing Add,
+a second run adds no duplicates, and the run log says what happened. The
+half-exit that remains is browsing by genre and by streaming service on a home
+screen each user arranged, which is 4–8.*
 
 ### M3 — Playback completion
 

@@ -1,8 +1,12 @@
 # 104. The library is built from rules, and a job maintains it
 
-**Status:** Accepted. Not built — roadmap M2, and it cannot start before the
-jobs runner, the scheduler and the **system principal**
-([ADR 0017](0017-how-a-capability-acts.md)'s reserved gap) exist. Builds on
+**Status:** Accepted and **built in part** in roadmap M2a, on M0.1's runner,
+scheduler and system principal. Built: the rule store, the settings surface, the
+scheduled pass, and the run's account on each rule. Not built: the **query
+kind's client path** — a saved provider search is stored, evaluated and run by
+the same code with no surface to create one from — and **tree refresh**, so a
+series that gains a season is refreshed and does not grow the new season,
+because every module dedups before writing and returns `AlreadyKnown`. Builds on
 [ADR 0028](0028-virtual-and-materialized-content.md)'s curated act and
 [ADR 0073](0073-stream-resolution-is-decoupled-from-metadata-provenance.md)'s
 enrichment pass. Produces the one shared library

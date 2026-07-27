@@ -79,11 +79,37 @@ reports *which* version is active and its reload class. That is a read-only
 operational probe that deliberately bypasses the policy gate; it cannot draft,
 validate or activate anything. It does not discharge these rows.
 
+### The saved-search library rule
+
+| Capability | Where it lives | Reachable? |
+|---|---|---|
+| A library rule that is a saved provider search | `domain.LibraryRuleQuery`, validated by `CreateLibraryRule`, evaluated by `evaluateQueryRule`, run by the maintenance pass | **No client path.** The settings surface creates collection rules only. |
+
+**This row was created deliberately in M2a rather than discovered afterwards.**
+[ADR 0104](adr/0104-the-library-is-built-from-rules.md) names two kinds of rule
+and both are built: the store carries the kind, the command validates it, the
+evaluator runs it against one module's search role, and the maintenance pass
+reconciles from it exactly as it does from a collection. What does not exist is a
+way to *make* one.
+
+The reason is a design question rather than a missing form. A rule is created
+from a thing you are looking at — the collection panel offers the catalogs the
+installed modules expose, so a catalog id cannot be mistyped into a rule that
+silently matches nothing. A saved search has no equivalent list to pick from; its
+natural home is a "save this search" control on the search screen, where the text
+and the source are already in front of somebody. Building a form with a module
+picker and a free-text box in settings instead would be the version that produces
+rules nobody can check.
+
+**What discharges it** is that control on the search screen, and the small
+question it forces: a search fans out to every provider, and a rule is addressed
+to one, so the affordance has to say which source is being saved.
+
 ### Library content: direct reads and manual editing
 
 | Removed operation | Application service | Reachable instead? |
 |---|---|---|
-| `searchContent` | `SearchContent` | **Partly.** The search screen calls `SearchAvailableContent`, which unions the library with module results. Searching the library *alone* has no path. |
+| `searchContent` | `SearchContent` | **Partly, and the gap moved rather than closing.** The search screen calls `SearchAvailableContent`, which unions the library with module results, and M2a's Library screen browses the library alone — through `ListLibrary`, a Platform query with paging and a real total, not through this. So *browsing* the library is reachable and this particular service still has no caller outside a module. See below. |
 | `contentByExternalId` | `FindContentByExternalID` | No. |
 | `moduleSettings` | `ModuleSettings` | No — reading a module's raw settings document. The *settings screen* renders `ModuleSettingsUI` and `configureModule` writes it, so a user can edit settings without being able to read the document behind them. |
 | `addContentWork` | `AddContentWork` | Not from a client. |
@@ -92,6 +118,18 @@ validate or activate anything. It does not discharge these rows.
 | `relateContent` | `RelateContent` | Not from a client. |
 | `bindContentSource` | `BindContentSource` | Not from a client. |
 | `resolveContentBinding` | `ResolveContentBinding` | Not from a client. |
+
+**`SearchContent` is a row worth reading carefully, because M2a could be
+mistaken for having discharged it.** The Library screen reads the same store
+with the same filters, and does *not* go through this service: browsing needs an
+offset and a total, which nothing sourcing content has ever asked for, so those
+went on `NodeQuery`/`NodeStore` and on a new Platform query rather than growing
+the SDK surface every installed extension holds. `SearchContent` remains the
+published "do I already have this?" read, exercised on every module import and
+by no client. Whether that is debt or the correct shape is now a real question
+rather than an oversight — the answer is probably that this row should be
+reclassified once something *needs* a client-side library-only search with the
+attribute filter, which is [faceting](#grouping-the-library-by-streaming-service).
 
 **The six content commands need care, and are the most likely row to be
 misjudged in either direction.**
