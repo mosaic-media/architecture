@@ -1,6 +1,17 @@
 # 71. Content artwork is stored on the node
 
-**Status:** Accepted
+**Status:** Accepted, and **extended twice on its own reasoning**. M2b moved a
+second value onto the node under this record's test — genres, because they are
+*filtered* in bulk where artwork is *rendered* in bulk — and put a third,
+streaming availability, in a table rather than on the node, because it has a
+lifecycle the node does not (roadmap M2.4, M2.5). Neither is a reversal: this
+record's argument is what decided both, in opposite directions. The follow-up it
+names as owed — a command that updates a stored work's fields, so a re-import
+refreshes stale artwork — is **still owed**; the availability refresh writes its
+own projection and does not touch `Artwork`. The ref-reconstruction problem this
+record documents as unsolvable from a node was **solved elsewhere**: ADR 0107
+stores the provider's whole answer, `ContentMetadata.Ref` included, which is what
+the M2.5 refresh re-asks with.
 **Date:** 2026-07-23
 
 ## Context

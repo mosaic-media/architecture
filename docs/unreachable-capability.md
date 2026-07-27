@@ -126,10 +126,18 @@ offset and a total, which nothing sourcing content has ever asked for, so those
 went on `NodeQuery`/`NodeStore` and on a new Platform query rather than growing
 the SDK surface every installed extension holds. `SearchContent` remains the
 published "do I already have this?" read, exercised on every module import and
-by no client. Whether that is debt or the correct shape is now a real question
-rather than an oversight — the answer is probably that this row should be
-reclassified once something *needs* a client-side library-only search with the
-attribute filter, which is [faceting](#grouping-the-library-by-streaming-service).
+by no client.
+
+**M2b answered the open question here, and the answer was the other one.**
+Faceting was named as the thing that would eventually *need* a client-side
+library-only search with the attribute filter. When it was built, the filters
+went on `ListLibrary` — genre, then streaming service — rather than on
+`SearchContent`, for the reason M2a already gave: a browse needs an offset and a
+total, and growing the SDK surface every installed extension holds to serve a
+Platform screen is the wrong direction. So `SearchContent` is not debt awaiting
+its caller; it is a module-facing read a Platform browse was never going to be
+built on. It stays on this register because a *user* still cannot search the
+library alone.
 
 **The six content commands need care, and are the most likely row to be
 misjudged in either direction.**

@@ -1,14 +1,22 @@
 # 105. Official builds carry project credentials, and a personal key replaces one
 
-**Status:** Accepted. **Built for `module-tmdb`** — `platform`'s release
-workflow links `defaultReadAccessToken`, and `linkercheck_test.go` fails if the
-`-X` symbol path stops resolving. **Declared and not built for
-`module-fanart-tv`**: the symbol and its whole policy exist in a doc comment,
-that comment names `./cmd/mosaic-platform` as the build path, and
-[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md) took
-that module out of the binary — no workflow injects the key, no guard test
-catches it, so every released binary ships an empty one and the module answers
-"fanart.tv API key not set". **Partly supersedes
+**Status:** Accepted. **Built for both modules.** `module-tmdb` is core, so
+`platform`'s release workflow links `defaultReadAccessToken`;
+`module-fanart-tv` is an extension, so its own `release.yml` `binaries` job links
+`defaultAPIKey` from `FANART_PROJECT_KEY` (M2b). Both ship the mandatory rule-3
+guard — `linkercheck_test.go`, run by each repository's container gate against
+the same symbol path its release build uses.
+
+**What rule 3 was written from is now a closed defect rather than a live one.**
+`module-fanart-tv` had the symbol, the three-state screen, the single-reader
+function and this record's whole policy in a doc comment — and the comment named
+`./cmd/mosaic-platform`, a build
+[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md) had
+taken it out of. No workflow injected the key, nothing checked, and every
+released binary shipped an empty one while the module answered "fanart.tv API key
+not set". **The chain is built and has not been seen working**: nobody has yet
+put a fanart clearlogo on a hero and looked at it, which is what the roadmap
+slice asked for and what a green gate cannot stand in for. **Partly supersedes
 [ADR 0072](0072-the-guaranteed-metadata-provider-needs-no-credential.md): the
 Mosaic-held-key alternative it rejected is reversed here. The rest of ADR 0072
 stands, and `module-cinemeta` remains the zero-configuration floor.**

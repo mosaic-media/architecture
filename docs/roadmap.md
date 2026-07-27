@@ -435,7 +435,8 @@ Home renders provider catalogs and a continue-watching rail; `collections` and
 `catalog` browse a *module's* collections; search unions the library with
 providers. Until M2a, nothing browsed what the install owns and nothing anywhere
 stated what it should contain — the library was whatever individual users
-happened to press Add on. **M2a (1–3) has landed**; the rest has not.
+happened to press Add on. **M2a (1–3) and M2b (4, 5, 9) have landed**; 6 and 8
+have not.
 
 1. ~~**A Library screen over the materialised graph**, paged, with an item count
    and the real name of what is being shown.~~ **Built.** `screenLibrary` is the
@@ -521,21 +522,110 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    from inside a command, which `JobStore` deliberately does not offer (M0.1
    named the seam rather than pretending), and the schedule is what makes the
    button unnecessary.
-4. **Facets: genre and streaming service.** Two independent halves. Provider-side
-   browsing by genre needs a filter argument on `CatalogItemsRequest`, which
-   carries only `Skip` today; that is an additive SDK bump, a `module.proto`
-   field, a line in each direction of the `sdk/host` converter and a change in
-   each module. Library-side faceting needs genre to be a stored, indexed
-   property of a node — artwork was moved onto the node for exactly this reason
-   ([ADR 0071](adr/0071-content-artwork-is-stored-on-the-node.md)) and the same
-   question has not been asked of genre.
-5. **The watch-provider refresh**, which is what makes grouping by streaming
-   service correct rather than confidently wrong, and which M0.1 unblocked: it
-   is now a `Schedule` and a handler rather than a runner that does not exist. Both halves of the grouping
-   are built — `module-tmdb` writes availability at import and
-   `SearchContentQuery.AttributesContain` filters on it by containment — and the
-   surface was deliberately withheld because nothing refreshes a thing that
-   churns monthly. Every record carries a `checkedAt` for the refresh to sort by.
+4. ~~**Facets: genre and streaming service.**~~ **Built**, both halves, and it
+   is the widest cross-repo change in M2: SDK `v0.25.0`, `contracts v0.57.0`,
+   `sdk/host v0.7.0` and all three catalog modules, before the Platform saw a
+   line of it.
+
+   **Provider-side, the design question was where the *values* come from.**
+   `CatalogItemsRequest` grew `Filters`, and `Catalog` grew the declaration a
+   consumer builds its control from — `CatalogFilter` with `CatalogFilterOption`
+   values. **Declared rather than free text**, so a value sent back is one the
+   source named: the same discipline that stops a catalog id being mistyped into
+   a rule that matches nothing, and without it a facet produces empty pages
+   indistinguishable from an empty catalog. Value and label are separate fields
+   because sources address a genre by numeric id and name it in words. A
+   provider **declines** a filter it did not declare rather than returning the
+   unfiltered page — quietly widening answers a question nobody asked, and the
+   answer looks right.
+
+   **Only the catalogs that can honour it declare it.** TMDB's list endpoints do
+   not filter at all, so a narrowed catalog is served by a `/discover` query
+   reproducing the same ranking; Popular and Top Rated are exactly a discover
+   sort and a custom catalog already is one. **Trending declares nothing**,
+   because TMDB's trending is a computed popularity-over-time ranking `/discover`
+   cannot express and a "Trending · Action" row served by raw popularity would be
+   confidently wrong in the way a user cannot see. In Cinemas and On The Air are
+   date windows TMDB does not publish the bounds of, and decline for the same
+   reason. Cinemeta reads its genre options from its own manifest, and the
+   Stremio module reads `extra.options` — an extra declaring *no* options is free
+   text and backs no control, and a catalog with a **required** extra is now
+   dropped from the catalog list entirely, because it could never be listed by id
+   alone.
+
+   **Library-side, genre is a `text[]` column on `nodes` with a partial GIN
+   index**, and the reason is ADR 0071's plus one it did not have. Artwork moved
+   because it is *rendered* in bulk; genre moves because it is *filtered* in
+   bulk, and there is no number of round trips that answers one question asked
+   across the whole library. The sharper reason: a facet must be **complete**, and
+   a chip that silently omits half the library is an omission from a filtered
+   list, which unlike a missing poster nobody can see. The index is partial on
+   works — in a library of 37,000 episode nodes under 800 works that is the
+   difference between an index over the library and one over a rounding error.
+
+   `NodeStore.Facets` is the honest half: **the chips are read from the library
+   rather than from a vocabulary**, so every chip offered returns something and a
+   genre nothing carries is never drawn. It ignores its own narrowing and applies
+   every other criterion, so pressing a chip cannot empty the row that offered
+   it.
+
+   **Left out, and it is a real limit:** genres are stored as each source named
+   them and nothing reconciles them, so a library fed by TMDB and Cinemeta offers
+   both "Science Fiction" and "Sci-Fi". That is a true statement about the
+   library where a synonym table would be a tidy invented one — but it is two
+   chips for one idea, and the honest fix is a user-facing merge rather than a
+   table shipped in the Platform. Also left out: **one value per facet at a
+   time**. The store filter is conjunctive and takes several; a chip row that
+   could combine them needs a way to say which are lit and a way to take one
+   back, which is a control rather than a param.
+
+   **A definition the vocabulary gained**: `FilterChip`, composed from Pressable
+   and Text, so it cost no client release. Its selected and unselected branches
+   are two nodes under a `$if`/`$ifNot` Fragment rather than one node with a
+   conditional prop — deliberately, because those are node guards and the one
+   place this project used them as values was `Pagination`'s disabled prop, which
+   shipped two permanently dead controls.
+5. ~~**The watch-provider refresh**~~, which is what makes grouping by streaming
+   service correct rather than confidently wrong. **Built**, refresh first and
+   surface second, which is the order the register asked for.
+
+   **It departed from the plan in one place, and the departure is the slice.**
+   The plan was a `Schedule` and a handler over the halves that already existed —
+   `module-tmdb` writing availability into the node's *attributes* at import, and
+   `SearchContentQuery.AttributesContain` filtering it. Refreshing that would
+   have needed the Platform to write into a module's own document, which ADR 0013
+   forbids, or a refresh verb on the SDK's `Capability` and a release of every
+   module, which is the same change 7 named and left out.
+
+   What landed instead reads the value the **SDK already models**:
+   `ContentMetadata.Watch` is a typed contract field that ADR 0107's enrichment
+   pass already fetches on every refresh, and the Platform projects it into its
+   own indexed `node_watch_availability`. That is not the Platform learning a
+   module's key — it is the Platform storing a field the contract defines, as it
+   already stores `Artwork` from the same answer. **The facet now works for any
+   metadata provider that fills `Watch`** rather than for one named module, and
+   `tmdbWatch` stays that module's business with nothing reading it.
+
+   The refresh walks the **library**, oldest answer first, daily and budgeted, as
+   the system principal. That is the difference from the maintenance pass beside
+   it, which walks the *rules*: anything added by hand from search was never
+   revisited at all. **It re-asks using the ref out of the stored document**,
+   which answers a problem ADR 0071 wrote down as open — a materialised node
+   cannot be turned back into a provider-bearing ref, and ADR 0107 storing the
+   provider's whole answer, `Ref` included, is what changed that.
+
+   Two behaviours carry the correctness and both are tested. **An empty answer is
+   still an answer**: a title that has left every service must stop matching, and
+   the only way it can is for the empty answer to overwrite the old one —
+   skipping it freezes the last positive answer forever. **A failed fetch is not
+   a check**: counting an unreachable provider as successful would stamp the row
+   with a fresh timestamp and a stale answer, which is the confidently-wrong
+   outcome arriving through the machinery built to prevent it.
+
+   **Left out:** the region is stored per record but no screen states it, so a
+   user cannot see that "on Netflix" means "in GB". And there is no staleness on
+   the screen — the `checkedAt` the refresh sorts by is not rendered, so a user
+   cannot tell a fresh answer from one eleven days old.
 6. **Cache-first rendering** ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)).
    Found by restarting the Platform under a live client: every cold catalog call
    failed, the emit-side discards catalog errors, and a full library rendered
@@ -592,18 +682,35 @@ happened to press Add on. **M2a (1–3) has landed**; the rest has not.
    unbuilt. A user who has expressed no preference takes the server's default,
    and a newly available row appears for everyone who has not decided about it —
    the trap role presets already fell into.
-9. **The project-credential chain, end to end**
-   ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)). It works for
-   `module-tmdb` and has never worked for `module-fanart-tv`: that module carries
-   a `defaultAPIKey` symbol and a doc comment stating the whole policy, the
-   comment names `./cmd/mosaic-platform` as its build path,
-   [ADR 0081](adr/0081-extension-installation-is-user-initiated-and-persistent.md)
-   moved the module out of that binary, and **no workflow anywhere injects the
-   key**. So every released binary ships an empty one, artwork enrichment answers
-   "API key not set", and nothing goes red — there is no linker-check test on
-   that module, which is the guard `module-tmdb` has for exactly this. Inject it
-   in the module's own release job, add the guard, and then do the thing this
-   thread has never done: **put a fanart clearlogo on a hero and look at it.**
+9. ~~**The project-credential chain, end to end**~~
+   ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)). **Built for
+   the chain; the demonstration is not done** — see below, and it is the half
+   this slice was written to force.
+
+   The defect was exactly as described. `module-fanart-tv` carried the symbol,
+   the three-state settings screen, the single-reader function and a doc comment
+   stating the whole policy — and the comment named `./cmd/mosaic-platform`,
+   which ADR 0081 stopped building this module into. No workflow injected the
+   key, nothing checked, every released binary shipped an empty one.
+
+   `release.yml`'s `binaries` job now applies the `-X` from a
+   `FANART_PROJECT_KEY` secret, in **that** repository because that is the
+   workflow building the artefact carrying it (ADR 0105 rule 2) — the inverse of
+   `module-tmdb`, whose own workflow says in as many words that `TMDB_RAC` does
+   not belong in its secrets. `linkercheck_test.go` is the mandatory guard (rule
+   3), asserting the symbol arrives *and* that `resolveKeys` and
+   `usingBundledKey` both read it, so the settings screen's middle state is
+   covered too; the container gate runs it as a second tagged pass against the
+   same symbol path the release uses. **Mistyping that path was checked to fail**
+   — the build still succeeds and the test goes red, which is the whole point.
+   The dev stack gained the local counterpart: `registry-build` links
+   `FANART_PROJECT_KEY` from `platform/.env` into the extension binary it
+   publishes to the local signed index.
+
+   **Not done: the clearlogo on a hero.** The chain is built and the key links,
+   and nobody has yet looked at fanart artwork on a screen — which is precisely
+   the step this slice existed to force, and precisely the step a green build
+   cannot stand in for. It stays open until someone has.
 
 *Exit: an administrator builds the library from two rules, a job keeps it
 current, and each user browses by genre and by streaming service, on a home
@@ -611,9 +718,15 @@ screen they arranged, having configured nothing beyond their stream source.*
 
 *Exit for M2a, met: an administrator creates two rules, the job runs on its
 schedule, new matches appear on the Library screen without anyone pressing Add,
-a second run adds no duplicates, and the run log says what happened. The
-half-exit that remains is browsing by genre and by streaming service on a home
-screen each user arranged, which is 4–8.*
+a second run adds no duplicates, and the run log says what happened.*
+
+*Exit for M2b, met in code and **not yet demonstrated**: 4, 5 and 9 are built
+and their gates are green in every repository they touch. What has not happened
+is somebody pressing them in a running Mosaic — a genre chip, a streaming-service
+chip, and a fanart clearlogo on a hero. Three of those are the discharge
+conditions this project has written down twice over, in the register's rules and
+in ADR 0105, and a passing suite is explicitly not evidence for any of them. What
+remains after that is 6 (cache-first rendering) and 8 (home composition).*
 
 ### M3 — Playback completion
 
