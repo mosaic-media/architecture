@@ -1,0 +1,32 @@
+{
+  "$comment": [
+    "The container gate, enforced. CLAUDE.md notes that this is the check most",
+    "likely to be skipped, because running it on the host means installing a",
+    "Python toolchain to lint some Markdown. A hook cannot skip it and cannot",
+    "misreport it.",
+    "",
+    "It runs only when the published content actually changed, so a turn that",
+    "touched nothing in docs/ pays nothing. mkdocs build --strict catches the",
+    "broken internal link that 'delete, do not annotate' produces and that",
+    "nothing else here would catch.",
+    "",
+    "The PDF export is deliberately not hooked: it downloads a Chromium and its",
+    "system libraries to produce artefacts CI publishes anyway. Run it by hand",
+    "when changing scripts/build_pdfs.py or checking that a Mermaid diagram",
+    "renders as a diagram:",
+    "  docker compose -f docker-compose.test.yml run --rm pdfs"
+  ],
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$(git status --porcelain -- docs mkdocs.yml scripts)\" ]; then docker compose -f docker-compose.test.yml run --rm test; else echo 'docs/ unchanged - mkdocs gate skipped'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

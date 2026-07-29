@@ -1,6 +1,7 @@
 # Local tooling and editor state
 .idea/
 .vscode/
+.claude/settings.local.json
 
 # Artefacts from the retired documentation system
 site/
