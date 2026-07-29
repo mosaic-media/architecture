@@ -995,8 +995,8 @@ perfectly, and one thing the release was asked for outright.
    **The spool architecture replaced it and fixed that failure**: one ffmpeg per
    playback writing to one spool, ranges served from it, so every reader sees the
    same bytes. Verified live — `MEDIA_ERR_DECODE` gone, `error: null`,
-   `readyState: 4`, a non-empty `seekable`, and the process fleet bounded to a
-   single ffmpeg where a scrubbing viewer previously left one per range. Seeks
+   `readyState: 4`, a non-empty `seekable`, and the process fleet bounded, where a
+   scrubbing viewer previously left one per range. Seeks
    forward and back are accepted and land on the clock (120 s → 30 s → 150 s,
    each firing `seeked`).
 
@@ -1014,18 +1014,34 @@ perfectly, and one thing the release was asked for outright.
    duration, so 150 s of a 66-minute episode showed as 83% watched on the
    continue-watching rail.
 
-   The superseded path is unwired and the honest pipe restored;
-   [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
-   line records which half of it was wrong. **Still to build:** one transcode per
-   session writing to a file, with ranges served out of that file so every reader
-   sees the same bytes. That is `seanime`'s non-local path, which ADR 0108
-   dismissed as the fallback for upstreams that cannot range — the correction is
-   that it is required by the *client's* range behaviour whatever the upstream
-   does. The byte-to-time mapping, the `-ss`/`-copyts` flags and the range
-   arithmetic all survive into it and keep their tests.
+   The superseded per-range path is unwired and the honest pipe restored. **The
+   spool is built and reached**: `internal/transport/playback/session.go` behind
+   `NewSessions(DefaultSpool)`, wired from the `/playback/` handler in
+   `cmd/mosaic-platform/main.go`, one ffmpeg appending to a `filesystem.Spool` and
+   a range served as a read from that file, a reader waiting on the write frontier
+   rather than starting a second transcode. That is `seanime`'s non-local path,
+   which [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)
+   dismissed as the fallback for upstreams that cannot range — **it is required by
+   the *client's* range behaviour whatever the upstream does, so that record's
+   decision point 2 is reversed and a superseding record is owed.**
 
-   Also owed: bounding the process fleet, which the live run showed is real —
-   two ffmpegs for one playback and nothing killing the first.
+   **The bound is three transcodes per ticket rather than one**, least recently
+   used evicted, and the reason is a second live failure worth keeping: a media
+   element reads several regions at once — the head for the header, the tail where
+   a progressive MP4's `moov` would be — so a single session killed whenever a
+   request falls outside it means the client's second region destroys the first and
+   the first destroys the second. One playback wrote 7.4 GB across two spools and
+   never reached `readyState: 1`, because nothing it had asked for survived long
+   enough to be read.
+
+   **Still owed: a caller for `Sessions.Reap`.** The eviction bound holds *within*
+   one playback; there is no idle bound across abandoned ones. `Reap`'s own comment
+   says a Platform calls it periodically and nothing does, so a viewer who closes
+   the tab leaves up to three transcodes running until `Close` sweeps them at
+   shutdown. It is a method describing a caller that does not exist — the shape
+   [finding 9](#findings-worth-keeping) names — and because the registry is an
+   in-memory map keyed by ticket, the honest fix is a ticker in the process that
+   owns it rather than a row on the M0.1 scheduler.
 
    *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
    and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the
@@ -1169,7 +1185,7 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    `verify.yml` is not a required check on `platform`'s `main`, so auto-merge is
    correctly disabled and the real fix is a ruleset. Layer-3 egress containment
    is reported honestly and provided by the deployment, which the shipped
-   topology should actually provide. Two decision records are numbered 0095.
+   topology should actually provide.
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
 
 ### M6 — The release candidate gate

@@ -7,8 +7,9 @@ client range from its own ffmpeg was built, tested and disproved live — a medi
 element issues overlapping ranges, so one playback drew bytes from two
 transcodes at different timestamps and would not decode. The file-backed design
 this record dismisses as unnecessary is required by the client's range
-behaviour, not by the upstream's. Superseding record owed with the built design;
-the segmenter remains **not built**.
+behaviour, not by the upstream's. That design has since been **built and reached
+in production** as the spool in `internal/transport/playback/session.go`; the
+superseding record is owed and still unwritten.
 **Date:** 2026-07-27
 
 ## Context
