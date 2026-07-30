@@ -1,9 +1,17 @@
 # 110. The segment length is measured from the source, not chosen
 
-**Status:** Accepted. **Not built.**
-Supersedes decision points 1 and 3 of
-[ADR 0109](0109-the-transcoded-stream-is-segmented.md); that record's decision
-to segment at all, and its points 2, 4 and 5, stand unchanged.
+**Status:** **Superseded wholly by
+[ADR 0111](0111-the-playlist-is-a-nominal-grid.md), and never built.** Both
+decisions here are wrong. The head-only probe does not exist —
+`-read_intervals` bounds what ffprobe reports and not what it reads, and a
+20-second window transfers 100% of a faststart MP4; the "93 ms" cited below was
+wall-clock on a small local file. And matching the source's interval is
+unnecessary, because the origin restarts ffmpeg at the position a client asks
+for, so the playlist is a nominal grid rather than a description of a continuous
+run. This record superseded decision points 1 and 3 of
+[ADR 0109](0109-the-transcoded-stream-is-segmented.md); with this one set aside,
+ADR 0109's decision to segment and its points 2, 4 and 5 stand, and ADR 0111
+replaces the rest.
 **Date:** 2026-07-30
 
 ## Context

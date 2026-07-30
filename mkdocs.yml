@@ -150,6 +150,7 @@ nav:
       - 108. The origin is a pipe only where it must be: adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md
       - 109. The transcoded stream is segmented, not byte-addressed: adr/0109-the-transcoded-stream-is-segmented.md
       - 110. The segment length is measured from the source: adr/0110-the-segment-length-is-measured.md
+      - 111. The playlist is a nominal grid: adr/0111-the-playlist-is-a-nominal-grid.md
 
 markdown_extensions:
   - admonition

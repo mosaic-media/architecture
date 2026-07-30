@@ -1079,24 +1079,38 @@ perfectly, and one thing the release was asked for outright.
    already a port with a substitutable factory, and only the unbounded working
    set stops it being one today.
 
-   **The segment length is measured, not chosen**
-   ([ADR 0110](adr/0110-the-segment-length-is-measured.md)), and that correction
-   came from running ffmpeg rather than reasoning about it. A copied stream
-   segments at exactly one **source keyframe interval**, whatever `-hls_time`
-   asks for, because a segment must start at a keyframe and a copy cannot make
-   one: asking for 6 s of a release with 10 s keyframes yields six 10-second
-   segments, so a playlist naming ten 6-second ones describes positions the file
-   does not have. Asking for *more* than the real interval is worse still —
-   10 s against 9.96 s skips a keyframe and doubles the first segment. Match the
-   two and it is exact to six decimal places. Learning the interval costs a
-   head-only `ffprobe -read_intervals`, which returned in 93 ms; that is one
-   number from the head of the file, not seanime's whole-file keyframe index.
+   **A segment index is a seek instruction, not a description**
+   ([ADR 0111](adr/0111-the-playlist-is-a-nominal-grid.md), superseding
+   [ADR 0110](adr/0110-the-segment-length-is-measured.md) wholly). It is true
+   that a copied stream cuts at the source's keyframes and nowhere else, so
+   asking for 6 s of a release with 10 s keyframes yields six 10-second
+   segments. ADR 0110 concluded from that the origin must measure the interval,
+   and was wrong twice.
 
-   **Still to build, and it is the whole of slice 4:** the head probe and the
-   irregular-GOP degradation, the playlist over a measured segment length, the
-   segment surface, the session registry re-keyed from byte offset to segment
-   index, a bounded window with production throttled ahead of the playhead and
-   segments evicted behind it, and the media framework in the Player runtime.
+   The probe it rests on does not exist: `-read_intervals` bounds what ffprobe
+   *reports*, not what it *reads*, and measured against a byte-counting HTTP
+   server a 20-second window and a 60-second window both transferred 100% of a
+   faststart MP4 and of a Matroska, and 200% of an MP4 with its `moov` at the
+   end. The 93 ms in that record was wall-clock on a small local file.
+
+   And matching the interval is unnecessary, because **the origin restarts
+   ffmpeg where the client asked**. Segment *N* is what ffmpeg produces started
+   at *N* × the length, so a restart at 60 s emitted a segment whose first PTS
+   was 60.000000 and one at 42 s emitted 40.000000 — off by the keyframe a copy
+   can begin at, and **not accumulating**, because each seek anchors to the
+   playlist's arithmetic rather than to the segment before it. That is how
+   `remux` resumes from anywhere, and the machinery is ADR 0108's `-ss`/`-copyts`
+   already.
+
+   **Still to build, and it is the whole of slice 4:** the segment surface, the
+   session registry re-keyed from byte offset to segment index, a bounded window
+   with production throttled ahead of the playhead and segments evicted behind
+   it, and the media framework in the Player runtime. The playlist already takes
+   a segment length rather than owning one, which is the part of ADR 0110 that
+   survived. A **"too far ahead" restart threshold is required rather than
+   optional**: where segments run longer than nominal a continuous run produces
+   fewer of them than the playlist names, so a linear play eventually asks for
+   one that run will never emit.
    The unbounded spool goes: it writes the whole transcode to a temp file, which
    on a small VPS is the thing that fills the disk. The `-ss`/`-copyts`
    arithmetic survives and keeps its tests; `contentLength`, `offsetAt`,
