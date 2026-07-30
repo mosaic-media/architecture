@@ -1079,13 +1079,41 @@ perfectly, and one thing the release was asked for outright.
    already a port with a substitutable factory, and only the unbounded working
    set stops it being one today.
 
-   **Still to build, and it is the whole of slice 4:** the playlist surface, the
-   session registry re-keyed from byte offset to segment index, a bounded window
-   with production throttled ahead of the playhead and segments evicted behind
-   it, and the media framework in the Player runtime. The `-ss`/`-copyts`
-   arithmetic survives into it and keeps its tests; `contentLength`, `offsetAt`,
+   **The segment length is measured, not chosen**
+   ([ADR 0110](adr/0110-the-segment-length-is-measured.md)), and that correction
+   came from running ffmpeg rather than reasoning about it. A copied stream
+   segments at exactly one **source keyframe interval**, whatever `-hls_time`
+   asks for, because a segment must start at a keyframe and a copy cannot make
+   one: asking for 6 s of a release with 10 s keyframes yields six 10-second
+   segments, so a playlist naming ten 6-second ones describes positions the file
+   does not have. Asking for *more* than the real interval is worse still —
+   10 s against 9.96 s skips a keyframe and doubles the first segment. Match the
+   two and it is exact to six decimal places. Learning the interval costs a
+   head-only `ffprobe -read_intervals`, which returned in 93 ms; that is one
+   number from the head of the file, not seanime's whole-file keyframe index.
+
+   **Still to build, and it is the whole of slice 4:** the head probe and the
+   irregular-GOP degradation, the playlist over a measured segment length, the
+   segment surface, the session registry re-keyed from byte offset to segment
+   index, a bounded window with production throttled ahead of the playhead and
+   segments evicted behind it, and the media framework in the Player runtime.
+   The unbounded spool goes: it writes the whole transcode to a temp file, which
+   on a small VPS is the thing that fills the disk. The `-ss`/`-copyts`
+   arithmetic survives and keeps its tests; `contentLength`, `offsetAt`,
    `parseByteRangeStart` and `serveSeekableRemux` do not, and `ShouldRemux` —
    dead code since ADR 0108 named it — goes with them.
+
+   **The order it is built in is deliberate: selection first.** A transcode is
+   the last resort, not the normal path — a title usually resolves to many
+   candidates and one of them is ordinarily playable as it stands. `playbackScore`
+   already ranks on video codec, audio codec, container, HDR and height, with
+   compatibility dominating resolution; it had been **reading nothing**, because
+   every one of those fields was empty on every Part the fan-out attached until
+   item 7 landed. Two are still empty — `Height`, because `StreamLink.Quality`
+   carries "2160p" and has nowhere to land, and `HDRFormat`, which no module
+   parses and which decides the tone-map that is the most expensive outcome
+   selection can produce. Filling them makes the segmenter rare, which is worth
+   more than making it fast.
 
    *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
    and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the

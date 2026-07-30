@@ -4,6 +4,10 @@
 Supersedes decision point 2 of
 [ADR 0108](0108-the-origin-is-a-pipe-only-where-it-must-be.md); that record's
 measurement and its decision points 1 and 3 stand unchanged.
+**Decision points 1 and 3 are in turn superseded by
+[ADR 0110](0110-the-segment-length-is-measured.md)** — the constant segment
+length was wrong and the drift it called tolerable was measured and is not; the
+decision to segment, and points 2, 4 and 5, stand.
 **Date:** 2026-07-30
 
 ## Context
