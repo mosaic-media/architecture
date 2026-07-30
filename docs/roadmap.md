@@ -1024,8 +1024,11 @@ perfectly, and one thing the release was asked for outright.
 
    The superseded path is unwired and the honest pipe restored;
    [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
-   line records which half of it was wrong. **The superseding record is still
-   owed**, and what it has to decide has grown — see the two findings below.
+   line records which half of it was wrong. **The superseding record is
+   [ADR 0109](adr/0109-the-transcoded-stream-is-segmented.md), and it is
+   decided: the transcoded stream is segmented rather than byte-addressed.**
+   The reasoning is in the record; the finding that forced it is three
+   paragraphs below.
 
    **Nothing was ending an abandoned transcode, and no test could have said so.**
    `Reap` and `Close` were written, tested and called from nowhere: `Handler`
@@ -1065,14 +1068,24 @@ perfectly, and one thing the release was asked for outright.
    playhead, and deleting segments 30 s behind it. `seanime` builds an exact
    playlist from a real keyframe index, which is **not available here**: reading
    every video packet's timestamp over a 61 GB remote URL means downloading the
-   file, and its own uniform-2 s fallback is the tell. So the open question is
-   whether to serve HLS to a client with a media framework —
-   [ADR 0070](adr/0070-the-web-player-is-the-browser.md) names exactly this
-   trigger and ADR 0108 left it open as the fallback — or to keep byte
-   addressing and accept an inexact scrubber. Segmenting also gives eviction a
-   unit, which is what would let the spool live in memory: `Spool` is already a
-   port with a substitutable factory, and only the unbounded working set stops it
-   being one today.
+   file, and its own uniform-2 s fallback is the tell. **So slice 4 is now
+   `remux`'s shape and not `seanime`'s** — a computed uniform playlist rather
+   than an exact one off a keyframe index — which
+   [ADR 0109](adr/0109-the-transcoded-stream-is-segmented.md) records. It also
+   settles the client: this is
+   [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s stated condition
+   firing rather than ADR 0070 being reversed. Segmenting is additionally what
+   gives eviction a unit, and so what lets the spool live in memory — `Spool` is
+   already a port with a substitutable factory, and only the unbounded working
+   set stops it being one today.
+
+   **Still to build, and it is the whole of slice 4:** the playlist surface, the
+   session registry re-keyed from byte offset to segment index, a bounded window
+   with production throttled ahead of the playhead and segments evicted behind
+   it, and the media framework in the Player runtime. The `-ss`/`-copyts`
+   arithmetic survives into it and keeps its tests; `contentLength`, `offsetAt`,
+   `parseByteRangeStart` and `serveSeekableRemux` do not, and `ShouldRemux` —
+   dead code since ADR 0108 named it — goes with them.
 
    *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
    and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the
@@ -1129,8 +1142,8 @@ perfectly, and one thing the release was asked for outright.
    release whose first audio track is Hindi cannot be described by one codec
    column — and the plan picks one. The user cannot.
 
-7. **`StreamLink` cannot say what it knows.** **The SDK half landed; the
-   pass-through did not.** `StreamLink` gained `Container`, `VideoCodec` and
+7. ~~**`StreamLink` cannot say what it knows.**~~ **Built**, bar quality and
+   seeders, which are named below. `StreamLink` gained `Container`, `VideoCodec` and
    `AudioCodec` in SDK `v0.26.0`, named and spelled as `Part`'s are, with
    `module.proto` fields and converter lines in each direction. Both stream
    modules fill them from the parse they were already doing and discarding:
@@ -1139,15 +1152,23 @@ perfectly, and one thing the release was asked for outright.
    so the same walk over the same text produced a richer answer for a Part than
    for a link.
 
-   **`attachResolvedStreams` still drops them.** The enrichment pass
-   (`internal/platform/app/enrich_streams.go`) attaches only the edition label,
-   the natural order, the location and the size, so a Part materialised through
-   the fan-out still loses container and codec — along with quality and seeders,
-   which it dropped before this too — and the probe is still the only source of
-   them. `AttachContentPartCommand` has held every one of these fields all
-   along; what was missing was a provider-side field to carry them, and now what
-   is missing is four lines in one function. Until those land, item 6's
-   selection reads nothing a module told it.
+   **The pass-through has now landed too, and item 7 is done bar one named
+   omission.** `attachResolvedStreams` had attached only the edition label, the
+   natural order, the location and the size, so a Part materialised through the
+   fan-out lost container and codec and the probe was the only source of them.
+   The mapping is now its own function — the translation had no seam a test
+   could reach without standing up a Service and a boundary, which is most of
+   why enrichment had no test at all and the narrowing was invisible for as long
+   as it existed. Two tests replace that: one for the case that was wrong, and
+   one that asks the types rather than a list, so any field the two structs
+   share by name and type is one the mapping owes. It reports the five it checks
+   — `SizeBytes`, `Location`, `Container`, `VideoCodec`, `AudioCodec`.
+
+   **Left out, deliberately: quality and seeders.** Both are on `StreamLink`
+   and this pass still drops them, because `AttachContentPartCommand` has no
+   field for either. Carrying them is a decision about whether they earn columns
+   or belong in `Attributes` — not more lines in the same function — and the
+   reflection check will catch them the day either exists on both sides.
 
    Two fields from the same family were deliberately left out rather than
    forgotten: **HDR format and audio channel count**. Both are real properties a
@@ -1229,7 +1250,7 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    `verify.yml` is not a required check on `platform`'s `main`, so auto-merge is
    correctly disabled and the real fix is a ruleset. Layer-3 egress containment
    is reported honestly and provided by the deployment, which the shipped
-   topology should actually provide. Two decision records are numbered 0095.
+   topology should actually provide.
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
 
 ### M6 — The release candidate gate

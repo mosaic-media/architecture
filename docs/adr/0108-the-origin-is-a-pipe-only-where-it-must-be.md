@@ -7,8 +7,10 @@ client range from its own ffmpeg was built, tested and disproved live — a medi
 element issues overlapping ranges, so one playback drew bytes from two
 transcodes at different timestamps and would not decode. The file-backed design
 this record dismisses as unnecessary is required by the client's range
-behaviour, not by the upstream's. Superseding record owed with the built design;
-the segmenter remains **not built**.
+behaviour, not by the upstream's.
+**Decision point 2 is superseded by
+[ADR 0109](0109-the-transcoded-stream-is-segmented.md)**, which takes the
+alternative this record left open; decision points 1 and 3 stand.
 **Date:** 2026-07-27
 
 ## Context
