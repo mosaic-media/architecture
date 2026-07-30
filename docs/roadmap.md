@@ -993,12 +993,20 @@ perfectly, and one thing the release was asked for outright.
    was correct. Only a real decoder assembling the responses could show it.
 
    **The spool architecture replaced it and fixed that failure**: one ffmpeg per
-   playback writing to one spool, ranges served from it, so every reader sees the
-   same bytes. Verified live — `MEDIA_ERR_DECODE` gone, `error: null`,
-   `readyState: 4`, a non-empty `seekable`, and the process fleet bounded to a
-   single ffmpeg where a scrubbing viewer previously left one per range. Seeks
-   forward and back are accepted and land on the clock (120 s → 30 s → 150 s,
-   each firing `seeked`).
+   region of a playback writing to one spool, ranges served from it, so every
+   reader sees the same bytes. Verified live — `MEDIA_ERR_DECODE` gone,
+   `error: null`, `readyState: 4`, a non-empty `seekable`. Seeks forward and back
+   are accepted and land on the clock (120 s → 30 s → 150 s, each firing
+   `seeked`).
+
+   **The bound on the process fleet is three per ticket, not one, and one was
+   wrong.** A media element reads several regions at once — the head for the
+   header and, for a progressive MP4, the tail where a `moov` would live — so
+   keeping a single session and killing it whenever a request fell outside it
+   meant the client's second region destroyed its first. Live, one playback wrote
+   7.4 GB across two spools and the player never reached `readyState` 1. Three is
+   a head, a tail and a seek in flight; the least recently used is evicted and a
+   session with a live reader never is.
 
    **What still does not work is playing from a seek.** Zero frames decode after
    one and the clock does not advance. The cause is an agreement failure, not a
@@ -1016,16 +1024,55 @@ perfectly, and one thing the release was asked for outright.
 
    The superseded path is unwired and the honest pipe restored;
    [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
-   line records which half of it was wrong. **Still to build:** one transcode per
-   session writing to a file, with ranges served out of that file so every reader
-   sees the same bytes. That is `seanime`'s non-local path, which ADR 0108
-   dismissed as the fallback for upstreams that cannot range — the correction is
-   that it is required by the *client's* range behaviour whatever the upstream
-   does. The byte-to-time mapping, the `-ss`/`-copyts` flags and the range
-   arithmetic all survive into it and keep their tests.
+   line records which half of it was wrong. **The superseding record is still
+   owed**, and what it has to decide has grown — see the two findings below.
 
-   Also owed: bounding the process fleet, which the live run showed is real —
-   two ffmpegs for one playback and nothing killing the first.
+   **Nothing was ending an abandoned transcode, and no test could have said so.**
+   `Reap` and `Close` were written, tested and called from nowhere: `Handler`
+   builds its own session registry and drops the handle, so
+   `HandlerWithSessions` was reachable by tests and by nothing else. Two other
+   properties compounded it — `startSession` detaches ffmpeg from the request
+   with `context.WithoutCancel`, deliberately, and `fill` copies its output into
+   the spool with no backpressure and no cap. An audio-only remux runs at
+   near-copy speed, so one click on Play started a process that raced to the end
+   of the release at wire speed, writing all of it to a temp file, and closing
+   the tab stopped none of it. Now wired: the composition root holds the
+   registry, reaps on a ticker and stops every transcode on shutdown, pinned by a
+   check that parses the composition root rather than the package.
+
+   **A dropped upstream ended the film with no error anywhere.** The remux path
+   holds one HTTP connection for the length of a film and passed no reconnect
+   flags, so a debrid CDN closing it partway through ended the transcode: the
+   spool stopped growing, readers saw a clean EOF, and the stream stopped
+   mid-scene. The relay path already survived this, because a media element
+   re-requests a range. Fixed with `-reconnect`, `-reconnect_streamed` and
+   `-reconnect_delay_max`, guarded to http and https because ffmpeg exits when
+   nothing consumes the option; `-reconnect_at_eof` is deliberately excluded,
+   since these inputs are finite and it would retry a legitimate end.
+
+   **The advertised length is an estimate that cannot be made exact, and that is
+   the decision the superseding record owes.** `serveSeekableRemux` advertises
+   `SourceBytes` and then writes whatever ffmpeg produces. For an audio-only
+   remux the two are close; for a re-encode they are not — a 61 GB source
+   becoming a 1080p output differs by an order of magnitude, so the response is
+   truncated against its own `Content-Length` and the tail of the timeline is
+   unreachable. Byte-addressing a live transcode can be made good and not exact,
+   which is why neither reference server does it: **`remux` and `seanime` both
+   serve HLS.** `remux` generates a VOD playlist listing every segment at a
+   uniform length so a client can seek anywhere immediately, restarts ffmpeg at
+   the requested segment's cumulative offset, and bounds its own footprint two
+   ways Mosaic does not — SIGSTOP when the encoder runs 300 s ahead of the
+   playhead, and deleting segments 30 s behind it. `seanime` builds an exact
+   playlist from a real keyframe index, which is **not available here**: reading
+   every video packet's timestamp over a 61 GB remote URL means downloading the
+   file, and its own uniform-2 s fallback is the tell. So the open question is
+   whether to serve HLS to a client with a media framework —
+   [ADR 0070](adr/0070-the-web-player-is-the-browser.md) names exactly this
+   trigger and ADR 0108 left it open as the fallback — or to keep byte
+   addressing and accept an inexact scrubber. Segmenting also gives eviction a
+   unit, which is what would let the spool live in memory: `Spool` is already a
+   port with a substitutable factory, and only the unbounded working set stops it
+   being one today.
 
    *The origin has two paths and only one is a pipe.* `Handler` forwards `Range`
    and `If-Range` upstream and relays `Content-Range`, `Accept-Ranges` and the
@@ -1045,8 +1092,19 @@ perfectly, and one thing the release was asked for outright.
    encoding 4K h264 in real time on a 3-core box. The profile's doc explains the
    phone case that motivated device pixels and nobody considered the desktop case
    in the other direction. **Deciding the encode cap from the same number as the
-   selection cap is the bug**, and it gates whether a segmented release is
-   watchable at all — so it is owed alongside the segmenter, not after it.
+   selection cap was the bug, and it is fixed**: the encode is bounded to 1080p
+   whatever the client declares, while selection still reads the declared height,
+   so a 4K display is still offered 4K releases and still direct-plays them at 4K
+   when nothing needs doing. Capping selection instead would have handed it a
+   1080p release to upscale.
+
+   It did not make that particular release watchable, which is worth recording
+   rather than glossing: the encode still runs about 30× slower than realtime —
+   2m52s of ffmpeg for 5.7 s of output — because decoding 4K 10-bit HEVC in
+   software is the floor on that box, and no amount of segmenting changes it.
+   **The honest test of a segmented path is a release needing only an audio
+   encode**, which remuxes at near-copy speed.
+
 5. **Subtitles end to end.** **The addressing half landed; nothing consumes it
    yet.** `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
    the same two coordinates `StreamRequest` took under
@@ -1065,10 +1123,12 @@ perfectly, and one thing the release was asked for outright.
    [unreachable capability](unreachable-capability.md) in the strict sense, and
    one this release is what finally gives a consumer. Remote sources without
    subtitles are a daily-use gap until then.
+
 6. **Audio and subtitle track selection at play time.** The probe stores the
    whole track list as a versioned document on the Part — it must, because a
    release whose first audio track is Hindi cannot be described by one codec
    column — and the plan picks one. The user cannot.
+
 7. **`StreamLink` cannot say what it knows.** **The SDK half landed; the
    pass-through did not.** `StreamLink` gained `Container`, `VideoCodec` and
    `AudioCodec` in SDK `v0.26.0`, named and spelled as `Part`'s are, with
