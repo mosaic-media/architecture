@@ -1102,15 +1102,33 @@ perfectly, and one thing the release was asked for outright.
    `remux` resumes from anywhere, and the machinery is ADR 0108's `-ss`/`-copyts`
    already.
 
-   **Still to build, and it is the whole of slice 4:** the segment surface, the
-   session registry re-keyed from byte offset to segment index, a bounded window
-   with production throttled ahead of the playhead and segments evicted behind
-   it, and the media framework in the Player runtime. The playlist already takes
-   a segment length rather than owning one, which is the part of ADR 0110 that
-   survived. A **"too far ahead" restart threshold is required rather than
-   optional**: where segments run longer than nominal a continuous run produces
-   fewer of them than the playlist names, so a linear play eventually asks for
-   one that run will never emit.
+   **The server half is built.** A release that must go through ffmpeg is three
+   resources under its ticket — `index.m3u8`, `init.mp4` and a numbered segment.
+   The playlist is complete and closed before anything is produced; a segment
+   request that no running transcode reaches restarts ffmpeg at that position
+   with `-ss`, `-copyts` and `-start_number`; `-hls_flags temp_file` makes a
+   file at its final name mean a finished segment, which is the readiness
+   signal. `-force_key_frames` is added only where the video is re-encoded,
+   because that is the only case where the boundaries are the origin's to place.
+   The footprint is a window: the encoder is `SIGSTOP`ped ten segments ahead of
+   the viewer and segments five behind are deleted. Windows gets no throttle and
+   the code says so.
+
+   Deleted with it: `contentLength`, `offsetAt`, `parseByteRangeStart`,
+   `serveSeekableRemux`, the byte spool and its registry, and `ShouldRemux` —
+   dead since ADR 0108 named it. The unseekable pipe survives for a source that
+   reports no duration, and its test pins that fallback rather than the only
+   behaviour.
+
+   **Left out, and it is the half a viewer sees: the client.** Nothing renders
+   HLS yet — the Shell plays a bare `<video>`, so a transcoded release is
+   currently served correctly and played by nothing. That is
+   [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s condition met and its
+   consequence owed: a media framework in `@mosaic-media/sdui-react` for every
+   browser that is not Safari. **And none of the server half has been
+   demonstrated in a browser**, which is the bar this slice has failed three
+   times — every previous design passed its unit tests and fell over in front of
+   a real decoder.
    The unbounded spool goes: it writes the whole transcode to a temp file, which
    on a small VPS is the thing that fills the disk. The `-ss`/`-copyts`
    arithmetic survives and keeps its tests; `contentLength`, `offsetAt`,
