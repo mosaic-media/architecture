@@ -1207,7 +1207,37 @@ perfectly, and one thing the release was asked for outright.
 6. **Audio and subtitle track selection at play time.** The probe stores the
    whole track list as a versioned document on the Part — it must, because a
    release whose first audio track is Hindi cannot be described by one codec
-   column — and the plan picks one. The user cannot.
+   column — and the plan picks one.
+
+   **The preference half landed** under
+   [ADR 0112](adr/0112-language-is-a-persons-preference.md), which is the part
+   that was wrong rather than merely missing: the plan ranked audio tracks
+   against `PreferredLanguages`, a package variable, and both callers passed
+   `nil` — so on a machine built for four people, every viewer got one person's
+   language. `playback.languages` is now a per-user preference key holding the
+   audio list, the subtitle list and a subtitle mode, set from Settings ›
+   Preferences › Language and read on the play path. The default is the list it
+   replaced, so nothing anyone was already watching changed.
+
+   The record's escalation rule is in with it: `forced` becomes `full` when the
+   chosen audio language is not one the viewer asked for, never past `off`, and
+   never on an untagged track. **It is computed and not rendered** — subtitle
+   delivery is item 5 — so `off`, `forced` and `full` are today
+   indistinguishable on screen, and the intent survives only in the play
+   telemetry. That is why ADR 0112 reads *built in part* rather than built.
+
+   **What remains under this item is the per-play override**, which is the
+   picker and not the preference: a preference decides the default and an
+   override decides one sitting. The user still cannot choose a track for a
+   single playback, and the surface for it belongs with item 2's source picker.
+
+   One consequence is recorded rather than fixed. `SummaryAudioCodec` still
+   picks a track with the install-wide list and stores its codec on the Part,
+   where it feeds candidate ranking
+   ([ADR 0048](adr/0048-stream-selection-against-a-client-profile.md)). It stays
+   install-wide on purpose: ranking only asks "will this need an audio encode at
+   all", the full track list is on the Part for the per-user decision that
+   follows, and a per-user column would be a column with no single right value.
 
 7. ~~**`StreamLink` cannot say what it knows.**~~ **Built**, bar quality and
    seeders, which are named below. `StreamLink` gained `Container`, `VideoCodec` and

@@ -151,6 +151,7 @@ nav:
       - 109. The transcoded stream is segmented, not byte-addressed: adr/0109-the-transcoded-stream-is-segmented.md
       - 110. The segment length is measured from the source: adr/0110-the-segment-length-is-measured.md
       - 111. The playlist is a nominal grid: adr/0111-the-playlist-is-a-nominal-grid.md
+      - 112. Language is a person's preference: adr/0112-language-is-a-persons-preference.md
 
 markdown_extensions:
   - admonition
