@@ -1120,15 +1120,22 @@ perfectly, and one thing the release was asked for outright.
    reports no duration, and its test pins that fallback rather than the only
    behaviour.
 
-   **Left out, and it is the half a viewer sees: the client.** Nothing renders
-   HLS yet — the Shell plays a bare `<video>`, so a transcoded release is
-   currently served correctly and played by nothing. That is
-   [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s condition met and its
-   consequence owed: a media framework in `@mosaic-media/sdui-react` for every
-   browser that is not Safari. **And none of the server half has been
-   demonstrated in a browser**, which is the bar this slice has failed three
-   times — every previous design passed its unit tests and fell over in front of
-   a real decoder.
+   **The client half is built too** (`@mosaic-media/sdui-react` `0.22.0`). The
+   `Player` primitive reads a playlist: natively where the browser does — Safari,
+   asked with `canPlayType` rather than inferred from a user-agent table — and
+   through hls.js everywhere else, behind a dynamic import so it stays out of the
+   bundle every other playback loads. A relayed stream keeps a plain `src` and no
+   library in the path. This is
+   [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s own stated condition
+   firing rather than a reversal of it.
+
+   **What is left is the demonstration, and it is not a formality.** None of this
+   has been opened in a browser. Three previous designs for this origin passed
+   every unit test and fell over in front of a real decoder, and the fourth is
+   not entitled to more trust than they got. Until a release is played, seeked
+   and resumed against a running instance, slice 4 is written and unproven —
+   which is why the row in the
+   [register](unreachable-capability.md) stays until someone watches something.
    The unbounded spool goes: it writes the whole transcode to a temp file, which
    on a small VPS is the thing that fills the disk. The `-ss`/`-copyts`
    arithmetic survives and keeps its tests; `contentLength`, `offsetAt`,

@@ -239,15 +239,19 @@ gate green throughout.
 
 | Capability | Where it lives | Reachable? |
 |---|---|---|
-| A transcoded release served as seekable HLS | `internal/transport/playback` — `index.m3u8`, `init.mp4` and numbered segments under a ticket, with restart-at-position, a throttled encoder and eviction behind the playhead | **No.** The Shell plays a bare `<video>`, which does not parse a playlist. The origin serves it correctly and nothing renders it. |
+| A transcoded release served as seekable HLS | `internal/transport/playback` serving `index.m3u8`, `init.mp4` and numbered segments; `@mosaic-media/sdui-react` `0.22.0` reading them | **Written on both sides, and never played.** Every part exists and nothing has been watched through it. |
 
-**This is [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s condition
-firing and its consequence unpaid.** That record chose a bare `<video>` and said
-the client adopts a media framework when the Platform serves something a
-`<video>` cannot play, "which today means HLS". It now does. Until
-`@mosaic-media/sdui-react` gains one, a release that needs ffmpeg produces a
-`Player` node whose `MimeType` says `application/vnd.apple.mpegurl` and whose
-`Src` points at a playlist the client cannot read.
+**The reason this row exists changed, and it did not discharge.** It was added
+because the origin served HLS and the Shell could not read it —
+[ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s condition met and its
+consequence unpaid. The consequence is now paid: the `Player` primitive reads a
+playlist natively on Safari and through hls.js elsewhere.
+
+What remains is the thing this register was written to keep visible. **A
+capability nobody has exercised is not reachable, however complete it looks.**
+Slice 4 has now produced four designs; three of them passed every unit test they
+had and failed the moment a real decoder assembled the responses, and the fourth
+has the same green suite the other three did.
 
 The relayed path is unaffected — a release needing no work is still the
 upstream's own bytes, still byte-range seekable, and still what most plays
@@ -255,11 +259,10 @@ should be once selection ranks on codec and dynamic range. So the practical
 reach of this row shrinks as the selection train lands, which is an argument
 for that order rather than a reason to leave this outstanding.
 
-**What discharges it** is a media framework in the published React runtime,
-plus the demonstration this slice has never had: opened in a browser, seeked,
-resumed. Three previous designs for this origin passed every unit test and
-failed in front of a real decoder, so a green suite is specifically not
-evidence here.
+**What discharges it** is one viewer watching one release that needed ffmpeg —
+opened, seeked, resumed, against a running instance. Nothing else. The rule at
+the foot of this document already says a passing test is never evidence a row is
+discharged; this row is the clearest case of it the register has held.
 
 ## Discharged in M1 — permissions and users
 
