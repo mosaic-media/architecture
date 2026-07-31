@@ -1,10 +1,11 @@
 # 112. Language is a person's preference, and subtitles answer to whether it was met
 
-**Status:** Accepted. **Built in part: the audio half.** The preference key, the
-settings surface that sets it, the per-user audio selection and the escalation
-rule are in. Subtitle *delivery* is not — the intent is computed and carried in
-telemetry, and nothing renders it, so `off`, `forced` and `full` are
-indistinguishable on screen. That is M3 item 5.
+**Status:** Accepted. **Built for embedded subtitle tracks on the transcoded
+path.** The preference key, the settings surface, the per-user audio selection,
+the escalation rule and its delivery as an HLS subtitle rendition
+([ADR 0113](0113-subtitles-are-a-rendition.md)) are in. Two gaps remain, both
+named there: a direct-played release carries no playlist and so gets no
+subtitles, and a module-provided subtitle still cannot say it is forced.
 **Date:** 2026-07-31
 
 ## Context

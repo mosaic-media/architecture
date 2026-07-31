@@ -1195,14 +1195,46 @@ perfectly, and one thing the release was asked for outright.
    could previously answer for a film and for nothing else, which was the whole
    of the gap on the source side.
 
-   What is left is the consumer, and it is all of it: **no application service
-   calls `Subtitles`.** `CapabilityRegistry.SubtitlesProvider` resolves one and
-   nothing asks it to; the enrichment pass
+   What is left on the *module* side is the consumer, and it is all of it: **no
+   application service calls `Subtitles`.** `CapabilityRegistry.SubtitlesProvider`
+   resolves one and nothing asks it to; the enrichment pass
    (`internal/platform/app/enrich_streams.go`) resolves streams and not
    subtitles. The role is filled, now correctly addressable, and unreached — an
    [unreachable capability](unreachable-capability.md) in the strict sense, and
    one this release is what finally gives a consumer. Remote sources without
    subtitles are a daily-use gap until then.
+
+   **The *embedded* side landed** under
+   [ADR 0113](adr/0113-subtitles-are-a-rendition.md), which is what makes
+   ADR 0112's escalation visible instead of merely computed. A release going
+   through ffmpeg now serves a master playlist declaring one HLS subtitle
+   rendition per embedded track, `DEFAULT=YES` on whichever the preference and
+   its escalation chose; windows of WebVTT are extracted from the source a
+   minute at a time and streamed straight to the response, so nothing is written
+   to disk. **It cost no client change at all** — hls.js and Safari already have
+   a subtitle menu, a track selector and a renderer, and a rendition is how they
+   get populated. The player's menu is also the only part of a track picker
+   (item 6) that exists.
+
+   Three things it left out, in descending order of how much they matter:
+
+   - **A direct-played release gets no subtitles.** A relayed stream is the
+     upstream's own bytes and the origin adds no playlist to hang a rendition
+     off. Closing it means a sidecar file and a `subtitles` prop on the `Player`
+     component — a native-vocabulary growth in `contracts` with a
+     `@mosaic-media/sdui-react` bump, which is the sanctioned second answer and
+     is currently not movable, because tag pushes to the Mosaic organisation
+     have been returning 403 since before this slice began.
+   - **Playing with subtitles reads the container about twice**, once for video
+     segments and once for subtitle windows. Subtitle packets are interleaved
+     with the pictures and there is no way to reach the text without them.
+     Extracting inside the video's own ffmpeg run would cost nothing extra and
+     was the preferred design going in; ffmpeg 5.1 refuses all three ways of
+     asking for it, which ADR 0113 records.
+   - **One claim is unverified and it is client-side.** The origin's two clocks
+     were measured to agree. Whether hls.js maps a raw WebVTT segment onto an
+     fMP4 timeline without an `X-TIMESTAMP-MAP` header needs a browser, and a
+     constant offset in the subtitles is what a wrong answer would look like.
 
 6. **Audio and subtitle track selection at play time.** The probe stores the
    whole track list as a versioned document on the Part — it must, because a
@@ -1221,10 +1253,10 @@ perfectly, and one thing the release was asked for outright.
 
    The record's escalation rule is in with it: `forced` becomes `full` when the
    chosen audio language is not one the viewer asked for, never past `off`, and
-   never on an untagged track. **It is computed and not rendered** — subtitle
-   delivery is item 5 — so `off`, `forced` and `full` are today
-   indistinguishable on screen, and the intent survives only in the play
-   telemetry. That is why ADR 0112 reads *built in part* rather than built.
+   never on an untagged track. It reaches a screen through the subtitle
+   renditions described under item 5 — `DEFAULT=YES` on the track the escalation
+   chose — so a release going through ffmpeg honours the whole preference and a
+   direct-played one honours its audio half.
 
    **What remains under this item is the per-play override**, which is the
    picker and not the preference: a preference decides the default and an
