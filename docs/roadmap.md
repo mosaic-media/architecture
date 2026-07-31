@@ -1216,6 +1216,33 @@ perfectly, and one thing the release was asked for outright.
    get populated. The player's menu is also the only part of a track picker
    (item 6) that exists.
 
+   **A subtitle track's codec then turned out to decide all of this**, which is
+   [ADR 0114](adr/0114-a-subtitle-track-has-a-form.md) and which corrected a bug
+   the paragraph above shipped. Offering *every* embedded track as a rendition is
+   right only for plain text. Picture tracks — PGS from a Blu-ray, VobSub from a
+   DVD — have no text in them at all, and ffmpeg refuses to invent some; the
+   rendition was listed, the extraction failed, and the player showed a subtitle
+   track that drew nothing for the whole film. Typeset tracks — the ASS that
+   anime releases use for signs and captions placed over the picture — survive
+   the conversion as *words only*: a cue authored `{\pos(640,120)\c&H00FF00&\fs72}`
+   over a doorway arrives as ordinary bold text at the bottom of the screen.
+
+   So there are three forms and three answers. Plain text is a rendition, free
+   and faithful. A picture track is **burned into the video** or not delivered,
+   because there is no third option. A typeset track is flattened by default and
+   burned when the viewer asks to see it as authored — a new `typeset` field on
+   the language preference, **off by default**, with the control saying plainly
+   that it makes the server re-encode a release it could otherwise pass through.
+   `off` never burns, and nothing is offered beside a burned track.
+
+   Two things this makes true that were not before. **A preference can now move
+   a release across the cheap/expensive line** — asking for typeset fidelity
+   turns a direct-play into a transcode — which is why it is opt-in and why
+   `subtitle_burned` is on the play telemetry. And **a burned track cannot be
+   switched off**, since by then it is part of the picture; that asymmetry is the
+   strongest argument for eventually shipping the ASS to the client and rendering
+   it with libass, which needs the same blocked `Player` prop as the sidecar path.
+
    Three things it left out, in descending order of how much they matter:
 
    - **A direct-played release gets no subtitles.** A relayed stream is the

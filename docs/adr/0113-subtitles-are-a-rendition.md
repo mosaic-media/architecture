@@ -2,7 +2,10 @@
 
 **Status:** Accepted. **Built for embedded tracks on the transcoded path.** Not
 built for direct-played releases or for module-provided subtitles; both are named
-under Consequences.
+under Consequences. **Partly superseded:** offering *every* embedded track as a
+rendition was wrong for picture tracks, which cannot become one, and lossy for
+typeset ones — corrected by
+[ADR 0114](0114-a-subtitle-track-has-a-form.md). The rest stands.
 
 **Date:** 2026-07-31
 
