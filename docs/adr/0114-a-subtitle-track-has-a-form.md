@@ -2,7 +2,11 @@
 
 **Status:** Accepted. **Built.** The classification, the three delivery paths and
 the opt-in setting are in. The picture-overlay path is verified as a filtergraph
-and not against a real PGS stream — see Consequences.
+and not against a real PGS stream — see Consequences. **Partly superseded:** the
+typeset track's two fates became three under
+[ADR 0115](0115-a-styled-subtitle-goes-to-the-client.md), which builds the
+client-side renderer this record rejected as blocked, and demotes burning to the
+answer for when it cannot be used. The classification and the graphic path stand.
 
 **Date:** 2026-07-31
 

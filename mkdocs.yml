@@ -154,6 +154,7 @@ nav:
       - 112. Language is a person's preference: adr/0112-language-is-a-persons-preference.md
       - 113. Subtitles are a rendition: adr/0113-subtitles-are-a-rendition.md
       - 114. A subtitle track has a form: adr/0114-a-subtitle-track-has-a-form.md
+      - 115. A styled subtitle goes to the client: adr/0115-a-styled-subtitle-goes-to-the-client.md
 
 markdown_extensions:
   - admonition

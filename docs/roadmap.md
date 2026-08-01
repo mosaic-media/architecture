@@ -1239,9 +1239,30 @@ perfectly, and one thing the release was asked for outright.
    a release across the cheap/expensive line** — asking for typeset fidelity
    turns a direct-play into a transcode — which is why it is opt-in and why
    `subtitle_burned` is on the play telemetry. And **a burned track cannot be
-   switched off**, since by then it is part of the picture; that asymmetry is the
-   strongest argument for eventually shipping the ASS to the client and rendering
-   it with libass, which needs the same blocked `Player` prop as the sidecar path.
+   switched off**, since by then it is part of the picture.
+
+   **That asymmetry is why the third answer then got built too**
+   ([ADR 0115](adr/0115-a-styled-subtitle-goes-to-the-client.md)), which ADR 0114
+   had rejected as blocked. The Platform now serves the ASS script itself and the
+   Shell's player draws it with libass, preserving every position, colour and
+   font at **no encode cost** — so the viewer's choice is three-valued (`plain`,
+   `client`, `burn`) with `client` the default, and burning is what is left for a
+   picture track or a client that cannot draw a script. The scripts ride *beside*
+   the HLS renditions rather than replacing them, which is what lets this ship
+   before any other client implements it: one that cannot draw a script ignores
+   the prop and still has subtitles.
+
+   The block was narrower than it read. It stops the **tag**, not the spec and
+   not the client: `contracts` carries `Player.subtitleTracks` with generated
+   `SubtitleTracks` sugar, and `@mosaic-media/sdui-react` draws it. **One line is
+   owed** — the Platform emits the prop through `ui.Prop` because the generated
+   builder is not in the version it compiles against, and that becomes
+   `ui.SubtitleTracks` on the contracts bump.
+
+   Unverified: whether it draws correctly in a browser. The build emits the
+   worker, both WASM variants and the fallback font, and the extraction preserves
+   every tag — but a script that arrives and draws nothing looks identical to one
+   never fetched, because both degrade silently to the rendition.
 
    Three things it left out, in descending order of how much they matter:
 
