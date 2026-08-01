@@ -1,15 +1,16 @@
 # 49. The resolution cache and capability classes
 
-**Status:** Accepted (built, except invalidate-on-read and the refresh job).
+**Status:** Accepted (built, except the refresh job). **Invalidate-on-read
+landed**: the ticket carries the part and the capability class, and the origin
+re-resolves once and retries on an upstream failure — on the relayed path, the
+pipe path and the segment path, each before a byte reaches the client. A source
+that returns the same address is treated as no answer rather than as grounds for
+an identical retry.
 Capability classes are derived on `Attach` from the declared profile
 (ADR 0047) and the `playback_resolutions` store is keyed by (part, capability
 class), read after selection and written after resolution — verified against
-real PostgreSQL. **Unbuilt: the origin's re-resolve-and-retry.** A dead cached
-link fails the play rather than being corrected transparently, because the
-ticket does not yet carry the part and the class the origin would need to
-re-ask; the invalidate-on-read half of this record is therefore not yet true.
-The background refresh job remains blocked on the jobs runner, the scheduler and
-the system principal, as this record anticipated. Implementation departed in two
+real PostgreSQL. The background refresh job remains blocked on the jobs runner,
+the scheduler and the system principal, as this record anticipated. Implementation departed in two
 places: a cache hit reports no module id, because no module was asked, and the
 write runs on the request goroutine rather than in the background — which still
 honours the "must not block the stream" requirement, since nothing is streaming

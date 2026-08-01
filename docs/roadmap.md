@@ -925,12 +925,25 @@ perfectly, and one thing the release was asked for outright.
    and reports what it chose out of how many; a user cannot override it, and an
    item with nothing playable presents as a failure rather than as an answer
    with counts and reasons.
-3. **Invalidate-on-read** ([ADR 0049](adr/0049-resolution-cache-and-capability-classes.md)).
-   A dead cached link fails the play instead of being re-resolved transparently.
-   This is the half of the cache that makes it safe rather than merely fast, and
-   it needs the ticket to carry the part and the capability class so the origin
-   can re-ask. A debrid link dies whenever its torrent leaves the provider's
-   cache, so a TTL is a hint and not a mechanism.
+3. ~~**Invalidate-on-read**~~ **Built**
+   ([ADR 0049](adr/0049-resolution-cache-and-capability-classes.md)). The ticket
+   now carries the release and the capability class, sealed, so the origin can
+   ask the source again when a cached address stops working — which it does on
+   all three serving paths, each before a byte reaches the client, so the retry
+   is invisible. This is the half of the cache that makes it safe rather than
+   merely fast: a debrid link dies whenever its torrent leaves the provider's
+   cache, so a TTL was never going to be the mechanism.
+
+   Three bounds are worth naming because each is a way this could have been
+   worse than the problem. A working link never re-resolves, since a liveness
+   pre-check spends a round trip on every play to catch a rare failure — the
+   exact latency the cache exists to remove. A source that hands back the *same*
+   address has said the link is not what failed, so that counts as no answer
+   rather than as grounds for an identical second attempt. And it retries once,
+   never in a loop.
+
+   Left out: the background refresh job, still blocked on the jobs runner, the
+   scheduler and the system principal, exactly as ADR 0049 anticipated.
 4. **Segmented output (HLS).** The origin emits fragmented MP4 off a pipe: no
    index, no length, `Accept-Ranges: none`. **A remuxed stream therefore cannot
    be seeked or resumed** — and remuxing is the normal case, because MSE takes
