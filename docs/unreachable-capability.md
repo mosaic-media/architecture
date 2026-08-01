@@ -84,6 +84,18 @@ validate or activate anything. It does not discharge these rows.
 | Capability | Where it lives | Reachable? |
 |---|---|---|
 | A library rule that is a saved provider search | `domain.LibraryRuleQuery`, validated by `CreateLibraryRule`, evaluated by `evaluateQueryRule`, run by the maintenance pass | **No client path.** The settings surface creates collection rules only. |
+| Choosing an audio track for one playback | `playEnvelope.AudioIndex`, applied by `playback.WithAudioOverride` | **No client path.** No screen offers the tracks; a client that sends the index gets it. |
+
+**The audio-override row was created deliberately, in the same change that built
+the mechanism** ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)).
+The play path honours a named audio stream and re-decides the plan around it, so
+switching to a track the client cannot decode correctly becomes a transcode
+rather than silence. What does not exist is a control that offers the tracks: the
+source picker lists *releases*, and the panel that would list a release's streams
+beside them is not built. Subtitles are not in the same position — embedded
+tracks are HLS renditions and switchable in the player's own menu
+([ADR 0113](adr/0113-subtitles-are-a-rendition.md)) — so the gap is audio alone,
+which is why it is one row rather than two.
 
 **This row was created deliberately in M2a rather than discovered afterwards.**
 [ADR 0104](adr/0104-the-library-is-built-from-rules.md) names two kinds of rule

@@ -921,10 +921,31 @@ perfectly, and one thing the release was asked for outright.
    **Materialising at play start dissolves that collision instead of solving
    it**, and it is what was actually asked for. The cost is honest and accepted:
    the library gains things people bounced off after ninety seconds.
-2. **A source picker and an honest no-candidate state.** The ranking is built
-   and reports what it chose out of how many; a user cannot override it, and an
-   item with nothing playable presents as a failure rather than as an answer
-   with counts and reasons.
+2. ~~**A source picker and an honest no-candidate state.**~~ **Built**
+   ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)).
+   `PlaybackSources` returns the ranked candidate list rather than its length,
+   each release saying what would have to happen to play it — a video re-encode,
+   a tone-map, an audio re-encode, or nothing. The phrasing is about the client
+   and not the file: a release is not bad, it is undecodable by the thing asking,
+   and the same release on a television may be the best answer there is.
+
+   **`SourcePicker` had been in the contract the whole time and nothing emitted
+   one**, which is why selection's answer was only ever a number in a log. So
+   this is a definition finally reaching a screen rather than a vocabulary
+   growth. Picking a release is an ordinary play of that Part, so it needed no
+   new action kind either.
+
+   The empty case gets the same screen and says plainly that an item can be in
+   the library with no file behind it — a metadata-only import, or a source that
+   stopped — with the way to Extensions. It was an *error* before, which was
+   never true and read as a defect in playback.
+
+   Two things deliberately not done. It **ranks and does not resolve**: resolving
+   twenty candidates to draw a list would spend a play's whole latency budget on
+   a screen somebody may be glancing at, and a release that turns out dead when
+   picked is invalidate-on-read's job. And the order is tie-broken by the
+   source's own order, because without a stable tiebreak the list moves under a
+   viewer reaching for the third row.
 3. ~~**Invalidate-on-read**~~ **Built**
    ([ADR 0049](adr/0049-resolution-cache-and-capability-classes.md)). The ticket
    now carries the release and the capability class, sealed, so the origin can
@@ -1319,10 +1340,27 @@ perfectly, and one thing the release was asked for outright.
    chose — so a release going through ffmpeg honours the whole preference and a
    direct-played one honours its audio half.
 
-   **What remains under this item is the per-play override**, which is the
-   picker and not the preference: a preference decides the default and an
-   override decides one sitting. The user still cannot choose a track for a
-   single playback, and the surface for it belongs with item 2's source picker.
+   **The per-play override landed too**
+   ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)):
+   `playPart` takes an audio and a subtitle stream index for this playback only,
+   and neither is written back — sampling the Japanese audio on one episode has
+   not changed what somebody wants on the next. Both are pointers because zero is
+   a real stream, and collapsing "no override" with "stream 0" would make the
+   first track of every release the one thing nobody could select.
+
+   The override **re-decides rather than re-labels**, which is the part worth
+   knowing: whether audio is copied or encoded is a property of the chosen
+   track's codec, so switching from the AAC track to the DTS one on a browser
+   turns a direct play into a transcode and the plan says so. A plan carrying the
+   new index beside the old verdict would have relayed a stream the client cannot
+   decode and presented it as silence.
+
+   **Left out: the controls.** The overrides are honoured on the play path and
+   any client that sends them gets them; no screen offers them yet. Embedded
+   subtitle tracks are separately switchable in the player's own menu, so the
+   visible gap is audio — an
+   [unreachable capability](unreachable-capability.md) row until the surface
+   lands beside the source picker.
 
    One consequence is recorded rather than fixed. `SummaryAudioCodec` still
    picks a track with the install-wide list and stores its codec on the Part,
