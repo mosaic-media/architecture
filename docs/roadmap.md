@@ -983,7 +983,13 @@ perfectly, and one thing the release was asked for outright.
 
    Left out: the background refresh job, still blocked on the jobs runner, the
    scheduler and the system principal, exactly as ADR 0049 anticipated.
-4. **Segmented output (HLS).** The origin emits fragmented MP4 off a pipe: no
+4. ~~**Segmented output (HLS).**~~ **Built.** The narrative below is kept in full
+   because it is the most instructive thing in this release: two designs were
+   built and disproved live before the third worked, and the disproofs are worth
+   more than the answer. The one thing still unconfirmed against a browser is
+   named at its end.
+
+   The starting premise was that the origin emits fragmented MP4 off a pipe: no
    index, no length, `Accept-Ranges: none`. **A remuxed stream therefore cannot
    be seeked or resumed** — and remuxing is the normal case, because MSE takes
    only fMP4 and WebM so Matroska cannot pass through a browser whatever codec
@@ -1237,8 +1243,11 @@ perfectly, and one thing the release was asked for outright.
    **The honest test of a segmented path is a release needing only an audio
    encode**, which remuxes at near-copy speed.
 
-5. **Subtitles end to end.** **The addressing half landed; nothing consumes it
-   yet.** `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
+5. ~~**Subtitles end to end.**~~ **Built**, across three deliveries and both
+   sides — the addressing, the embedded tracks and the module-provided files.
+   Its own paragraphs below name what each one left out.
+
+   The addressing came first. `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
    the same two coordinates `StreamRequest` took under
    [ADR 0073](adr/0073-stream-resolution-is-decoupled-from-metadata-provenance.md),
    with `module.proto` fields and converter lines in each direction — and both
@@ -1351,7 +1360,11 @@ perfectly, and one thing the release was asked for outright.
      fMP4 timeline without an `X-TIMESTAMP-MAP` header needs a browser, and a
      constant offset in the subtitles is what a wrong answer would look like.
 
-6. **Audio and subtitle track selection at play time.** The probe stores the
+6. ~~**Audio and subtitle track selection at play time.**~~ **Built**, preference
+   and override both; the controls for the audio override are the one thing left
+   and are on the [unreachable capability](unreachable-capability.md) register.
+
+   The probe stores the
    whole track list as a versioned document on the Part — it must, because a
    release whose first audio track is Hindi cannot be described by one codec
    column — and the plan picks one.
