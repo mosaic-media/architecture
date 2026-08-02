@@ -912,15 +912,33 @@ than smoothed over.
 Playing works. What is missing is everything around a play that does not go
 perfectly, and one thing the release was asked for outright.
 
-1. **Playing something unowned adds it.** Today playback requires a materialised
-   Part. This was scoped as materialise-on-*commitment* — play from a
-   `ContentRef` and write to the library only past a watch threshold — and
-   deferred on a real collision: [ADR 0028](adr/0028-virtual-and-materialized-content.md)
-   admits only two crossings while [ADR 0046](adr/0046-playback-state-is-platform-owned.md)
-   keys progress by node, and pre-commitment progress has no node to key on.
-   **Materialising at play start dissolves that collision instead of solving
-   it**, and it is what was actually asked for. The cost is honest and accepted:
-   the library gains things people bounced off after ninety seconds.
+1. ~~**Playing something unowned adds it.**~~ **Built**
+   ([ADR 0118](adr/0118-playing-something-unowned-adds-it.md)). `playPart` takes
+   the same ref envelope `importContent` takes and materialises before resolving
+   anything, so a virtual item now offers Play beside Add rather than only Add,
+   then find it again, then play.
+
+   Materialising at play *start* dissolves the collision that deferred this
+   rather than solving it: by the time anything reports a position there is a
+   node to key it against, so [ADR 0046](adr/0046-playback-state-is-platform-owned.md)
+   needs no change and [ADR 0028](adr/0028-virtual-and-materialized-content.md)'s
+   two crossings are untouched. Materialise-on-*commitment* would still need
+   somewhere to hold progress for a node that does not exist.
+
+   **It authorises as the import it is.** A viewer without `content.import` is
+   refused here exactly as at the Add button, so Play is not a way around the
+   authority that curates the library — the same correction ADR 0069 made when
+   the first ordinary account pressed Add and got nothing.
+
+   A film starts; a series does not. One playable item is unambiguous, and
+   guessing an episode is worse than having added the series and drawn the
+   episodes that now exist — so an ambiguous work returns cleanly and the screen
+   re-renders. An added work with no releases takes the same path and is equally
+   not an error.
+
+   The cost is honest and accepted: the library gains things people bounced off
+   after ninety seconds. Removing those, if it is ever wanted, belongs with the
+   library-rule maintenance pass rather than here.
 2. ~~**A source picker and an honest no-candidate state.**~~ **Built**
    ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)).
    `PlaybackSources` returns the ranked candidate list rather than its length,
@@ -1229,14 +1247,29 @@ perfectly, and one thing the release was asked for outright.
    could previously answer for a film and for nothing else, which was the whole
    of the gap on the source side.
 
-   What is left on the *module* side is the consumer, and it is all of it: **no
-   application service calls `Subtitles`.** `CapabilityRegistry.SubtitlesProvider`
-   resolves one and nothing asks it to; the enrichment pass
-   (`internal/platform/app/enrich_streams.go`) resolves streams and not
-   subtitles. The role is filled, now correctly addressable, and unreached — an
-   [unreachable capability](unreachable-capability.md) in the strict sense, and
-   one this release is what finally gives a consumer. Remote sources without
-   subtitles are a daily-use gap until then.
+   **The module side now has its consumer too**
+   ([ADR 0117](adr/0117-the-subtitles-role-gets-a-consumer.md)), which closes the
+   item. The gap was not what "unbuilt" usually looks like: the registry could
+   resolve a subtitles provider *by name* and no code path anywhere knew a name
+   to ask for, so the plural enumerator every other fanned-out role has did not
+   exist either. The role was fillable, filled, correctly addressable and
+   unreachable — a missing call rather than a missing feature.
+
+   `PlaybackSubtitles` asks every installed provider at play time, handed the
+   work's shared identities exactly as stream enrichment is and for ADR 0073's
+   reason. Asked at play rather than stored at import, because a subtitle URL is
+   perishable the way a debrid link is. Best-effort throughout, so a source that
+   is down costs the extra tracks and never the playback. Deduped by URL, or a
+   title with both an IMDb and a TMDB id lists every file twice.
+
+   **The origin fetches them, and this is the one subtitle path a direct-played
+   release can have.** ADR 0045's rule has a concrete reason here — the URL may
+   carry a credential, and pointing a browser at it hands a third party the
+   viewer's address — and the payoff is that a file from elsewhere needs no
+   playlist to hang a rendition off, so it works where the embedded path cannot.
+   ffmpeg does the fetching as well as the conversion, since it already speaks
+   every scheme a module might return. None is ever marked default: the release's
+   own tracks are what a preference was resolved against.
 
    **The *embedded* side landed** under
    [ADR 0113](adr/0113-subtitles-are-a-rendition.md), which is what makes

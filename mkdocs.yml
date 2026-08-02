@@ -156,6 +156,8 @@ nav:
       - 114. A subtitle track has a form: adr/0114-a-subtitle-track-has-a-form.md
       - 115. A styled subtitle goes to the client: adr/0115-a-styled-subtitle-goes-to-the-client.md
       - 116. A preference is a default, an override is a sitting: adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md
+      - 117. The subtitles role gets a consumer: adr/0117-the-subtitles-role-gets-a-consumer.md
+      - 118. Playing something unowned adds it: adr/0118-playing-something-unowned-adds-it.md
 
 markdown_extensions:
   - admonition
