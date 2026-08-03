@@ -10,7 +10,7 @@ This repository holds Mosaic's architecture and direction in three documents. Th
 
 ## The source is authoritative, not this repository
 
-`platform` is ~37,500 lines of Go and it is the truth. These documents describe it. The SDK, the two modules, `sdui` and `web` are the truth about themselves in the same way.
+`platform` is ~86,350 lines of Go and it is the truth. These documents describe it. The SDK, the two modules, `sdui` and `web` are the truth about themselves in the same way.
 
 **Read the code before writing about it.** Do not describe a contract, package or behaviour from what a document says it is. Open the file. This repository previously contained two hundred documents describing a system nobody had checked against the source, and the result was a roadmap built against an abandoned storage model.
 

@@ -1,6 +1,6 @@
 # Architecture
 
-How Mosaic is built. This document describes the system as it exists in `platform` — 175 Go files, ~17,650 lines — not a system that is planned. Where it describes something unbuilt, it says so.
+How Mosaic is built. This document describes the system as it exists in `platform` — 473 Go files, ~86,350 lines — not a system that is planned. Where it describes something unbuilt, it says so.
 
 Read this before changing anything. For what Mosaic is and why, see [MOSAIC.md](index.md). For what is being built next, see [ROADMAP.md](roadmap.md).
 

@@ -1,6 +1,10 @@
 # 109. The transcoded stream is segmented, not byte-addressed
 
-**Status:** Accepted. **Not built.**
+**Status:** Accepted. **Built on both sides, and never played.**
+`internal/transport/playback` serves `index.m3u8`, `init.mp4` and numbered
+segments; `@mosaic-media/sdui-react` `0.22.0` reads them. Nothing has been
+watched through it — the row stays on the
+[register](../unreachable-capability.md#the-segmented-playback-origin).
 Supersedes decision point 2 of
 [ADR 0108](0108-the-origin-is-a-pipe-only-where-it-must-be.md); that record's
 measurement and its decision points 1 and 3 stand unchanged.

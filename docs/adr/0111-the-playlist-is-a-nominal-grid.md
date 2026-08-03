@@ -1,6 +1,9 @@
 # 111. The playlist is a nominal grid, and a segment index is a seek instruction
 
-**Status:** Accepted. **Not built.**
+**Status:** Accepted. **Built, and never played.** The nominal grid is computed
+in `internal/transport/playback/playlist.go` and the restart-at-`-ss` in
+`segments.go`; no release has been watched through it. See
+[ADR 0109](0109-the-transcoded-stream-is-segmented.md)'s status line.
 Supersedes [ADR 0110](0110-the-segment-length-is-measured.md) wholly — both its
 decision to measure the source's keyframe interval and its degradation for
 irregular sources. [ADR 0109](0109-the-transcoded-stream-is-segmented.md)'s

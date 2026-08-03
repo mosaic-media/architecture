@@ -244,11 +244,37 @@ graph LR
   M4[M4 Supervisor and Shell binary] --> M5[M5 Passkeys and hardening]
   M5 --> M6
   M0 -.-> M4
+  M6 --> M7[M7 The extension surface]
 ```
 
 M4 depends on M0 only for the session model it fronts, so it can run beside
 M1–M3. M5 must follow M4: a passkey is bound to an origin, and the origin is
-M4's to decide.
+M4's to decide. M7 follows the release candidate because the MVP does not need
+it, and precedes any invitation to the community because the surface that exists
+on the day the first outside module is written is the surface the ecosystem
+hardens around.
+
+### Reference implementations
+
+Seven projects were read from source and mapped against these milestones. They
+are read for design, never copied; each entry names the milestone it serves and
+the subsystem worth opening.
+
+| Project | Serves | What to read |
+|---|---|---|
+| [seanime](https://github.com/5rahim/seanime) (Go) | **M3.4**, M7 | `internal/mediastream/transcoder/` — keyframe indexing, the `sc_threshold` note in `hwaccel.go`, session lifecycle. `internal/extension_repo/` for a role-typed extension host |
+| [remux](https://github.com/lostb1t/remux) (Rust) | **M3.4**, M7 | `crates/remux-server/src/api/hls.rs` and `transcode/engine.rs` — the shape slice 4 took; `SIGSTOP` at 300 s ahead and deletion 30 s behind |
+| [jellyfin](https://github.com/jellyfin/jellyfin) (C#) | M3.2, M3.6, M7 | `MediaBrowser.Model/Session/TranscodeReason.cs` — the reason set as a bitfield; `Dlna/StreamBuilder.cs`; the plugin interface list as a decade of community demand |
+| [harbor](https://github.com/harborstremio/harbor) (TS/Rust) | M3.2, beyond-RC | `harbor-core/src/trust.rs` — the stage that drops candidates before ranking, which Mosaic has no equivalent of |
+| [supervisor](https://github.com/home-assistant/supervisor) (Python) | **M4** | `supervisor/resolution/` — checks, evaluations and fixups; `jobs/const.py` for job conditions; `backups/` for M5.2 |
+| [stremio-addon-sdk](https://github.com/Stremio/stremio-addon-sdk) | M7 | `docs/api/` — the addon protocol normatively, when an addon's behaviour is in question |
+| [stremio-core](https://github.com/Stremio/stremio-core) (Rust) | M7 | `src/models/` as a list of the surfaces a Stremio-shaped product needs |
+
+Two hazards when reading them. **They assume a local seekable file**; Mosaic's
+sources are remote, which is what ADR 0108's measurement settled. And *transport*
+in the Stremio protocol and in stremio-core's `addon_transport/` means the addon
+protocol's HTTP binding — the word is theirs, and the [controlled
+vocabulary](index.md#controlled-vocabulary) reserves it here.
 
 ### M0 — Foundations — **landed**
 
@@ -907,10 +933,18 @@ account was created by a previous session and its credential is lost. That is a
 gap in the demonstration and not in the mechanism, and it is written here rather
 than smoothed over.
 
-### M3 — Playback completion
+### M3 — Playback completion — **six slices landed; slice 4 is written and never played**
 
 Playing works. What is missing is everything around a play that does not go
 perfectly, and one thing the release was asked for outright.
+
+Slices 1, 2, 3, 5, 6 and 7 are built and were opened in a browser. **Slice 4 is
+built on both sides and has never had a release watched through it**, which by
+the [working rule](#working-rules) below is not done: a milestone item is done
+when a human clicked it in a running Mosaic, and a passing test is never the
+evidence. Three earlier designs for this origin passed every unit test and fell
+over in front of a real decoder. The [register](unreachable-capability.md#the-segmented-playback-origin)
+carries the row.
 
 1. ~~**Playing something unowned adds it.**~~ **Built**
    ([ADR 0118](adr/0118-playing-something-unowned-adds-it.md)). `playPart` takes
@@ -1187,18 +1221,20 @@ perfectly, and one thing the release was asked for outright.
    [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s own stated condition
    firing rather than a reversal of it.
 
-   **What is left is the demonstration, and it is not a formality.** None of this
-   has been opened in a browser. Three previous designs for this origin passed
-   every unit test and fell over in front of a real decoder, and the fourth is
-   not entitled to more trust than they got. Until a release is played, seeked
-   and resumed against a running instance, slice 4 is written and unproven —
-   which is why the row in the
-   [register](unreachable-capability.md) stays until someone watches something.
-   The unbounded spool goes: it writes the whole transcode to a temp file, which
-   on a small VPS is the thing that fills the disk. The `-ss`/`-copyts`
-   arithmetic survives and keeps its tests; `contentLength`, `offsetAt`,
-   `parseByteRangeStart` and `serveSeekableRemux` do not, and `ShouldRemux` —
-   dead code since ADR 0108 named it — goes with them.
+   **What is left is the demonstration, and it is not a formality.** No release
+   has been watched through the segmented path. Three previous designs for this
+   origin passed every unit test and fell over in front of a real decoder, and
+   the fourth is not entitled to more trust than they got. Until a release is
+   played, seeked and resumed against a running instance, slice 4 is written and
+   unproven — which is why the row in the
+   [register](unreachable-capability.md#the-segmented-playback-origin) stays
+   until someone watches something.
+
+   **The honest test is a release needing only an audio encode.** The 4K HDR
+   release used for the earlier demonstrations decodes 10-bit HEVC in software at
+   about 30× slower than realtime on a 3-core box, so it cannot show whether
+   seeking works — no amount of segmenting changes that floor. An audio-only
+   remux runs at near-copy speed and is the case that can be watched.
 
    **The order it is built in is deliberate: selection first.** A transcode is
    the last resort, not the normal path — a title usually resolves to many
@@ -1220,9 +1256,12 @@ perfectly, and one thing the release was asked for outright.
    `TestRemuxedResponseIsNotSeekable` pins the other half so the difference
    cannot go back to being a reading of the code.
 
-   *Demonstrated in the browser, which is where the real surprise was.* The 4K
+   *The pipe path was demonstrated in the browser, which is where the real
+   surprise was.* This is the unsegmented origin, before the playlist existed —
+   the segmented path that replaced it is the one still unwatched. The 4K
    HDR release plays and **cannot be seeked**: `video.seekable` is `[[0, 0]]` and
-   a seek to 120 s is silently refused. It also **does not keep up** —
+   a seek to 120 s is silently refused, which is the expected behaviour of a pipe
+   and is what the segmenter exists to fix. It also **does not keep up** —
    `currentTime` stays at `0` while ffmpeg burns two cores. That second finding
    is not a seeking problem and a segmenter would not fix it: `maxHeight` comes
    from `screen.height × devicePixelRatio`, so a Retina laptop declares 2400 and
@@ -1239,9 +1278,7 @@ perfectly, and one thing the release was asked for outright.
    It did not make that particular release watchable, which is worth recording
    rather than glossing: the encode still runs about 30× slower than realtime —
    2m52s of ffmpeg for 5.7 s of output — because decoding 4K 10-bit HEVC in
-   software is the floor on that box, and no amount of segmenting changes it.
-   **The honest test of a segmented path is a release needing only an audio
-   encode**, which remuxes at near-copy speed.
+   software is the floor on that box.
 
 5. ~~**Subtitles end to end.**~~ **Built**, across three deliveries and both
    sides — the addressing, the embedded tracks and the module-provided files.
@@ -1534,6 +1571,105 @@ claim → create three accounts → build the library from rules → each accoun
 watches, resumes on a second device, and browses by genre and by service →
 upgrade in place → restore from backup. Nothing is ticked off from a passing
 test.
+
+### M7 — The extension surface
+
+The thesis in [MOSAIC.md](index.md) is that format coverage cannot be built solo
+and the community closes it. The surface that exists today cannot carry that: it
+was built for one shape of module — one that fetches video metadata and returns
+streams — and every other shape strains it.
+
+This was derived by asking what six hypothetical modules would need (anime,
+music, audiobooks, group playback, games, a generated EPG), then testing the
+answer against the feature lists of the four reference clients. **The object
+graph passed every case** — `nodes`, `parts`, `relations` and `source_bindings`
+absorbed anime, music, audiobooks, games and virtual channels without a new
+shape. Everything that strained is above it.
+
+Stated as what a module cannot do, each with the decision that prevents it:
+
+| A module cannot… | Because |
+|---|---|
+| **Act** | `dispatch` in `internal/transport/session` is the complete enumeration of what any client can invoke, and it is Platform-authored |
+| **React** | It is called and returns. No event subscription, no progress push, no schedule, no way to ask a question mid-operation |
+| **Show** | [ADR 0038](adr/0038-module-contributed-settings-ui.md) scopes module UI to settings — content screens stay Platform-emitted |
+| **Annotate** | Only a node's own metadata provider can say anything about it; a second module has no way to add a fact |
+| **Store** | Modules produce metadata, never bytes. The scratch directory is named once, for the torrent engine, and is unbuilt |
+| **Serve** | [ADR 0045](adr/0045-playback-consumer-and-media-origin.md) — the module never speaks HTTP. *Gateway* is reserved in the vocabulary and nothing fills it |
+| **Compose** | `ListLibrary` was deliberately kept off the SDK. The reasoning held for sources; a module deriving something from the library is not sourcing |
+| **Authenticate** | Identity is wholly Platform-owned |
+| **Reach a LAN device** | Egress is an HTTP proxy; discovery is multicast and Discord presence is a local socket |
+| **Read a user's media folder** | No filesystem grant exists |
+
+Three module shapes follow from that, and only the first is supported:
+**sources** bring content in, **actors** do things outside, **composers** derive
+new experiences from what is already there.
+
+The slices, in dependency order. Each is a decision record before it is code.
+
+1. **Module authority distinct from its user.** The record
+   [MOSAIC.md](index.md#deliberately-undecided) defers to *"the first capability
+   that needs authority distinct from its user's"* — a verb acting on a
+   third-party account is that capability, and so are the library read, the
+   network reach and the filesystem grant. **This gates the rest** and is written
+   first.
+2. **Verbs.** How a module declares an action, how it is authorised, how it is
+   dispatched. Carries per-user module settings with it, because
+   `ModuleSettingsStore` holds one document per module and "my Steam library" is
+   per person.
+3. **Lifecycle.** Event subscription, progress push, mid-operation prompts,
+   module-declared cron, dependency declaration. Confirms or replaces
+   [ADR 0011](adr/0011-platform-transports-events.md), which is inherited and
+   unconfirmed.
+4. **Contribution points.** Named slots on Platform-owned screens
+   (`home.rails`, `library.sections`, `discovery.rows`, `detail.facts`), declared
+   in the manifest. Three tiers — data, presentation, tree — with the rule that
+   tiers 1 and 2 must be expressive enough to make tier 3 rare, because a module
+   that draws its own tree stops inheriting the skin, the focus work and every
+   later improvement.
+5. **Annotations**, with two questions settled before code: whether the unit is a
+   *fact* or a *document* (a filler flag is one bit; a read-along sync map is
+   ~100k triples), and precedence — **the user is the highest-precedence
+   annotator**, which is what makes a manual correction survive the next
+   enrichment pass.
+6. **Module-served resources.** A third origin beside artwork and playback:
+   signed, session-bound URLs for bulk module output. Manga pages, lyrics, EPUB
+   content and sync maps want the same endpoint.
+7. **Module storage**, quota-bounded and Platform-granted, with what a module
+   writes able to become a Part. Needed by a DVR, offline downloads and trickplay.
+8. **Gateways.** The Platform owns the listener and routes a path prefix into a
+   module; modules never bind ports. This is the item with the highest strategic
+   return, because a Jellyfin-compatible or DLNA facade reaches televisions and
+   phones Mosaic will never write a client for.
+9. **Composers read the library**, and **authentication providers**, each on the
+   permission record from 1.
+
+*Exit: an anime module, written against the published SDK by someone who cannot
+change the Platform, adds a rail to Home, annotates episodes with skip segments a
+different module supplied, scrobbles progress to a third-party account, and
+contributes a settings screen — with nothing in `platform` changed to allow it.*
+
+**What must not be conceded**, because each is load-bearing elsewhere:
+
+- **Modules shipping client code.** Breaks [ADR 0082](adr/0082-components-are-authored-only-in-the-contract.md)
+  and the multi-client promise.
+- **Modules contributing shell chrome.** Contribution points are slots on
+  screens; the shell is [ADR 0031](adr/0031-server-owned-app-shell.md)'s.
+- **Modules reading watch history.** The exclusion was right. An anime-scoped
+  continue-watching rail is the Platform composing and the module supplying the
+  filter.
+- **Module annotations deciding authorization.** A module-supplied age rating
+  that gates content is a module unlocking parental controls. Annotations inform;
+  only Platform-validated fields decide.
+
+**Client work no module can deliver**, kept here so it is not mistaken for a gap
+in the surface: native decoding, several simultaneous video surfaces, shaders,
+HDR passthrough, picture-in-picture, gapless audio scheduling and clock
+discipline for room-to-room sync. About a sixth of a mature client's feature list
+is of this kind. The primitive vocabulary and the `Player` contract are where
+that capability grows, and both are the Platform's — which is why every primitive
+added costs one implementation per client and the vocabulary is cheapest to grow
+while there is one.
 
 ---
 
