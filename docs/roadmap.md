@@ -56,7 +56,7 @@ remote source requires the user to name one.
 | 15 | Remote playback that feels instant | Built — 3.75 s cold, 11 ms warm | — |
 | 16 | Browse by streaming service or genre without involved setup | Genre is reachable on both surfaces — a facet over the shelf and a filter on a source's catalogue; streaming service is browsable as a source's catalogue asked live, and the union with what the library already holds is unbuilt | M2 |
 | 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) | — |
-| 18 | A Shell that is its own binary, decoupled from the Platform | A Vite bundle with no server | M4 |
+| 18 | A Shell that is its own binary, decoupled from the Platform | Built — `mosaic-shell` embeds the bundle and is told the endpoint at runtime; never served to a person | M4 |
 
 Five requirements were not in that list because they were not asked for and the
 release is not credible without them. **Signing out** landed in M1 — it is on
@@ -1502,12 +1502,26 @@ and per-install builds were deleted in favour of a CI-built binary
 ([ADR 0063](adr/0063-platform-binary-built-by-ci.md)). What is left is process
 lifecycle, the front door, and the artefact.
 
-1. **`mosaic-shell` as its own binary.** The Shell is a Vite bundle with no
-   server, signing in from credentials compiled into it. It becomes a small Go
-   binary that embeds the built assets, serves them with a deep-link fallback,
-   injects the Platform endpoint **at runtime rather than at build time**,
-   answers a health probe and adopts an inbound boot id. It renders; it decides
-   nothing; there is no server-side rendering.
+1. ~~**`mosaic-shell` as its own binary.**~~ **Built, and never served to a
+   person.** `web/mosaic-shell` is a Go binary embedding the built bundle: a
+   deep-link fallback, the Platform endpoint injected into the document **at
+   runtime rather than at build time**, `/healthz`, and `MOSAIC_BOOT_ID`
+   adopted when a supervising process supplies one. It renders nothing and
+   decides nothing, and there is no server-side rendering.
+
+   **What was left out:** it has never been driven against a live Platform.
+   The evidence is the Go and web gates green in their containers, then the
+   linked binary loaded in headless Chromium, where React mounted and the
+   Shell sent `AuthService/Bootstrap` to the injected endpoint rather than to
+   its own origin — which settles the runtime-injection question and nothing
+   about whether a real session works through it. No TLS: the front door is
+   slice 2's, and terminating it here would build the thing twice.
+
+   **A correction this slice forced.** The plan above said the Shell signs in
+   "from credentials compiled into it". It has not since M1 — requirement 4
+   already records that nothing signs in from a build-time credential, and
+   `VITE_PLATFORM_URL` was the only build-time value left. Two statements
+   about one fact, and the older one rotted.
 2. **The Supervisor.** It manages the Platform and the Shell as processes, and
    is the single front door: TLS, one port, the Shell at the root and the
    Platform's API, `/artwork` and `/playback` behind it. It serves the offline
