@@ -1746,12 +1746,36 @@ decides on the user's behalf to be recorded.
    ([ADR 0065](adr/0065-module-distribution-and-trust.md),
    [ADR 0079](adr/0079-the-platform-manages-extension-modules.md)), so what is
    missing here is key custody and nothing conceptual.
-4. **Configuration versioning gets its door.** Every field declares a reload
-   class — Hot, Restart, Generation or Recovery — and only a Hot-only change
-   activates without escalation. It is implemented, tested, and no administrator
-   can drive it, because escalation is exactly what the Supervisor is for.
-   `MOSAIC_MODULES` core-module selection stops being an environment bridge and
-   becomes the Generation-class configuration it was designed as.
+4. **Configuration versioning gets its door.** **The escalation is built; the
+   door is not.** A change needing more than the Platform can do to itself was
+   classified correctly and then left Validated, which lost the fact that
+   somebody had asked for it — a restart could not tell a version a user chose
+   from one that merely validated, so it would have had to apply all of them
+   or none. A `pending` status records the request, with `RequestedAt`,
+   and one at a time by unique index: two would both be applied by a single
+   restart in an order nobody chose. `ApplyPending(granted)` is the far end —
+   a Platform that has just started grants Restart, and a Generation-class
+   change waits for the Supervisor rather than being carried by a restart that
+   was never going to apply it. The handoff surface reports what escalation is
+   owed, which is how the process that can perform one finds out.
+
+   Verified over the socket handoff: a pending restart-class change appeared
+   as owed with its class, a restart applied it and superseded its
+   predecessor, the handoff went quiet, and a second restart did not reapply
+   it.
+
+   **Running it found a defect of exactly the shape the design anticipated.**
+   The boot-time apply reused `bootCtx`, which is cancelled when
+   connect-and-migrate finishes, so every boot logged "context canceled" and
+   applied nothing. It is deliberately not fatal — a Platform that refuses to
+   start because a queued change cannot be applied is one an operator cannot
+   reach to withdraw it — so nothing failed, no test could see it, and the
+   feature simply did not happen.
+
+   **Still owed:** the screen. The five services remain unreachable to a user,
+   so the register's configuration-versioning block is *not* discharged by
+   this. `MOSAIC_MODULES` also still bridges through the environment rather
+   than being the Generation-class configuration it was designed as.
 5. **Operational findings become durable state**
    ([ADR 0119](adr/0119-operational-findings-are-durable-state.md)). Every
    failure Mosaic has is a log line that scrolls away: a module that will not
@@ -1782,7 +1806,9 @@ decides on the user's behalf to be recorded.
 in its place; upgrade in place without the page in front of you dying; and when
 it does not work, the box says what is wrong and what to do about it.*
 
-**Discharges:** the register's configuration-versioning block.
+**Discharges:** the register's configuration-versioning block — when slice 4's
+screen lands. The escalation beneath it is built and reachable by the
+Supervisor, not by a person.
 
 **Decisions owed:** the domain and origin story. The session credential no
 longer waits on it ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)
