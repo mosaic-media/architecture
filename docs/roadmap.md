@@ -41,7 +41,7 @@ remote source requires the user to name one.
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
-| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Fronting built — TLS on one port, routing, the degradation ladder; process supervision written and never used to run the real Platform | M4 |
+| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Fronting built — TLS on one port, routing, the degradation ladder; it supervises the Shell, and has never owned the Platform process | M4 |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
@@ -1542,11 +1542,22 @@ lifecycle, the front door, and the artefact.
    That is [ADR 0005](adr/0005-supervisor-guarantees-an-interface.md)'s ladder
    working, which is more than the tests could say.
 
-   **Not built, and none of it is nearly done.** Process supervision is
-   *written* — start, readiness probe, exponential backoff, process-group
-   stop, boot id handed to both children — and has never been used to run the
-   real Platform, only fronted one that was externally managed; that is the
-   part most likely to be wrong. There is no Recovery SDUI and no renderer for
+   **Process supervision now runs something.** `docker-compose.supervisor.yml`
+   puts the dev stack behind the front door, and against a real Platform on a
+   fresh database the Supervisor spawned the Shell binary, handed it the boot
+   id it adopted, restarted it as a new pid after a kill, and served the
+   actual setup wizard over TLS — server-emitted SDUI, through a same-origin
+   Connect call routed back to the Platform. Running it found three defects no
+   test had: the readiness probe asked `/health/live`, which the Platform does
+   not serve; a first start was counted as a restart, so a healthy boot
+   reported a crash that never happened; and the test asserting the handoff
+   paths stay unpublished used invented paths, proving only that the router
+   ignores paths nobody serves.
+
+   **Still unexercised.** The Supervisor has never owned the *Platform*
+   process — compose starts it, so it mints its own boot id and ADR 0060 is
+   half honoured in that shape. No TLS from a real certificate. There is no
+   Recovery SDUI and no renderer for
    it, so ADR 0005's second rung does not exist and the bottom rung is a
    static holding page that says so rather than impersonating the feature. It
    does not observe itself file-only or merge into expert mode
