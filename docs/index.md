@@ -106,7 +106,9 @@ Each of these words must carry exactly one meaning, everywhere.
 | **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built (ADR 0043) | An inbound source, or anything Mosaic *consumes* |
 | **Stale-while-revalidate** | Serving the last known-good *read* from a snapshot while a fresh one is fetched, then replacing it (ADR 0052) | *Optimistic UI*, which renders a predicted **write** outcome before the server confirms it. Mosaic predicts nothing |
 | **Platform** | Mosaic's own code and contracts | The binary; say *Platform Binary* for that |
-| **Supervisor** | The component that selects modules, builds the binary and manages the running system | The Platform, or the Runtime |
+| **Supervisor** | The host-level process manager and single front door: runs the Platform and the Shell, terminates TLS, activates a Generation (ADR 0004, ADR 0005) | The Platform, or the Runtime. It no longer selects modules (ADR 0079) or builds anything (ADR 0063) |
+| **Issue** | A durable, typed statement that something is operationally wrong, held by the Platform until resolved (ADR 0119) | A GitHub issue, a log line, or a health state — health says whether traffic should arrive, an Issue says what a person should do |
+| **Suggestion** | A named action offered against an Issue, rendered into words by the client (ADR 0119) | A recommendation to the user about content |
 | **Store** | A typed persistence contract resolved within a transaction | The database |
 | **Node tree** | The content-agnostic object model | A filesystem |
 | **Single binary** | The Platform Binary the Supervisor compiles Modules into (ADR 0007) | The database, which runs as its own process. "Single binary dropped" referred only to not bundling PostgreSQL |

@@ -1507,7 +1507,8 @@ has since shrunk a long way: extension modules are the
 Platform's throughout ([ADR 0079](adr/0079-the-platform-manages-extension-modules.md)),
 and per-install builds were deleted in favour of a CI-built binary
 ([ADR 0063](adr/0063-platform-binary-built-by-ci.md)). What is left is process
-lifecycle, the front door, and the artefact.
+lifecycle, the front door, the artefact, and somewhere for what the Supervisor
+decides on the user's behalf to be recorded.
 
 1. ~~**`mosaic-shell` as its own binary.**~~ **Built, and never served to a
    person.** `web/mosaic-shell` is a Go binary embedding the built bundle: a
@@ -1613,6 +1614,25 @@ lifecycle, the front door, and the artefact.
    `runner_test.go` asserted the old assumption in a comment, and that
    comment was corrected in the same change.
 
+   **Two defects in what is built, both found by reading Home Assistant's
+   Supervisor rather than by any gate.** They are named here because they are
+   wrong now, not future work:
+
+   - **The watchdog has no guards and no ceiling.** A child that exits is
+     restarted, unconditionally and forever. HA's refuses to act while the
+     component is in an error state (rollback owns it), while it is on the
+     landing page, or **while a task is in progress** — and caps attempts
+     (5, with a 30-minute throttle) rather than looping. Mosaic's would
+     cheerfully restart the Platform in the middle of a Generation
+     activation, and would restart a hopeless Platform until the host is
+     turned off.
+   - **Readiness is the Platform's own opinion of itself.** The Supervisor
+     polls `/readyz`, which the Platform answers about itself. HA
+     deliberately probes *as an external client would*, bypassing its own
+     internal API layer, because a component can report every subsystem
+     loaded while the endpoint a user reaches is broken. The front door is
+     where Mosaic can ask the same question and does not.
+
    **Still unexercised.** No TLS from a real certificate. Restarts have been
    provoked by killing a child, never by a Platform that failed on its own.
    There is no Recovery SDUI and no renderer for
@@ -1638,15 +1658,61 @@ lifecycle, the front door, and the artefact.
    verifying and activating a Generation, with the handover
    ([ADR 0033](adr/0033-supervisor-driven-live-handover.md)) folded into the
    transport's stream resume rather than built as a separate dance.
+
+   **Build rollback as activation's failure branch, not as a second feature.**
+   Home Assistant's update installs, starts, health-checks, and on failure
+   reinstalls the previous version and starts that — one path, with the revert
+   as its `else`. Two details of theirs are worth copying outright: the health
+   check that gates the rollback is a *functional* probe rather than a
+   self-report (see slice 2's defects above), and the previous log is copied
+   aside before the revert, because otherwise the rollback destroys the only
+   evidence of why it was needed.
+
+   **Do not look to Home Assistant for the signing half — Mosaic is ahead of
+   it.** Their updater fetches a version document over plain HTTPS, checks a
+   channel field and parses it; there is no signature verification, and trust
+   rests on TLS plus image digests downstream. (Their own contributor guide
+   says the updater validates signatures. The code does not. Worth knowing
+   before taking any of it as a reference.) Mosaic already signs the registry
+   index, the per-module manifests and the binary digests
+   ([ADR 0065](adr/0065-module-distribution-and-trust.md),
+   [ADR 0079](adr/0079-the-platform-manages-extension-modules.md)), so what is
+   missing here is key custody and nothing conceptual.
 4. **Configuration versioning gets its door.** Every field declares a reload
    class — Hot, Restart, Generation or Recovery — and only a Hot-only change
    activates without escalation. It is implemented, tested, and no administrator
    can drive it, because escalation is exactly what the Supervisor is for.
    `MOSAIC_MODULES` core-module selection stops being an environment bridge and
    becomes the Generation-class configuration it was designed as.
+5. **Operational findings become durable state**
+   ([ADR 0119](adr/0119-operational-findings-are-durable-state.md)). Every
+   failure Mosaic has is a log line that scrolls away: a module that will not
+   start, an enrichment that failed for a catalogue, a disk with a gigabyte
+   left. It is in M4 rather than after it because **this milestone is what
+   makes it untenable** — the Supervisor now restarts children and will
+   activate and roll back Generations, taking decisions on the user's behalf
+   with nowhere to record them. A system that silently undoes its own upgrade
+   and says so only in a log produces a bug report three days after the
+   evidence rotated away.
+
+   An `Issue` is a typed, durable statement that something is wrong; a
+   `Suggestion` is a named action that might fix it, rendered into words by
+   the client; applying one is an ordinary authorised command. Issue types are
+   a **closed** vocabulary by ADR 0015's test, because Platform code branches
+   on them to offer a suggestion. `unhealthy` and `unsupported` are separate
+   system-level states carrying enumerated reasons.
+
+   The Supervisor spools its own findings to a file and hands them over when
+   the Platform is up — the findings it most needs to record are precisely the
+   ones it makes while the Platform is not there to be written to — and the
+   dependency does not invert.
+
+   It lands with a screen or it does not land: a register of findings nobody
+   can reach would be the exact debt this milestone is meant to discharge.
 
 *Exit: one install, one URL, TLS; kill the Platform and the Supervisor answers
-in its place; upgrade in place without the page in front of you dying.*
+in its place; upgrade in place without the page in front of you dying; and when
+it does not work, the box says what is wrong and what to do about it.*
 
 **Discharges:** the register's configuration-versioning block.
 
@@ -1889,7 +1955,7 @@ stated language behind it is not written.
 
 ## Findings worth keeping
 
-Twelve failure shapes that recurred, none of which a gate caught.
+Thirteen failure shapes that recurred, none of which a gate caught.
 
 1. **A screen that has not been rendered has not been verified.** Sign-in was
    verified end to end on the server, declared blocked in the browser, and the
@@ -1970,6 +2036,25 @@ Twelve failure shapes that recurred, none of which a gate caught.
     opened. **A method that returns a slice returns a copy, or it is not the
     accessor it looks like** — and the aliasing is invisible until a second
     caller mutates.
+13. **Read the mature comparable before building the same thing again.** Two
+    defects in the Supervisor's first week — a watchdog that would restart the
+    Platform mid-activation and never stop trying, and a readiness probe that
+    asks the Platform's opinion of itself — were found in an hour of reading
+    Home Assistant's Supervisor, and neither would have been caught by a gate
+    or by a browser. The reusable part is not the taxonomy but the questions a
+    decade of production forced them to answer: *what must a watchdog refuse to
+    act on, and how does it give up?* and *whose opinion is readiness?* Their
+    answers carry the reasoning — a timeout is classed as a bad response rather
+    than no response, because mutual TLS rejects within a few packets and never
+    manifests as one — which is the kind of thing nobody derives from first
+    principles.
+
+    Two cautions, both learned in the same hour. **Read their code, not their
+    documentation**: their contributor guide states the updater validates
+    signatures and it does not, which is the doc rot this repository's rules
+    exist to prevent, in somebody else's repository. And **check the direction
+    of the comparison before adopting** — on update trust Mosaic is ahead, so
+    copying would have been a downgrade.
 
 ---
 

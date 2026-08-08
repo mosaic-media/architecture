@@ -158,6 +158,7 @@ nav:
       - 116. A preference is a default, an override is a sitting: adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md
       - 117. The subtitles role gets a consumer: adr/0117-the-subtitles-role-gets-a-consumer.md
       - 118. Playing something unowned adds it: adr/0118-playing-something-unowned-adds-it.md
+      - 119. Operational findings are durable state: adr/0119-operational-findings-are-durable-state.md
 
 markdown_extensions:
   - admonition
