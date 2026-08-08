@@ -1667,11 +1667,23 @@ decides on the user's behalf to be recorded.
    surfaces stay two sockets, because collapsing them would publish the
    handoff channel to anything that could reach the client API.
 
-   **What is still owed from it:** the Platform reading `X-Forwarded-For`.
-   That is what repairs ADR 0101's per-peer ceiling, and it is only sound
-   now — a socket has no peer address at all, so until it lands every client
-   shares one bucket, which is worse than before. Scheduled in M5's hardening
-   sweep and unblocked by this.
+   **The Platform reads the forwarded address, and only on a socket.** That
+   repairs ADR 0101's per-peer ceiling, which the front door had already
+   turned into one household-wide bucket and which sockets would have made
+   worse still, a socket having no peer address at all. The transport is the
+   proof: a listener nothing can reach except through the front door is the
+   only one where the header cannot be a claim by whoever connected, so on
+   TCP it stays ignored.
+
+   Two details carry it, and each has a test that fails without it. The
+   **rightmost** entry is the front door's own observation — everything left
+   of it was supplied by the caller, so the leftmost would let anyone pick a
+   fresh bucket per request. And an address must parse as an **IP**: Go
+   reports a Unix peer as `"@"`, one constant for every caller, which would
+   have been a single shared bucket wearing the shape of a resolved address.
+
+   Verified live: 25 requests from one source were served 21 then refused,
+   while a second source was served at the same instant.
 
    **Still owed from the same reading:** the guard that refuses to restart a
    child *while an operation is in progress*. It has no caller yet — nothing
@@ -1789,16 +1801,11 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    is reported honestly and provided by the deployment, which the shipped
    topology should actually provide.
 
-   **The pre-session rate limit stopped being per-peer when M4 landed.**
-   `peerOf` keys on the socket address, and behind the Supervisor's front door
-   that is the Supervisor's for every client, so the ceiling
-   [ADR 0101](adr/0101-the-pre-session-bootstrap.md) put on the one pre-auth
-   surface is now shared by the whole household and spendable by any one of
-   them. The Platform must read `X-Forwarded-For` instead — which is safe to
-   trust only because
-   [ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md) leaves no other
-   path to the Platform for a header to arrive by, so this waits on that
-   landing rather than being a header read somebody could do sooner.
+   ~~The pre-session rate limit stopped being per-peer when M4 landed.~~
+   **Fixed in M4**, where it was caused: the Platform reads the forwarded
+   address, and believes it only on a listener nothing can reach except
+   through the front door
+   ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
 
 ### M6 — The release candidate gate

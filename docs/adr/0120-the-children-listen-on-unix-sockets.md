@@ -1,6 +1,6 @@
 # 120. The children listen on Unix sockets
 
-**Status:** Built, apart from the Platform reading `X-Forwarded-For`, which this unblocks and M5 carries.
+**Status:** Built.
 **Date:** 2026-08-08
 
 ## Context
