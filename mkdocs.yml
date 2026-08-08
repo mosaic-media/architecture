@@ -159,6 +159,7 @@ nav:
       - 117. The subtitles role gets a consumer: adr/0117-the-subtitles-role-gets-a-consumer.md
       - 118. Playing something unowned adds it: adr/0118-playing-something-unowned-adds-it.md
       - 119. Operational findings are durable state: adr/0119-operational-findings-are-durable-state.md
+      - 120. The children listen on Unix sockets: adr/0120-the-children-listen-on-unix-sockets.md
 
 markdown_extensions:
   - admonition

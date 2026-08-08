@@ -1652,6 +1652,25 @@ decides on the user's behalf to be recorded.
    a counter whose reset condition is satisfied by the very event it is meant
    to be counting.
 
+   **The front door is a convention, not a property — and becomes one**
+   ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)). The Platform
+   holds two TCP listeners and the Shell a third, so "the Supervisor is the
+   only way in" is the address people are told about rather than anything
+   enforced; the handoff listener, which carries Generation and migration
+   state and deliberately bypasses the policy gate, is reachable by anything
+   on the box. Mosaic already made this decision for *third-party* code — an
+   extension module is reached over a Unix socket for "no accidental network
+   exposure, and filesystem permissions as the access control" (ADR 0064) —
+   and never applied it to its own two processes. Both children move to Unix
+   sockets; the Supervisor keeps the only TCP listener.
+
+   It also settles the rate-limit finding above rather than leaving it a
+   judgement call: once the Platform is reachable only through a socket the
+   Supervisor holds, the Supervisor is the only party that can set
+   `X-Forwarded-For`, so reading it is a consequence rather than a decision
+   about which proxies to trust. Left as TCP it would have got *worse* — a
+   Unix socket has no peer address, so every client would share one bucket.
+
    **Still owed from the same reading:** the guard that refuses to restart a
    child *while an operation is in progress*. It has no caller yet — nothing
    deliberately stops the Platform — and it becomes real with slice 3's
@@ -1773,10 +1792,11 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    that is the Supervisor's for every client, so the ceiling
    [ADR 0101](adr/0101-the-pre-session-bootstrap.md) put on the one pre-auth
    surface is now shared by the whole household and spendable by any one of
-   them. The front door already sends `X-Forwarded-For`; reading it is a
-   decision about which proxies are trusted — a header is forgeable by anyone
-   who can reach the Platform directly — so the fix is that decision plus the
-   deployment guarantee that nothing can, not a one-line header read.
+   them. The Platform must read `X-Forwarded-For` instead — which is safe to
+   trust only because
+   [ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md) leaves no other
+   path to the Platform for a header to arrive by, so this waits on that
+   landing rather than being a header read somebody could do sooner.
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
 
 ### M6 — The release candidate gate
