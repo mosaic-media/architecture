@@ -41,7 +41,7 @@ remote source requires the user to name one.
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
-| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Fronting built — TLS on one port, routing, the degradation ladder; it supervises the Shell, and has never owned the Platform process | M4 |
+| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port; no real certificate and no Recovery SDUI | M4 |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
@@ -1561,10 +1561,45 @@ lifecycle, the front door, and the artefact.
    paths stay unpublished used invented paths, proving only that the router
    ignores paths nobody serves.
 
-   **Still unexercised.** The Supervisor has never owned the *Platform*
-   process — compose starts it, so it mints its own boot id and ADR 0060 is
-   half honoured in that shape. No TLS from a real certificate. There is no
-   Recovery SDUI and no renderer for
+   **It now owns both children, and ADR 0060 is honoured end to end.**
+   `docker-compose.supervisor.yml` runs one process tree — the Supervisor at
+   the root, the Platform and the Shell as its children on its own loopback,
+   reachable only through the front door, as a deployed install has it. All
+   three processes share one boot id; the Platform logs the Supervisor's,
+   which is the first time that has been true. Children stop in reverse
+   registration order, each with its own grace — the Shell's five seconds
+   because it serves static files, the Platform's forty-five because it may
+   be mid-transaction — and each child's console output is attributed, since
+   three processes on one terminal were otherwise indistinguishable.
+
+   Running it found three more defects, all of them in the shutdown path
+   nothing had ever taken:
+
+   - **The Supervisor exited without stopping its children.** `Run` was
+     launched and never waited for, so the process returned as soon as the
+     front door closed and every child was killed by Docker instead of
+     stopped by the Supervisor — the one job it exists to do, skipped
+     silently in the ordinary case.
+   - **`go run` swallowed the signal.** Under it the toolchain is the
+     process being signalled, so SIGTERM never reached the Supervisor at
+     all. A process manager that cannot receive SIGTERM is not one, and the
+     overlay now execs a built binary.
+   - **A stubborn child would never have been killed.** The old wait polled
+     `cmd.ProcessState` — racing `cmd.Wait`, and closing its channel after a
+     fixed fifteen seconds whether or not the process had gone, so the
+     select took the "it exited" branch and skipped the SIGKILL. It now
+     waits on the process actually exiting.
+
+   **A consequence worth recording.** A restarted Platform keeps the
+   Supervisor's boot id, and that id is the jobs runner's lease owner, so a
+   new Platform process is no longer necessarily a new owner. Nothing breaks
+   — `Claim` reclaims on lease expiry and never compares `leased_by` — but
+   `runner_test.go` asserted the old assumption in a comment, and that
+   comment was corrected in the same change.
+
+   **Still unexercised.** No TLS from a real certificate. Restarts have been
+   provoked by killing a child, never by a Platform that failed on its own.
+   There is no Recovery SDUI and no renderer for
    it, so ADR 0005's second rung does not exist and the bottom rung is a
    static holding page that says so rather than impersonating the feature. It
    does not observe itself file-only or merge into expert mode
