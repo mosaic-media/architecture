@@ -1793,8 +1793,13 @@ decides on the user's behalf to be recorded.
    apart from `GetConfigVersion`, which stays owed because nothing lists the
    versions, so no screen has an id to pass.
 
-   **Building the screen found three defects, none of which a gate could
-   have.** `runtime.log_level` — the schema's own "canonical hot-reload
+   **Building the screen found four defects, none of which a gate could
+   have, and the fourth was visible only by looking at it.** The pending
+   banner listed the payload's keys, and a pending version is a whole
+   configuration rather than a patch — so changing one setting reported a
+   change waiting to set two others to the values they already held. Nothing
+   stored or applied was wrong; the sentence was, in the direction that
+   teaches an operator to skim it. The other three: `runtime.log_level` — the schema's own "canonical hot-reload
    example", and the first field anybody would put on a configuration screen —
    is read by nothing, so a control for it would have saved a value, reported
    that it applied and changed nothing; `runtime.environment` is the same, and

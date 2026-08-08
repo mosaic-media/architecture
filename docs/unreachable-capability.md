@@ -327,8 +327,12 @@ the library pass runs is not drafting a version. Three controls would make an
 operator drive an implementation in order, and leave a half-finished draft
 behind every time they changed their mind.
 
-**Putting a door on it found three things no gate could have**, which is the
-argument for this register in the miniature:
+**Putting a door on it found four things no gate could have**, which is the
+argument for this register in the miniature. The fourth needed more than a
+door — it needed somebody looking at the screen: the pending banner listed the
+payload's keys, and a pending version is a whole configuration rather than a
+patch, so changing one setting announced a change waiting to set two others to
+the values they already had. The other three:
 
 - **`runtime.log_level` is read by nothing.** The schema's own comment calls it
   "the canonical hot-reload example", and it is the first field anybody would
