@@ -72,13 +72,18 @@ detail now renders from the object graph rather than asking the provider again.
 
 ## Where the build is
 
-Twelve repositories: `architecture`, `platform`, `sdk`, `contracts`, `web`,
-`registry`, and six modules — three **core**, compiled into the binary
-(`module-tmdb`, `module-cinemeta`, `module-remote-playback`), and three
-**extension**, installed at runtime and no dependency of the Platform anywhere
-(`module-stremio-addons`, `module-aiostreams`, `module-fanart-tv`). The Platform
-is AGPL-3.0 with a module-linking exception, the SDK Apache-2.0, optional modules
-their authors' choice, this documentation CC-BY-4.0 ([ADR 0022](adr/0022-licensing.md)).
+Thirteen repositories: `architecture`, `platform`, `supervisor`, `sdk`,
+`contracts`, `web`, `registry`, and six modules — three **core**, compiled
+into the binary (`module-tmdb`, `module-cinemeta`, `module-remote-playback`),
+and three **extension**, installed at runtime and no dependency of the
+Platform anywhere (`module-stremio-addons`, `module-aiostreams`,
+`module-fanart-tv`). `supervisor` was extracted from `platform`, where it was
+parked before it had a repository of its own — its history moved with it via
+`git subtree split`, and it now carries its own gate. The Platform is AGPL-3.0
+with a module-linking exception, the Supervisor plain AGPL-3.0 with no
+exception (it links no Module), the SDK Apache-2.0, optional modules their
+authors' choice, this documentation CC-BY-4.0
+([ADR 0022](adr/0022-licensing.md)).
 
 **The content model and the extension thesis.** `nodes`, `parts`, `relations`
 and `source_bindings` ([ADR 0013](adr/0013-object-graph.md),
@@ -1495,8 +1500,10 @@ chosen release; and a stale link recovers without the user seeing it.*
 ### M4 — The Supervisor, the Shell binary and the front door
 
 [ADR 0004](adr/0004-supervisor-as-host-manager.md)–[ADR 0006](adr/0006-supervisor-orchestrates-isolated-builds.md)
-have been decided since the beginning and there is no Supervisor on disk. What
-it is responsible for has since shrunk a long way: extension modules are the
+have been decided since the beginning, and [`supervisor`](https://github.com/mosaic-media/supervisor)
+is now its own repository, extracted from `platform` with its history
+(`git subtree split`) once it had somewhere to go. What it is responsible for
+has since shrunk a long way: extension modules are the
 Platform's throughout ([ADR 0079](adr/0079-the-platform-manages-extension-modules.md)),
 and per-install builds were deleted in favour of a CI-built binary
 ([ADR 0063](adr/0063-platform-binary-built-by-ci.md)). What is left is process
@@ -1565,11 +1572,14 @@ lifecycle, the front door, and the artefact.
    beyond the boot id). It does not touch extension modules, which is correct
    and was never at risk.
 
-   **It has no repository.** The module is `github.com/mosaic-media/supervisor`
-   and it is parked in `platform/supervisor/` with its own `go.mod`, so
-   extraction is a `git mv` with no import to rewrite. Creating the repository
-   is a decision nobody has taken; the boundary test is what keeps the parking
-   spot from becoming a coupling.
+   **It has its own repository now.** [`mosaic-media/supervisor`](https://github.com/mosaic-media/supervisor),
+   extracted from `platform/supervisor/` with the two commits that built it —
+   full authorship and messages, via `git subtree split`, not a fresh history.
+   It carries its own gate (`docker-compose.test.yml`) and its own AGPL-3.0
+   license with no module-linking exception, since it links no Module. The
+   boundary test that kept it import-clean while it was a parking spot is
+   what proved the extraction cost nothing: the `git subtree split` needed no
+   accompanying find-and-replace.
 3. **The artefact, and activating one.** The CI release matrix already
    cross-compiles five targets with checksums and builds a multi-arch image
    carrying `ffmpeg`. Remaining: signing the binaries and the checksums, which
