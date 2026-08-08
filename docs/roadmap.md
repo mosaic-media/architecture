@@ -1849,9 +1849,10 @@ decides on the user's behalf to be recorded.
 in its place; upgrade in place without the page in front of you dying; and when
 it does not work, the box says what is wrong and what to do about it.*
 
-**Discharges:** the register's configuration-versioning block — when slice 4's
-screen lands. The escalation beneath it is built and reachable by the
-Supervisor, not by a person.
+**Discharges:** the register's configuration-versioning block, apart from
+`GetConfigVersion` — slice 4's screen landed, and the escalation beneath it is
+now reachable by a person as well as by the Supervisor. Reading one version by
+id stays owed, because nothing lists the versions.
 
 **Decisions owed:** the domain and origin story. The session credential no
 longer waits on it ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)
