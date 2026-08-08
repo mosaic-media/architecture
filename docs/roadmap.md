@@ -41,7 +41,7 @@ remote source requires the user to name one.
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
-| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Nothing on disk | M4 |
+| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Fronting built — TLS on one port, routing, the degradation ladder; process supervision written and never used to run the real Platform | M4 |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
@@ -1522,16 +1522,43 @@ lifecycle, the front door, and the artefact.
    already records that nothing signs in from a build-time credential, and
    `VITE_PLATFORM_URL` was the only build-time value left. Two statements
    about one fact, and the older one rotted.
-2. **The Supervisor.** It manages the Platform and the Shell as processes, and
-   is the single front door: TLS, one port, the Shell at the root and the
-   Platform's API, `/artwork` and `/playback` behind it. It serves the offline
-   and reconnecting states, which are the Shell's only hand-written screens and
-   are [ADR 0031](adr/0031-server-owned-app-shell.md)'s stated exception — the
-   process still up when the Platform is not is the one that can answer. It
-   observes itself file-only and merges into expert mode when the Platform is up
-   ([ADR 0060](adr/0060-the-supervisor-observes-independently.md)), and the
-   dependency never inverts: the Platform stays observable standalone. It does
-   **not** touch extension modules.
+2. **The Supervisor.** **The front door is built; the rest of the slice is
+   not.** It is a separate Go module importing the standard library and
+   nothing else — enforced, because it has to run when the Platform cannot.
+
+   **Built:** TLS on one port with a self-signed certificate generated per
+   boot when none is configured (warned about at every start); routing, where
+   `/mosaic.` , `/artwork` and `/playback/` reach the Platform and everything
+   else is the Shell's; the degradation ladder; a health probe that reports
+   its children without going red itself, since the Supervisor being up is
+   what it exists to report. The Platform's handoff listener is deliberately
+   **not** routed — publishing it would put Generation and migration state on
+   the public port — and there is a test asserting it.
+
+   **Verified end to end in a sandbox:** the real Shell behind it over HTTPS,
+   loaded in headless Chromium, its same-origin Connect call routed to an
+   absent Platform, and the Supervisor's own "unavailable" rendered inside the
+   Shell's offline state. Stopping the Shell dropped to the bootstrap page.
+   That is [ADR 0005](adr/0005-supervisor-guarantees-an-interface.md)'s ladder
+   working, which is more than the tests could say.
+
+   **Not built, and none of it is nearly done.** Process supervision is
+   *written* — start, readiness probe, exponential backoff, process-group
+   stop, boot id handed to both children — and has never been used to run the
+   real Platform, only fronted one that was externally managed; that is the
+   part most likely to be wrong. There is no Recovery SDUI and no renderer for
+   it, so ADR 0005's second rung does not exist and the bottom rung is a
+   static holding page that says so rather than impersonating the feature. It
+   does not observe itself file-only or merge into expert mode
+   ([ADR 0060](adr/0060-the-supervisor-observes-independently.md) is unbuilt
+   beyond the boot id). It does not touch extension modules, which is correct
+   and was never at risk.
+
+   **It has no repository.** The module is `github.com/mosaic-media/supervisor`
+   and it is parked in `platform/supervisor/` with its own `go.mod`, so
+   extraction is a `git mv` with no import to rewrite. Creating the repository
+   is a decision nobody has taken; the boundary test is what keeps the parking
+   spot from becoming a coupling.
 3. **The artefact, and activating one.** The CI release matrix already
    cross-compiles five targets with checksums and builds a multi-arch image
    carrying `ffmpeg`. Remaining: signing the binaries and the checksums, which
