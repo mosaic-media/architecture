@@ -1614,24 +1614,50 @@ decides on the user's behalf to be recorded.
    `runner_test.go` asserted the old assumption in a comment, and that
    comment was corrected in the same change.
 
-   **Two defects in what is built, both found by reading Home Assistant's
-   Supervisor rather than by any gate.** They are named here because they are
-   wrong now, not future work:
+   **Two defects found by reading Home Assistant's Supervisor rather than by
+   any gate here, both since fixed.**
 
-   - **The watchdog has no guards and no ceiling.** A child that exits is
-     restarted, unconditionally and forever. HA's refuses to act while the
-     component is in an error state (rollback owns it), while it is on the
-     landing page, or **while a task is in progress** — and caps attempts
-     (5, with a 30-minute throttle) rather than looping. Mosaic's would
-     cheerfully restart the Platform in the middle of a Generation
-     activation, and would restart a hopeless Platform until the host is
-     turned off.
-   - **Readiness is the Platform's own opinion of itself.** The Supervisor
-     polls `/readyz`, which the Platform answers about itself. HA
-     deliberately probes *as an external client would*, bypassing its own
-     internal API layer, because a component can report every subsystem
-     loaded while the endpoint a user reaches is broken. The front door is
-     where Mosaic can ask the same question and does not.
+   - ~~The watchdog has no ceiling.~~ **Fixed.** A child that could not start
+     was restarted forever with an identical line every minute, so a box that
+     was never coming back looked exactly like a slow one. Consecutive
+     failures are counted, crossing the ceiling is said once and reported as
+     `unrecoverable` beside the run and the last error, and retries continue
+     at the capped backoff so a database that was briefly away still heals
+     itself. Forgiving the run requires the child to have *stayed up* — a
+     duration, not the event of becoming ready.
+   - ~~Readiness is the Platform's own opinion of itself.~~ **Fixed.** The
+     handoff `/readyz` cannot report that the client-facing listener failed
+     to bind or that its mux is unrouted; those are two listeners and only
+     one serves users. Both are probed now and both must pass.
+
+   **What choosing the client-side probe turned up, and it is not the
+   Supervisor's to fix.** The obvious target — `AuthService/Bootstrap`, the
+   one surface reachable before authentication — is rate-limited
+   ([ADR 0101](adr/0101-the-pre-session-bootstrap.md)), and `peerOf` keys
+   that limit on the socket address. Now that every client arrives through
+   the front door, that address is the Supervisor's for all of them: **the
+   per-peer limit has become effectively global, and one abusive client can
+   spend everyone's budget.** The front door already sets `X-Forwarded-For`
+   and `X-Forwarded-Proto`; the Platform reads neither. Trusting a forwarded
+   header is a decision about which proxies are trusted, so it is recorded
+   here rather than taken quietly. The Supervisor sidesteps it by probing
+   with a GET, which Connect refuses before the handler runs — no RPC, no
+   budget spent.
+
+   **A third defect, in the fix itself, found by writing its test.** Clearing
+   the failure run when a child "became ready" is wrong, because a child with
+   no probe is ready the instant it starts: every attempt forgave the one
+   before it, the count never rose, and the condition could never be reported
+   at all. It is the same shape as the first-start-counted-as-a-restart bug —
+   a counter whose reset condition is satisfied by the very event it is meant
+   to be counting.
+
+   **Still owed from the same reading:** the guard that refuses to restart a
+   child *while an operation is in progress*. It has no caller yet — nothing
+   deliberately stops the Platform — and it becomes real with slice 3's
+   Generation activation and slice 4's Restart-class config change, either of
+   which the watchdog would currently fight. Deliberately not built ahead of
+   the first thing that needs it.
 
    **Still unexercised.** No TLS from a real certificate. Restarts have been
    provoked by killing a child, never by a Platform that failed on its own.
@@ -1741,6 +1767,16 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    correctly disabled and the real fix is a ruleset. Layer-3 egress containment
    is reported honestly and provided by the deployment, which the shipped
    topology should actually provide.
+
+   **The pre-session rate limit stopped being per-peer when M4 landed.**
+   `peerOf` keys on the socket address, and behind the Supervisor's front door
+   that is the Supervisor's for every client, so the ceiling
+   [ADR 0101](adr/0101-the-pre-session-bootstrap.md) put on the one pre-auth
+   surface is now shared by the whole household and spendable by any one of
+   them. The front door already sends `X-Forwarded-For`; reading it is a
+   decision about which proxies are trusted — a header is forgeable by anyone
+   who can reach the Platform directly — so the fix is that decision plus the
+   deployment guarantee that nothing can, not a one-line header read.
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
 
 ### M6 — The release candidate gate
