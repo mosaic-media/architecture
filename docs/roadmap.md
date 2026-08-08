@@ -1566,11 +1566,27 @@ lifecycle, the front door, and the artefact.
    the root, the Platform and the Shell as its children on its own loopback,
    reachable only through the front door, as a deployed install has it. All
    three processes share one boot id; the Platform logs the Supervisor's,
-   which is the first time that has been true. Children stop in reverse
-   registration order, each with its own grace — the Shell's five seconds
-   because it serves static files, the Platform's forty-five because it may
-   be mid-transaction — and each child's console output is attributed, since
-   three processes on one terminal were otherwise indistinguishable.
+   which is the first time that has been true. Each child's console output is
+   attributed, since three processes on one terminal were otherwise
+   indistinguishable.
+
+   **Shutdown walks the ladder down rather than falling off it.** Children
+   stop in registration order — the Platform first, the interface last — and
+   the front door stays open until both are down, so the Platform goes and
+   the Shell still renders its offline state, then the Shell goes and the
+   holding page answers, then the door closes. Each child has its own grace:
+   five seconds for the Shell, which serves static files, forty-five for the
+   Platform, which may be mid-transaction.
+
+   This is deliberately **not** the conventional stop-dependents-first, which
+   was how it was built first and was wrong. That rule exists to drain traffic
+   through the dependent, and it does not apply here — clients reach the
+   Platform through the front door directly, never through the Shell — so
+   stopping the Shell first drained nothing and only discarded the richest
+   screen still standing, which is the one thing
+   [ADR 0005](adr/0005-supervisor-guarantees-an-interface.md) says not to do.
+   Closing the front door first, as it also did, made the whole ordering
+   unobservable: a client got a refused connection either way.
 
    Running it found three more defects, all of them in the shutdown path
    nothing had ever taken:
