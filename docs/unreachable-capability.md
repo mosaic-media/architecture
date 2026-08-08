@@ -30,7 +30,9 @@ They *are* complete as Platform capability. The slice that was never scheduled
 is the one that puts a door on them. Permissions management is the worked
 example, in both directions: it sat here for the whole life of the project, and
 the milestone that finally put doors on it found seven defects in services that
-had been passing every test throughout.
+had been passing every test throughout. Config versioning then repeated it in
+miniature — three more defects, including a field of the schema's own choosing
+that nothing reads.
 
 So there is no automated signal, and the written record reads like success. The
 only thing standing between "deferred" and "forgotten" is a list somebody
@@ -58,26 +60,17 @@ clicked it.
 
 ## Owed
 
-### Configuration versioning
+### Reading one configuration version by id
 
 | Removed operation | Application service | What it does |
 |---|---|---|
-| `draftConfigVersion` | `DraftConfigVersion` | Draft a new configuration version |
-| `validateConfigVersion` | `ValidateConfigVersion` | Validate a draft and classify its reload class |
-| `activateConfigVersion` | `ActivateConfigVersion` | Activate a validated version |
-| `activeConfigVersion` | `GetActiveConfigVersion` | Read the active version |
 | `configVersion` | `GetConfigVersion` | Read a version by id |
 
-The reload-class machinery — every config field declares `Hot`, `Restart`,
-`Generation` or `Recovery`, and only a Hot-only change activates without
-escalation — is implemented and tested, and no administrator can drive it. (It
-is a standing invariant in [architecture.md](architecture.md) rather than an ADR
-of its own; there is no decision record for configuration versioning.)
-
-**Partial exception:** the Supervisor handoff serves `GET :8080/config`, which
-reports *which* version is active and its reload class. That is a read-only
-operational probe that deliberately bypasses the policy gate; it cannot draft,
-validate or activate anything. It does not discharge these rows.
+The rest of the configuration block left this register in M4 — see
+[below](#discharged-in-m4-configuration-versioning). This row did not: nothing
+lists the versions, so there is no id for a screen to pass. A history of what
+the install was configured to do, and when, is a reasonable thing to want and
+nothing needs it yet.
 
 ### The saved-search library rule
 
@@ -309,6 +302,56 @@ could not read its own name; settings would not open for one at all; "Add to
 library" was drawn for people who cannot import; creating four accounts produced
 three with no authority; and a claimed server never reconciled its owner's role.
 Each one is a service that worked perfectly and a product that did not.
+
+---
+
+## Discharged in M4 — configuration versioning
+
+The reload-class machinery left this register on 2026-08-08. It is recorded
+rather than deleted for the reason the M1 block is: it sat here from the day it
+was written, and a deleted entry reads as a capability nobody ever missed.
+
+| Application service | Where a human reaches it |
+|---|---|
+| `DraftConfigVersion` | Settings › Configuration › Apply |
+| `ValidateConfigVersion` | The same control — a rejected value comes back on the field that carried it |
+| `ActivateConfigVersion` | The same control — the toast says whether it applied or is waiting |
+| `GetActiveConfigVersion` | The panel's rows: what each setting is worth right now |
+
+`GetConfigVersion` is the one row of the block that is not discharged, and it
+stays [owed above](#reading-one-configuration-version-by-id).
+
+**One control, not three.** Draft, validate and activate are the machinery of
+the model rather than a workflow a person performs: somebody changing how often
+the library pass runs is not drafting a version. Three controls would make an
+operator drive an implementation in order, and leave a half-finished draft
+behind every time they changed their mind.
+
+**Putting a door on it found three things no gate could have**, which is the
+argument for this register in the miniature:
+
+- **`runtime.log_level` is read by nothing.** The schema's own comment calls it
+  "the canonical hot-reload example", and it is the first field anybody would
+  put on a configuration screen. A control for it would have saved a value,
+  reported that it applied, and changed nothing. `runtime.environment` is in the
+  same position. Both are excluded, and a test now asserts every offered field
+  against the readers' own constants.
+- **A number submitted as text validates and is then ignored.** Every reader
+  type-asserts a JSON number; validation checks only that a field is
+  *registered*, never what type it holds. So `"30"` would have drafted,
+  validated, activated and reported "Applied." while the reader kept using the
+  default. The transport parses at the boundary.
+- **The stored payload is not what is in force.** Each reader applies its own
+  default for an unset field, falls back again for an unusable one, and the
+  audit floor ([ADR 0057](adr/0057-audit-is-a-store-not-a-log-stream.md)) is applied after
+  both — so a panel formatting the payload would have shown "not set" on a
+  fresh install while the Platform kept logs for a fortnight. The panel asks the
+  readers, which are the definition of what applies.
+
+The earlier **partial exception** stands and is unchanged: the Supervisor
+handoff's `GET :8080/config` reports which version is active and its reload
+class, as a read-only operational probe that deliberately bypasses the policy
+gate. It never discharged anything; the screen did.
 
 ---
 

@@ -56,7 +56,7 @@ remote source requires the user to name one.
 | 15 | Remote playback that feels instant | Built — 3.75 s cold, 11 ms warm | — |
 | 16 | Browse by streaming service or genre without involved setup | Genre is reachable on both surfaces — a facet over the shelf and a filter on a source's catalogue; streaming service is browsable as a source's catalogue asked live, and the union with what the library already holds is unbuilt | M2 |
 | 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) | — |
-| 18 | A Shell that is its own binary, decoupled from the Platform | Built — `mosaic-shell` embeds the bundle and is told the endpoint at runtime; never served to a person | M4 |
+| 18 | A Shell that is its own binary, decoupled from the Platform | Built — `mosaic-shell` embeds the bundle and is told the endpoint at runtime; served through the front door, where it drew the real setup wizard | — |
 
 Five requirements were not in that list because they were not asked for and the
 release is not credible without them. **Signing out** landed in M1 — it is on
@@ -1510,20 +1510,21 @@ and per-install builds were deleted in favour of a CI-built binary
 lifecycle, the front door, the artefact, and somewhere for what the Supervisor
 decides on the user's behalf to be recorded.
 
-1. ~~**`mosaic-shell` as its own binary.**~~ **Built, and never served to a
-   person.** `web/mosaic-shell` is a Go binary embedding the built bundle: a
+1. ~~**`mosaic-shell` as its own binary.**~~ **Built, and since slice 2 it is
+   what a person is served.** `web/mosaic-shell` is a Go binary embedding the built bundle: a
    deep-link fallback, the Platform endpoint injected into the document **at
    runtime rather than at build time**, `/healthz`, and `MOSAIC_BOOT_ID`
    adopted when a supervising process supplies one. It renders nothing and
    decides nothing, and there is no server-side rendering.
 
-   **What was left out:** it has never been driven against a live Platform.
-   The evidence is the Go and web gates green in their containers, then the
-   linked binary loaded in headless Chromium, where React mounted and the
-   Shell sent `AuthService/Bootstrap` to the injected endpoint rather than to
-   its own origin — which settles the runtime-injection question and nothing
-   about whether a real session works through it. No TLS: the front door is
-   slice 2's, and terminating it here would build the thing twice.
+   **What this slice left out, and slice 2 then closed:** it had never been
+   driven against a live Platform. Its own evidence was the Go and web gates
+   green in their containers, then the linked binary loaded in headless
+   Chromium, where React mounted and the Shell sent `AuthService/Bootstrap` to
+   the injected endpoint rather than to its own origin — which settled the
+   runtime-injection question and nothing about whether a real session works
+   through it. No TLS either: the front door is slice 2's, and terminating it
+   here would have built the thing twice.
 
    **A correction this slice forced.** The plan above said the Shell signs in
    "from credentials compiled into it". It has not since M1 — requirement 4
@@ -1746,8 +1747,12 @@ decides on the user's behalf to be recorded.
    ([ADR 0065](adr/0065-module-distribution-and-trust.md),
    [ADR 0079](adr/0079-the-platform-manages-extension-modules.md)), so what is
    missing here is key custody and nothing conceptual.
-4. **Configuration versioning gets its door.** **The escalation is built; the
-   door is not.** A change needing more than the Platform can do to itself was
+4. ~~**Configuration versioning gets its door.**~~ **Built — the escalation
+   and the screen. `MOSAIC_MODULES` is what it left out**, still bridging
+   through the environment rather than being the Generation-class
+   configuration it was designed as.
+
+   A change needing more than the Platform can do to itself was
    classified correctly and then left Validated, which lost the fact that
    somebody had asked for it — a restart could not tell a version a user chose
    from one that merely validated, so it would have had to apply all of them
@@ -1772,10 +1777,43 @@ decides on the user's behalf to be recorded.
    reach to withdraw it — so nothing failed, no test could see it, and the
    feature simply did not happen.
 
-   **Still owed:** the screen. The five services remain unreachable to a user,
-   so the register's configuration-versioning block is *not* discharged by
-   this. `MOSAIC_MODULES` also still bridges through the environment rather
-   than being the Generation-class configuration it was designed as.
+   **The screen.** Settings › Configuration shows what each setting is worth
+   now, what a change to it would cost, and what is waiting for a restart.
+   Draft, validate and activate are **one control**: they are the machinery of
+   the model rather than a workflow a person performs, and three controls
+   would make an operator drive an implementation in order and leave a
+   half-finished draft behind on every change of mind.
+
+   Demonstrated through the Supervisor's front door on the running stack: a
+   Hot-only change applied immediately; a change mixing a Hot field with a
+   Restart one went pending with a banner naming both, and the restart logged
+   "applied a configuration change that was waiting for this restart" with the
+   scheduler picking up the new interval; a non-numeric value came back on the
+   field that carried it. That discharges the register's configuration block
+   apart from `GetConfigVersion`, which stays owed because nothing lists the
+   versions, so no screen has an id to pass.
+
+   **Building the screen found three defects, none of which a gate could
+   have.** `runtime.log_level` — the schema's own "canonical hot-reload
+   example", and the first field anybody would put on a configuration screen —
+   is read by nothing, so a control for it would have saved a value, reported
+   that it applied and changed nothing; `runtime.environment` is the same, and
+   both are excluded with a test asserting the offered list against the
+   readers' own field constants. A number submitted as text validates and is
+   then silently ignored, because every reader type-asserts a JSON number
+   while validation checks only that a field is *registered* — so `"30"` would
+   have reported "Applied." and left the default in force. And the stored
+   payload is not what is in force: each reader applies its own default for an
+   unset field and falls back again for an unusable one, so a panel formatting
+   the payload would have shown "not set" on a fresh install while the
+   Platform kept logs for a fortnight.
+
+   **Which fields are offered is a curated set, and deliberately not the
+   schema.** `composition.modules` is Generation-class and Generation
+   activation is not built, so a value saved there would wait for an
+   escalation that cannot happen; `storage.postgres.dsn` and its password are
+   Recovery-class, secret, and the pair that locks an operator out of their
+   own install.
 5. **Operational findings become durable state**
    ([ADR 0119](adr/0119-operational-findings-are-durable-state.md)). Every
    failure Mosaic has is a log line that scrolls away: a module that will not
