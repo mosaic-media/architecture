@@ -1652,24 +1652,26 @@ decides on the user's behalf to be recorded.
    a counter whose reset condition is satisfied by the very event it is meant
    to be counting.
 
-   **The front door is a convention, not a property — and becomes one**
-   ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)). The Platform
-   holds two TCP listeners and the Shell a third, so "the Supervisor is the
-   only way in" is the address people are told about rather than anything
-   enforced; the handoff listener, which carries Generation and migration
-   state and deliberately bypasses the policy gate, is reachable by anything
-   on the box. Mosaic already made this decision for *third-party* code — an
-   extension module is reached over a Unix socket for "no accidental network
-   exposure, and filesystem permissions as the access control" (ADR 0064) —
-   and never applied it to its own two processes. Both children move to Unix
-   sockets; the Supervisor keeps the only TCP listener.
+   **The front door is a property now, not a convention**
+   ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)). **Built.**
+   The Platform's two listeners and the Shell's are Unix sockets, mode `0600`
+   in a `0700` runtime directory the Supervisor creates, and the Supervisor
+   holds the only TCP listener. Mosaic had already made this decision for
+   *third-party* code — an extension module is reached over a socket for "no
+   accidental network exposure, and filesystem permissions as the access
+   control" (ADR 0064) — and never applied it to its own two processes.
 
-   It also settles the rate-limit finding above rather than leaving it a
-   judgement call: once the Platform is reachable only through a socket the
-   Supervisor holds, the Supervisor is the only party that can set
-   `X-Forwarded-For`, so reading it is a consequence rather than a decision
-   about which proxies to trust. Left as TCP it would have got *worse* — a
-   Unix socket has no peer address, so every client would share one bucket.
+   Verified by counting listeners rather than by reading the configuration:
+   inside the running container the only TCP socket is `:8443`, and 8080,
+   8081 and 8090 are gone and refused from the host. The Platform's two
+   surfaces stay two sockets, because collapsing them would publish the
+   handoff channel to anything that could reach the client API.
+
+   **What is still owed from it:** the Platform reading `X-Forwarded-For`.
+   That is what repairs ADR 0101's per-peer ceiling, and it is only sound
+   now — a socket has no peer address at all, so until it lands every client
+   shares one bucket, which is worse than before. Scheduled in M5's hardening
+   sweep and unblocked by this.
 
    **Still owed from the same reading:** the guard that refuses to restart a
    child *while an operation is in progress*. It has no caller yet — nothing
