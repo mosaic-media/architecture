@@ -1685,12 +1685,21 @@ decides on the user's behalf to be recorded.
    Verified live: 25 requests from one source were served 21 then refused,
    while a second source was served at the same instant.
 
-   **Still owed from the same reading:** the guard that refuses to restart a
-   child *while an operation is in progress*. It has no caller yet — nothing
-   deliberately stops the Platform — and it becomes real with slice 3's
-   Generation activation and slice 4's Restart-class config change, either of
-   which the watchdog would currently fight. Deliberately not built ahead of
-   the first thing that needs it.
+   ~~Still owed from the same reading: the guard that refuses to restart a
+   child while an operation is in progress.~~ **Built.** `Hold` pauses the
+   watchdog for a child while an operation owns it, nesting so overlapping
+   operations do not release each other's; `Restart` stops a child and lets
+   it come back, taking the hold itself so a caller cannot forget to. A
+   deliberate stop is reported distinctly and counts as nothing — no failure,
+   no backoff, no recorded error — because counting it would have an
+   activation look like a crashing Platform and end as `unrecoverable`.
+
+   It was built ahead of its first caller after all, and the reason is worth
+   stating: **slices 3 and 4 are both blocked on it**, so it is the shared
+   prerequisite rather than speculative machinery for one of them. The hold
+   delays the *restart* and not the accounting — waiting before recording
+   left a dead child reporting a pid that no longer existed, which a test
+   caught by timing out rather than failing.
 
    **Still unexercised.** No TLS from a real certificate. Restarts have been
    provoked by killing a child, never by a Platform that failed on its own.
