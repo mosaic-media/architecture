@@ -2395,7 +2395,8 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    through the front door
    ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
-5. **Telemetry moves onto OpenTelemetry** — **three of four landed**
+5. **Telemetry moves onto OpenTelemetry** — **three of four landed**, and the
+   metric surface ADR 0059 had withheld landed beside it
    ([ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md)).
    Mosaic has hand-written the same thing three times — the Platform's ~1,300
    lines, the SDK's smaller copy for modules, and the Supervisor's third, whose
@@ -2562,6 +2563,46 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    the SDK's `Encoder`, which needed both a tracer and a logger and now has
    both; then the sinks becoming OTel exporters, which is the change that moves
    the wire shape and the schema and therefore wants its own slice.
+
+   **Landed alongside: the module metric surface**
+   ([ADR 0130](adr/0130-the-module-metric-surface.md)). It is not part of the
+   conversion and would not have been reachable without it — ADR 0059 published
+   no counter and no histogram, because "publishing a counter that silently
+   discards is worse than publishing nothing", and said they would join the
+   surface when the Platform could back them. Running the OTel SDK is what let
+   it. `v1.Telemetry` gained `Count` and `Measure` on the same ambient handle,
+   the harness carries both to the three out-of-process modules, and a **Metrics
+   screen** reads the values, composed from SDUI that already existed so it cost
+   no client release and no definition.
+
+   The prompt was a question about *shape* rather than a feature request: whether
+   a third-party contributor faces too high a learning curve to instrument
+   correctly, and simply does not. For logging and tracing the answer was already
+   good and is worth writing down — a module that never mentions telemetry is
+   fully traced, because the Platform spans the invocation at the seam, the
+   context carries the trace opaquely and the HTTP client the composition root
+   hands over propagates it. Six module repositories hold **six** hand-written
+   telemetry call sites between them and are all fully traced. Metrics were the
+   honest hole: not hard, *absent*.
+
+   **Left out: retention, and export.** The values live in the Platform process
+   behind a `ManualReader` and reset on restart, which the screen says in its
+   lead rather than leaving a reader to conclude a module has done nothing. A
+   retained series is a schema, a retention policy and a rollup and earns its own
+   slice. And nothing exports to a collector yet: the reader is not an OTLP
+   exporter, so the values are readable in Mosaic and nowhere else — which is
+   precisely the benefit ADR 0128 was taken for, still untaken here.
+
+   **Two things worth recording from the build.** The metric API is `v1.45.0`
+   and stable, unlike the logs API this conversion had to take at `v0.21.0` — so
+   the fourth allowlisted OTel module is the least risky of the four. And the
+   cardinality bound needed a *different lifetime* from ADR 0059's record quota,
+   which is the kind of thing only building it reveals: a record quota is per
+   invocation because a chatty module should degrade its own call, but a series
+   is created once and outlives the invocation, so a per-invocation cap would
+   reset and admit the same unbounded growth on the next call. An over-cap series
+   is folded rather than dropped, because dropping makes a counter under-report
+   and a wrong number is worse than a coarse one.
 
    **Two costs stated rather than discovered later.** The SDK's zero-dependency
    rule ends, replaced by "the OTel API modules and nothing else" — measured at

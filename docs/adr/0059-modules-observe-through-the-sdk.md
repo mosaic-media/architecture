@@ -1,6 +1,6 @@
 # 59. Modules observe through the SDK
 
-**Status:** Built, and partly superseded by [ADR 0128](0128-opentelemetry-is-the-telemetry-implementation.md): the decision stands — the Platform owns the observability plane, the SDK declares the surface, a module configures nothing — and the *rejection* of the OpenTelemetry API does not. The SDK now depends on OTel's API modules and the surface described here is backed by them; the zero-dependency premise this record reasons from is gone.
+**Status:** Built, and partly superseded by [ADR 0128](0128-opentelemetry-is-the-telemetry-implementation.md): the decision stands — the Platform owns the observability plane, the SDK declares the surface, a module configures nothing — and the *rejection* of the OpenTelemetry API does not. The SDK now depends on OTel's API modules and the surface described here is backed by them; the zero-dependency premise this record reasons from is gone. The counter and histogram this record withheld "until the Platform can back them" were added by [ADR 0130](0130-the-module-metric-surface.md) once it could; that is the condition being met rather than the decision changing.
 **Date:** 2026-07-22
 
 ## Context
