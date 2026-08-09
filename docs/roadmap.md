@@ -1980,12 +1980,47 @@ decides on the user's behalf to be recorded.
    is being installed and by whom**, and names three gaps that have to close
    before any of the above is reachable:
 
-   - ~~**The Supervisor has no CI at all**~~ **— gate and release closed, image
-     still owed.** It was extracted from `platform` with its history and
-     arrived without workflows, so the process a supervised install installs was
-     the one nothing checked. `verify.yml` runs its container gate; `release.yml`
-     cross-compiles the same five targets as the other two artefacts. The `full`
-     and `lite` images are not built yet.
+   - ~~**The Supervisor has no CI at all**~~ **— gate, release and both images
+     closed.** It was extracted from `platform` with its history and arrived
+     without workflows, so the process a supervised install installs was the one
+     nothing checked. `verify.yml` runs its container gate; `release.yml`
+     cross-compiles the same five targets as the other two artefacts and now
+     builds `lite` and `full` from those binaries — packaging artefacts, not a
+     second build.
+
+     **Neither image contains the Platform or the Shell**, which is the shape of
+     the supervised install rather than an omission: the Supervisor fetches a
+     signed Generation on first boot, and an image carrying them would pin two
+     versions to the image tag and make an upgrade a re-pull. **PostgreSQL in
+     `full` is started and stopped by the entrypoint, not by the Supervisor** —
+     the child model probes HTTP and a database answers neither probe, so making
+     it a child would mean a second kind of probe and a start ordering in order
+     to package one deployment of three. The ordering the entrypoint owns is the
+     load-bearing part and was verified by stopping the container: platform,
+     shell, supervisor, then the database.
+
+     **Running the image found two defects.** Ownership was inferred from "no
+     command and nowhere to fetch one", which reads as "somebody else runs
+     this" — and in an image there is no somebody else, so a `docker run` with no
+     release URL sat at "Starting" forever without ever saying it had nowhere to
+     fetch from. It is stated now, with an explicit opt-out, and the failure
+     reaches the recovery screen as well as the log, because nothing is serving
+     in that state and the screen is the only surface anybody can reach. The
+     second was the image's: children inherit the Supervisor's working
+     directory, and the Platform resolves its telemetry log and extension
+     install directories against it — left at `/` a first boot failed with "exit
+     status 1" and nothing about a directory.
+
+     That second failure is also the best evidence slice 5 works: the spool came
+     out of it carrying all three findings — the child that would not come up,
+     the Generation rolled back, the provisioning that failed — written by a
+     Supervisor whose Platform never started.
+
+     **A `docker run` of `full` is now a working Mosaic** where a release
+     catalogue exists to point it at: it initialises a database, generates its
+     own password, fetches and verifies a signed Generation, activates it and
+     serves the Shell it downloaded. Demonstrated against a development
+     catalogue; there is still no *official* one to default to.
 
      **Its verification of a release landed with them, on a development key.**
      What is signed is the checksums file, not each binary — one `SHA256SUMS`
