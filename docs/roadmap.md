@@ -1704,15 +1704,34 @@ decides on the user's behalf to be recorded.
 
    **Still unexercised.** No TLS from a real certificate. Restarts have been
    provoked by killing a child, never by a Platform that failed on its own.
-   There is no Recovery SDUI and no renderer for
-   it, so ADR 0005's second rung does not exist and the bottom rung is a
-   static holding page that says so rather than impersonating the feature.
+   **The Recovery SDUI emitter is built** and served at `/supervisor/ui`; what
+   is still missing is every *renderer* — the Shell does not ask for it, and
+   there is no embedded one, so ADR 0005's second and third rungs are half
+   each and the bottom rung is still a static holding page that says so rather
+   than impersonating the feature.
    **That gap is on the first-boot path, not only the failure path** — ADR 0005
    puts onboarding on Supervisor-emitted SDUI, because at that point the
    Platform does not exist to emit any. How the emitter obtains the contract
    without breaking the Supervisor's import boundary was open until
-   [ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md); the boundary
-   widens by exactly one module, and not until the emitter lands. It
+   [ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md), and the
+   boundary has now widened by exactly one module, with the emitter that needed
+   it.
+
+   **Exactly one is a claim the test had to enforce rather than describe.** The
+   first version of the handler reached for `protojson` to marshal a node —
+   a second module — and the boundary test refused it; the contract had already
+   anticipated the case, since `ui.Element.BuildJSON` exists so an emitter can
+   produce the wire bytes without importing protobuf. The Supervisor emits
+   **primitives only**, checked against `sdui.Primitives` rather than a list
+   maintained beside it, because a definition is data the Platform delivers on
+   connect and there is no Platform in the states these screens describe.
+
+   Two contract gaps came out of being a second emit-side, both worked around
+   locally rather than fixed: the `Text` primitive's props have no typed helpers,
+   so `text` and `style` go through the generic `ui.Prop` — the pattern the
+   Platform also falls back to — and `value` is a string on the field primitives
+   and a number on `ProgressBar`, so the typed `ui.Value` helper is wrong for it,
+   against `contracts`' own "one prop key, one type" rule. It
    does not observe itself file-only or merge into expert mode
    ([ADR 0060](adr/0060-the-supervisor-observes-independently.md) is unbuilt
    beyond the boot id). It does not touch extension modules, which is correct
