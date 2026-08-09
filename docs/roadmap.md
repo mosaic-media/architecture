@@ -2493,21 +2493,56 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    field added to the SDK goes red the moment it exists rather than being
    silently dropped. It found the first three the same way.
 
-   **Not landed: the Platform's own ~1,300 lines.** `Record`, `Field`, `Level`,
-   `Sink`, `Span`, `TraceContext`, the batching buffer, the file and console
-   sinks and the PostgreSQL store with its partitioning and retention are still
-   Mosaic's own. The Platform is *on* the new SDK and has not yet moved its own
-   emission onto it, so the module adapter still carries its own copy of the
-   classification mapping rather than using the SDK's `Encoder` — which is the
-   duplication ADR 0128 exists to remove, still present in the one place that
-   most wants it gone.
+   **The Platform's spans are OpenTelemetry's now.** `Start` goes through an
+   OTel tracer, so Mosaic's instrumentation composes with anything off the
+   shelf, and a finished span reaches the same `SpanSink` the PostgreSQL store
+   and the expert-mode viewer already read — neither the schema nor the surface
+   a person looks at moved.
 
-   **The order the remainder has to go in, and why it is not one commit.** The
-   Platform's spans are W3C trace ids with its own `Start`/`Span`, and its module
-   adapter hands modules a span that continues that trace. Adopting the SDK's
-   OTel-backed `Telemetry` means giving it a real `trace.Tracer`, so logs and
-   spans have to move together or module spans stop joining the Platform's trace
-   — a half-conversion that would be worse than either end of it.
+   **The coherence evidence is the pre-existing suite, unchanged**, which is
+   worth more than anything written to match the new implementation: nested
+   spans forming a tree, every parent id naming a real span, the logger
+   rebinding so a log line carries its own span rather than an ancestor's, an
+   inbound traceparent continuing rather than restarting, a genuinely parentless
+   root, an unsampled trace still carrying its id. On top of it, one journey is
+   now asserted end to end — a client's traceparent through an entry span, a
+   handler, a module invocation and a SQL statement, with a log record at every
+   level, on one trace id and one parent chain. A conversion producing a valid
+   trace id *per hop* would pass every test that checks one exists while leaving
+   a support report joinable to nothing.
+
+   The load-bearing wiring is that `TraceInto` seeds **both** representations —
+   Mosaic's, which `TraceFrom` reads, and OpenTelemetry's, which the tracer
+   parents from. Removing that one line makes a journey abandon the caller's
+   trace and start its own, which is how it was proven rather than assumed.
+
+   Two choices stated rather than left to be found. **Sampling is
+   `AlwaysSample`**: [ADR 0054](adr/0054-the-correlation-id-is-the-trace-id.md)
+   says the flag governs whether spans are recorded, and the implementation it
+   describes has always written every span to the sink regardless — so a
+   parent-based sampler would have silently stopped recording spans for
+   unsampled traces, which is a retention decision rather than a side effect of
+   changing a representation. And **the process identity travels on the span
+   rather than the provider**, because it comes from the ambient logger when a
+   span starts while the provider is built once by whoever configured the sink;
+   moving it belongs with the composition root's own conversion.
+
+   **Not landed: the Platform's log records, and its ~1,300 lines around them.** `Record`, `Field`, `Level`,
+   `Logger`, `Record`, `Sink`, the batching buffer, the file and console sinks
+   and the PostgreSQL store with its partitioning and retention are unchanged.
+   So the Platform emits **OpenTelemetry spans and Mosaic-shaped logs**, both
+   carrying the same trace and span ids — which is what makes that intermediate
+   state coherent rather than half-converted. The module adapter still carries
+   its own copy of the classification mapping rather than the SDK's `Encoder`,
+   which is the duplication ADR 0128 exists to remove; it needs the log half,
+   because `Encoder` produces OTel attributes and the Platform's sinks still
+   want `telemetry.Field`.
+
+   **What remains, in order.** The log half — `Logger` emitting an OTel record,
+   the file and console sinks becoming exporters, the PostgreSQL writer becoming
+   a processor — and then the module adapter onto `v1.NewTelemetry` with the
+   SDK's `Encoder`, which needs both a tracer and a logger and so comes last.
+   The tracer now exists, so that precondition is met.
 
    **Two costs stated rather than discovered later.** The SDK's zero-dependency
    rule ends, replaced by "the OTel API modules and nothing else" — measured at
