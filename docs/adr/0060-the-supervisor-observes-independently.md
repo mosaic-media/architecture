@@ -1,13 +1,16 @@
 # 60. The Supervisor observes independently
 
 **Status:** Built in part — the writing, not the reading. The Supervisor keeps
-its own file-and-console telemetry in the Platform's record format under a shared
-boot id, records the lifecycle enumerated below, and rotates size-capped; the
-Platform adopts an inbound `MOSAIC_BOOT_ID` rather than always minting one. Both
-read paths are unbuilt: expert mode does not merge the Supervisor's records, and
-the Supervisor serves no status-and-log page. The support bundle carries no log
-file from either process. The format is duplicated rather than shared, which the
-Consequences left open — the key set is pinned by a test in the Supervisor.
+its own file-and-console telemetry under a shared boot id, records the lifecycle
+enumerated below, and rotates size-capped; the Platform adopts an inbound
+`MOSAIC_BOOT_ID` rather than always minting one. Both read paths are unbuilt:
+expert mode does not merge the Supervisor's records, and the Supervisor serves no
+status-and-log page. The support bundle carries no log file from either process.
+Partly superseded by [ADR 0128](0128-opentelemetry-is-the-telemetry-implementation.md),
+which reverses the rejection of the OTel SDK below — the objection was to OTLP
+needing a collector rather than to OTel, so the Supervisor takes the SDK with a
+file exporter — and closes the duplicated record format this record's
+Consequences left open. Everything else here stands.
 **Date:** 2026-07-22
 
 ## Context

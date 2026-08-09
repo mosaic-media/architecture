@@ -214,7 +214,9 @@ goroutine that only existed while the process did — a Platform down for a mont
 used to come back with a month of records it had intended to drop. The Supervisor
 keeps its own smaller file in the same format under the same boot id, for the
 failures where the process that would normally report is the one that is broken;
-nothing merges or serves it yet.
+nothing merges or serves it yet. All three implementations are hand-written and
+[ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md) replaces
+them with OpenTelemetry, which is M5's fifth thread and not yet built.
 
 **Authorization.** Argon2id password verification, ABAC roles, an `authorized`
 value only the boundary can construct with a reflection-enforced conformance
@@ -2308,6 +2310,27 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    through the front door
    ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
+5. **Telemetry moves onto OpenTelemetry**
+   ([ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md)).
+   Mosaic has hand-written the same thing three times — the Platform's ~1,300
+   lines, the SDK's smaller copy for modules, and the Supervisor's third, whose
+   record format is duplicated from the Platform's with a test naming the JSON
+   keys as the whole guard. A fourth process would need a fourth copy. The
+   decision keeps the SDK's authoring surface exactly as it is, so **no module
+   changes and none of the Platform's 324 classified field call sites change**;
+   what moves is what sits behind them.
+
+   The order is forced — the SDK first, since every other repository compiles
+   against its shape, then the Platform's package and its PostgreSQL store as an
+   OTel processor, then the Supervisor's file exporter, then a version bump in
+   the six module repositories.
+
+   **Two costs stated rather than discovered later.** The SDK's zero-dependency
+   rule ends, replaced by "the OTel API modules and nothing else" — measured at
+   three modules, against twelve for the SDK a binary wires. And
+   `go.opentelemetry.io/otel/log` is `v0.21.0`, so a pre-1.0 API enters a
+   published contract; the tracing half is `v1.45.0` and carries that project's
+   compatibility guarantee, and the logging half is the half Mosaic uses most.
 
 ### M6 — The release candidate gate
 
