@@ -1710,20 +1710,34 @@ decides on the user's behalf to be recorded.
    running Shell still shows its own offline state rather than what the
    Supervisor has to say.
 
-   The embedded renderer is **8KB, no framework, no build step and no request
-   off its own origin**, each of which is a test rather than an intention: it
-   draws when there is no Shell, so every dependency would be one more thing
-   that has to work on the worst day the install has. The payload carries the
-   phase as data beside the tree, so a renderer knows when to hand back to the
-   Shell without string-matching the sentences.
+   **The recovery UI is hypermedia**: the Supervisor renders the tree to HTML
+   and htmx swaps it, so the browser holds no component model. That leaves one
+   renderer where a hand-written JavaScript one had two — a JS renderer and a Go
+   text extractor beside it — which is the drift this project has already paid
+   for, and the hypermedia version removes rather than manages it.
 
-   **One existing assertion had to be earned back rather than relaxed.** The
-   front-door tests required the bottom rung not to depend on scripting, which
-   adding a script broke; the page's no-script block is now filled by the
-   Supervisor with the same state in words, so scripting off costs the live
-   updating and nothing else. It extracts the tree's *text* rather than
-   rendering it a second time in Go — two implementations of one component
-   model is the drift this project has already paid for.
+   **Three rungs inside the page, because the thing that might be failing is the
+   Supervisor.** SSE says "changed" and htmx re-fetches; a 5-second poll runs
+   regardless; and with no scripting at all a meta refresh reloads. The fragment
+   always arrives by `hx-get`, so the three share one content path. The stream
+   carries a *signal* and never content — a stream carrying HTML breaks the
+   moment something in the middle buffers it, which a homelab's reverse proxy
+   does by default, holding every event until the stream closes: a live page
+   turned dead with no error.
+
+   SSE rather than an RPC stream, because Connect streaming needs a generated
+   client and protobuf in the browser — a dependency in the rung that must work
+   when things are broken.
+
+   htmx and its SSE extension are **vendored into the binary**, never fetched:
+   this draws when there may be no route to the internet configured at all.
+   66KB total, with the budget set so a second library is a decision rather than
+   a slide. Verified in Chromium with scripting on and off — no page errors and
+   no off-origin requests either way.
+
+   The no-scripting property the front door already asserted is kept: the state
+   is server-rendered into the page body, so a browser with scripting off shows
+   it from the ordinary DOM and the meta refresh keeps it current.
    **That gap is on the first-boot path, not only the failure path** — ADR 0005
    puts onboarding on Supervisor-emitted SDUI, because at that point the
    Platform does not exist to emit any. How the emitter obtains the contract
@@ -1813,8 +1827,13 @@ decides on the user's behalf to be recorded.
    guessing — a guess in the wrong direction is a silent downgrade. The test
    pins `v0.9.0 < v0.10.0`, which string comparison gets backwards.
 
-   **Left out:** nothing triggers any of it from outside Go. Nothing polls, and
-   there is no surface — whether an install upgrades itself unattended is a
+   **Left out:** nothing triggers any of it from outside Go, and the recovery
+   UI's progress bar is implemented on both sides and never fed — the front door
+   infers its phase from the health report it already holds, so `provisioning`
+   and `upgrading` are never reported and no bar is drawn. Wiring the Fetcher's
+   bytes-so-far and the Activator's phase into it is what turns the first-boot
+   progress from implemented into live. Nothing polls the catalogue, and there
+   is no surface — whether an install upgrades itself unattended is a
    product decision this does not make. That surface is where ADR 0033's
    handover belongs, since a user watching a screen is what it exists to keep
    connected.
