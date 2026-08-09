@@ -41,7 +41,7 @@ remote source requires the user to name one.
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
-| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port; no real certificate and no Recovery SDUI | M4 |
+| 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port, answering the Platform's own client surface while it is down; a publicly trusted certificate needs the owed domain | — |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
@@ -1502,7 +1502,7 @@ carries the row.
 anywhere, on a remuxed stream as exactly as on a relayed one; override the
 chosen release; and a stale link recovers without the user seeing it.*
 
-### M4 — The Supervisor, the Shell binary and the front door
+### M4 — The Supervisor, the Shell binary and the front door — **landed; the upgrade trigger and a publicly trusted certificate are not in it**
 
 [ADR 0004](adr/0004-supervisor-as-host-manager.md)–[ADR 0006](adr/0006-supervisor-orchestrates-isolated-builds.md)
 have been decided since the beginning, and [`supervisor`](https://github.com/mosaic-media/supervisor)
@@ -1707,11 +1707,26 @@ decides on the user's behalf to be recorded.
    left a dead child reporting a pid that no longer existed, which a test
    caught by timing out rather than failing.
 
-   **Still unexercised.** No TLS from a real certificate. Restarts have been
-   provoked by killing a child, never by a Platform that failed on its own.
-   **The Recovery SDUI emitter is built** and served at `/supervisor/ui`, and
-   **all three of ADR 0005's rungs now draw it** — the embedded renderer, and
-   the Shell.
+   ~~**Still unexercised.** No TLS from a real certificate. Restarts have been
+   provoked by killing a child, never by a Platform that failed on its own.~~
+   **Both exercised.** A child that failed on its own — exiting non-zero on
+   every start — was run to its ceiling, and the exit code, the uptime, the
+   climbing failure count and the crossing all arrived as records. And the
+   Supervisor was run behind an **operator-supplied certificate** rather than
+   the per-boot self-signed one: a client trusting the issuer verified it
+   (`ssl_verify_result 0`), a client that did not was refused, the served chain
+   was the operator's leaf and issuer, and the self-signed warning correctly did
+   not appear. What that does *not* cover is a **publicly trusted** certificate,
+   which needs the domain this milestone still owes — the code path is the same
+   one either way.
+
+   **The Recovery SDUI emitter is built**, served as an HTML fragment and an
+   event stream under `/supervisor/ui/`, and **all three of ADR 0005's rungs now
+   draw it** — the embedded renderer, and the Shell. There was a `/supervisor/ui`
+   beside them serving the same tree as JSON, and
+   [ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)
+   deleted it: a second source is a rule every client would have to reimplement
+   correctly.
 
    **There is one SDUI source, not two** ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)).
    The Supervisor answers the Platform's *own* Connect services — `AuthService`
@@ -2272,6 +2287,66 @@ decides on the user's behalf to be recorded.
 *Exit: one install, one URL, TLS; kill the Platform and the Supervisor answers
 in its place; upgrade in place without the page in front of you dying; and when
 it does not work, the box says what is wrong and what to do about it.*
+
+**Against that exit, clause by clause, because three of the four are met and
+saying "landed" without naming the fourth is the failure this document exists
+to prevent.**
+
+- **One install, one URL, TLS — met, with one qualifier.** `docker run` of the
+  `full` image is a working Mosaic: it initialises a database, generates its own
+  password, fetches and verifies a signed Generation, activates it and serves the
+  Shell it downloaded, all behind one port. TLS terminates there, and the
+  operator-certificate path is exercised rather than merely present. The
+  qualifier is that a **publicly trusted** certificate has never been served,
+  because that needs the domain this milestone owes and nothing else.
+- **Kill the Platform and the Supervisor answers in its place — met.** It
+  answers the Platform's *own* Connect services while the Platform is not
+  serving ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)),
+  so a client calls the address it always calls and contains no code about the
+  Supervisor at all. Demonstrated as a takeover and a handback of a live session
+  with a JavaScript marker surviving and no main-frame navigation.
+- **Upgrade in place without the page in front of you dying — half met, and
+  this is the one that did not land.** The *mechanism* is complete and
+  demonstrated: fetch, verify, activate, gate on the surface a client actually
+  reaches, revert on failure keeping the evidence, and a handover that keeps a
+  watching page connected across the switch. What is missing is the **trigger and
+  the surface** — nothing polls the catalogue and nothing upgrades a *running*
+  install from outside Go, so an install that could upgrade itself safely has no
+  way to be told to. It stays [owed](unreachable-capability.md).
+- **When it does not work, the box says what is wrong and what to do about it —
+  met.** Findings are durable typed state with an identity that folds repeats
+  into one situation, the Supervisor spools its own across a Platform that never
+  started, and Settings › Problems renders them as sentences with the suggestion
+  attached.
+
+**Carried out of M4, each with why rather than a bare list:**
+
+- **The upgrade trigger and its surface.** The policy is decided
+  ([ADR 0125](adr/0125-major-upgrades-are-never-automatic.md), reading the
+  contract version rather than the artefact's after
+  [ADR 0127](adr/0127-the-monitored-version-is-the-contract-not-the-artefact.md)),
+  and what is *not* decided is the channel: the setting is Platform
+  configuration and the actor is the Supervisor, which cannot read the Platform's
+  database. ADR 0125 leaves that open in as many words, so building a trigger now
+  would mean inventing it in code first. **Blocked on a decision, not on work.**
+- **A publicly trusted certificate**, and with it the domain and origin story —
+  owed by the owner, and it blocks M5's passkeys harder than it blocks this,
+  since a relying-party id is bound to an origin and changing it afterwards
+  invalidates every passkey anybody registered.
+- **Generating both signing keys.** [ADR 0122](adr/0122-the-signing-key-hierarchy.md)
+  decided the hierarchy; creating them is custody work that happens off CI and is
+  the owner's. Verification fails closed meanwhile, so a build with no key
+  refuses rather than skipping.
+- **An official release catalogue to default to.** A Generation needs binaries
+  from two repositories and nothing aggregates and signs them the way the
+  registry does for modules, so `MOSAIC_SUPERVISOR_RELEASE_URL` is configurable
+  and empty, and an install with nothing on disk and nothing configured says so.
+- **`MOSAIC_MODULES` as Generation-class configuration**, still bridging through
+  the environment — it waits on the same trigger as the first item.
+- **Reading the Supervisor's records without shell access.**
+  [ADR 0060](adr/0060-the-supervisor-observes-independently.md)'s two read paths
+  are unbuilt; the file is written and nothing serves it, which is a register
+  row rather than a milestone item.
 
 **Discharges:** the register's configuration-versioning block, apart from
 `GetConfigVersion` — slice 4's screen landed, and the escalation beneath it is
