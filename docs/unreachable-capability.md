@@ -403,10 +403,16 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     **The row was created in the same change as the mechanism**, which is the
     rule working rather than an omission caught later: `VerifyArtefact` shipped
     one commit ahead of its own caller and the gap was visible immediately. What
-    discharges this is the trigger and the surface — and
-    [ADR 0033](adr/0033-supervisor-driven-live-handover.md)'s handover belongs
-    with them, since a user watching a screen is what the handover exists to
-    keep connected.
+    discharges this is the trigger and the surface.
+
+    **The client half of it is no longer owed.**
+    [ADR 0033](adr/0033-supervisor-driven-live-handover.md)'s handover is what
+    keeps a user watching a screen connected across a Generation switch, and the
+    Shell now renders the Supervisor's own Recovery SDUI while the Platform is
+    away and reconnects the moment the Supervisor reports it serving — without a
+    reload, and including from the state where its retry budget is spent. So an
+    upgrade nobody can trigger is now an upgrade that would be *survivable* if
+    anyone could; what is left on this row is the trigger and the surface alone.
 
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and

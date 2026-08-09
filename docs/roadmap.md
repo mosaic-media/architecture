@@ -1705,10 +1705,61 @@ decides on the user's behalf to be recorded.
    **Still unexercised.** No TLS from a real certificate. Restarts have been
    provoked by killing a child, never by a Platform that failed on its own.
    **The Recovery SDUI emitter is built** and served at `/supervisor/ui`, and
-   **the embedded renderer draws it** — ADR 0005's third rung. The second rung
-   is what is left: the Shell does not ask for the Supervisor's state, so a
-   running Shell still shows its own offline state rather than what the
-   Supervisor has to say.
+   **all three of ADR 0005's rungs now draw it** — the embedded renderer, and
+   the Shell.
+
+   **The Shell asks for `/supervisor/ui` whenever it has nothing of the
+   Platform's to draw**, and renders the answer through its ordinary renderer:
+   no special case, no new component. It can, because the Supervisor emits
+   primitives and no definitions, so the vocabulary is the client's native one
+   and the tokens are the ones it boots with — the state a first boot is in.
+   Plain HTTP and an `EventSource`, not Connect: the Supervisor must not grow a
+   Connect server, so the envelope is JSON over GET and the tree inside it is
+   the same protojson the session lane carries. The stream drives and a
+   five-second poll is the floor, as on the Supervisor's own page.
+
+   **The handover back is seamless and needed two mechanisms**, both verified in
+   a browser rather than asserted. `useLive` gained a `reconnect()` that
+   abandons the backoff when the Supervisor reports every child serving — which
+   matters most *past* the ten-attempt budget, where nothing is scheduled at all
+   and the only previous way back was the hand-written Standby's "Try again",
+   which reloaded the page. Demonstrated by holding the Platform down for two
+   and a half minutes and watching the screen return on its own, with a
+   JavaScript variable set before the outage still set afterwards and zero
+   main-frame navigations. With no session it is the *bootstrap* that failed,
+   and that runs once on mount, so it is re-asked on the same edge — also
+   without a reload.
+
+   **Standby has shrunk to what it is for**: the unsupervised deployment
+   ([ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md)'s DIY path) and
+   a Supervisor that is unreachable too. In both, the Shell genuinely has
+   nothing to report but its own failure to connect.
+
+   **Three defects the Shell rendering found, none of which any test saw.** Two
+   were in the emitter and had been there since it was written: the icon was
+   named `alert`, which the web client has never shipped (it has `warning`), so
+   the degraded phase would have drawn an empty `svg` — in the one state with
+   nothing else to read; and the icon's size was `"lg"`, but `Icon.size` is
+   `string|number` with no token scale behind it, so it produced `width="lg"`,
+   which a browser discards. The third is older than this slice and was in the
+   Shell: `showDoorway` never checked whether a session exists, so a signed-in
+   client — which keeps its doorway from boot — was shown a sign-in form on
+   every reconnect, and flashed one on every cold load with a stored credential.
+
+   `iconName` is **open text with no published set**, on the stated grounds that
+   the glyph set is a client asset rather than data. That leaves an emitter with
+   nothing to check a name against and a client drawing nothing when it guesses
+   wrong, silently. The Supervisor now guards its own two renderers against each
+   other (`phaseIcon` against `recoveryGlyphs`), which is the half of the
+   coupling inside one repository; **the client half is unguarded and open.**
+   `sdui-react`'s `Icon` defaults a *missing* name to `info` and an unknown one
+   to nothing, which is the wrong way round and is the cheapest partial fix.
+
+   The tree also states its own centring rather than relying on a stylesheet
+   rule per renderer — and doing so exposed that `maxWidth` on the root box
+   makes the root itself 520 wide and leaves it against the left edge, which the
+   embedded page's own `margin: 0 auto` had hidden. Two boxes now: an outer one
+   that fills the viewport and centres, an inner one that has the maximum width.
 
    **The recovery UI is hypermedia**: the Supervisor renders the tree to HTML
    and htmx swaps it, so the browser holds no component model. That leaves one
@@ -1717,13 +1768,28 @@ decides on the user's behalf to be recorded.
    for, and the hypermedia version removes rather than manages it.
 
    **Three rungs inside the page, because the thing that might be failing is the
-   Supervisor.** SSE says "changed" and htmx re-fetches; a 5-second poll runs
-   regardless; and with no scripting at all a meta refresh reloads. The fragment
-   always arrives by `hx-get`, so the three share one content path. The stream
-   carries a *signal* and never content — a stream carrying HTML breaks the
-   moment something in the middle buffers it, which a homelab's reverse proxy
-   does by default, holding every event until the stream closes: a live page
-   turned dead with no error.
+   Supervisor.** SSE says "changed" and htmx re-fetches; a 5-second poll is the
+   floor beneath it; and with no scripting at all a meta refresh reloads. The
+   fragment always arrives by `hx-get`, so the three share one content path. The
+   stream carries a *signal* and never content — a stream carrying HTML breaks
+   the moment something in the middle buffers it, which a homelab's reverse
+   proxy does by default, holding every event until the stream closes: a live
+   page turned dead with no error.
+
+   **The stream drives and the poll is only the floor.** Polling while SSE works
+   is a wasted request and a visible one, since an `innerHTML` swap recreates the
+   spinner and restarts its animation — so the interval is dropped as soon as the
+   stream delivers and restored after twenty seconds of silence. Proving by
+   *delivery* rather than by an "opened" event, and a watchdog rather than an
+   "error" event, because the failure this must survive is the buffered stream
+   above: it connects, never errors, and never delivers.
+
+   **Nothing on this path asks a person to refresh**, in either renderer. The
+   embedded page's one `location.reload()` survives only because it is
+   unreachable in any state that has a Shell — once a Shell exists it renders the
+   Supervisor's tree itself, so the handover is the next tree arriving rather
+   than a navigation, and this page is what a first boot sees *before* the Shell
+   has been downloaded, with nothing to hand over to without a load.
 
    SSE rather than an RPC stream, because Connect streaming needs a generated
    client and protobuf in the browser — a dependency in the rung that must work
@@ -1738,13 +1804,15 @@ decides on the user's behalf to be recorded.
    The no-scripting property the front door already asserted is kept: the state
    is server-rendered into the page body, so a browser with scripting off shows
    it from the ordinary DOM and the meta refresh keeps it current.
-   **That gap is on the first-boot path, not only the failure path** — ADR 0005
-   puts onboarding on Supervisor-emitted SDUI, because at that point the
+
+   **The emitter is on the first-boot path, not only the failure path** — ADR
+   0005 puts onboarding on Supervisor-emitted SDUI, because at that point the
    Platform does not exist to emit any. How the emitter obtains the contract
    without breaking the Supervisor's import boundary was open until
    [ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md), and the
    boundary has now widened by exactly one module, with the emitter that needed
-   it.
+   it. **Onboarding itself is not built**; what exists is the emitter it will
+   use and the three renderers that draw what it emits.
 
    **Exactly one is a claim the test had to enforce rather than describe.** The
    first version of the handler reached for `protojson` to marshal a node —
