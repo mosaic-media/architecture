@@ -2320,13 +2320,45 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    changes and none of the Platform's 324 classified field call sites change**;
    what moves is what sits behind them.
 
-   **Landed: the SDK and the Supervisor.** `sdk` `v0.28.0` backs `v1.Telemetry`,
+   **Landed: the SDK and the Supervisor**, and with them the two properties the
+   direction was actually asked for — *swappability* and *visibility*.
+
+   Swappability is enforced rather than claimed: the surface a module compiles
+   against lives in a file that may import no OpenTelemetry package, with a test
+   between it and the host-facing half, so replacing OTel later is not a breaking
+   change to a published contract. The host-facing half — `NewTelemetry`,
+   `TelemetryOptions`, `Encoder` — names OTel types by necessity, and that line
+   is where it is drawn rather than pretended away.
+
+   Visibility is `MOSAIC_SUPERVISOR_OTLP_ENDPOINT`: off by default, **additive
+   rather than a replacement** (a collector that is down costs records in the
+   collector and none on disk), batched because it crosses a network, and taking
+   a base URL like `OTEL_EXPORTER_OTLP_ENDPOINT` — the exporter's own option
+   wants a full URL, so an operator writing `http://collector:4318` would have
+   had every record POSTed to `/`. The cost is stated: `otlploghttp` brings gRPC,
+   grpc-gateway and genproto into the process whose value is being small, 22
+   modules against 12. It is linked and not run when unconfigured, so ADR 0060's
+   actual property — no aliveness assumptions — is untouched. `sdk` `v0.28.0` backs `v1.Telemetry`,
    `v1.Span` and the classified `v1.Field` with OTel's API, adding `v1.Encoder` —
    where classification becomes an attribute, exported so the Platform and the
    out-of-process host apply one rule rather than two copies — and `v1.NewTelemetry`
    for a host to call. The Supervisor now writes OTLP JSON through the OTel SDK
    and a **file** exporter, which deleted the duplicated record format and the
    test that pinned its JSON keys. Its boundary widened to three modules.
+
+   **Traceability across processes is the gap this thread has not closed, and
+   it is the part with design content left in it.** Everything above is
+   *logging*: the Supervisor emits records and no spans, and what stitches its
+   timeline to the Platform's is a boot id carried as a resource attribute
+   rather than a trace. ADR 0060 decided "no traces" for the Supervisor
+   deliberately, so changing it earns a new record, and the questions that
+   record has to answer are real rather than mechanical — whether a boot is
+   honestly a trace when its spans last minutes; whether the Supervisor should
+   hand a `traceparent` to its children so the Platform's boot span descends
+   from the activation that caused it (ADR 0054 has the Platform mint its own);
+   and whether the out-of-process module harness (ADR 0077) propagates context
+   as OTel's gRPC instrumentation would give it for free. None of it is written
+   down yet, and it is the next decision rather than the next task.
 
    **Not landed, and blocked rather than deferred: the Platform and the six
    modules.** Both need the SDK at a resolvable tag, and the tag could not be
