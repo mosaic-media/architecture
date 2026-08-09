@@ -1,7 +1,6 @@
 # 125. Major upgrades are staged, never automatic
 
-**Status:** Proposed. Nothing here is built: there is no schedule, no policy
-setting and no surface. The fetch/activate split it relies on exists.
+**Status:** Proposed and partly superseded: the three levels and the never-automatic invariant stand, and the version they read was corrected by [ADR 0127](0127-the-monitored-version-is-the-contract-not-the-artefact.md) — the contract's, not the artefact's. Nothing here is built: there is no schedule, no policy setting and no surface. The fetch/activate split it relies on exists.
 **Date:** 2026-08-09
 
 Decides the product question [ADR 0004](0004-supervisor-as-host-manager.md)'s

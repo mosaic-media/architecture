@@ -1,7 +1,6 @@
 # 124. The Platform and the Shell are resolved independently and paired by contract major
 
-**Status:** Proposed. Nothing here is built; the Supervisor reads a signed index
-from a configured URL today, and no official one exists.
+**Status:** Proposed and partly superseded: the pairing shape stands, and the component it reads was corrected by [ADR 0127](0127-the-monitored-version-is-the-contract-not-the-artefact.md) — pre-1.0 it is the contract minor, not the major. Nothing here is built; the Supervisor reads a signed index from a configured URL today, and no official one exists.
 **Date:** 2026-08-09
 
 Settles where the release catalogue

@@ -166,6 +166,7 @@ nav:
       - 124. Artefacts are paired by contract major: adr/0124-artefacts-are-paired-by-contract-major.md
       - 125. Major upgrades are staged, never automatic: adr/0125-major-upgrades-are-never-automatic.md
       - 126. Before 1.0, the caution window shifts by one: adr/0126-before-1-0-the-caution-window-shifts-by-one.md
+      - 127. The monitored version is the contract, not the artefact: adr/0127-the-monitored-version-is-the-contract-not-the-artefact.md
 
 markdown_extensions:
   - admonition

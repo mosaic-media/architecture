@@ -1,7 +1,6 @@
 # 126. Before 1.0, the upgrade caution window shifts by one
 
-**Status:** Proposed. Nothing here is built; it is the rule the upgrade policy
-will read.
+**Status:** Superseded by [ADR 0127](0127-the-monitored-version-is-the-contract-not-the-artefact.md). The window shift was applied to the artefact's own version and withheld from the contract's; both were the wrong way round. Never built.
 **Date:** 2026-08-09
 
 Fills the gap [ADR 0125](0125-major-upgrades-are-never-automatic.md) named and
