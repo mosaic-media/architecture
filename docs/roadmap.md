@@ -1729,7 +1729,13 @@ decides on the user's behalf to be recorded.
 3. **The artefact, and activating one.** The CI release matrix already
    cross-compiles five targets with checksums and builds a multi-arch image
    carrying `ffmpeg`. Remaining: signing the binaries and the checksums, which
-   waits on key custody Mosaic must operate; and the Supervisor downloading,
+   waits on key custody — **now decided rather than open**
+   ([ADR 0122](adr/0122-the-signing-key-hierarchy.md)): a second keypair,
+   separate from the registry's because that one is exercised on every module
+   release and a compromise of it must not reach the Platform binary, held
+   offline as well as in CI, and rotated through the overlapping trust
+   `Keyring.verify` already supports and nothing has ever used. What is left is
+   generating it, which is the owner's to do; and the Supervisor downloading,
    verifying and activating a Generation, with the handover
    ([ADR 0033](adr/0033-supervisor-driven-live-handover.md)) folded into the
    transport's stream resume rather than built as a separate dance.

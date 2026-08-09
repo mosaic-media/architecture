@@ -12,7 +12,10 @@ from one. `tools/modulesign` is the publisher side (sign, sign-index). Not built
 the admin surface that collects a user's consent to add a repository, real key
 custody for the official key, and the composition-root wiring to a live official
 repository — the machinery exists; a running Platform does not yet install from a
-real repository.
+real repository. **Key custody is decided by
+[ADR 0122](0122-the-signing-key-hierarchy.md)** and still unbuilt: two keys held
+offline as well as in CI, rotated by overlapping trust, with revocation still
+open.
 **Date:** 2026-07-22
 
 Depends on [ADR 0062](0062-two-module-tiers.md),
