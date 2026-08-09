@@ -1708,32 +1708,51 @@ decides on the user's behalf to be recorded.
    **all three of ADR 0005's rungs now draw it** — the embedded renderer, and
    the Shell.
 
-   **The Shell asks for `/supervisor/ui` whenever it has nothing of the
-   Platform's to draw**, and renders the answer through its ordinary renderer:
-   no special case, no new component. It can, because the Supervisor emits
-   primitives and no definitions, so the vocabulary is the client's native one
-   and the tokens are the ones it boots with — the state a first boot is in.
-   Plain HTTP and an `EventSource`, not Connect: the Supervisor must not grow a
-   Connect server, so the envelope is JSON over GET and the tree inside it is
-   the same protojson the session lane carries. The stream drives and a
-   five-second poll is the floor, as on the Supervisor's own page.
+   **There is one SDUI source, not two** ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)).
+   The Supervisor answers the Platform's *own* Connect services — `AuthService`
+   and `SessionService` — while the Platform is not serving, and the front door
+   switches on the Platform child's readiness. A client calls the address it
+   always calls; the Shell contains no code about the Supervisor at all, and
+   neither will any client written later.
 
-   **The handover back is seamless and needed two mechanisms**, both verified in
-   a browser rather than asserted. `useLive` gained a `reconnect()` that
-   abandons the backoff when the Supervisor reports every child serving — which
-   matters most *past* the ten-attempt budget, where nothing is scheduled at all
-   and the only previous way back was the hand-written Standby's "Try again",
-   which reloaded the page. Demonstrated by holding the Platform down for two
-   and a half minutes and watching the screen return on its own, with a
-   JavaScript variable set before the outage still set afterwards and zero
-   main-frame navigations. With no session it is the *bootstrap* that failed,
-   and that runs once on mount, so it is re-asked on the same edge — also
-   without a reload.
+   **`Subscribe` ending is the handover.** The Supervisor pushes its screen as
+   the shell, re-pushes it as its state changes, and closes the stream the moment
+   the Platform is serving — at which point the client's ordinary reconnect,
+   the same one that already survives a restart, is proxied to the Platform.
+   Nothing polls, nothing is told to refresh. Verified in a browser: the
+   Supervisor took over a live session and handed it back, with a JavaScript
+   variable set before the outage still set afterwards and zero main-frame
+   navigations.
+
+   **This replaced a client-side switch, and the deletion is the point.** The
+   Shell had a `useSupervisor` hook, a second fetch path, a poll, an
+   `EventSource`, a three-state presence and a `reconnect()` on the live session
+   — about 150 lines, all correct and all verified. Every line of it was a *rule
+   about when to ask a different server*, which is not transferable: each new
+   client would have implemented it again from a description, and a client that
+   never asks looks exactly like one asking a Supervisor with nothing to say.
+   `/supervisor/ui` is removed with it; the fragment and event endpoints stay,
+   because they serve the embedded page, which is a renderer rather than a
+   client.
+
+   The Supervisor's boundary is therefore **two modules** rather than one — the
+   contract, and `connectrpc.com/connect`. That adds nothing to the build graph:
+   the contract already required Connect to generate those handlers, so the
+   module moved from transitive to direct.
 
    **Standby has shrunk to what it is for**: the unsupervised deployment
    ([ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md)'s DIY path) and
    a Supervisor that is unreachable too. In both, the Shell genuinely has
    nothing to report but its own failure to connect.
+
+   **Two things left open, both recorded rather than worked around.** A client
+   whose access token expires mid-outage cannot renew it — the Supervisor has no
+   database — so the Shell now presents the credential it holds instead of
+   treating a failed renewal as fatal, and the Platform refuses it properly when
+   it returns; that is correct but untested against a real expiry. And a standing
+   notice the Platform issued survives onto the Supervisor's screen, because
+   retraction is by name and the process that would retract it is the one that is
+   gone.
 
    **Three defects the Shell rendering found, none of which any test saw.** Two
    were in the emitter and had been there since it was written: the icon was

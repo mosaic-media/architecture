@@ -162,6 +162,7 @@ nav:
       - 120. The children listen on Unix sockets: adr/0120-the-children-listen-on-unix-sockets.md
       - 121. Two supervised images, a DIY path, and the Supervisor's own contract dependency: adr/0121-two-supervised-images-and-a-diy-path.md
       - 122. Two signing keys, held offline, rotated by overlap: adr/0122-the-signing-key-hierarchy.md
+      - 123. The Supervisor answers the Platform's client surface: adr/0123-the-supervisor-answers-the-platforms-client-surface.md
 
 markdown_extensions:
   - admonition

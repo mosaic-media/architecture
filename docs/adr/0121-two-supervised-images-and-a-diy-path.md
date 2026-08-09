@@ -1,6 +1,6 @@
 # 121. Two supervised images, a DIY path, and the Supervisor's own contract dependency
 
-**Status:** Proposed. Nothing here is built.
+**Status:** Partly built, and partly superseded: the import boundary was widened again by [ADR 0123](0123-the-supervisor-answers-the-platforms-client-surface.md); the rest stands. The contract dependency and the emitter it was for are built; the two images, the DIY path and onboarding's module step are not.
 **Date:** 2026-08-09
 
 Amends [ADR 0080](0080-deployment-topologies.md)'s topology table (the supervised

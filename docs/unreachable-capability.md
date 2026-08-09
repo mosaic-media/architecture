@@ -408,9 +408,10 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     **The client half of it is no longer owed.**
     [ADR 0033](adr/0033-supervisor-driven-live-handover.md)'s handover is what
     keeps a user watching a screen connected across a Generation switch, and the
-    Shell now renders the Supervisor's own Recovery SDUI while the Platform is
-    away and reconnects the moment the Supervisor reports it serving — without a
-    reload, and including from the state where its retry budget is spent. So an
+    Supervisor now answers the Platform's own client surface while the Platform
+    is away ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)),
+    ending the push lane when it returns so the client's ordinary reconnect
+    carries it back — without a reload, and without any client code. So an
     upgrade nobody can trigger is now an upgrade that would be *survivable* if
     anyone could; what is left on this row is the trigger and the surface alone.
 
