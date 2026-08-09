@@ -2395,7 +2395,7 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    through the front door
    ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
-5. **Telemetry moves onto OpenTelemetry** — **two of four landed**
+5. **Telemetry moves onto OpenTelemetry** — **three of four landed**
    ([ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md)).
    Mosaic has hand-written the same thing three times — the Platform's ~1,300
    lines, the SDK's smaller copy for modules, and the Supervisor's third, whose
@@ -2445,14 +2445,43 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    as OTel's gRPC instrumentation would give it for free. None of it is written
    down yet, and it is the next decision rather than the next task.
 
-   **Not landed, and blocked rather than deferred: the Platform and the six
-   modules.** Both need the SDK at a resolvable tag, and the tag could not be
-   pushed — GitHub refuses a tag ref from this environment with a 403 while
-   accepting branch pushes, so `v0.28.0` is a commit on `main` that the module
-   proxy cannot see. The same is true of **`v0.27.0`**, which predates this work:
-   its commit is on `main`, no tag exists, the proxy 404s it, and the SDK's own
-   README describes it as released. A `replace` would unblock the build locally
-   and must never land in a commit, so nothing was bumped.
+   **The six modules landed, and the change in each is one line.** That is the
+   evidence for the decision's central claim rather than a restatement of it: the
+   authoring surface kept its shape, so `go.mod` moved and nothing else did — no
+   code, and no boundary test, since each of those checks *its own* imports and
+   each module still imports only the SDK and the standard library. Four of the
+   six actually call `v1.TelemetryFrom`; the other two never adopted the surface,
+   so for them it is a dependency move and nothing more. Worth stating plainly:
+   their green proves they compile and pass against the new SDK, **not** that an
+   implementer of `v1.Telemetry` still satisfies it — no module test installs a
+   fake. The Platform's `moduleTelemetry` is that implementer, and its gate is
+   what covers it.
+
+   **The tag blocker turned out not to be one.** Tag pushes are refused from this
+   environment (GitHub answers 403 on a tag ref while accepting branch pushes),
+   and `go get sdk@<sha>` resolves an untagged commit from the proxy as an
+   ordinary `require` — a pseudo-version, no `replace`, so the standing rule that
+   a `replace` must never land is untouched. Every consumer now requires
+   `v0.26.1-0.20260809181051-866aef95a264` and moves to a tag when one exists.
+   Worth knowing separately: **`v0.27.0` was never published either** — its commit
+   is on `main`, no tag exists, the proxy 404s it, and the SDK's README describes
+   it as released.
+
+   **Not landed: the Platform's own ~1,300 lines.** `Record`, `Field`, `Level`,
+   `Sink`, `Span`, `TraceContext`, the batching buffer, the file and console
+   sinks and the PostgreSQL store with its partitioning and retention are still
+   Mosaic's own. The Platform is *on* the new SDK and has not yet moved its own
+   emission onto it, so the module adapter still carries its own copy of the
+   classification mapping rather than using the SDK's `Encoder` — which is the
+   duplication ADR 0128 exists to remove, still present in the one place that
+   most wants it gone.
+
+   **The order the remainder has to go in, and why it is not one commit.** The
+   Platform's spans are W3C trace ids with its own `Start`/`Span`, and its module
+   adapter hands modules a span that continues that trace. Adopting the SDK's
+   OTel-backed `Telemetry` means giving it a real `trace.Tracer`, so logs and
+   spans have to move together or module spans stop joining the Platform's trace
+   — a half-conversion that would be worse than either end of it.
 
    **Two costs stated rather than discovered later.** The SDK's zero-dependency
    rule ends, replaced by "the OTel API modules and nothing else" — measured at
