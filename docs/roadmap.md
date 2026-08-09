@@ -2467,6 +2467,32 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    is on `main`, no tag exists, the proxy 404s it, and the SDK's README describes
    it as released.
 
+   **The Platform's conversion has started, at the piece that must not be got
+   wrong.** `TraceContext` ↔ OpenTelemetry `SpanContext` is a field-for-field
+   bridge, tested both ways, round-trip, and on a traceparent from the wire. It
+   is first because the trace id *is* Mosaic's correlation id
+   ([ADR 0054](adr/0054-the-correlation-id-is-the-trace-id.md)) — on every log
+   record, span, event and outbox row — so a conversion producing *a* trace id
+   rather than *the same* one would pass any test asserting one exists while
+   severing the join the whole telemetry thread is arranged around. The mapping
+   needing nothing invented is ADR 0054's choice of W3C being collected rather
+   than luck. The root-trace case is guarded specifically: `NewRootTrace`'s zero
+   span id means "nothing precedes this", and the plausible mistake — gating on
+   `SpanContext.IsValid` — silently zeroes the trace id of every request.
+
+   **Two defects came out of the bump, and the first was self-inflicted.**
+   `go get sdk@<sha>` pulls the SDK's new OpenTelemetry dependency, and a commit
+   was gated and pushed without `go mod tidy`, so its `go.sum` had no entry for
+   `go.opentelemetry.io/otel/trace` and every package failed setup — a broken
+   commit on `main` reported as clean. The second is a real gap this project had
+   already written down as open: `StreamLink` gained `Width`, `Height` and
+   `HDRFormat`, and the enrichment pass never carried them into the Part, so
+   `module-aiostreams`'s note that "the Platform half is still open" was
+   accurate. They are now carried. **The guard is the thing worth noticing** —
+   a reflection pass over every field the two types share by name and type, so a
+   field added to the SDK goes red the moment it exists rather than being
+   silently dropped. It found the first three the same way.
+
    **Not landed: the Platform's own ~1,300 lines.** `Record`, `Field`, `Level`,
    `Sink`, `Span`, `TraceContext`, the batching buffer, the file and console
    sinks and the PostgreSQL store with its partitioning and retention are still
