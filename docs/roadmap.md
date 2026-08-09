@@ -2527,22 +2527,41 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    span starts while the provider is built once by whoever configured the sink;
    moving it belongs with the composition root's own conversion.
 
-   **Not landed: the Platform's log records, and its ~1,300 lines around them.** `Record`, `Field`, `Level`,
-   `Logger`, `Record`, `Sink`, the batching buffer, the file and console sinks
-   and the PostgreSQL store with its partitioning and retention are unchanged.
-   So the Platform emits **OpenTelemetry spans and Mosaic-shaped logs**, both
-   carrying the same trace and span ids — which is what makes that intermediate
-   state coherent rather than half-converted. The module adapter still carries
-   its own copy of the classification mapping rather than the SDK's `Encoder`,
-   which is the duplication ADR 0128 exists to remove; it needs the log half,
-   because `Encoder` produces OTel attributes and the Platform's sinks still
-   want `telemetry.Field`.
+   **The log records followed, with the same containment.** A record is produced
+   as an OpenTelemetry record and a finished one reaches the same `Sink` the
+   JSON file, the console and the PostgreSQL store already read, so the wire
+   shape, the schema and the expert-mode viewer did not move. The trace and span
+   ids reach a record through the **emit context**, which is how OpenTelemetry
+   correlates a record with a span — carrying them as two more attributes would
+   have worked and would have put them where no OTLP consumer looks, defeating
+   the point of the trace id being the correlation id.
 
-   **What remains, in order.** The log half — `Logger` emitting an OTel record,
-   the file and console sinks becoming exporters, the PostgreSQL writer becoming
-   a processor — and then the module adapter onto `v1.NewTelemetry` with the
-   SDK's `Encoder`, which needs both a tracer and a logger and so comes last.
-   The tracer now exists, so that precondition is met.
+   **The failure mode worth naming is a field's type.** Rebuilding a record for
+   the sink by rendering values back as text turns `"results":7` into
+   `"results":"7"` in the JSON file, in the telemetry store and in everything
+   that parses either — and no test asserting "the field is present" would
+   notice. It is pinned, and was proven by replacing the typed restore with
+   `Value.Emit()` and watching three assertions go red. Redaction is pinned in
+   the same place: classification happens on the way *in*, so a rebuilt field is
+   marked `RedactionNone` and `EmitValue` is a no-op rather than redacting
+   twice. Severity is read back by **range** rather than exact value, so a
+   record from an instrumentation library using `SeverityWarn2` — a legitimate
+   part of OpenTelemetry's scale — comes back as warn rather than as info.
+
+   **Not landed: the module adapter, and the sinks themselves.**
+   `internal/platform/app`'s `convertFields` still carries its own copy of the
+   classification mapping rather than the SDK's `Encoder` — the duplication
+   ADR 0128 exists to remove. Both halves it needed now exist, so what is left
+   is the adapter itself. The `Sink` implementations are also still Mosaic's:
+   `JSONSink`, `ConsoleSink`, the batching buffer and the PostgreSQL writer are
+   the destination rather than OTel exporters, which is what an OTLP export
+   would replace — and a deliberate stopping point, since it is the change that
+   moves the wire shape and the schema.
+
+   **What remains, in order.** The module adapter onto `v1.NewTelemetry` with
+   the SDK's `Encoder`, which needed both a tracer and a logger and now has
+   both; then the sinks becoming OTel exporters, which is the change that moves
+   the wire shape and the schema and therefore wants its own slice.
 
    **Two costs stated rather than discovered later.** The SDK's zero-dependency
    rule ends, replaced by "the OTel API modules and nothing else" — measured at
