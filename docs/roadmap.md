@@ -141,7 +141,7 @@ is served too — 124 token values, both themes, changed without a client build
 
 **The screens.** `home`, `search`, `library`, `collections`, `catalog`, `detail`,
 `settings`, `extensions`, `history`, the expert-mode diagnostics screens — logs,
-traces and now the background-work queue behind its own `job.read` — the
+traces, live metrics, and the background-work queue behind its own `job.read` — the
 pre-session doorway with its setup wizard and its sign-in form, the People
 panels behind `user.read`, a device list on the account panel, a real 404, and
 the Shell's one remaining hand-written state (a Platform that could not describe its own door;
