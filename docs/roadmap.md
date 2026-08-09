@@ -1759,10 +1759,31 @@ decides on the user's behalf to be recorded.
    `Hold` and `Restart` got their first caller here, which is what they were
    built ahead of.
 
-   **Left out:** nothing triggers an activation. There is no upgrade check, no
-   catalogue of available releases, and no surface — `Activate` and `Rollback`
-   are reachable only from Go. That is the next piece and it is where ADR 0033's
-   handover belongs.
+   **Discovery and the composition are built.** A signed release catalogue —
+   `index.json` and a detached signature, the same shape the module registry
+   uses — says which versions exist and where each one's artefacts are;
+   `Updater.Check` reports what is on offer without changing anything, and
+   `Upgrade` is fetch-then-activate.
+
+   **The catalogue's signature is not the artefacts'**, and the difference is
+   the point: `SHA256SUMS` is signed so the bytes cannot be swapped, and the
+   index is signed so the *choice of version* cannot be. Without the second, a
+   host can pin an install to an old but genuinely-signed release forever, every
+   signature checking out while the fix never arrives. `Upgrade` also refuses to
+   move backwards, which is the half of that defence a signature cannot provide.
+   This is where Home Assistant is behind rather than ahead: its updater fetches
+   its version document over plain HTTPS with no signature at all.
+
+   Version ordering is hand-written, since this module imports the standard
+   library and nothing else, and refuses what it cannot order rather than
+   guessing — a guess in the wrong direction is a silent downgrade. The test
+   pins `v0.9.0 < v0.10.0`, which string comparison gets backwards.
+
+   **Left out:** nothing triggers any of it from outside Go. Nothing polls, and
+   there is no surface — whether an install upgrades itself unattended is a
+   product decision this does not make. That surface is where ADR 0033's
+   handover belongs, since a user watching a screen is what it exists to keep
+   connected.
 
    Remaining: signing the binaries and the checksums, which
    waits on key custody — **now decided rather than open**

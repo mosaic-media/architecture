@@ -392,13 +392,13 @@ nothing, and building the feature is what the roadmap should say.
 These belong on this register though GraphQL never carried them, because the
 honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
-- **Activating a Generation, and rolling one back, are reachable only from Go.**
-  The Supervisor can fetch a signed release into a Generation, restart its
-  children onto it, gate on the surface a client actually reaches and revert —
-  keeping what the failed Generation said before the revert buries it. Nothing
-  calls any of it. There is no upgrade check, no catalogue of available releases
-  and no surface, so an install that could upgrade itself safely has no way to be
-  told to.
+- **Upgrading, activating a Generation and rolling one back are reachable only
+  from Go.** The Supervisor can read a signed release catalogue, fetch and verify
+  a release into a Generation, restart its children onto it, gate on the surface
+  a client actually reaches and revert — keeping what the failed Generation said
+  before the revert buries it. Nothing calls any of it: nothing polls the
+  catalogue and no surface offers the check or the upgrade, so an install that
+  could upgrade itself safely has no way to be told to.
 
     **The row was created in the same change as the mechanism**, which is the
     rule working rather than an omission caught later: `VerifyArtefact` shipped
