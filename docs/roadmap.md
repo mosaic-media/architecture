@@ -1741,10 +1741,27 @@ decides on the user's behalf to be recorded.
    - **The Supervisor has no CI at all** — no gate, no release, no image — and
      it is the one binary a supervised install installs. Every other repository
      has both; this one has neither.
-   - **Nothing publishes the Shell binary.** `web`'s release workflow publishes
-     the npm package and never touches the Go binary, so the supervised path has
-     nothing to fetch and the DIY path has nothing to download. It is the
-     smallest of the three and it blocks both.
+   - ~~**Nothing publishes the Shell binary.**~~ **Closed.**
+     `web`'s `release-shell.yml` cross-compiles the same five targets on a
+     `shell-v*` tag, with per-file checksums rolled into one `SHA256SUMS`, so a
+     Supervisor verifying two downloads verifies them the same way. **Signing is
+     what it left out**, waiting on the same key custody the Platform's release
+     waits on.
+
+     **The gate was the bigger hole and was fixed with it.** The Shell's Go
+     module had no CI at all: `docker-compose.test.yml` carried a `shell-binary`
+     service with gofmt, vet, build and tests since the module was written, and
+     `verify.yml` ran Node and only Node — so the one component both install
+     paths depend on was the one whose tests could have been red for weeks
+     behind a green tick.
+
+     Two things came out of building it. `debug.ReadBuildInfo` reports
+     `(devel)` for a `go build` of a main package, so a released Shell was
+     indistinguishable from a laptop build; the version is now linked in with
+     `-X` and `(devel)` is explicitly not passed through, since it looks like a
+     version to anything parsing one. And `check-versions.mjs` read the newest
+     tag unfiltered, which was correct only by the accident that `shell-` sorts
+     below `v` — a `web-v9.9.9` tag makes it pick the wrong one.
    - **Two supervised images**, `full` and `lite`, from the one Supervisor
      binary — packaging artefacts exactly as the Platform's image is, split on
      whether PostgreSQL is inside.
