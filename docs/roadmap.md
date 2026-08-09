@@ -1706,7 +1706,13 @@ decides on the user's behalf to be recorded.
    provoked by killing a child, never by a Platform that failed on its own.
    There is no Recovery SDUI and no renderer for
    it, so ADR 0005's second rung does not exist and the bottom rung is a
-   static holding page that says so rather than impersonating the feature. It
+   static holding page that says so rather than impersonating the feature.
+   **That gap is on the first-boot path, not only the failure path** — ADR 0005
+   puts onboarding on Supervisor-emitted SDUI, because at that point the
+   Platform does not exist to emit any. How the emitter obtains the contract
+   without breaking the Supervisor's import boundary was open until
+   [ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md); the boundary
+   widens by exactly one module, and not until the emitter lands. It
    does not observe itself file-only or merge into expert mode
    ([ADR 0060](adr/0060-the-supervisor-observes-independently.md) is unbuilt
    beyond the boot id). It does not touch extension modules, which is correct
@@ -1727,6 +1733,26 @@ decides on the user's behalf to be recorded.
    verifying and activating a Generation, with the handover
    ([ADR 0033](adr/0033-supervisor-driven-live-handover.md)) folded into the
    transport's stream resume rather than built as a separate dance.
+
+   **[ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md) settles what
+   is being installed and by whom**, and names three gaps that have to close
+   before any of the above is reachable:
+
+   - **The Supervisor has no CI at all** — no gate, no release, no image — and
+     it is the one binary a supervised install installs. Every other repository
+     has both; this one has neither.
+   - **Nothing publishes the Shell binary.** `web`'s release workflow publishes
+     the npm package and never touches the Go binary, so the supervised path has
+     nothing to fetch and the DIY path has nothing to download. It is the
+     smallest of the three and it blocks both.
+   - **Two supervised images**, `full` and `lite`, from the one Supervisor
+     binary — packaging artefacts exactly as the Platform's image is, split on
+     whether PostgreSQL is inside.
+
+   The unsupervised path is now **supported rather than a stopgap**: the release
+   workflow's "a user can download and run the binary directly meanwhile" is no
+   longer a meanwhile, and the Platform image and its standalone
+   `docker-compose.yml` are product rather than debt.
 
    **Build rollback as activation's failure branch, not as a second feature.**
    Home Assistant's update installs, starts, health-checks, and on failure

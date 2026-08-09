@@ -160,6 +160,7 @@ nav:
       - 118. Playing something unowned adds it: adr/0118-playing-something-unowned-adds-it.md
       - 119. Operational findings are durable state: adr/0119-operational-findings-are-durable-state.md
       - 120. The children listen on Unix sockets: adr/0120-the-children-listen-on-unix-sockets.md
+      - 121. Two supervised images, a DIY path, and the Supervisor's own contract dependency: adr/0121-two-supervised-images-and-a-diy-path.md
 
 markdown_extensions:
   - admonition
