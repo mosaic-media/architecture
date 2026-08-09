@@ -2127,31 +2127,64 @@ decides on the user's behalf to be recorded.
    escalation that cannot happen; `storage.postgres.dsn` and its password are
    Recovery-class, secret, and the pair that locks an operator out of their
    own install.
-5. **Operational findings become durable state**
-   ([ADR 0119](adr/0119-operational-findings-are-durable-state.md)). Every
-   failure Mosaic has is a log line that scrolls away: a module that will not
-   start, an enrichment that failed for a catalogue, a disk with a gigabyte
-   left. It is in M4 rather than after it because **this milestone is what
-   makes it untenable** — the Supervisor now restarts children and will
-   activate and roll back Generations, taking decisions on the user's behalf
-   with nowhere to record them. A system that silently undoes its own upgrade
-   and says so only in a log produces a bug report three days after the
-   evidence rotated away.
+5. ~~**Operational findings become durable state**~~ **Built**
+   ([ADR 0119](adr/0119-operational-findings-are-durable-state.md)), including
+   the screen it does not land without.
 
-   An `Issue` is a typed, durable statement that something is wrong; a
-   `Suggestion` is a named action that might fix it, rendered into words by
-   the client; applying one is an ordinary authorised command. Issue types are
-   a **closed** vocabulary by ADR 0015's test, because Platform code branches
-   on them to offer a suggestion. `unhealthy` and `unsupported` are separate
-   system-level states carrying enumerated reasons.
+   An `Issue` is a durable typed statement that something is wrong, created at
+   the point of detection by the code that detected it. **Its identity is
+   (type, context, reference)**, so a module that fails on every boot is one
+   situation that has been happening since Tuesday rather than fourteen
+   problems — and `first_seen` is never moved, because that is the number
+   answering "did this start when I updated last week". A test breaks that one
+   rule deliberately to prove it is guarded: an upsert that touched `first_seen`
+   would be a working, passing, entirely wrong implementation.
 
-   The Supervisor spools its own findings to a file and hands them over when
-   the Platform is up — the findings it most needs to record are precisely the
-   ones it makes while the Platform is not there to be written to — and the
-   dependency does not invert.
+   Issue types are closed by ADR 0015's test and `CHECK`-constrained in the
+   schema. **Suggestions carry no prose and are derived on read rather than
+   stored**, so a row written by an older build cannot pin an offer this one no
+   longer honours, and a withdrawn suggestion disappears instead of failing when
+   pressed. Raising takes no `Caller` and passes no policy gate — a detector is
+   a boot path or a spool, not somebody's request — while reading and resolving
+   are ordinary authorised operations with a row each in the boundary table.
 
-   It lands with a screen or it does not land: a register of findings nobody
-   can reach would be the exact debt this milestone is meant to discharge.
+   **The Supervisor spools its own findings to a file and the Platform adopts
+   them**, because the findings worth having most are the ones made while the
+   Platform is not there to be told: a child that will not come up, a Generation
+   that was rolled back, a first boot that could not fetch one. One JSON object
+   per line, treated as untrusted input — a bad line costs only itself — and the
+   file is renamed before it is read, so the still-running Supervisor's next
+   append lands in a fresh file rather than one about to be deleted. The
+   dependency does not invert: an install with no Supervisor reads nothing and
+   says nothing.
+
+   **The first Platform-side detector is real**: extension adoption failure,
+   which logged "capability degraded" and skipped. That is the exact shape the
+   document exists to stop — the capability is simply absent, nothing fails,
+   nothing is said. A successful adoption withdraws the finding, so the register
+   says what is wrong *now*.
+
+   **Two defects came out of opening the screen, and neither was visible to any
+   test.** No role granted `findings.read`, so the panel that discharges the
+   whole slice answered with a permission error — a capability with no
+   permission has no client path, which is the debt this document exists to stop
+   accruing. And the composition root never passed the store, so `RaiseIssue`
+   took its "optional store" branch and returned nil: a boot adopted two
+   findings, logged `count=2`, wrote none of them, and the register was
+   permanently empty with nothing red anywhere. Raising into a missing register
+   is an error now; withdrawing from one is still success, because raising into
+   nothing loses information and clearing from nothing loses none.
+
+   **Left out:** `unhealthy` and `unsupported` — ADR 0119's system-level states,
+   distinct from a list of things that went wrong and each carrying enumerated
+   reasons — are not built; nothing computes either, and no surface reports one.
+   `reinstall_extension` is modelled and deliberately undrawn: the record names
+   the module but not the repository it came from, and installing from a
+   repository a client chose would put the trust decision in the wrong place, so
+   the service refuses it and the panel offers no control rather than one that
+   fails every press. Adding an action to a role preset does not grant it to
+   roles that already exist, so an install predating this reaches the panel only
+   by re-applying the preset.
 
 *Exit: one install, one URL, TLS; kill the Platform and the Supervisor answers
 in its place; upgrade in place without the page in front of you dying; and when

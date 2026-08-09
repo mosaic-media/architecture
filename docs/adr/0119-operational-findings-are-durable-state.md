@@ -1,6 +1,6 @@
 # 119. Operational findings are durable state
 
-**Status:** Accepted; not built. Scheduled in M4.
+**Status:** Built. The register, its screen and the Supervisor's spool all landed; `unhealthy` and `unsupported` did not — see the roadmap.
 **Date:** 2026-08-08
 
 ## Context
