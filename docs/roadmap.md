@@ -1914,16 +1914,55 @@ decides on the user's behalf to be recorded.
    guessing — a guess in the wrong direction is a silent downgrade. The test
    pins `v0.9.0 < v0.10.0`, which string comparison gets backwards.
 
-   **Left out:** nothing triggers any of it from outside Go, and the recovery
-   UI's progress bar is implemented on both sides and never fed — the front door
-   infers its phase from the health report it already holds, so `provisioning`
-   and `upgrading` are never reported and no bar is drawn. Wiring the Fetcher's
-   bytes-so-far and the Activator's phase into it is what turns the first-boot
-   progress from implemented into live. Nothing polls the catalogue, and there
-   is no surface — whether an install upgrades itself unattended is a
-   product decision this does not make. That surface is where ADR 0033's
-   handover belongs, since a user watching a screen is what it exists to keep
-   connected.
+   ~~**Left out:** nothing triggers any of it from outside Go.~~ **The machinery
+   has a caller now, and it is a first boot.** A Supervisor boots onto the
+   Generation it has and fetches one when it has none — front door first, so
+   somebody opening the URL during the minutes a first boot spends downloading
+   sees the install rather than a refused connection, which is the whole reason
+   the recovery page exists. A failed provision is logged and never fatal: the
+   front door is what says why, and exiting would replace an explanation with a
+   closed port.
+
+   **The progress bar is fed.** It was implemented on three renderers and driven
+   by nothing, because the front door could only infer a phase from the health
+   report — which distinguishes starting, degraded and ready and nothing else.
+   The Fetcher and the Activator report what they are doing, and what is being
+   done on purpose is preferred over what can be observed: during an upgrade the
+   children *are* down, so the inference would say degraded, which is true and is
+   the wrong thing to tell somebody. Progress is counted in **artefacts**, with
+   the current one's bytes as fine detail, because a size is only knowable from a
+   Content-Length — a claim the download cap deliberately does not trust. A bar
+   may believe a claim where a limit may not, and counting whole artefacts means
+   it advances truthfully when every claim is absent.
+
+   Demonstrated against a signed development release over TLS rather than
+   asserted: nothing on disk, fetched in 16 seconds, verified, activated, live —
+   with the bar advancing 0.24, 0.47, 0.99 in a browser watching it, and the page
+   handing over to the Shell on its own. **Three defects came out of running it
+   and none of them was visible to any test.** Ownership was inferred from an
+   empty command and could not be — a dev stack has none because something else
+   runs the process, a first boot has none because the binary is not downloaded
+   yet — so the Supervisor refused to start the child it had just provisioned,
+   and the install sat at "starting" forever with nothing red anywhere;
+   `ChildSpec.Managed` states it now. A second artefact list named the binaries
+   without their per-host suffix, agreed with itself in a test, and was caught by
+   a 404. And the recovery page's handover had never worked: it listened for an
+   `sse:ready` window event that does not exist — htmx exposes a named event as
+   an `hx-trigger` — while its test asserted only that the string was in the
+   page.
+
+   **Still no schedule and no surface.** Nothing polls the catalogue and nothing
+   upgrades a *running* install; whether one updates itself unattended is a
+   product decision this does not make. That surface is where ADR 0033's handover
+   belongs, since a user watching a screen is what it exists to keep connected.
+
+   **There is no default release URL, and that is a gap rather than a policy.**
+   The module registry's URL is compiled into the Platform because there is one
+   and it is published; the equivalent for Platform *releases* does not exist — a
+   Generation needs binaries from two repositories and nothing aggregates and
+   signs them the way the registry does for modules. `MOSAIC_SUPERVISOR_RELEASE_URL`
+   is configurable, empty by default, and an install with nothing on disk and
+   nothing configured says so rather than waiting silently.
 
    Remaining: signing the binaries and the checksums, which
    waits on key custody — **now decided rather than open**
