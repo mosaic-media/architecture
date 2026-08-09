@@ -2310,7 +2310,7 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    through the front door
    ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
 4. **Dead code.** The Shell's `mock/` and `gallery/`.
-5. **Telemetry moves onto OpenTelemetry**
+5. **Telemetry moves onto OpenTelemetry** — **two of four landed**
    ([ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md)).
    Mosaic has hand-written the same thing three times — the Platform's ~1,300
    lines, the SDK's smaller copy for modules, and the Supervisor's third, whose
@@ -2320,17 +2320,40 @@ does, and changing it afterwards invalidates every passkey anybody registered.
    changes and none of the Platform's 324 classified field call sites change**;
    what moves is what sits behind them.
 
-   The order is forced — the SDK first, since every other repository compiles
-   against its shape, then the Platform's package and its PostgreSQL store as an
-   OTel processor, then the Supervisor's file exporter, then a version bump in
-   the six module repositories.
+   **Landed: the SDK and the Supervisor.** `sdk` `v0.28.0` backs `v1.Telemetry`,
+   `v1.Span` and the classified `v1.Field` with OTel's API, adding `v1.Encoder` —
+   where classification becomes an attribute, exported so the Platform and the
+   out-of-process host apply one rule rather than two copies — and `v1.NewTelemetry`
+   for a host to call. The Supervisor now writes OTLP JSON through the OTel SDK
+   and a **file** exporter, which deleted the duplicated record format and the
+   test that pinned its JSON keys. Its boundary widened to three modules.
+
+   **Not landed, and blocked rather than deferred: the Platform and the six
+   modules.** Both need the SDK at a resolvable tag, and the tag could not be
+   pushed — GitHub refuses a tag ref from this environment with a 403 while
+   accepting branch pushes, so `v0.28.0` is a commit on `main` that the module
+   proxy cannot see. The same is true of **`v0.27.0`**, which predates this work:
+   its commit is on `main`, no tag exists, the proxy 404s it, and the SDK's own
+   README describes it as released. A `replace` would unblock the build locally
+   and must never land in a commit, so nothing was bumped.
 
    **Two costs stated rather than discovered later.** The SDK's zero-dependency
    rule ends, replaced by "the OTel API modules and nothing else" — measured at
-   three modules, against twelve for the SDK a binary wires. And
-   `go.opentelemetry.io/otel/log` is `v0.21.0`, so a pre-1.0 API enters a
-   published contract; the tracing half is `v1.45.0` and carries that project's
-   compatibility guarantee, and the logging half is the half Mosaic uses most.
+   three modules, against twelve for the SDK a binary wires, and enforced by the
+   allowlist that used to assert emptiness. And `go.opentelemetry.io/otel/log` is
+   `v0.21.0`, which says in its own package documentation that its interfaces may
+   gain methods without a major bump; the tracing half is `v1.45.0` and carries
+   that project's compatibility guarantee, and the logging half is the half
+   Mosaic uses most.
+
+   **Two things the implementation found that the record did not predict.** The
+   logs API at `v0.21.0` carries `attribute.KeyValue` rather than a type of its
+   own, so one encoder serves records and spans and a span is demonstrably not a
+   laxer channel. And the Supervisor's file-order-matches-timestamp-order
+   property, fixed hours earlier, was dropped on purpose: it was worth
+   maintaining while the sink was Mosaic's, and every OTel consumer sorts by
+   timestamp when merging two sources, which is what the property existed to
+   protect.
 
 ### M6 — The release candidate gate
 

@@ -1,6 +1,6 @@
 # 128. OpenTelemetry is the telemetry implementation
 
-**Status:** Proposed. Nothing here is built.
+**Status:** Built in part. The SDK's surface is backed by the OTel API (`v0.28.0`, committed but **not tagged** — see below), and the Supervisor's telemetry is the OTel SDK with a file exporter, which ended the third hand-written copy. Not built: the Platform's own ~1,300 lines and its PostgreSQL store, and the six modules' version bumps — all blocked on the SDK tag, which this environment cannot push (GitHub refuses a tag ref with 403 while accepting branch pushes), so the module proxy cannot resolve `v0.28.0` and the Platform's `require` cannot move without a `replace` that must never land in a commit.
 **Date:** 2026-08-09
 
 Reverses the OpenTelemetry alternative that
