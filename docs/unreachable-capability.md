@@ -392,6 +392,22 @@ nothing, and building the feature is what the roadmap should say.
 These belong on this register though GraphQL never carried them, because the
 honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
+- **Activating a Generation, and rolling one back, are reachable only from Go.**
+  The Supervisor can fetch a signed release into a Generation, restart its
+  children onto it, gate on the surface a client actually reaches and revert —
+  keeping what the failed Generation said before the revert buries it. Nothing
+  calls any of it. There is no upgrade check, no catalogue of available releases
+  and no surface, so an install that could upgrade itself safely has no way to be
+  told to.
+
+    **The row was created in the same change as the mechanism**, which is the
+    rule working rather than an omission caught later: `VerifyArtefact` shipped
+    one commit ahead of its own caller and the gap was visible immediately. What
+    discharges this is the trigger and the surface — and
+    [ADR 0033](adr/0033-supervisor-driven-live-handover.md)'s handover belongs
+    with them, since a user watching a screen is what the handover exists to
+    keep connected.
+
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and
   transactional; the artwork enrichment pass calls it

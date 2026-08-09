@@ -1740,10 +1740,29 @@ decides on the user's behalf to be recorded.
    it. A rollback **swaps** the two pointers rather than dropping the one it came
    from, so a failed rollback still has somewhere to go.
 
-   **Activation is the next piece and is deliberately not in it**: restarting
-   children onto a new Generation, health-gating with a functional probe, and
-   reverting on failure. Separating activation from the pointer is what lets the
-   failure branch restore the pointer before anything is restarted a second time.
+   **Activation is built, with the revert as its failure branch** rather than a
+   second feature — written as two operations they drift, and the one that runs
+   least is the one that has to work.
+
+   Three things carry it. **The pointer is written last**, so a Supervisor that
+   dies mid-activation starts the *old* Generation on its next boot: the failure
+   falls backwards. A deliberate rollback inverts that on purpose — there the
+   pointer moves first, because dying halfway lands on the version the operator
+   was heading for. **The gate is the Serving probe**, so what decides is a
+   request to the socket a client reaches rather than the child's opinion of
+   itself; the test makes the listener stop answering rather than making the
+   child complain. And **the evidence outlives the revert**: child console output
+   is captured for the activation window and written to
+   `failed/<version>-<timestamp>.log` before anything is restarted, because the
+   old Generation starts cleanly and writes over the reason it was needed.
+
+   `Hold` and `Restart` got their first caller here, which is what they were
+   built ahead of.
+
+   **Left out:** nothing triggers an activation. There is no upgrade check, no
+   catalogue of available releases, and no surface — `Activate` and `Rollback`
+   are reachable only from Go. That is the next piece and it is where ADR 0033's
+   handover belongs.
 
    Remaining: signing the binaries and the checksums, which
    waits on key custody — **now decided rather than open**
