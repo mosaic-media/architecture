@@ -165,6 +165,7 @@ nav:
       - 123. The Supervisor answers the Platform's client surface: adr/0123-the-supervisor-answers-the-platforms-client-surface.md
       - 124. Artefacts are paired by contract major: adr/0124-artefacts-are-paired-by-contract-major.md
       - 125. Major upgrades are staged, never automatic: adr/0125-major-upgrades-are-never-automatic.md
+      - 126. Before 1.0, the caution window shifts by one: adr/0126-before-1-0-the-caution-window-shifts-by-one.md
 
 markdown_extensions:
   - admonition
