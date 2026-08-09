@@ -1,9 +1,13 @@
 # 60. The Supervisor observes independently
 
-**Status:** Proposed. One piece is built ahead of the Supervisor: the Platform
-reads `MOSAIC_BOOT_ID` and adopts an inbound boot id rather than always minting
-one, so a boot has a name in the logs and there is something to hand over to.
-Nothing else here is buildable — there is no Supervisor on disk.
+**Status:** Built in part — the writing, not the reading. The Supervisor keeps
+its own file-and-console telemetry in the Platform's record format under a shared
+boot id, records the lifecycle enumerated below, and rotates size-capped; the
+Platform adopts an inbound `MOSAIC_BOOT_ID` rather than always minting one. Both
+read paths are unbuilt: expert mode does not merge the Supervisor's records, and
+the Supervisor serves no status-and-log page. The support bundle carries no log
+file from either process. The format is duplicated rather than shared, which the
+Consequences left open — the key set is pinned by a test in the Supervisor.
 **Date:** 2026-07-22
 
 ## Context

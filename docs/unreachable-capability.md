@@ -415,6 +415,29 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     upgrade nobody can trigger is now an upgrade that would be *survivable* if
     anyone could; what is left on this row is the trigger and the surface alone.
 
+- **The Supervisor's records reach a file and no further.** It now writes what it
+  saw — child starts and their pids, exits and their codes, the run of failures
+  behind a crash loop, readiness transitions, Generation selection, activation
+  and revert — as JSON Lines under the boot id its children share
+  ([ADR 0060](adr/0060-the-supervisor-observes-independently.md)). Nothing serves
+  it. Both of that record's read paths are unbuilt: the Platform merging it into
+  expert mode when it is up, and the Supervisor showing it when the Platform is
+  down.
+
+    **The row was created in the same change as the file**, and it is a
+    particularly sharp instance of what this register is for, because the
+    capability's whole purpose is the case where a person cannot get at it.
+    [ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md) exists so
+    an administrator does not need shell access to their own host to find out why
+    Mosaic will not start; a Supervisor log readable only over SSH is that
+    requirement restated, not met. The failures it describes best — a Platform
+    that never came up, a Generation that reverted — are exactly the ones where
+    the person affected is least likely to have a terminal open.
+
+    **What discharges it** is either path. The Platform's is the larger and the
+    more useful: the support bundle carries no log file at all today, so merging
+    two of them is a slice rather than a wiring change.
+
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and
   transactional; the artwork enrichment pass calls it

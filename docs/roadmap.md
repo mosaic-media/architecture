@@ -211,7 +211,10 @@ Mosaic as logs and a trace waterfall behind `telemetry.read`
 Modules observe through a dependency-free SDK interface the Platform attributes
 and quota-bounds. Retention is a scheduled job as of M0.1 rather than a
 goroutine that only existed while the process did — a Platform down for a month
-used to come back with a month of records it had intended to drop.
+used to come back with a month of records it had intended to drop. The Supervisor
+keeps its own smaller file in the same format under the same boot id, for the
+failures where the process that would normally report is the one that is broken;
+nothing merges or serves it yet.
 
 **Authorization.** Argon2id password verification, ABAC roles, an `authorized`
 value only the boundary can construct with a reflection-enforced conformance
@@ -1847,11 +1850,54 @@ decides on the user's behalf to be recorded.
    so `text` and `style` go through the generic `ui.Prop` — the pattern the
    Platform also falls back to — and `value` is a string on the field primitives
    and a number on `ProgressBar`, so the typed `ui.Value` helper is wrong for it,
-   against `contracts`' own "one prop key, one type" rule. It
-   does not observe itself file-only or merge into expert mode
-   ([ADR 0060](adr/0060-the-supervisor-observes-independently.md) is unbuilt
-   beyond the boot id). It does not touch extension modules, which is correct
-   and was never at risk.
+   against `contracts`' own "one prop key, one type" rule. It does not touch
+   extension modules, which is correct and was never at risk.
+
+   **The Supervisor now writes down what it saw, and nothing reads it back**
+   ([ADR 0060](adr/0060-the-supervisor-observes-independently.md)). That record
+   was written eight months before there was a Supervisor to put a file in, and
+   until this the process narrated everything to stdout and nowhere else — so on
+   a box where nobody is watching the console it said it to no one, which is
+   precisely the class of failure it exists to describe. It writes JSON Lines to
+   `<state-dir>/logs/mosaic-supervisor.log` in the Platform's own record format
+   and under the shared boot id, so one reader parses both: child starts with
+   their pid, exits with their code and how long they lasted, the run of failures
+   behind a crash loop and the backoff, readiness transitions — the edges only,
+   since a poll every two seconds would otherwise be a line every two seconds —
+   and Generation selection, activation and revert. Rotation, size-capped and
+   keeping one previous file, is the whole retention policy; there is no
+   database, no exporter and no collector, because each is a thing that can be
+   unavailable at the moment it is needed.
+
+   **The record format is duplicated from the Platform's, which ADR 0060 left
+   open and named as a hazard.** The Platform's telemetry package is `internal/`,
+   the Supervisor's boundary is two published modules wide and that is not one of
+   them, and a third published module carrying one struct would be a thing to
+   version and keep in step for less code than the comment explaining it. What
+   bounds it is that only one side reads: JSON Lines with omitted empties ignores
+   an unknown key and reads a missing one as empty, so the hazard is not an
+   unparseable file but a key quietly renamed — and the key set is pinned by a
+   test naming every one of them. Three keys the Platform writes are absent
+   rather than empty (`trace`, `span`, `module`), since the Supervisor runs no
+   traces and links no Module.
+
+   **What it left out is the reading, and that is the whole of ADR 0060's second
+   half.** Neither read path exists: expert mode does not merge these records,
+   and the Supervisor serves no status-and-log page. The support bundle carries
+   no log file from either process, so it is a slice rather than a wiring change.
+   Finding out what the Supervisor saw therefore still means shell access to the
+   host — which is the requirement
+   [ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md) was
+   written to remove, restated rather than met, and it is
+   [owed](unreachable-capability.md).
+
+   **A real run against a crash-looping child found two defects the tests had
+   not.** The timestamp was read before the write lock, so three shutdown lines
+   landed in the file in the opposite order to their own timestamps — harmless
+   until somebody merges this file with the Platform's by sorting on time, at
+   which point the merge is what looks wrong. It is stamped under the lock now,
+   with a test that fails ten times out of ten against the old code. The
+   `listening` line also carried a boot id every record already stamps.
 
    **It has its own repository now.** [`mosaic-media/supervisor`](https://github.com/mosaic-media/supervisor),
    extracted from `platform/supervisor/` with the two commits that built it —
