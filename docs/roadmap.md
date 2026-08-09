@@ -1704,11 +1704,26 @@ decides on the user's behalf to be recorded.
 
    **Still unexercised.** No TLS from a real certificate. Restarts have been
    provoked by killing a child, never by a Platform that failed on its own.
-   **The Recovery SDUI emitter is built** and served at `/supervisor/ui`; what
-   is still missing is every *renderer* — the Shell does not ask for it, and
-   there is no embedded one, so ADR 0005's second and third rungs are half
-   each and the bottom rung is still a static holding page that says so rather
-   than impersonating the feature.
+   **The Recovery SDUI emitter is built** and served at `/supervisor/ui`, and
+   **the embedded renderer draws it** — ADR 0005's third rung. The second rung
+   is what is left: the Shell does not ask for the Supervisor's state, so a
+   running Shell still shows its own offline state rather than what the
+   Supervisor has to say.
+
+   The embedded renderer is **8KB, no framework, no build step and no request
+   off its own origin**, each of which is a test rather than an intention: it
+   draws when there is no Shell, so every dependency would be one more thing
+   that has to work on the worst day the install has. The payload carries the
+   phase as data beside the tree, so a renderer knows when to hand back to the
+   Shell without string-matching the sentences.
+
+   **One existing assertion had to be earned back rather than relaxed.** The
+   front-door tests required the bottom rung not to depend on scripting, which
+   adding a script broke; the page's no-script block is now filled by the
+   Supervisor with the same state in words, so scripting off costs the live
+   updating and nothing else. It extracts the tree's *text* rather than
+   rendering it a second time in Go — two implementations of one component
+   model is the drift this project has already paid for.
    **That gap is on the first-boot path, not only the failure path** — ADR 0005
    puts onboarding on Supervisor-emitted SDUI, because at that point the
    Platform does not exist to emit any. How the emitter obtains the contract
