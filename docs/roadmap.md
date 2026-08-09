@@ -1502,7 +1502,7 @@ carries the row.
 anywhere, on a remuxed stream as exactly as on a relayed one; override the
 chosen release; and a stale link recovers without the user seeing it.*
 
-### M4 — The Supervisor, the Shell binary and the front door — **landed; the upgrade trigger and a publicly trusted certificate are not in it**
+### M4 — The Supervisor, the Shell binary and the front door — **landed; a publicly trusted certificate is the one thing not in it**
 
 [ADR 0004](adr/0004-supervisor-as-host-manager.md)–[ADR 0006](adr/0006-supervisor-orchestrates-isolated-builds.md)
 have been decided since the beginning, and [`supervisor`](https://github.com/mosaic-media/supervisor)
@@ -2305,14 +2305,21 @@ to prevent.**
   so a client calls the address it always calls and contains no code about the
   Supervisor at all. Demonstrated as a takeover and a handback of a live session
   with a JavaScript marker surviving and no main-frame navigation.
-- **Upgrade in place without the page in front of you dying — half met, and
-  this is the one that did not land.** The *mechanism* is complete and
-  demonstrated: fetch, verify, activate, gate on the surface a client actually
-  reaches, revert on failure keeping the evidence, and a handover that keeps a
-  watching page connected across the switch. What is missing is the **trigger and
-  the surface** — nothing polls the catalogue and nothing upgrades a *running*
-  install from outside Go, so an install that could upgrade itself safely has no
-  way to be told to. It stays [owed](unreachable-capability.md).
+- **Upgrade in place without the page in front of you dying — met.** The
+  mechanism was complete and demonstrated long before anything could ask it to
+  run; [ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md)
+  closed the trigger and the surface, and it invented no channel to do it. The
+  Supervisor checks the signed catalogue on a schedule and spools an available
+  version as a **finding**; Settings › Problems draws it with an *Install it*
+  control; pressing it records a request naming that version; the Supervisor
+  reads it from `GET /upgrade` on the private handoff and carries it out.
+
+  **Nothing acknowledges anything, and that is the design.** A request settles
+  when the Platform is *running* the version it asked for — which needed
+  `MOSAIC_GENERATION_ID`, read by the Platform's telemetry resource and written
+  by nobody for the whole life of that field. An acknowledgement would have been
+  written by a process the upgrade was about to replace, about an activation
+  that might still revert.
 - **When it does not work, the box says what is wrong and what to do about it —
   met.** Findings are durable typed state with an identity that folds repeats
   into one situation, the Supervisor spools its own across a Platform that never
@@ -2321,14 +2328,12 @@ to prevent.**
 
 **Carried out of M4, each with why rather than a bare list:**
 
-- **The upgrade trigger and its surface.** The policy is decided
-  ([ADR 0125](adr/0125-major-upgrades-are-never-automatic.md), reading the
-  contract version rather than the artefact's after
-  [ADR 0127](adr/0127-the-monitored-version-is-the-contract-not-the-artefact.md)),
-  and what is *not* decided is the channel: the setting is Platform
-  configuration and the actor is the Supervisor, which cannot read the Platform's
-  database. ADR 0125 leaves that open in as many words, so building a trigger now
-  would mean inventing it in code first. **Blocked on a decision, not on work.**
+- **The upgrade automation *policy*.** The trigger and the surface landed
+  (ADR 0129); what has not is ADR 0125's three levels, so every upgrade today is
+  a person pressing something. That is the Manual level and the safest of the
+  three, and turning on the others means deciding how the setting reaches the
+  Supervisor — the same channel question ADR 0129 answered for the request, so it
+  is now a small change rather than an open one.
 - **A publicly trusted certificate**, and with it the domain and origin story —
   owed by the owner, and it blocks M5's passkeys harder than it blocks this,
   since a relying-party id is bound to an origin and changing it afterwards
@@ -2351,7 +2356,12 @@ to prevent.**
 **Discharges:** the register's configuration-versioning block, apart from
 `GetConfigVersion` — slice 4's screen landed, and the escalation beneath it is
 now reachable by a person as well as by the Supervisor. Reading one version by
-id stays owed, because nothing lists the versions.
+id stays owed, because nothing lists the versions. And **upgrading in place**,
+by [ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md):
+a person can see an available version and press *Install it*. What is left of
+that row is the backward direction — rolling back, and installing a named older
+version, are still Go-only, which is the wrong way round for the case a person's
+judgement is actually needed on.
 
 **Decisions owed:** the domain and origin story. The session credential no
 longer waits on it ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)

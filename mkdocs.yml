@@ -168,6 +168,7 @@ nav:
       - 126. Before 1.0, the caution window shifts by one: adr/0126-before-1-0-the-caution-window-shifts-by-one.md
       - 127. The monitored version is the contract, not the artefact: adr/0127-the-monitored-version-is-the-contract-not-the-artefact.md
       - 128. OpenTelemetry is the telemetry implementation: adr/0128-opentelemetry-is-the-telemetry-implementation.md
+      - 129. The upgrade channel is the handoff and the register: adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md
 
 markdown_extensions:
   - admonition

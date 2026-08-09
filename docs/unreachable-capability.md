@@ -305,6 +305,28 @@ Each one is a service that worked perfectly and a product that did not.
 
 ---
 
+## Discharged in M4 — upgrading in place
+
+| Capability | What discharges it |
+|---|---|
+| Checking the release catalogue, and installing what it offers | [ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md) — the Supervisor checks on a schedule and spools an available version as a finding; Settings › Problems draws it with an *Install it* control; pressing it records a request naming that version; the Supervisor reads it from `GET /upgrade` on the private handoff and carries it out. |
+
+**It invented no channel**, which is why it took one slice rather than a
+milestone. The offer travels on the findings spool and the request on the
+handoff, and both already carried this shape of message — the handoff has
+reported an owed *configuration* escalation since M4's slice 4, and ADR 0125 had
+already written down that a version waiting should be a finding.
+
+**Nothing acknowledges anything.** A request settles when the Platform is
+*running* the version it asked for, which needed `MOSAIC_GENERATION_ID` — read
+by the Platform's telemetry resource and written by nobody for the whole life of
+that field. An acknowledgement would have been written by a process the upgrade
+was about to replace, about an activation that might still revert.
+
+**What did not come with it** is the backward direction, which is now its own
+row above, and ADR 0125's automation policy: every upgrade today is a person
+pressing something, which is that record's Manual level.
+
 ## Discharged in M4 — configuration versioning
 
 The reload-class machinery left this register on 2026-08-08. It is recorded
@@ -392,51 +414,26 @@ nothing, and building the feature is what the roadmap should say.
 These belong on this register though GraphQL never carried them, because the
 honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
-- **Upgrading, activating a Generation and rolling one back are reachable only
-  from Go.** The Supervisor can read a signed release catalogue, fetch and verify
-  a release into a Generation, restart its children onto it, gate on the surface
-  a client actually reaches and revert — keeping what the failed Generation said
-  before the revert buries it. Nothing calls any of it: nothing polls the
-  catalogue and no surface offers the check or the upgrade, so an install that
-  could upgrade itself safely has no way to be told to.
+- **Rolling back to the previous Generation has no client path.**
+  `Activator.Rollback` swaps the pointers rather than dropping one — the design
+  detail that makes a failed rollback still have somewhere to go — and nothing
+  calls it outside Go. `Updater.UpgradeTo` is in the same position: installing a
+  *named* version, newer or older, is Go-only.
 
-    **The row was created in the same change as the mechanism**, which is the
-    rule working rather than an omission caught later: `VerifyArtefact` shipped
-    one commit ahead of its own caller and the gap was visible immediately. What
-    discharges this is the trigger and the surface.
+    **This is what is left of the upgrade row, and the remainder is the sharper
+    half.** Going forwards now has a control
+    ([ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md),
+    below); going backwards does not, which is the wrong way round for the case
+    that matters. A version that installs, comes up, and is simply *worse* is
+    exactly what the automatic revert cannot catch, because that revert gates on
+    "did it start" — so the one situation needing a person's judgement is the one
+    with no control.
 
-    **The client half of it is no longer owed.**
-    [ADR 0033](adr/0033-supervisor-driven-live-handover.md)'s handover is what
-    keeps a user watching a screen connected across a Generation switch, and the
-    Supervisor now answers the Platform's own client surface while the Platform
-    is away ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)),
-    ending the push lane when it returns so the client's ordinary reconnect
-    carries it back — without a reload, and without any client code. So an
-    upgrade nobody can trigger is now an upgrade that would be *survivable* if
-    anyone could; what is left on this row is the trigger and the surface alone.
-
-- **The Supervisor's records reach a file and no further.** It now writes what it
-  saw — child starts and their pids, exits and their codes, the run of failures
-  behind a crash loop, readiness transitions, Generation selection, activation
-  and revert — as JSON Lines under the boot id its children share
-  ([ADR 0060](adr/0060-the-supervisor-observes-independently.md)). Nothing serves
-  it. Both of that record's read paths are unbuilt: the Platform merging it into
-  expert mode when it is up, and the Supervisor showing it when the Platform is
-  down.
-
-    **The row was created in the same change as the file**, and it is a
-    particularly sharp instance of what this register is for, because the
-    capability's whole purpose is the case where a person cannot get at it.
-    [ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md) exists so
-    an administrator does not need shell access to their own host to find out why
-    Mosaic will not start; a Supervisor log readable only over SSH is that
-    requirement restated, not met. The failures it describes best — a Platform
-    that never came up, a Generation that reverted — are exactly the ones where
-    the person affected is least likely to have a terminal open.
-
-    **What discharges it** is either path. The Platform's is the larger and the
-    more useful: the support bundle carries no log file at all today, so merging
-    two of them is a slice rather than a wiring change.
+    **What discharges it** is a control on the same panel, and the reason it did
+    not land with the upgrade half is that the two are not symmetrical. An
+    upgrade is offered by a finding that names a version; a rollback has nothing
+    to hang on, because no detector says "this version is worse" — a person does.
+    So it needs a surface of its own, and where that lives is undecided.
 
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and
