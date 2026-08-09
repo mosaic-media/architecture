@@ -1728,7 +1728,24 @@ decides on the user's behalf to be recorded.
    accompanying find-and-replace.
 3. **The artefact, and activating one.** The CI release matrix already
    cross-compiles five targets with checksums and builds a multi-arch image
-   carrying `ffmpeg`. Remaining: signing the binaries and the checksums, which
+   carrying `ffmpeg`.
+
+   **Fetching a release into a Generation is built**, on the development key:
+   download, verify each artefact against the signed checksums, and complete the
+   Generation only if all of them pass. The design is in the failure branch —
+   one bad artefact discards the whole staging directory, because half a
+   Generation is the most dangerous state available: every file in it is
+   individually genuine, so nothing looks wrong, and the `.complete` marker
+   written after the last artefact verifies is the only thing that would catch
+   it. A rollback **swaps** the two pointers rather than dropping the one it came
+   from, so a failed rollback still has somewhere to go.
+
+   **Activation is the next piece and is deliberately not in it**: restarting
+   children onto a new Generation, health-gating with a functional probe, and
+   reverting on failure. Separating activation from the pointer is what lets the
+   failure branch restore the pointer before anything is restarted a second time.
+
+   Remaining: signing the binaries and the checksums, which
    waits on key custody — **now decided rather than open**
    ([ADR 0122](adr/0122-the-signing-key-hierarchy.md)): a second keypair,
    separate from the registry's because that one is exercised on every module
