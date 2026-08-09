@@ -1744,9 +1744,32 @@ decides on the user's behalf to be recorded.
    is being installed and by whom**, and names three gaps that have to close
    before any of the above is reachable:
 
-   - **The Supervisor has no CI at all** — no gate, no release, no image — and
-     it is the one binary a supervised install installs. Every other repository
-     has both; this one has neither.
+   - ~~**The Supervisor has no CI at all**~~ **— gate and release closed, image
+     still owed.** It was extracted from `platform` with its history and
+     arrived without workflows, so the process a supervised install installs was
+     the one nothing checked. `verify.yml` runs its container gate; `release.yml`
+     cross-compiles the same five targets as the other two artefacts. The `full`
+     and `lite` images are not built yet.
+
+     **Its verification of a release landed with them, on a development key.**
+     What is signed is the checksums file, not each binary — one `SHA256SUMS`
+     and one detached signature per release, so adding a target costs no extra
+     signature, which is the shape the module registry already uses. Four
+     distinct refusals, and the distinctions are the design: an artefact **not
+     named in the signed checksums is unsigned** however genuine the signature
+     over the set, so adding a file to a release directory does not get it
+     executed; and "cannot verify" is not "did not verify", so an unconfigured
+     build does not report an attack.
+
+     **No key ships**, and the code fails closed rather than skipping — ADR 0122
+     decided the hierarchy and generating the key is custody work that happens
+     off CI. The development override is [ADR 0099](adr/0099-the-development-module-repository.md)'s
+     build tag rather than a flag: a shipped Supervisor does not contain the code
+     that reads `MOSAIC_DEV_RELEASE_KEY`, and both configurations are gated,
+     because the tagged path is otherwise code nothing executes and the untagged
+     claim is only a claim if nothing compiles it. Demonstrated against a
+     generated key — genuine accepted and named by signer, smuggled file,
+     tampered bytes and untrusted signer each refused differently.
    - ~~**Nothing publishes the Shell binary.**~~ **Closed.**
      `web`'s `release-shell.yml` cross-compiles the same five targets on a
      `shell-v*` tag, with per-file checksums rolled into one `SHA256SUMS`, so a
