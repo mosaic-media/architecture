@@ -1,6 +1,18 @@
 # go-plugin is the extension module harness
 
-**Status:** Proposed
+**Status:** Accepted; **built.** `hashicorp/go-plugin` v1.8.0 is the harness on
+both sides — `sdk/host` serves a module and `internal/adapters/extension` in the
+Platform launches and adapts one — and the four things this record leaves with
+Mosaic (the `Caller` handle table, restart and crash-loop policy, the egress
+proxy, the manifest check) are Mosaic's and are built. `sdk`'s own `go.mod`
+still names no gRPC or protobuf module, which is the property the split exists
+to hold. With [ADR 0064](0064-extension-module-boundary.md) and
+[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md) this
+is what supersedes [ADR 0007](0007-static-go-module-composition.md)'s rejection
+of module RPC **for the extension tier only**; core modules stay statically
+linked under [ADR 0062](0062-two-module-tiers.md). Not done: the MPL-2.0
+compatibility check this record asks to be "done and recorded" is recorded
+nowhere, and both Open questions below are still open.
 **Date:** 2026-07-24
 
 Implements [ADR 0064](0064-extension-module-boundary.md) within the decision it

@@ -9,8 +9,11 @@ an identical retry.
 Capability classes are derived on `Attach` from the declared profile
 (ADR 0047) and the `playback_resolutions` store is keyed by (part, capability
 class), read after selection and written after resolution — verified against
-real PostgreSQL. The background refresh job remains blocked on the jobs runner,
-the scheduler and the system principal, as this record anticipated. Implementation departed in two
+real PostgreSQL. **The background refresh job is still unbuilt, but no longer
+blocked**: the jobs runner, the interval scheduler and the system principal all
+landed in M0.1 (`internal/platform/jobs`, `Service.SystemCaller`), and four
+handlers are registered on them. The resolution-cache refresh is simply not one
+of them — it is queued work now rather than a prerequisite. Implementation departed in two
 places: a cache hit reports no module id, because no module was asked, and the
 write runs on the request goroutine rather than in the background — which still
 honours the "must not block the stream" requirement, since nothing is streaming

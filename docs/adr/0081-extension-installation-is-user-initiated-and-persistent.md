@@ -1,6 +1,19 @@
 # Extension installation is user-initiated and persistent
 
-**Status:** Proposed
+**Status:** Accepted; **built.** Nothing is installed by default — the three
+extension modules are in neither the Platform's `go.mod` nor its composition
+root, which is what completes
+[ADR 0064](0064-extension-module-boundary.md)'s cutover and, with it and
+[ADR 0077](0077-go-plugin-as-the-extension-harness.md), reverses
+[ADR 0007](0007-static-go-module-composition.md)'s rejection of module RPC for
+this tier. `installExtension` and `uninstallExtension` are `Invoke`-lane actions
+behind an extensions surface that lists the signed index and names each role
+before consent; the installed set is durable Platform state
+(`InstalledExtensions` on `Tx`) and boot re-adopts the pinned bytes from the
+on-disk cache rather than re-reading a catalogue that may have moved. Install
+and uninstall take effect while the Platform is serving. **Unbuilt: the
+third-party repository step this record leaves "still open in its detail" —
+see [ADR 0079](0079-the-platform-manages-extension-modules.md).**
 **Date:** 2026-07-24
 
 Refines [ADR 0079](0079-the-platform-manages-extension-modules.md), which made

@@ -14,9 +14,15 @@ proxy applying netguard's deny list, and `sdk/host` forces the module's
 transport through it — including for loopback, which `HTTP_PROXY` alone
 excludes, the case that would otherwise leave the Platform's own PostgreSQL
 reachable. Still unbuilt: OS-level network denial (layer 3), which is what turns
-the proxy from the easy path into the only path. `module-stremio-addons` runs as
-its own process and is proven doing so against the real boundary; the Platform
-still composes it statically, because the cutover is a distribution decision.
+the proxy from the easy path into the only path. **The cutover has since
+happened**: `module-stremio-addons` and the other two extension modules are in
+neither the Platform's `go.mod` nor its composition root, and are installed at
+runtime under
+[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md).
+**This record supersedes [ADR 0007](0007-static-go-module-composition.md)'s
+rejection of module RPC, for the extension tier only** —
+[ADR 0062](0062-two-module-tiers.md) keeps that rejection for the core modules,
+which are still statically linked.
 **Partly superseded: the "Supervisor owns the install" division is reversed by
 [ADR 0079](0079-the-platform-manages-extension-modules.md)** — the Platform
 manages extension modules end to end, including download and verification; the

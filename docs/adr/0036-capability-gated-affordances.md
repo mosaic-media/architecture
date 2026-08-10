@@ -1,6 +1,20 @@
 # Capability-gated affordances and consumer roles
 
-**Status:** Proposed
+**Status:** Accepted; **built in part, and the gate reads something else than
+this record specifies.** The consumer class is real: `RolePlayback` is in the
+SDK, `module-remote-playback` fills it
+([ADR 0045](0045-playback-consumer-and-media-origin.md)), and
+`CapabilityRegistry.PlaybackProviders()` enumerates it. **What was not built is
+the gate itself.** Nothing on the emit side reads the installed capability set —
+`PlaybackProviders()` has one caller, `ResolvePlayback`, at resolution time, and
+the screens layer has no handle on the registry at all. Play and Add are gated
+on the *caller's* `content.import` permission
+([ADR 0069](0069-privilege-cannot-escalate.md)), and the continue-watching rail
+on there being something in progress; both cite this record, and both are
+proxies for it rather than it. So there is no "discovery mode": an install with
+no consumer draws Add and Play for anyone who may import, which is the dead-end
+affordance this record exists to prevent. The "gate on a consumer existing, not
+on playback existing" distinction is therefore untested by anything.
 **Date:** 2026-07-21
 
 ## Context

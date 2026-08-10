@@ -1,6 +1,19 @@
 # The Platform manages extension modules; the Supervisor manages the binary
 
-**Status:** Proposed
+**Status:** Accepted; **built, except the third-party repository surface.** The
+division landed as decided: the Platform discovers, downloads, verifies,
+installs, pins, spawns, health-checks, restarts and kills an extension module
+(`internal/adapters/extension`), and the Supervisor touches none of it — it
+manages the Platform binary and through it the core modules, and says so in its
+own source. The install and uninstall actions are Platform client surfaces
+(ADR 0061), shaped by
+[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md).
+**Unbuilt: adding or consenting to a third-party repository.** The trusted set
+is Mosaic's own key compiled into the binary, plus the development override
+[ADR 0099](0099-the-development-module-repository.md) adds; `Registry.Add`
+exists and no client action reaches it, so the per-repository trust decision
+[ADR 0065](0065-module-distribution-and-trust.md) puts at the centre of the
+model is one only a build can make.
 **Date:** 2026-07-24
 
 Partly supersedes [ADR 0064](0064-extension-module-boundary.md) (the "Supervisor

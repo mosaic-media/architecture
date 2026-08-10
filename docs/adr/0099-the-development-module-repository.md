@@ -1,9 +1,12 @@
 # The development module repository, and the build tag that keeps it out of releases
 
-**Status:** Proposed. Built: the override, its build-tag guard and the dev
+**Status:** Accepted; **built.** The override, its build-tag guard and the dev
 stack's local registry all land with this record, and the loop below was
 exercised end to end — a working-copy edit to `module-stremio-addons` reached a
 locally signed index and was installed through the Platform's own install action.
+The guard is absence rather than an off switch: `devregistry_off.go` reads no
+environment, and `docker-compose.test.yml` gates both configurations by running
+`go vet -tags mosaicdev ./...` and the tagged tests after the ordinary suite.
 **Date:** 2026-07-26
 
 Extends [ADR 0065](0065-module-distribution-and-trust.md) (the signed repository

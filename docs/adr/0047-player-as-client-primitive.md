@@ -1,14 +1,22 @@
 # The player is a client primitive over a server-issued ticket
 
-**Status:** Accepted (built, except progress reporting). `playPart` resolves to
+**Status:** Accepted; **built.** `playPart` resolves to
 a `Player` node carrying a ticket URL, and the web runtime renders it. **The
 capability declaration is now built**: `AttachRequest` carries an optional
 `ClientProfile`, the web Shell fills it from the browser's own `canPlayType`,
 and the Platform records it on the live session and ranks against it — the
 hard-coded browser preference at the `playPart` call site is gone, surviving
-only as the fallback for a client that declares nothing. **Still unbuilt:** no
-client reports progress back, so the node carries no subtitle tracks and no
-next-up reference and its resume offset is always zero. **Partly superseded:**
+only as the fallback for a client that declares nothing. **The four things this
+line called unbuilt have all landed since**: the player reports progress
+(`reportProgress`, dispatched from `sdui-react`'s player), the node carries
+`subtitleTracks` ([ADR 0115](0115-a-styled-subtitle-goes-to-the-client.md)) and
+a real `resumeAt`, and "what comes next" is a server-emitted `Button` the host
+renders. `@mosaic-media/sdui-react` now depends on `hls.js` and `jassub`,
+attached conditionally to read
+[ADR 0109](0109-the-transcoded-stream-is-segmented.md)'s segmented origin and
+ADR 0115's styled tracks — the condition
+[ADR 0070](0070-the-web-player-is-the-browser.md) set for adopting a library,
+met. **Partly superseded:**
 the "web client is Shaka Player" bullet below was reversed by
 [ADR 0070](0070-the-web-player-is-the-browser.md) — the renderer is a bare
 `<video>` element. The rest of this record stands.

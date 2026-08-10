@@ -1,6 +1,22 @@
 # Static Go module composition
 
-**Status:** Accepted
+**Status:** Accepted, and **partly superseded — for the extension tier only.**
+Static composition still governs the **core** tier, and
+[ADR 0062](0062-two-module-tiers.md) says so in as many words: it splits the
+modules in two and keeps this record's rejection of module RPC — *paying a
+distributed-systems cost for a problem that is not distributed* — for the core
+modules compiled into the binary. For **extension** modules that rejection is
+reversed, and the reversal is built:
+[ADR 0064](0064-extension-module-boundary.md) puts them in their own process
+over a Unix domain socket,
+[ADR 0077](0077-go-plugin-as-the-extension-harness.md) makes
+`hashicorp/go-plugin`'s gRPC harness the wire on both sides of it, and
+[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md)
+installs them at runtime rather than linking them. Separately, the per-install
+Build Pipeline this record specifies is superseded by
+[ADR 0063](0063-platform-binary-built-by-ci.md) and was never built — the
+composition root registers modules explicitly instead
+([ADR 0020](0020-optional-module-composition.md)).
 **Date:** 2026-07-14
 
 ## Context

@@ -1,8 +1,21 @@
 # Modules as anti-corruption layers: source dialects and a tested-source registry
 
-**Status:** Accepted (built) — `module-stremio-addons` translates at the
-boundary with a dialect table keyed on addon manifest id, and fills the SDK's
-typed container and codec fields rather than leaving them empty.
+**Status:** Accepted; **built in part — the typed fields, not the dialect
+table.** `module-stremio-addons` does translate at the boundary and fills the
+SDK's typed fields rather than leaving them empty: `parseStreamMeta` works out
+container, video codec, audio codec, quality, size and seeders, and
+`streamLinkFrom` carries all of them onto the `StreamLink`, so nothing
+addon-shaped crosses and no consumer re-derives a fact from a URL. **What is not
+built is everything keyed on the source's identity.** There is one universal
+regex set applied to every addon's free text — the generic fallback this record
+describes — and no dialect table, no per-source extractor and no tested-source
+registry; the module reads a manifest id only to hide non-source addons from
+browse, which is a deny list and not a dialect. `Confidence` does not travel
+with a value either: no field on `StreamLink` distinguishes a fact read from a
+structured place from one inferred from a release name, so a consumer cannot
+prefer the former and the probe
+([ADR 0050](0050-probing-and-the-per-stream-playback-decision.md)) is doing all
+of that work alone.
 **Date:** 2026-07-22
 
 ## Context

@@ -1,6 +1,15 @@
 # The artwork provider role
 
-**Status:** Proposed
+**Status:** Accepted; **built.** `RoleArtwork` and `ArtworkProvider` are in the
+SDK, `CapabilityRegistry.ArtworkProviders()` resolves them, and
+`enrich_artwork.go` runs the pass over a materialised work and its seasons —
+asking every provider, unioning the results rather than stopping at the first,
+and swallowing every failure so an artwork source being down cannot lose a user
+the work they just added. `module-fanart-tv` fills the role and declares no
+metadata role; a boundary test in that repository fails if it ever does, which
+is the half of this record that had to be enforced rather than stated.
+`RoleArtwork` does not count toward
+[ADR 0035](0035-metadata-as-required-capability.md)'s requirement, as decided.
 **Date:** 2026-07-24
 
 Adds an eighth role to [ADR 0027](0027-modules-as-typed-capability-providers.md)'s

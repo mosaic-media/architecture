@@ -1,20 +1,26 @@
 # Probing, and the per-stream playback decision
 
-**Status:** Accepted (built, except HLS). The probe, the per-stream plan and the
+**Status:** Accepted; **built.** The probe, the per-stream plan and the
 audio-encode-video-copy path are built, and implementation added one thing this
 record does not anticipate: HDR is tone-mapped rather than copied, because
 passing HDR10 metadata to an SDR browser decoder produces a purple-and-green
-picture. **Unbuilt: the HLS emission below.** Encoded output is fragmented MP4
-down a pipe, which has no index and no length, so the origin answers
-`Accept-Ranges: none` and a remuxed stream cannot be seeked — this record's
-claim to retire ADR 0045's non-seekable caveat is therefore not yet true.
+picture. **The HLS emission below has landed since**, by a route this record
+does not describe: [ADR 0109](0109-the-transcoded-stream-is-segmented.md) and
+[ADR 0111](0111-the-playlist-is-a-nominal-grid.md) make the transcoded stream a
+computed playlist over restart-addressed segments, so anything encoded is served
+as `index.m3u8`, `init.mp4` and numbered segments and is seekable. The
+unseekable fragmented-MP4 pipe survives only where a source reports no duration
+— there is no grid to compute — and answers `Accept-Ranges: none` there. **Nothing
+has been watched through the segmented path**, which is ADR 0109's own status
+line and a row on the [register](../unreachable-capability.md).
 **Probe results are now durable on the Part, with one departure:** the technical
 columns this record points at cannot hold a track list, and the four-audio-track
 release below is exactly why that matters — so the full result is stored as a
 versioned document in `Part.Attributes` and the columns carry the summary. The
 probe is authoritative over the module's parse, as decided here. Recording it
-authorises `content.bind`, so a read-only viewer cannot warm the cache; that
-awaits the system principal.
+authorises `content.bind`, and the system principal it was waiting on is built:
+the playback transport records the probe as that principal, so a read-only
+viewer warms the cache instead of re-probing every play.
 **Date:** 2026-07-22
 
 ## Context

@@ -1,6 +1,17 @@
 # Artwork is a candidate set
 
-**Status:** Proposed
+**Status:** Accepted; **built, except the user's half of the selection rule.**
+`v1.Artwork` carries `Candidates` beside the four flat slots, `ArtworkSlot` is
+the open eight-value vocabulary this record names, and an `ArtworkCandidate`
+carries `{Slot, URL, Source, Language, Rank}`. Selection resolves on write in
+`enrich_artwork.go`: candidates union across providers, dedupe, sort textless
+first for backdrop and landscape, then by the source's own rank, then by source,
+capped at twelve per slot — and the winner's URL is written into the flat slot,
+so no reader walks the list. **Two parts of the stated rule are not built.**
+There is no "prefer the user's configured language" step — the sort reads
+language only to find the textless ones — and there is no picker, so nothing
+records a user's choice or outranks the rule. That second one is the thing this
+record says it exists to make possible, and it is the half still owed.
 **Date:** 2026-07-24
 
 Grows the value [ADR 0071](0071-content-artwork-is-stored-on-the-node.md) put on
