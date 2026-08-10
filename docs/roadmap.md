@@ -2410,10 +2410,13 @@ certificate and warns on every new device.
    greyed control, no "unavailable" row — and announces them exactly once, at the
    superuser's first sign-in via the public origin. Enable now or later; both
    answers end the announcement permanently, and the settings row stays available
-   so "once" is not a dead end. It is a `Banner` with two `Button`s rather than a
-   modal, because the contract has no overlay primitive and adding one is a
-   client release ([ADR 0024](adr/0024-primitives-and-definitions.md)) that a
-   security prompt should not smuggle in.
+   so "once" is not a dead end. ADR 0133 chooses a `Banner` with two
+   `Button`s over a modal — **on the interruption argument only.** Its stated
+   second reason, that the contract has no overlay mechanism, is wrong and its
+   Status line says so: `OpenOverlay`/`CloseOverlay` are action kinds,
+   `modal`/`sheet`/`drawer` are declared surfaces, and the extensions screen
+   already opens a modal with them. The error was looking for a *component*
+   named Modal and not checking the action and surface tiers.
 
    **Buildable now**, with one browser check owed first that no amount of design
    settles: whether a WebAuthn ceremony runs at all on a `.local` origin behind a
