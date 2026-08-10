@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-10 · **Scope:** all 135 records in `docs/adr/`, and every reference to them across the twelve repositories on disk.
 
-This is a working document for one decision: moving the decision records out of `architecture` and into the repositories that own them, with each repository's series restarting at 1. It is not part of the published site and is not in `mkdocs.yml`. **It should be deleted once the migration lands or is abandoned** — leaving it is the "delete, do not annotate" rule broken by a document about following rules.
+This is a working document for one decision: moving the decision records out of `architecture` and into the repositories that own them, with each repository's series restarting at 1. **Part I** decides where each record goes. **Part II** asks whether 135 is the right number of records, and re-scopes those whose wording straddles repositories. It is not part of the published site and is not in `mkdocs.yml`. **It should be deleted once the migration lands or is abandoned** — leaving it is the "delete, do not annotate" rule broken by a document about following rules.
 
 > **On the "do not create new documents" rule.** `CLAUDE.md` caps the corpus at three pages plus the unreachable-capability register. This file is deliberately outside `docs/`, so it publishes nowhere and adds no page. It is scaffolding for a migration, not a fifth document. If it survives past the migration, that reasoning has failed and it should go.
 
@@ -192,7 +192,136 @@ The ordering matters more than usual, because the only check in the fleet disapp
 6. **Move one repository first as a pilot.** `contracts` (19 records) or `supervisor` (11) is the right size — large enough to hit real problems, small enough to reverse. `platform` at 81 is the wrong place to learn.
 7. **Rewrite citations repo by repo**, mechanically, with the lint as the gate. Note the 129 citations in `contracts`' generated files must be changed at source and regenerated.
 8. **Update the eleven `CLAUDE.md` files** in the same series.
-9. **Delete this document.**
+9. **Consolidate, if at all, only now** — after the namespace exists, so the 4,675-site rewrite is paid once rather than twice. See §14 for what is worth merging and what is not.
+10. **Delete this document.**
+
+---
+
+# Part II — the enrichment pass
+
+Added 2026-08-10, second pass. Part I asked *where each record goes*. This part asks *whether 135 records is the right number*, and whether a record's wording can be scoped so its home is obvious rather than argued.
+
+## 9. The premise, tested
+
+The observation prompting this pass — that some chains are four consecutive records back to back — is right, and understates it.
+
+**133 of the 135 records sit inside a run of consecutive numbers written on the same day.** Only 0099 and 0100 stand alone. There are 19 such runs:
+
+| Run | Records | Date |
+|---|---:|---|
+| 0045–0065 | 21 | 2026-07-22 |
+| 0018–0034 | 17 | 2026-07-20 |
+| 0083–0098 | 16 | 2026-07-25 |
+| 0121–0130 | 10 | 2026-08-09 |
+| 0035–0044 | 10 | 2026-07-21 |
+| 0074–0082 | 9 | 2026-07-24 |
+| 0003–0011 | 9 | 2026-07-14 |
+| 0066–0073 | 8 | 2026-07-23 |
+| …11 more runs | 2–6 each | |
+
+The whole corpus was written in 27 days. So the one-decision-per-record granularity is substantially an artefact of **authoring in sittings**, not of decisions arriving separately over time. That is evidence for consolidation, not proof of it — whether a run is one decision or several that happened to land together is answerable only by reading the bodies, which is what this pass did for all 135.
+
+## 10. The result: 135 → 111, and why it is not 60
+
+Seven clusters were assessed independently, each required to enumerate the decisions carried in and out and prove nothing was dropped.
+
+| Cluster | In | Out | |
+|---|---:|---:|---|
+| Playback, transcode, subtitles | 18 | **9** | the one big win |
+| SDUI contract and vocabulary | 25 | **19** | |
+| Modules, tiers, distribution | 23 | **19** | |
+| Supervisor and host | 17 | **14** | |
+| Auth, session, secrets | 15 | **13** | |
+| Content model, storage, artwork | 26 | **25** | barely moves |
+| Telemetry and observability | 11 | **12** | **grows** |
+| **Total** | **135** | **111** | **−18%** |
+
+**An 18% reduction, not the halving the same-day-run data suggests.** One cluster grows. That gap between the premise and the result is the most useful thing in this pass, and it has a single cause.
+
+### The binding constraint is reversals, not authoring style
+
+All seven assessments converged independently on the same rule: **never merge across a reversal.** Where record B overturned record A, merging them keeps the answer and deletes the argument the answer had to beat — and a rejected alternative with a reason attached is precisely what stops a decision being re-litigated in eighteen months.
+
+The refusals are more instructive than the merges:
+
+- **0059 → 0128 → 0135** (may the SDK depend on OpenTelemetry: no, then yes, then no again). Refused, and rightly: 0135 is still `Proposed` while `sdk/go.mod` still requires the four OTel modules, so a merged record would describe code that does not exist. The reversal is also two-of-three — one ground was genuinely settled by 0128, two were reinstated by 0135 — and only three records can say that.
+- **0001 / 0012** (transactional store extensibility). The corpus's only record of a reversal that *reached code and was backed out*. It is what explains `StorageAdapter` surviving with no `Store[T]` beside it.
+- **0068 / 0102** (session credentials). Merging would delete the `HttpOnly`/XSS argument that `localStorage` had to beat — a security rationale, not a historical note.
+- **0088 / 0096** (the form merge rule). The account of the bug 0088 hid — a blank field beating a typed value, storing silently, answering `200`, found by typing `GB` into a region box — dies in the merge. The corrected rule survives; the reason anyone should care does not.
+
+Runs consolidate well when they are **one decision plus its serial refinements** and badly when they are **one decision plus its corrections**. Those look identical from the outside — consecutive numbers, same day, cross-referencing Status lines — and can only be told apart by reading. That is why this pass could not be done from the index.
+
+### The clean case, for contrast
+
+**0108 → 0109 → 0110 → 0111 merges 4 → 1.** Three of the four were written on 2026-07-30 and two were superseded before the day ended. There is no independent decision among them — only four attempts at one question (how a stream ffmpeg produces is made seekable) and the measurements that killed three. The merged Status must still carry *"built on both sides and never played"* and *"this is the fourth design"*, or the merge launders a record that admits it was wrong.
+
+## 11. The real prize is re-homing, not the count
+
+Across the seven clusters: roughly **24 merges, 12 splits and 17 reframes**. The splits are what serve your stated goal, because they attack the actual cause of the 76 cross-cutting records in Part I — **a record that bundles two repositories' decisions in one body has no clean home, and never will until it is split.**
+
+Worked examples, each verified against code rather than prose:
+
+- **0031** (the server-emitted app shell) carries separate rejected alternatives for its server half and its client half. Split → `platform` / `web`.
+- **0084** (vocabulary negotiation): `VocabularyProfile` and `fallback` are fields in `contracts`' protos, while the degradation pass is `platform/internal/transport/vocabulary/`. Split → `contracts` / `platform`.
+- **0061** (one client transport) splits into a `platform` record (delete the GraphQL transport; `dispatch` is the boundary) and a `contracts` record (`AuthService` as its own service).
+- **0052** carries a notification model already implemented and cited in `contracts/session.proto`. That half moves to the repository that implements it.
+- **0128** has one Status line covering three build states in three repositories — already stale.
+- **Seven records in the module cluster alone** decide something for `sdk` and something for `platform` in one body. That is why 0077 currently sits in a different repository from the record it refines.
+
+The effect on the distribution is modest in aggregate and large where it matters:
+
+| Repo | Disperse only | Disperse + consolidate | Δ |
+|---|---:|---:|---:|
+| `platform` | 81 | **63** | −18 |
+| `contracts` | 19 | **17** | −2 |
+| `sdk` | 10 | **9** | −1 |
+| `supervisor` | 11 | **8** | −3 |
+| `web` | 6 | **5** | −1 |
+| `architecture` | 4 | **5** | +1 |
+| module repos | 4 | **4** | 0 |
+| **Total** | **135** | **111** | **−24** |
+
+`platform` absorbs the whole reduction, falling from 60% of the corpus to 57%. **The module repositories gain nothing** — consolidation does not fix the distribution problem Part I identified, and nothing in this pass suggests it should be expected to.
+
+## 12. Two decisions this pass forces
+
+**A. The append-only rule.** Merging bodies is a head-on collision with the rule asserted in eleven `CLAUDE.md` files: *"Never rewrite a record's body… State changes go in the Status line and nowhere else."* That rule governs **maintaining** a corpus. This migration **re-founds** one — new repositories, numbering from 1 — and a re-founding is the one moment transcription is legitimate, provided the original survives. The mechanism, which this project has used before:
+
+1. Tag the current corpus (`pre-adr-split-2026-08-10`), exactly as `pre-reset-2026-07-19` preserved the last one.
+2. Consolidated records are **new** records in the new series, each naming in its Status line the originals it supersedes.
+3. No original is edited. They cease to be the live series and remain reachable at the tag.
+
+Anything less — editing bodies in place and calling it consolidation — breaks the rule for real, and the rule is load-bearing.
+
+**B. Where the reversals go.** 111 records still carry the reversal chains that refused to merge. Those chains are the corpus's most valuable content and the most fragile under renumbering, because a Status line pointing at a superseded record is exactly the cross-repo citation nothing checks (§2). Most chains stay within one repository under this mapping — the playback and subtitle chains are all `platform`, the upgrade chain all `supervisor` — but **0059 → 0128 → 0135 sits inside `sdk` while 0130's siblings do not**, and the pre-session chain splits `platform` from `contracts`. Check each chain before moving it.
+
+## 13. Further defects found in this pass
+
+Independent of the migration, and additional to §7.
+
+**11. Two contract-level constants exist only in one client.** ADR 0090 states the impression threshold is *"arbitrary, like any threshold, but **stated** and identical"* across clients; ADR 0093 names a 600px prefetch margin. **Verified:** `VISIBILITY_THRESHOLD = 0.5` and `PREFETCH_MARGIN_PX = 600` live in `web/packages/sdui-react/src/` and appear nowhere in `contracts` — not in `ui.spec.json`, not in the conformance corpus, not in `REFERENCE.md`. A second client would guess. `check-vocabulary.mjs` cannot catch it, because it compares vocabulary members, not constants.
+
+**12. Status lines stale in both directions.** 0047 is stale in four clauses (progress reporting, `subtitleTracks`, next-up and resume are all built — `hls.js` and `jassub` are real `sdui-react` dependencies); 0050 is stale the other way (HLS landed); 0036, 0074 and 0075 read `Proposed` and are built; 0099 reads `Proposed` while describing built code.
+
+**13. Three unrecorded reversals in the auth cluster** — 0102 reverses 0068 on cookies, and 0106 reverses 0061 on the `capabilities` field. Neither is recorded as a reversal, so a careless consolidation would launder both.
+
+**14. 0064 rejects the standard library's `plugin` package while 0077 adopts `hashicorp/go-plugin`.** Correct as written — they are different things — but merged carelessly they read as self-contradictory.
+
+**15. 0011's module half has no SDK surface at all**; 0014's export formats and 0030's second slice are unbuilt while their records do not say so.
+
+### Corrections to Part I
+
+- **Retired.** An agent reported that code discloses the server name pre-authentication, against 0097. **It does not.** `setupServerStep()` collects a name in the setup wizard, the review step echoes back what the user typed, and `claimEnvelope` is documented as *"what the setup wizard's submit collects"* — all inbound. No read of a configured name into a pre-auth tree exists.
+- **Softened.** ADR 0124 was reported as contradicting working code by rejecting an aggregated catalogue. Its own Status line already acknowledges the departure — *"the Supervisor reads a signed index from a configured URL today, and no official one exists"* — and the roadmap agrees. It is recorded, just as a build-state note rather than as the reversal of a named rejected alternative.
+
+## 14. Revised recommendation
+
+Consolidation is worth doing, but **not for the record count**, and it should not gate the migration.
+
+1. **Do the splits.** Twelve of them, and they are the only move that measurably improves where records live. A split record has one owner by construction.
+2. **Do the four clean merges** — the playback run (4→1), the subtitle run (5→1), the upgrade run (3→1), the bindings/scopes/fields run (3→1). Together they account for 11 of the 24 removed records and none crosses a reversal.
+3. **Leave the reversal chains alone.** They are 18% of the corpus and most of its value.
+4. **Treat consolidation as optional and sequence it after the citation namespace (§4) exists** — merging records changes numbers a second time, and doing that before the lint exists means paying the 4,675-site rewrite twice.
 
 ---
 
