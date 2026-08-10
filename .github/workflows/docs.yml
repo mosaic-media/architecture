@@ -31,6 +31,20 @@ jobs:
       - name: Install Chromium for PDF rendering
         run: python -m playwright install --with-deps chromium
 
+      # Both run before the site build, because `mkdocs --strict` validates a
+      # link only while both ends live in `docs/` — it stops helping exactly
+      # when records start moving to the repositories that own them.
+      - name: Check the decision-record index is not stale
+        run: python scripts/adr_index.py --repo architecture --check
+
+      # A ratchet, not a target: the ceiling is today's count and is lowered as
+      # records move. It can only go down.
+      - name: Check every record citation names its repository
+        run: |
+          python scripts/adr_lint.py --repo architecture \
+            --max-unqualified 1671 \
+            --exclude adr-migration-audit.md --exclude 'scripts/adr_*.py'
+
       - name: Build site
         env:
           DISABLE_MKDOCS_2_WARNING: "true"

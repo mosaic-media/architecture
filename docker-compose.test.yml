@@ -6,12 +6,25 @@
 # Nothing is installed or built on the host — no virtualenv, no pip install, no
 # mkdocs on PATH.
 #
-# `mkdocs build --strict` is the only check this repository keeps, and what it
-# actually catches is a **broken internal link**: a document pointing at a page
-# or anchor that no longer exists. That is the failure mode of a repository
-# whose rule is "delete, do not annotate", so it is worth more than its size
-# suggests. It is also the check most likely to be skipped, because running it
-# on the host means installing a Python toolchain to lint some Markdown.
+# `mkdocs build --strict` catches a **broken internal link**: a document
+# pointing at a page or anchor that no longer exists. That is the failure mode
+# of a repository whose rule is "delete, do not annotate", so it is worth more
+# than its size suggests. It is also the check most likely to be skipped,
+# because running it on the host means installing a Python toolchain to lint
+# some Markdown.
+#
+# Two checks run before it, and they exist because `--strict` stops helping the
+# moment a record moves to another repository: it validates a link only while
+# both ends are inside `docs/`.
+#
+#   * `adr_index.py --check` refuses a stale `docs/adr/README.md`. That index is
+#     generated, and it is the only complete map of the corpus once `nav:` goes.
+#   * `adr_lint.py` refuses a citation that names no repository. The ceiling is
+#     a ratchet, not a target: 4,618 sites across the fleet still use the old
+#     unqualified spelling and cannot be rewritten in one commit, so the gate
+#     holds the line at today's count and is lowered as records move. A check
+#     that merely reported until the migration finished is a check nobody would
+#     have turned on.
 #
 # For a shell in the same environment:
 #
@@ -42,6 +55,10 @@ services:
       - -c
       - |
         python -m pip install -r requirements.txt
+        python scripts/adr_index.py --repo architecture --check
+        python scripts/adr_lint.py --repo architecture \
+          --max-unqualified 1671 \
+          --exclude adr-migration-audit.md --exclude 'scripts/adr_*.py'
         mkdocs build --strict
 
   # The PDF export, kept as a separate service because it is expensive and not
