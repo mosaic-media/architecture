@@ -171,6 +171,8 @@ nav:
       - 129. The upgrade channel is the handoff and the register: adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md
       - 130. The module metric surface: adr/0130-the-module-metric-surface.md
       - 131. Passkeys are an optional layer on a public origin: adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md
+      - 132. TOTP is the second factor that works everywhere: adr/0132-totp-is-the-second-factor-that-works-everywhere.md
+      - 133. An optional capability is announced once, when it becomes possible: adr/0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md
 
 markdown_extensions:
   - admonition

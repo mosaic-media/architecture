@@ -42,7 +42,7 @@ remote source requires the user to name one.
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port, answering the Platform's own client surface while it is down; a publicly trusted certificate needs the owed domain | — |
-| 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
+| 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential. A **TOTP second factor** on top of it is decided and unbuilt ([ADR 0132](adr/0132-totp-is-the-second-factor-that-works-everywhere.md)) | M5 |
 | 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface. Scoped down: an **optional** layer for installs with a public origin, never the foundation ([ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)) | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
@@ -2404,13 +2404,54 @@ certificate and warns on every new device.
    becomes a message naming the passkeys it broke instead of one that silently
    stops being offered.
 
+   **How it is offered is
+   [ADR 0133](adr/0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md).**
+   Mosaic says nothing about passkeys on an install that cannot have them — no
+   greyed control, no "unavailable" row — and announces them exactly once, at the
+   superuser's first sign-in via the public origin. Enable now or later; both
+   answers end the announcement permanently, and the settings row stays available
+   so "once" is not a dead end. It is a `Banner` with two `Button`s rather than a
+   modal, because the contract has no overlay primitive and adding one is a
+   client release ([ADR 0024](adr/0024-primitives-and-definitions.md)) that a
+   security prompt should not smuggle in.
+
    **Buildable now**, with one browser check owed first that no amount of design
    settles: whether a WebAuthn ceremony runs at all on a `.local` origin behind a
    self-signed certificate. It changes nothing in the record — enrolment is gated
    on a public origin either way — but it decides what an owner is told when they
    name their server.
-2. **Backup and restore.** One PostgreSQL and no documented restore path.
-3. **The hardening sweep.** The redaction-class vet check was decided and not built, which
+
+2. **TOTP — the second factor that works everywhere**
+   ([ADR 0132](adr/0132-totp-is-the-second-factor-that-works-everywhere.md)).
+   Passkeys leave a gap they cannot close: an install reached at
+   `192.168.1.50` or `<name>.local` has **one secret** between an attacker and
+   every account on it, and no path to a second, because WebAuthn cannot run
+   there at all. That is the majority deployment for a home media server.
+
+   TOTP needs no origin, no domain, no certificate and no network, so it works
+   on day one everywhere. It is **not** a replacement for the password — the
+   server holds the same secret the phone does, so a code proves a device rather
+   than an identity — and it is not a replacement for passkeys either, because it
+   is phishable: a relaying sign-in page defeats it in real time, and a passkey
+   cannot be relayed. The three stack rather than compete.
+
+   Because it works from day one it is offered **in onboarding as its own
+   optional step**, not behind a later prompt — a factor deferred to settings is
+   a factor nobody adds. That takes the wizard from four steps to five, which is
+   a re-expansion of a flow that was deliberately cut down and is recorded as
+   such.
+
+   Two things fall out that are worth knowing before starting. It is a *factor*
+   rather than a credential, so it adds no fifth arrow to
+   [ADR 0068](adr/0068-one-principal-many-credentials.md)'s Principal
+   constructor — it makes the password arrow two-step, and `domain.AuthStrength`
+   is what records the difference, becoming load-bearing after only ever holding
+   one value. And **`domain.RecoveryFactor` finally gets a caller**: single-use,
+   hash-only, `ConsumedAt` on use, written long ago and never used by anything. A
+   second factor with no recovery path is a way to lose an account when a phone
+   is lost, and a self-hosted server has no support desk to appeal to.
+3. **Backup and restore.** One PostgreSQL and no documented restore path.
+4. **The hardening sweep.** The redaction-class vet check was decided and not built, which
    leaves the PII boundary as developer discipline
    ([ADR 0056](adr/0056-redaction-classes-are-the-pii-boundary.md)) — an
    arrangement [ADR 0066](adr/0066-authorization-is-carried-in-the-type.md)
@@ -2427,8 +2468,8 @@ certificate and warns on every new device.
    address, and believes it only on a listener nothing can reach except
    through the front door
    ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
-4. **Dead code.** The Shell's `mock/` and `gallery/`.
-5. **Telemetry moves onto OpenTelemetry** — **three of four landed**, and the
+5. **Dead code.** The Shell's `mock/` and `gallery/`.
+6. **Telemetry moves onto OpenTelemetry** — **three of four landed**, and the
    metric surface ADR 0059 had withheld landed beside it
    ([ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md)).
    Mosaic has hand-written the same thing three times — the Platform's ~1,300
