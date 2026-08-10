@@ -29,10 +29,12 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-# A citation of a record held in another repository: `platform#12`.
-# Deliberately unlike `ADR 0012`, so that the old spelling can be found and
-# refused rather than silently resolving to a different record.
-FOREIGN = re.compile(r"\b([a-z][a-z0-9-]*)#(\d+)\b")
+# A citation of a record held in another repository, as it is written: a label
+# and the URL it links to. Deliberately unlike `ADR 0012`, so the old spelling
+# can be found and refused rather than silently resolving to a different record.
+# The URL is captured rather than reconstructed — this file cannot know another
+# repository's filenames, and a link built from a guess is not a link.
+FOREIGN = re.compile(r"\[([a-z][a-z0-9-]*)#(\d+)\]\((https?://[^)]+)\)")
 
 GITHUB = "https://github.com/mosaic-media"
 
@@ -53,7 +55,15 @@ def status_summary(text: str, limit: int = 140) -> str:
     carries the rest, and duplicating more of it here would be a second copy of
     exactly the kind this repository keeps deleting.
     """
-    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)  # links to their text
+    # Links collapse to their text — except a citation of another repository's
+    # record, which keeps its link. That is the one link in a Status line a
+    # reader of the index actually needs, and stripping it leaves a label
+    # pointing nowhere.
+    text = re.sub(
+        r"\[([^\]]+)\]\(([^)]+)\)",
+        lambda m: m.group(0) if re.fullmatch(r"[a-z][a-z0-9-]*#\d+", m.group(1)) else m.group(1),
+        text,
+    )
     # Emphasis and code markers are stripped rather than preserved: this is one
     # cell of a table, and truncating prose mid-`**bold**` or mid-`code` emits a
     # dangling marker that corrupts the row it sits in.
@@ -106,17 +116,21 @@ def read_record(path: Path) -> Record:
     return Record(int(m.group(1)), title, status_summary(" ".join(status)), path.name)
 
 
-def foreign_citations(records: list[Path], repo: str) -> dict[str, set[int]]:
-    """Records in *other* repositories that this repository's records cite."""
-    out: dict[str, set[int]] = {}
+def foreign_citations(records: list[Path], repo: str) -> dict[str, dict[int, str]]:
+    """Records in *other* repositories that this repository's records cite.
+
+    Maps repository -> {number: url}, with the URL taken from the citation
+    itself so the index links to the record rather than to its directory.
+    """
+    out: dict[str, dict[int, str]] = {}
     for path in records:
-        for other, number in FOREIGN.findall(path.read_text()):
-            if other != repo and other.startswith(("module-", "arch", "plat", "cont", "sdk", "web", "reg", "sup")):
-                out.setdefault(other, set()).add(int(number))
+        for other, number, url in FOREIGN.findall(path.read_text()):
+            if other != repo:
+                out.setdefault(other, {})[int(number)] = url
     return out
 
 
-def render(repo: str, records: list[Record], foreign: dict[str, set[int]]) -> str:
+def render(repo: str, records: list[Record], foreign: dict[str, dict[int, str]]) -> str:
     out = [
         "# Decision records",
         "",
@@ -144,11 +158,11 @@ def render(repo: str, records: list[Record], foreign: dict[str, set[int]]) -> st
             "",
         ]
         for other in sorted(foreign):
-            numbers = ", ".join(
-                f"[{other}#{n}]({GITHUB}/{other}/blob/main/docs/adr/)" for n in sorted(foreign[other])
-            )
-            out.append(f"- **`{other}`** — {numbers}")
-        out.append("")
+            out.append(f"**`{other}`**")
+            out.append("")
+            for n in sorted(foreign[other]):
+                out.append(f"- [{other}#{n}]({foreign[other][n]})")
+            out.append("")
     return "\n".join(out)
 
 

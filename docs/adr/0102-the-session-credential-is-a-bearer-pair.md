@@ -25,7 +25,7 @@ strongest option against script access, and it is a **browser** mechanism. It
 requires the client and the server to share an origin, it brings a CSRF surface
 and the mitigations that go with it, and it is at best awkward for three of the
 four clients the transport was chosen against
-([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)) — Flutter, Compose and
+([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)) — Flutter, Compose and
 native iOS all hold credentials in a platform keystore and send them explicitly.
 Choosing it means the security-critical path has a variant per platform, and the
 one that is exercised daily is not the one three clients use.

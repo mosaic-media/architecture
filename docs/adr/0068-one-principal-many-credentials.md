@@ -143,7 +143,7 @@ always the one that is wrong.
   separate static host means `SameSite=None` plus CORS, a materially worse
   posture, and serving the Shell from the Platform avoids the category.
 - **The cookie only matters at Attach.** `SessionService` is a long-lived
-  two-lane stream ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)); once
+  two-lane stream ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)); once
   established, the stream is the session and no credential is re-presented per
   message.
 - **Legacy clients get scoping they cannot ask for or refuse.** Jellyfin has no

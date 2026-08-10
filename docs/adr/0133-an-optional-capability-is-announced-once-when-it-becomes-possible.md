@@ -62,7 +62,7 @@ without ever being announced again.**
 - **It is a banner with actions, not a modal.** The contract has no `Modal`,
   `Dialog` or overlay primitive, so a true popup is a **vocabulary** change —
   a new primitive, an ADR, a `@mosaic-media/sdui-react` release
-  ([ADR 0024](0024-primitives-and-definitions.md)). A `Stack` holding a `Banner`
+  ([contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)). A `Stack` holding a `Banner`
   and two `Button`s expresses this today at no cost, and interrupts less. If a
   modal is ever genuinely needed it should be decided on its own merits and not
   arrive as a side effect of a security prompt.

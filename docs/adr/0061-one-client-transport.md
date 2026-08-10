@@ -2,14 +2,14 @@
 
 **Status:** Accepted — built (the GraphQL transport is deleted; `AuthService`
 mints sessions over Connect). Partly superseded: the removal of the `query`
-action kind was reversed by [ADR 0083](0083-one-generated-sdui-vocabulary.md),
+action kind was reversed by [contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md),
 which declares a `query` carrying a screen name rather than a GraphQL string;
 the rest stands.
 **Date:** 2026-07-22
 
 ## Context
 
-[ADR 0041](0041-cross-client-transport-two-lane-rpc.md) moved the first-party
+[contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) moved the first-party
 client onto a two-lane Connect surface and, under "The GraphQL question", named
 three ways the two transports could coexist. It chose **split by audience**:
 Connect for first-party clients, GraphQL kept "only where a flexible, ad-hoc
@@ -60,7 +60,7 @@ The client API is two Connect services and nothing else:
   something a session does. Separating them also lets the two mount behind
   different interceptors.
 - **`mosaic.session.v1.SessionService`** — the two lanes of
-  [ADR 0041](0041-cross-client-transport-two-lane-rpc.md), unchanged.
+  [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md), unchanged.
 
 Three consequences of "delete" are decided here rather than left to discover:
 
@@ -132,12 +132,12 @@ reporting GraphQL handles worst.
 
 ## Consequences
 
-- **One contract framing for clients.** [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
+- **One contract framing for clients.** [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
   worried about "a second contract framing in the codebase"; that worry is now
   resolved in the direction it pointed. A client — React today, Flutter/Compose/
   Swift later — generates from the protos and speaks nothing else.
-- **This supersedes ADR 0041's "split by audience".** The rest of ADR 0041 —
-  two lanes, protobuf `UINode` ([ADR 0044](0044-contracts-protobuf-workspace.md)),
+- **This supersedes [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)'s "split by audience".** The rest of [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) —
+  two lanes, protobuf `UINode` ([contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)),
   resume cursors — is untouched and still Accepted.
 - **There is no ad-hoc query surface.** If an integration ever genuinely needs
   one, it is a new decision with a real requirement behind it, not a

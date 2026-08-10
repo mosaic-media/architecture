@@ -49,7 +49,7 @@ it is most needed.
 The UI surface, unusually, already exists. `internal/transport/screens/settings.go`
 hosts a Platform-owned settings frame ([ADR 0038](0038-module-contributed-settings-ui.md)),
 and the session transport already pushes region updates to a live client
-([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)) — so a live log tail is
+([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)) — so a live log tail is
 a consumer of push machinery that is already built, not new transport work.
 
 ## Decision

@@ -37,7 +37,7 @@ a resolver or a module writes no telemetry code and is fully instrumented.**
 
 The nine seams:
 
-1. **The session Connect interceptor** ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md))
+1. **The session Connect interceptor** ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md))
    — both lanes. Unary intents get a span each; `Subscribe` gets a long-lived
    span for the stream plus an event per pushed `RegionUpdate`, because a span
    per push on a stream that lives for hours is not a useful shape.

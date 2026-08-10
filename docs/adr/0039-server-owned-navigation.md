@@ -11,7 +11,7 @@ open rather than as this record being partly built.
 
 ## Context
 
-The server-driven-UI thesis ([ADR 0023](0023-server-driven-ui-and-the-shell.md),
+The server-driven-UI thesis ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md),
 [ADR 0031](0031-server-owned-app-shell.md)) is that the server owns the whole
 interface and a thin client renders it, so the experience can change **without
 shipping a client**. That last clause is not a nicety. The web Shell can be

@@ -5,13 +5,13 @@
 
 ## Context
 
-[ADR 0023](0023-server-driven-ui-and-the-shell.md)–[ADR 0025](0025-sdui-contract-repository.md) established Server-Driven UI, the primitive/definition component model, and the technology-agnostic contract ([`mosaic-sdui`](https://github.com/mosaic-media/mosaic-sdui)). The **web** renderer of that contract — the React implementation of the primitives, the registry, the recursive renderer, the definition expander, the runtime context/provider, and the token-driven skin — was first written inside the Shell.
+[contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)–[contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md) established Server-Driven UI, the primitive/definition component model, and the technology-agnostic contract ([`mosaic-sdui`](https://github.com/mosaic-media/mosaic-sdui)). The **web** renderer of that contract — the React implementation of the primitives, the registry, the recursive renderer, the definition expander, the runtime context/provider, and the token-driven skin — was first written inside the Shell.
 
 But more than one web surface needs to render SDUI. The Shell is one; a **component storybook** is another; embeds and future surfaces will be more. If the renderer lives inside the Shell, every other consumer depends on a package published *out of the Shell's repo*, which makes the Shell privileged and invites the renderer to drift as it is copied.
 
 ## Decision
 
-Extract the React renderer into its own repository and published package — **[`mosaic-sdui-react`](https://github.com/mosaic-media/mosaic-sdui-react)** / `@mosaic-media/sdui-react`. It is the reference **web** implementation of the [ADR 0024](0024-primitives-and-definitions.md) primitive vocabulary, and the Shell and the storybook consume it as **peers**.
+Extract the React renderer into its own repository and published package — **[`mosaic-sdui-react`](https://github.com/mosaic-media/mosaic-sdui-react)** / `@mosaic-media/sdui-react`. It is the reference **web** implementation of the [contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md) primitive vocabulary, and the Shell and the storybook consume it as **peers**.
 
 - It is a **client implementation**, not the contract. The contract (`@mosaic-media/sdui`, Apache-2.0) is technology-agnostic data; this is one specific way to render it, in React. A native client (Flutter) would be a *separate* runtime implementing the same contract — not this package.
 - It is therefore **AGPL-3.0-only** — first-party client code, like the Shell ([ADR 0022](0022-licensing.md)). React is a peer dependency; it builds to `dist` and ships `@mosaic-media/sdui-react/styles.css`.

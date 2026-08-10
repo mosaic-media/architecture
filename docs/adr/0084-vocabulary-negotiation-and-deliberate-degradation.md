@@ -5,7 +5,7 @@
 
 ## Context
 
-[ADR 0083](0083-one-generated-sdui-vocabulary.md) made the SDUI vocabulary one
+[contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md) made the SDUI vocabulary one
 generated thing and published it as data. That answered *what the contract
 contains*. It did not answer the question the server actually has to ask before
 it sends anything: **can this client draw what I am about to send?**
@@ -25,7 +25,7 @@ reports nothing. A client running a release behind the contract could stay that
 way indefinitely, and the first symptom would be a user describing a missing
 control.
 
-The numbers make it concrete. As of ADR 0083 the contract declares 26 primitives
+The numbers make it concrete. As of [contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md) the contract declares 26 primitives
 and 12 action kinds; the one client implements 25 and 9. That gap is deliberate —
 `Form`, `query`, `setValue` and `submit` belong to slices that have not landed —
 but until now it was a fact you could only establish by reading two repositories
@@ -65,7 +65,7 @@ that.**
   and kinds and their counts. This is the entire point of the slice — the client
   would have drawn a placeholder either way; what changes is that somebody can
   know.
-- **A definition may declare a `fallback`** ([ADR 0083](0083-one-generated-sdui-vocabulary.md)'s
+- **A definition may declare a `fallback`** ([contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md)'s
   contract, used here): a second template for a client missing a primitive the
   first one needs. The server picks per session and sends one, so the client never
   sees both and never has to choose. Node-level degradation cannot reach inside a

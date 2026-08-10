@@ -103,7 +103,7 @@ have to be told everything the first already knows.
   to stop accruing, so the register lands with a surface or it does not land.
   It is composed from the existing SDUI vocabulary; if it cannot be, that is a
   finding about the vocabulary and answered there
-  ([ADR 0024](0024-primitives-and-definitions.md)), not by a bespoke component.
+  ([contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)), not by a bespoke component.
 - **Every subsystem that fails now has somewhere to say so**, which is a
   standing invitation to file noise. An issue that nobody can act on is a log
   line with extra machinery: if there is no suggestion and no decision a user

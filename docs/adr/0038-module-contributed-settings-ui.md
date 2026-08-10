@@ -36,7 +36,7 @@ screens.**
   them to the client to render in a bounded settings slot.
 - **Modules may import the published SDUI contract (`mosaic-sdui`) to build that
   screen.** This is sanctioned, not new licence: `mosaic-sdui` is "the contract
-  the Platform, **Modules** and Shell share" ([ADR 0025](0025-sdui-contract-repository.md)),
+  the Platform, **Modules** and Shell share" ([contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)),
   so a module producing SDUI with the Go producer binding is intended. The module
   import boundary — today "the SDK and the standard library only" — is **extended
   to also allow the published SDUI contract**, and the boundary test updated to

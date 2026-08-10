@@ -33,7 +33,7 @@ what that division now extends backwards over install.
 Depends on [ADR 0062](0062-two-module-tiers.md). Supersedes
 [ADR 0007](0007-static-go-module-composition.md)'s rejection of module RPC for
 the extension tier only. Presumes
-[ADR 0044](0044-contracts-protobuf-workspace.md). Nothing here is built.
+[contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md). Nothing here is built.
 
 ## Context
 
@@ -120,11 +120,11 @@ the provider roles; the module calls back into `ContentService` and `Telemetry`
 over the same connection, within the invocation that opened it.
 
 The schema is a third proto module — `proto/mosaic/module/v1/` — in the buf
-workspace [ADR 0044](0044-contracts-protobuf-workspace.md) establishes, alongside
+workspace [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md) establishes, alongside
 `mosaic/sdui/v1` and `mosaic/session/v1`, generated for Go and published under
-`github.com/mosaic-media/contracts/gen/…`. **This presumes ADR 0044 is accepted
+`github.com/mosaic-media/contracts/gen/…`. **This presumes [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md) is accepted
 and the `sdui` → `contracts` rename has happened**; today the repository is still
-`sdui` and `platform` requires `github.com/mosaic-media/sdui`. If ADR 0044 is not
+`sdui` and `platform` requires `github.com/mosaic-media/sdui`. If [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md) is not
 accepted, this needs a different home, and putting it in `sdk` is not an option
 for the dependency reason above.
 

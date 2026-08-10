@@ -17,7 +17,7 @@ nowhere, and both Open questions below are still open.
 
 Implements [ADR 0064](0064-extension-module-boundary.md) within the decision it
 already made — gRPC over a Unix domain socket — and does not supersede it.
-Depends on [ADR 0044](0044-contracts-protobuf-workspace.md)'s workspace and on
+Depends on [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)'s workspace and on
 the `sdui` → `contracts` rename that record specifies. Nothing here is built.
 
 ## Context

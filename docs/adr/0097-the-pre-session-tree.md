@@ -26,7 +26,7 @@ verified.
 
 ## Context
 
-Every screen Mosaic draws is server-emitted (ADR 0031, ADR 0083): the client
+Every screen Mosaic draws is server-emitted (ADR 0031, [contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md)): the client
 ships a primitive vocabulary and a generic expander, and the Platform sends the
 tree. There is one screen this had never covered, and it is the first one anybody
 sees.

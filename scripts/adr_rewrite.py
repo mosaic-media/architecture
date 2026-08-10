@@ -28,6 +28,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from collections import Counter
@@ -93,11 +94,18 @@ def load_mapping(path: Path) -> dict[int, Home]:
     return mapping
 
 
-def rewrite_markdown(text: str, mapping: dict[int, Home], repo: str) -> tuple[str, Counter]:
+def rewrite_markdown(
+    text: str, mapping: dict[int, Home], repo: str, from_dir: Path, adr_dir: Path
+) -> tuple[str, Counter]:
     hits: Counter = Counter()
 
     def link_for(home: Home) -> str:
-        target = home.filename if home.repo == repo else home.url()
+        if home.repo != repo:
+            return f"[{home.label()}]({home.url()})"
+        # Relative to the *citing file*, not to the record directory. A README
+        # at the repository root and a record inside docs/adr/ do not share a
+        # parent, and a bare filename resolves only from the second.
+        target = os.path.relpath(adr_dir / home.filename, from_dir)
         return f"[{home.label()}]({target})"
 
     def on_linked(m: re.Match) -> str:
@@ -158,6 +166,11 @@ def main() -> None:
              "generated and buf.gen.yaml is not, and no naming rule gets both right.",
     )
     ap.add_argument("--show", type=int, default=10)
+    ap.add_argument(
+        "--adr-dir", type=Path, default=Path("docs/adr"),
+        help="where this repository's records live, relative to --root. Used to make a "
+             "same-repository Markdown link relative to the file doing the citing.",
+    )
     args = ap.parse_args()
 
     mapping = load_mapping(args.map)
@@ -198,9 +211,12 @@ def main() -> None:
             line = text.count("\n", 0, m.start()) + 1
             identifiers.append(f"{rel}:{line}: {m.group(0)}")
 
-        new, hits = (rewrite_markdown if path.suffix == ".md" else rewrite_plain)(
-            *( (text, mapping, args.repo) if path.suffix == ".md" else (text, mapping) )
-        )
+        if path.suffix == ".md":
+            new, hits = rewrite_markdown(
+                text, mapping, args.repo, path.parent, (args.root / args.adr_dir).resolve()
+            )
+        else:
+            new, hits = rewrite_plain(text, mapping)
         totals.update(hits)
         if new != text:
             changed.append((str(rel), hits["linked"] + hits["bare"]))

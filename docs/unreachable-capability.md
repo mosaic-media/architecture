@@ -388,7 +388,7 @@ Recorded so nobody reading the deleted schema rebuilds them.
 | Removed operation | Now reached by |
 |---|---|
 | `signIn` / `signOut` | `mosaic.auth.v1.AuthService` ([ADR 0061](adr/0061-one-client-transport.md)), and since M1 the doorway's own form and the account cluster's Sign out |
-| `screen(name, params)` | The session push lane — the Platform renders and pushes region updates ([ADR 0041](adr/0041-cross-client-transport-two-lane-rpc.md)) |
+| `screen(name, params)` | The session push lane — the Platform renders and pushes region updates ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)) |
 | `importContent` | The `importContent` action, via session `Invoke` |
 | `configureModule` | The `configureModule` action, via session `Invoke` |
 | `contentNode` | The detail screen (`GetContentNode`) |

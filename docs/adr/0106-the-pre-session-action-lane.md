@@ -18,7 +18,7 @@ claiming to M1.
 M1 is where the controls arrive, and they arrive into a gap. Every other
 affordance in Mosaic emits an SDUI action that the session transport's
 `dispatch` maps to an application command
-([ADR 0041](0041-cross-client-transport-two-lane-rpc.md),
+([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md),
 [ADR 0061](0061-one-client-transport.md)). A doorway has no session, so it has
 none of that: no `Invoke`, and — more awkwardly — no push lane for an outcome to
 travel back on. The two-lane transport exists precisely so the server drives the
@@ -26,7 +26,7 @@ client's regions unprompted, and a client that has not authenticated has nothing
 for the server to drive.
 
 There is also a shape to protect. The client bundles no components
-([ADR 0082](0082-components-are-authored-only-in-the-contract.md)) and decides
+([contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)) and decides
 no screens ([ADR 0031](0031-server-owned-app-shell.md)); the whole reason the
 doorway is a server-emitted tree is that it can be redesigned without a client
 release. A door whose *buttons* the client understood would give that back
@@ -44,7 +44,7 @@ transport's `Invoke`, and its outcome rides the unary response.**
   can name and the server cannot map does not exist.
 - **Three outcomes, as a `oneof`.** A minted session; a replacement doorway;
   or the fields that were refused
-  ([ADR 0089](0089-validation-and-the-symmetric-rejection.md)'s envelope,
+  ([contracts#13](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0013-validation-and-the-symmetric-rejection.md)'s envelope,
   unchanged). Exclusive rather than a set of fields, so a client cannot get the
   ranking wrong. Transport failures stay Connect errors.
 - **The client interprets none of them.** It sends the name the server wrote

@@ -27,7 +27,7 @@ the "web client is Shaka Player" bullet below was reversed by
 [ADR 0045](0045-playback-consumer-and-media-origin.md) produces bytes at a URL and
 [ADR 0046](0046-playback-state-is-platform-owned.md) records where the viewer got
 to. Something has to actually play. That something sits on the wrong side of the
-line Mosaic has held since [ADR 0023](0023-server-driven-ui-and-the-shell.md): the
+line Mosaic has held since [contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md): the
 server owns the interface and the client is a pure renderer
 ([ADR 0031](0031-server-owned-app-shell.md) went as far as emitting the app shell
 itself).
@@ -39,7 +39,7 @@ position that changes continuously; buffering, track switching and seeking are
 sub-frame concerns; and every client platform has its own decoder pipeline
 (`<video>` and Media Source Extensions on the web, ExoPlayer on Compose, AVPlayer
 on iOS, libmpv on desktop) that cannot be driven by a declarative tree pushed over
-a network. The four-client bar [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
+a network. The four-client bar [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
 set is precisely what makes this concrete rather than theoretical.
 
 Stremio's answer is the one every real client converges on: the player is native,
@@ -64,7 +64,7 @@ transport controls.**
   to a module.
 - **The client declares its capabilities on `Attach`.** Containers, video codecs
   and audio codecs it can decode, sent on the session intent it already issues
-  ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)). The Platform then
+  ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)). The Platform then
   never issues a ticket the client cannot play — it selects a stream the client
   can ([ADR 0048](0048-stream-selection-against-a-client-profile.md)). **The
   client declares; the server decides.** An earlier draft had the client refuse

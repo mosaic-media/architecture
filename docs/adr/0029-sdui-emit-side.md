@@ -6,9 +6,9 @@
 ## Context
 
 The client half of the server-driven interface is built: the Shell renders a
-tree of `UINode`s carrying `Action` envelopes ([ADR 0023](0023-server-driven-ui-and-the-shell.md),
-[ADR 0024](0024-primitives-and-definitions.md)), the contract is published with
-a Go producer binding ([ADR 0025](0025-sdui-contract-repository.md)), and the
+tree of `UINode`s carrying `Action` envelopes ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md),
+[contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)), the contract is published with
+a Go producer binding ([contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)), and the
 React runtime renders it ([ADR 0026](0026-react-sdui-runtime.md)). But the
 **Platform emits no screens** — the Shell runs on mock payloads, because nothing
 on the server builds a `UINode` tree from real state.
@@ -88,7 +88,7 @@ story, if one is ever wanted, is its own decision, not this one.)
 **The Shell builds `UINode`s from raw GraphQL data itself (a thin client
 adapter).** *Rejected:* it bypasses the whole point of server-driven UI — that
 the server owns the screen and a second client (a future Flutter app) renders
-the same payload ([ADR 0023](0023-server-driven-ui-and-the-shell.md), [ADR 0024](0024-primitives-and-definitions.md)).
+the same payload ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md), [contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)).
 The screen must be built once, on the server.
 
 ## Consequences
@@ -102,7 +102,7 @@ Three honest limits:
 
 1. **Region-refresh protocol.** A `Query` action refreshing a named region (the
    search grid) needs the Shell and the emit-side to agree on how a partial
-   result replaces a region. The contract has the `Into` field ([ADR 0025](0025-sdui-contract-repository.md));
+   result replaces a region. The contract has the `Into` field ([contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md));
    the end-to-end refresh is exercised for the first time here and may surface
    contract gaps — the same forcing-function role modules play for the SDK.
 2. **Modules cannot contribute UI.** Deliberate ([ADR 0008](0008-sdk-as-public-contract-language.md)),
@@ -118,7 +118,7 @@ The Platform gains a `go get github.com/mosaic-media/mosaic-sdui` dependency and
 a screen package that builds `sdui.Node` trees from the application query
 services, plus the `screen` GraphQL query over a registry. The two builders
 (`search`, `collections`) read the slice-3 services and emit the standard
-component vocabulary ([ADR 0024](0024-primitives-and-definitions.md)) — `Screen`,
+component vocabulary ([contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)) — `Screen`,
 `SearchBar`, `Grid`, `PosterCard`, `EmptyState`, `Button`. The Shell then points
 those two routes at `screen(...)` instead of its mock payloads. Building the
 screens is expected to pressure-test the `Action`/region contract, and any gap

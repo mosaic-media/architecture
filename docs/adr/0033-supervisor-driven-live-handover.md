@@ -1,7 +1,7 @@
 # Supervisor-driven live-session handover
 
-**Status:** Superseded by [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
-— its bespoke going-away/reconnect handover folds into ADR 0041's stream resume
+**Status:** Superseded by [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
+— its bespoke going-away/reconnect handover folds into [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)'s stream resume
 (the `Subscribe` cursor replays or rebuilds across a rolling upgrade). Recorded
 here for the reasoning; not built as a separate mechanism.
 **Date:** 2026-07-20

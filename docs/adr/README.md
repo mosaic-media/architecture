@@ -28,28 +28,22 @@ A record is cited from another repository as `architecture#N`, written as a link
 | 20 | [Optional-module composition](0020-optional-module-composition.md) | Accepted. Parts are a deliberate bridge until the Supervisor's Build Pipeline exists. |
 | 21 | [User-managed module settings](0021-module-settings.md) | Accepted |
 | 22 | [Licensing](0022-licensing.md) | Accepted; the licensing is unchanged. |
-| 23 | [Server-Driven UI and the Shell](0023-server-driven-ui-and-the-shell.md) | Accepted; built. |
-| 24 | [Primitives and definitions: no component holdouts](0024-primitives-and-definitions.md) | Accepted |
-| 25 | [The SDUI contract repository](0025-sdui-contract-repository.md) | Accepted; the extraction stands. |
 | 26 | [The React SDUI runtime is a shared package](0026-react-sdui-runtime.md) | Accepted; |
 | 27 | [Modules as typed capability providers](0027-modules-as-typed-capability-providers.md) | Accepted |
 | 28 | [Virtual browse and materialized library](0028-virtual-and-materialized-content.md) | Accepted |
 | 29 | [The Platform's SDUI emit-side](0029-sdui-emit-side.md) | Accepted |
 | 30 | [The artwork proxy (and cache)](0030-artwork-proxy-and-cache.md) | Accepted |
 | 31 | [The Shell is a pure renderer; the app shell is server-emitted](0031-server-owned-app-shell.md) | Accepted |
-| 32 | [The live session over a bidirectional WebSocket](0032-live-session-websocket.md) | Superseded by ADR 0041 — its goals (streaming input, server push, region updates, a technology-agnostic client) are unchanged and carried forward; |
-| 33 | [Supervisor-driven live-session handover](0033-supervisor-driven-live-handover.md) | Superseded by ADR 0041 — its bespoke going-away/reconnect handover folds into ADR 0041's stream resume (the Subscribe cursor replays or rebuilds across a rolling upgrade). |
+| 32 | [The live session over a bidirectional WebSocket](0032-live-session-websocket.md) | Superseded by [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) — its goals (streaming input, server push, region updates, a technology-agnostic client) are unchanged and carried forward; |
+| 33 | [Supervisor-driven live-session handover](0033-supervisor-driven-live-handover.md) | Superseded by [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) — its bespoke going-away/reconnect handover folds into [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)'s stream resume (the Subscribe cursor replays or rebuilds across a rolling upgrade). |
 | 34 | [Rich metadata: the descriptive surface grows a preview](0034-rich-metadata-preview.md) | Accepted. |
 | 35 | [Metadata is a required capability with a default provider](0035-metadata-as-required-capability.md) | Accepted (the requirement is met; the mechanism differs from the one specified here). |
 | 36 | [Capability-gated affordances and consumer roles](0036-capability-gated-affordances.md) | Accepted; built in part, and the gate reads something else than this record specifies. |
 | 37 | [Completing the Stremio source surface](0037-completing-the-stremio-source-surface.md) | Accepted |
 | 38 | [Module-contributed settings UI](0038-module-contributed-settings-ui.md) | Accepted (built) |
 | 39 | [Server-owned navigation: a screen-agnostic client](0039-server-owned-navigation.md) | Proposed, and not what is built. |
-| 40 | [Definitions and the skin are server-delivered data](0040-server-delivered-definitions-and-skin.md) | Accepted; both tiers now built. |
-| 41 | [Cross-client transport: protobuf and two lanes](0041-cross-client-transport-two-lane-rpc.md) | Accepted — built on both sides. |
 | 42 | [The web frontend is one workspace; split repos only to enforce a boundary](0042-frontend-workspace.md) | Accepted — executed (the web workspace holds the runtime, Shell and storybook as independent packages; the three source repos are archived) |
 | 43 | [Repository names encode role, not the org — drop the redundant prefix](0043-repository-naming-convention.md) | Accepted; the convention stands and the table below is the state of the day it was applied. |
-| 44 | [The SDUI and session contracts are protobuf in one workspace](0044-contracts-protobuf-workspace.md) | Accepted (built) — the proto workspace, generated Go and TypeScript are built; |
 | 45 | [The playback consumer contract and the Platform-hosted media origin](0045-playback-consumer-and-media-origin.md) | Accepted (built for Direct). |
 | 46 | [Playback state is Platform-owned](0046-playback-state-is-platform-owned.md) | Accepted (built, except the continue-watching rail and watched marks on EpisodeRow, which are slice 6). |
 | 47 | [The player is a client primitive over a server-issued ticket](0047-player-as-client-primitive.md) | Accepted; built. playPart resolves to a Player node carrying a ticket URL, and the web runtime renders it. |
@@ -87,21 +81,8 @@ A record is cited from another repository as `architecture#N`, written as a link
 | 79 | [The Platform manages extension modules; the Supervisor manages the binary](0079-the-platform-manages-extension-modules.md) | Accepted; built, except the third-party repository surface. |
 | 80 | [Deployment topologies: a native binary that runs in a container or on bare metal](0080-deployment-topologies.md) | Proposed. |
 | 81 | [Extension installation is user-initiated and persistent](0081-extension-installation-is-user-initiated-and-persistent.md) | Accepted; built. |
-| 82 | [Components are authored only in the contract, and clients bundle none](0082-components-are-authored-only-in-the-contract.md) | Accepted (built) |
-| 83 | [One generated SDUI vocabulary](0083-one-generated-sdui-vocabulary.md) | Accepted (built) |
 | 84 | [Vocabulary negotiation and deliberate degradation](0084-vocabulary-negotiation-and-deliberate-degradation.md) | Accepted (built) |
-| 85 | [Module types are namespaced](0085-module-types-are-namespaced.md) | Accepted (built) |
-| 86 | [Bindable props, and no expression language](0086-bindable-props.md) | Accepted (built) |
-| 87 | [State scopes](0087-state-scopes.md) | Accepted (built) |
-| 88 | [Fields and forms](0088-fields-and-forms.md) | Partly superseded: the merge rule — "the scope's values merge under the action's input" — was reversed by ADR 0096, which also removed the SubmitField primitive this record left in place. |
-| 89 | [Validation, and the symmetric rejection](0089-validation-and-the-symmetric-rejection.md) | Accepted (built) |
 | 90 | [Lifecycle triggers, and the telemetry lane that is not needed](0090-lifecycle-triggers-and-the-absent-telemetry-lane.md) | Accepted (built) |
-| 91 | [Accessibility in the contract](0091-accessibility-in-the-contract.md) | Accepted (built) |
-| 92 | [Focus and spatial navigation](0092-focus-and-spatial-navigation.md) | Accepted (built) |
-| 93 | [Lazy lists](0093-lazy-lists.md) | Accepted (built). |
-| 94 | [The conformance corpus](0094-the-conformance-corpus.md) | Accepted (built) |
-| 95 | [The generated vocabulary reference](0095-the-generated-vocabulary-reference.md) | Accepted (built) |
-| 96 | [Retiring `$value`, and the merge rule it hid](0096-retiring-value.md) | Accepted (built). |
 | 97 | [The pre-session tree, and what a locked door may say](0097-the-pre-session-tree.md) | Accepted, built, and withdrawn on 2026-07-25 — the code was removed in contracts v0.48.0 and the Platform and Shell commits that used it were reverted. |
 | 98 | [Claiming an unclaimed server](0098-claiming-an-unclaimed-server.md) | Accepted, built, withdrawn on 2026-07-25 with the pre-session surface it rode on (ADR 0097), and rebuilt on 2026-07-27 (M1.1) over ADR 0101's bootstrap and ADR 0106's action lane. |
 | 99 | [The development module repository, and the build tag that keeps it out of releases](0099-the-development-module-repository.md) | Accepted; built. |
@@ -141,3 +122,20 @@ A record is cited from another repository as `architecture#N`, written as a link
 | 133 | [An optional capability is announced once, when it becomes possible](0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md) | Proposed. Nothing is built. |
 | 134 | [The install key](0134-the-install-key.md) | Proposed. The sealing envelope is built (internal/adapters/crypto/sealer.go); the key it needs is not, which is what this record is for. |
 | 135 | [The SDK carries no implementation](0135-the-sdk-carries-no-implementation.md) | Proposed. The SDK's go.mod still requires four OpenTelemetry API modules as this is written. |
+
+## Records this repository depends on
+
+Decisions held elsewhere that these records cite. They bind work here and are not repeated — follow the link.
+
+**`contracts`**
+
+- [contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)
+- [contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)
+- [contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)
+- [contracts#4](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0004-server-delivered-definitions-and-skin.md)
+- [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
+- [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)
+- [contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)
+- [contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md)
+- [contracts#13](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0013-validation-and-the-symmetric-rejection.md)
+- [contracts#17](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0017-the-conformance-corpus.md)

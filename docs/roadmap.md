@@ -97,7 +97,7 @@ Platform internals. Boundary tests keep it honest: an external probe module
 cannot compile if a public signature leaks an `internal/` type.
 
 **The client transport.** One transport, two lanes
-([ADR 0041](adr/0041-cross-client-transport-two-lane-rpc.md),
+([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md),
 [ADR 0061](adr/0061-one-client-transport.md)): unary intents
 (`Navigate`/`Invoke`/`SubmitInput`/`Attach`) and one server-streaming
 `Subscribe` per session, over h2c. A per-session outbound mailbox, a monotonic
@@ -117,7 +117,7 @@ by session id rather than by the credential, which rotates
 ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
 
 **The SDUI vocabulary.** All thirteen slices of the vocabulary overhaul landed
-([ADR 0083](adr/0083-one-generated-sdui-vocabulary.md)–[ADR 0095](adr/0095-the-generated-vocabulary-reference.md)):
+([contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md)–[contracts#18](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0018-the-generated-vocabulary-reference.md)):
 one `ui.spec.json` generating the Go and TypeScript authoring layers, the
 registries and a conformance fixture; negotiation and deliberate degradation;
 namespaced module types; bindable props; state scopes; fields, forms and the
@@ -135,9 +135,9 @@ fields: `TextField`, `Select` and `Toggle` each bound the props their label
 needs and none of them bound `name`, so the input inside each wrote to local
 state nothing collects. Components are authored
 **only** in the contract and the client bundles none
-([ADR 0082](adr/0082-components-are-authored-only-in-the-contract.md)); the skin
+([contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)); the skin
 is served too — 124 token values, both themes, changed without a client build
-([ADR 0040](adr/0040-server-delivered-definitions-and-skin.md)).
+([contracts#4](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0004-server-delivered-definitions-and-skin.md)).
 
 **The screens.** `home`, `search`, `library`, `collections`, `catalog`, `detail`,
 `settings`, `extensions`, `history`, the expert-mode diagnostics screens — logs,
@@ -500,7 +500,7 @@ browser is named at the end.
    not by ref**, so a title still opens when the source that provided it is down.
 
    **It scrolls rather than pages**, on the lazy-list mechanism
-   ([ADR 0093](adr/0093-lazy-lists.md)): the grid states
+   ([contracts#16](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0016-lazy-lists.md)): the grid states
    `hasMore` and `loadMore`, and the client asks for the next window as the end
    comes into view. `hasMore` is computed from the total rather than from the
    page being full, which is the property that mechanism exists for. Because a
@@ -837,7 +837,7 @@ browser is named at the end.
    unknown icon name renders as *nothing* — an invisible control that still
    works, which is a defect shape this project has shipped before. And the
    `Switch` primitive has no accessible name in the contract
-   ([ADR 0091](adr/0091-accessibility-in-the-contract.md)), so the text beside a
+   ([contracts#14](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0014-accessibility-in-the-contract.md)), so the text beside a
    switch is a sibling rather than a label; this screen surfaces that gap rather
    than causing it, and closing it is a vocabulary change.
 9. ~~**The project-credential chain, end to end**~~
@@ -2818,7 +2818,7 @@ contributes a settings screen — with nothing in `platform` changed to allow it
 
 **What must not be conceded**, because each is load-bearing elsewhere:
 
-- **Modules shipping client code.** Breaks [ADR 0082](adr/0082-components-are-authored-only-in-the-contract.md)
+- **Modules shipping client code.** Breaks [contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)
   and the multi-client promise.
 - **Modules contributing shell chrome.** Contribution points are slots on
   screens; the shell is [ADR 0031](adr/0031-server-owned-app-shell.md)'s.

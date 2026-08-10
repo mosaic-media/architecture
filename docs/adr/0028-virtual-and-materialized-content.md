@@ -124,7 +124,7 @@ admin portal; a materialize service that turns a chosen virtual result into
 library nodes via `MetadataProvider` and snapshots streams via `StreamProvider`;
 and GraphQL for each (search, browse-catalogs, materialize-selection). The user
 search screen and the admin collection browser are the first real SDUI screens
-([ADR 0023](0023-server-driven-ui-and-the-shell.md)), so this work and the SDUI
+([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)), so this work and the SDUI
 emit-side converge. The Stremio module gains its `catalog` and `search` provider
 implementations; its `meta` and `stream` paths move behind `MetadataProvider`
 and `StreamProvider` unchanged.

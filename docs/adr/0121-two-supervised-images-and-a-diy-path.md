@@ -134,13 +134,13 @@ inside the Supervisor. It is cheaper and smaller and it is the mistake this
 project has already made once: ~30 components lived as hand-written TypeScript in
 the web client while the contract held four stale copies of four of them, three
 had drifted, and nothing anywhere reported it
-([ADR 0082](0082-components-are-authored-only-in-the-contract.md)). A drifting
+([contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)). A drifting
 Supervisor emitter would be worse, because it is read by *every* client and the
 screens it draws are the ones a user sees when something is already wrong.
 
 **What the Supervisor emits is deliberately narrow: primitives only, no
 definitions.** Definitions are server-delivered data
-([ADR 0040](0040-server-delivered-definitions-and-skin.md)) and shipping a
+([contracts#4](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0004-server-delivered-definitions-and-skin.md)) and shipping a
 definition library inside the Supervisor would put a second copy of the
 composition set in the one binary that must not grow. A Supervisor screen is
 composed from the native vocabulary, which is what every client implements by
@@ -172,7 +172,7 @@ decision is revisited, so nothing is lost by asking once at the start.
 
 **Hand-roll the SDUI wire format in the Supervisor.** *Rejected*, with the
 reasoning above. The published conformance fixture
-([ADR 0094](0094-the-conformance-corpus.md)) would have made the
+([contracts#17](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0017-the-conformance-corpus.md)) would have made the
 drift *detectable*, which is genuinely more than the web client had, but a guard
 against divergence is not the same as an implementation that cannot diverge.
 

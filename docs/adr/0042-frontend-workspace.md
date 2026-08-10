@@ -7,7 +7,7 @@
 
 The repository count has reached eight, and each split was reasonable when it was
 made. With a multi-client future pushing new contracts into being
-([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)), it is worth checking
+([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)), it is worth checking
 the topology against a sharper rule before it grows further.
 
 The governing insight: **isolation between consumers is enforced by the published
@@ -77,7 +77,7 @@ a trust/compile, or a polyglot-contract boundary.**
 The durable rule, stated plainly: **prefer a workspace of published packages over
 a repository per package; keep a repository boundary only where it enforces a
 license, a trust/compile boundary, or a polyglot contract.** This is the same
-rule [ADR 0041](0041-cross-client-transport-two-lane-rpc.md) applies on the
+rule [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) applies on the
 contract side — the SDUI and transport protobuf contracts share one buf workspace
 as two packages, because once their schemas import each other the split is
 organizational.
@@ -123,7 +123,7 @@ and mixes Apache/MIT into AGPL. The small contract repos are not the fan-out;
 - **Less drift.** One fewer place for the renderer to be copied, and the storybook
   can no longer lag the runtime version.
 - This **amends [ADR 0026](0026-react-sdui-runtime.md)** (the "own repository"
-  clause) and refines [ADR 0025](0025-sdui-contract-repository.md)'s topology note.
+  clause) and refines [contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)'s topology note.
   It does **not** change licensing ([ADR 0022](0022-licensing.md)) — every merged
   package stays AGPL-3.0-only.
 
@@ -137,6 +137,6 @@ path-filtered jobs and the storybook's Pages deploy. Archive the three old repos
 with a forwarding pointer. Set ADR 0026's status to Amended on acceptance.
 
 This is pure topology — no runtime behaviour changes — so it can land
-independently of, and in parallel with, the ADR 0041 transport work. If a smaller
+independently of, and in parallel with, the [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) transport work. If a smaller
 first step is preferred, merge the storybook into the runtime (8 → 7) and take the
 Shell in a second pass; the end state is the same workspace.

@@ -71,7 +71,8 @@ def pages_for(mkdocs: Path, docs: Path) -> dict[str, str]:
     on no map at all.
     """
     pages = dict(TOP_LEVEL) | adr_pages(mkdocs)
-    on_disk = {p.name for p in (docs / "adr").glob("*.md")}
+    # README.md is the generated index, not a record.
+    on_disk = {p.name for p in (docs / "adr").glob("*.md") if p.name != "README.md"}
     in_nav = {path.rstrip("/").split("/", 1)[1] + ".md" for path in pages if path.startswith("adr/")}
     if missing := sorted(on_disk - in_nav):
         raise SystemExit(f"Records absent from nav: in mkdocs.yml: {', '.join(missing)}")

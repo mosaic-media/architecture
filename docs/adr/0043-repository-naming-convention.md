@@ -1,6 +1,6 @@
 # Repository names encode role, not the org — drop the redundant prefix
 
-**Status:** Accepted; the convention stands and the table below is the state of the day it was applied. Two of its rows have moved since: `sdui` was renamed again to `contracts` by [ADR 0044](0044-contracts-protobuf-workspace.md) (`github.com/mosaic-media/contracts`), and the three web repositories left untouched here were consolidated into `web` and archived by [ADR 0042](0042-frontend-workspace.md)
+**Status:** Accepted; the convention stands and the table below is the state of the day it was applied. Two of its rows have moved since: `sdui` was renamed again to `contracts` by [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md) (`github.com/mosaic-media/contracts`), and the three web repositories left untouched here were consolidated into `web` and archived by [ADR 0042](0042-frontend-workspace.md)
 **Date:** 2026-07-21
 
 ## Context

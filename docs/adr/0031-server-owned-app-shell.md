@@ -5,8 +5,8 @@
 
 ## Context
 
-The server-driven UI thesis ([ADR 0023](0023-server-driven-ui-and-the-shell.md),
-[ADR 0024](0024-primitives-and-definitions.md)) is that the server owns the
+The server-driven UI thesis ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md),
+[contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)) is that the server owns the
 interface and a thin client renders it, so the UI can change without shipping a
 client and a second client (a future Flutter app) renders the same payloads.
 
@@ -33,12 +33,12 @@ The Shell keeps exactly three things, none of them layout:
   because they are shown precisely when the server is unreachable. They are
   deliberately minimal — a message and a spinner, not a fake app.
 - **The renderer and primitives** — the engine that turns `UINode`s into pixels
-  ([ADR 0024](0024-primitives-and-definitions.md)).
+  ([contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)).
 
 Everything else is a payload. The Platform emits an **app-shell layout**: a
 root `UINode` with the navigation, chrome, and a named **content region** that
 navigation fills. This needs a few contract additions to the SDUI vocabulary
-([ADR 0024](0024-primitives-and-definitions.md), [ADR 0025](0025-sdui-contract-repository.md)) —
+([contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md), [contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)) —
 an app-shell/layout node with named regions, a nav-rail and nav-item, and
 region-targeted rendering — and it **subsumes the mock chrome screens**
 (home/settings/gallery), which become server-emitted or disappear.
@@ -73,7 +73,7 @@ contained change rather than a rewrite.
 Two honest limits:
 
 1. **The vocabulary needs the shell components.** An app-shell/layout with named
-   regions and a nav rail are new standard components ([ADR 0024](0024-primitives-and-definitions.md));
+   regions and a nav rail are new standard components ([contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md));
    until they exist the shell cannot be expressed. Small, additive.
 2. **The meta states are the client's only holdout.** *Connecting / unreachable /
    standby* live in the client forever, by necessity. Keeping that set tiny — and

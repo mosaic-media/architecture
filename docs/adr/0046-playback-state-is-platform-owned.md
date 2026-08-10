@@ -82,11 +82,11 @@ owns it.**
 - **Reads are queries on the same surface** — one node's state, and an
   in-progress list ordered by recency. The in-progress list is what the
   continue-watching rail renders; it is a query rather than a client-side fold so
-  that every client gets it identically ([ADR 0023](0023-server-driven-ui-and-the-shell.md)).
+  that every client gets it identically ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)).
 - **Progress is reported by the client and coalesced by the Platform.** The
   player emits position intents on a slow cadence and at meaningful boundaries
   (pause, seek settled, exit); the Platform coalesces them the same way it already
-  coalesces input ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)) so a
+  coalesces input ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)) so a
   playing video does not become a write per second.
 - **Finished is derived, then sticky.** Crossing a completion threshold near the
   end marks the item finished; an explicit user mark overrides it in either

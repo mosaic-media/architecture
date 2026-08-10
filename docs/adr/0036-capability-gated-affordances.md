@@ -72,7 +72,7 @@ the surface is discovery-only.**
   the gate — keying on playback specifically would wrongly make "library implies
   streaming."
 - **Gating lives on the server** ([ADR 0029](0029-sdui-emit-side.md),
-  [ADR 0023](0023-server-driven-ui-and-the-shell.md)). The Platform owns how
+  [contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)). The Platform owns how
   content is shown and knows the installed capabilities; the emit-side simply
   omits affordances a consumer would drive. Modules contribute capabilities, not
   UI. This sits cleanly on the virtual/materialised split

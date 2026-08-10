@@ -1,6 +1,6 @@
 # The live session over a bidirectional WebSocket
 
-**Status:** Superseded by [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
+**Status:** Superseded by [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
 — its goals (streaming input, server push, region updates, a
 technology-agnostic client) are unchanged and carried forward; only the wire
 changed, from a bespoke WebSocket to a two-lane Connect/gRPC surface.
@@ -59,7 +59,7 @@ as the primary path.**
   happens on connect (the session `Caller`, [ADR 0017](0017-how-a-capability-acts.md)),
   once, rather than per message.
 
-The transport stays technology-agnostic ([ADR 0023](0023-server-driven-ui-and-the-shell.md)):
+The transport stays technology-agnostic ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)):
 a WebSocket plus a versioned message protocol is universal, so a Flutter client
 speaks the same session. A one-shot HTTP path (the `screen` query) may remain as
 a fallback and for tools, but the Shell's normal life is the socket.

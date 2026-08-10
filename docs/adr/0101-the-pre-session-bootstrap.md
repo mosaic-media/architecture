@@ -19,9 +19,9 @@ Platform served exactly the right tree; the browser drew *"SignInPanel — not
 registered in this Shell"*.
 
 The cause is structural rather than a bug. Definitions and the token set are
-**pushed on connect** ([ADR 0040](0040-server-delivered-definitions-and-skin.md)),
+**pushed on connect** ([contracts#4](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0004-server-delivered-definitions-and-skin.md)),
 which is to say after a session exists, and the client deliberately bundles no
-components at all ([ADR 0082](0082-components-are-authored-only-in-the-contract.md)).
+components at all ([contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)).
 So a client without a session does not have a *thin* vocabulary. It has none —
 no components, and no skin either, which is the half the withdrawal did not
 mention and which would have produced an unstyled doorway even had the
@@ -33,7 +33,7 @@ library becomes an unauthenticated fetch.
 
 Two constraints narrow the choice, and both are older than the problem.
 
-- **Four clients** ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)) —
+- **Four clients** ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)) —
   web, Flutter, Compose, native iOS. Anything that leans on a browser's ability
   to fetch and evaluate something late is a web answer wearing a contract's
   clothes.
@@ -86,7 +86,7 @@ reachable before authentication.
 **A primitives-only doorway.** *Rejected.* It creates a second, weaker
 vocabulary used by exactly one screen, which is the shape that drifts — the
 client's bundled components drifted for the whole life of the project behind a
-green build ([ADR 0082](0082-components-are-authored-only-in-the-contract.md)),
+green build ([contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)),
 and a doorway is the surface least likely to be re-checked. It also makes the
 first screen a user ever sees the one screen not built from the design system.
 
@@ -97,7 +97,7 @@ does not. That is precisely the failure being fixed: the tree was right and the
 vocabulary was absent, and nothing anywhere reported a mismatch.
 
 **Bundle a fallback library in the client.** *Rejected.* This is the second copy
-[ADR 0082](0082-components-are-authored-only-in-the-contract.md) deleted, and it
+[contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md) deleted, and it
 would return with the same drift and the same silence.
 
 **Serve the doorway from the Supervisor.** *Rejected.* The Supervisor answers

@@ -77,14 +77,14 @@ unreachable.**
   reserved gap stays reserved) and every read still authorises as the user who
   caused it.
 - **The live result arrives as a `RegionUpdate`** — the first real use of the
-  op-set [ADR 0041](0041-cross-client-transport-two-lane-rpc.md) defined and
+  op-set [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) defined and
   nothing has exercised. `REPLACE` is the honest starting point; `PATCH` earns
   its place once a revalidation changes one row rather than the page.
 - **"No results" and "the source failed" must never render the same.** They are
   different states and only one of them is the user's to act on. A failed fetch
   is logged, counted, and rendered as a failure — never as an empty library.
 - **A source that stays unreachable gets a persistent notification.** A toast is
-  transient by design ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
+  transient by design ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
   carries them for exactly that): right for "import finished", wrong for a
   condition still true a minute later. Degraded-but-working is a state the
   interface should hold, not announce once and forget.
@@ -141,7 +141,7 @@ nobody renders is storage and staleness for nothing.
 - **Source outages become survivable rather than fatal.** The library keeps
   working, degraded and honest, instead of appearing to be unconfigured.
 - **The `RegionUpdate` op-set is finally exercised.** It has existed since
-  ADR 0041 with nothing using it, which means it is also unproven — expect the
+  [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) with nothing using it, which means it is also unproven — expect the
   first revalidation push to find something.
 - **Staleness becomes a visible concept.** Once a screen can be old, "how old"
   and "is it refreshing" are questions the interface has to answer, and the

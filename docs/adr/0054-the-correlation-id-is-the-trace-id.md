@@ -23,7 +23,7 @@ That was tolerable when the interesting work happened in one process. It is not
 tolerable now. A single user action crosses, at minimum:
 
 - the **Shell** (`mosaic-web`, React) — a click,
-- the **session transport** ([ADR 0041](0041-cross-client-transport-two-lane-rpc.md))
+- the **session transport** ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md))
   — a unary `Invoke` on one lane, a `RegionUpdate` pushed back on the other,
 - **application services** — the command handler order,
 - a **module** in its own repository — `module-stremio-addons`,
