@@ -1,6 +1,6 @@
 # 68. One principal, many credentials
 
-**Status:** Proposed
+**Status:** Proposed. Unbuilt apart from `domain.PasskeyCredential` and two store methods. The passkey branch gained an enrolment policy in [ADR 0131](0131-passkeys-are-an-optional-layer-on-a-public-origin.md) — optional, and only on an install with a public origin — which narrows where that credential kind applies without changing this record's decision.
 **Date:** 2026-07-23
 
 ## Context

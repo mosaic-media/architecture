@@ -43,7 +43,7 @@ remote source requires the user to name one.
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port, answering the Platform's own client surface while it is down; a publicly trusted certificate needs the owed domain | — |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential | — |
-| 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface | M5 |
+| 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface. Scoped down: an **optional** layer for installs with a public origin, never the foundation ([ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)) | M5 |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
 | 8 | Ask-and-receive, plus unprompted server push | Built — the two-lane transport | — |
@@ -2334,10 +2334,11 @@ to prevent.**
   three, and turning on the others means deciding how the setting reaches the
   Supervisor — the same channel question ADR 0129 answered for the request, so it
   is now a small change rather than an open one.
-- **A publicly trusted certificate**, and with it the domain and origin story —
-  owed by the owner, and it blocks M5's passkeys harder than it blocks this,
-  since a relying-party id is bound to an origin and changing it afterwards
-  invalidates every passkey anybody registered.
+- **A publicly trusted certificate**, which needs a domain the owner supplies.
+  It no longer blocks M5's passkeys: [ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)
+  made them an optional layer enrolled only from a public origin, so an install
+  without one authenticates by password and offers no passkey rather than
+  waiting for a decision.
 - **Generating both signing keys.** [ADR 0122](adr/0122-the-signing-key-hierarchy.md)
   decided the hierarchy; creating them is custody work that happens off CI and is
   the owner's. Verification fails closed meanwhile, so a build with no key
@@ -2363,19 +2364,51 @@ that row is the backward direction — rolling back, and installing a named olde
 version, are still Go-only, which is the wrong way round for the case a person's
 judgement is actually needed on.
 
-**Decisions owed:** the domain and origin story. The session credential no
-longer waits on it ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)
-is deliberately origin-independent), but the passkey relying-party id in M5
-does, and changing it afterwards invalidates every passkey anybody registered.
+**Decisions owed:** a domain, for a publicly trusted certificate. It is now a
+thing the owner needs to *have* rather than a decision Mosaic was waiting on: the
+session credential never waited ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)
+is deliberately origin-independent), and the passkey relying-party id stopped
+waiting when [ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)
+made passkeys an optional layer enrolled only from a public origin the owner
+supplies. What remains is that a `.local` install serves a self-signed
+certificate and warns on every new device.
 
 ### M5 — Passkeys and hardening
 
-1. **Passkeys** ([ADR 0068](adr/0068-one-principal-many-credentials.md)).
+1. **Passkeys — an optional layer, not the foundation**
+   ([ADR 0068](adr/0068-one-principal-many-credentials.md),
+   [ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)).
    `PasskeyCredential`, `SavePasskey` and `ListPasskeys` exist; there is no
-   ceremony, no verifier, no RPC and no surface. Deliberately after M4: WebAuthn
-   binds a credential to an origin, so registering before the front door is
-   settled means every user registers twice. No JWT anywhere — a claims-carrying
-   token makes a tightened limit take effect only when the token expires.
+   ceremony, no verifier, no RPC and no surface. No JWT anywhere — a
+   claims-carrying token makes a tightened limit take effect only when the token
+   expires.
+
+   **This was recorded as blocked on a decision the owner owed, and that was
+   wrong.** WebAuthn binds a credential to a relying-party id and stores it on
+   the authenticator, so changing it destroys every passkey registered under the
+   old one — but the blocker is not that a self-hosted server has no domain. Many
+   have one free through DuckDNS, Cloudflare Tunnel or Tailscale. It is that a
+   self-hosted install's origin *changes over its life*: raw IP at first boot,
+   `<name>.local` once the owner names the server at claim, a public name once
+   they set up outside access. Three origins in sequence, and the final one
+   arrives last. So the rule is that **nobody may enrol until the origin is
+   final**, which is a policy Mosaic owns rather than a decision it was waiting
+   on.
+
+   ADR 0131 settles it: **username and password is the foundation and stays
+   mandatory**, on an IP and on `.local` and on day one; passkeys are an optional
+   second credential the superuser enables on an install that has a public
+   origin, from that origin, with the relying-party id as explicit
+   Generation-class configuration rather than inferred from a `Host` header. Each
+   credential records the id it was registered under, so changing the origin
+   becomes a message naming the passkeys it broke instead of one that silently
+   stops being offered.
+
+   **Buildable now**, with one browser check owed first that no amount of design
+   settles: whether a WebAuthn ceremony runs at all on a `.local` origin behind a
+   self-signed certificate. It changes nothing in the record — enrolment is gated
+   on a public origin either way — but it decides what an owner is told when they
+   name their server.
 2. **Backup and restore.** One PostgreSQL and no documented restore path.
 3. **The hardening sweep.** The redaction-class vet check was decided and not built, which
    leaves the PII boundary as developer discipline

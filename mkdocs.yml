@@ -170,6 +170,7 @@ nav:
       - 128. OpenTelemetry is the telemetry implementation: adr/0128-opentelemetry-is-the-telemetry-implementation.md
       - 129. The upgrade channel is the handoff and the register: adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md
       - 130. The module metric surface: adr/0130-the-module-metric-surface.md
+      - 131. Passkeys are an optional layer on a public origin: adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md
 
 markdown_extensions:
   - admonition
