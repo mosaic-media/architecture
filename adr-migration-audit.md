@@ -579,6 +579,53 @@ Depends on D2/D4/D5. Nothing moves until this exists and has been run against th
 
 ---
 
+## P3 outcome — what the pilot found
+
+`contracts` holds 19 records numbered 1..19; `architecture` holds 116. Fleet
+citations went 4,618 → 4,185 unqualified, with **395 `contracts#N` citations and
+none unresolvable**. Zero dangling, zero unlinked.
+
+**The tag could not be pushed.** `pre-adr-split-2026-08-10` exists locally at
+**`94b0833`** and GitHub refused the ref twice — the same refusal §19.21 records,
+which is why `platform` requires `contracts` and `sdk` at pseudo-versions. Noted
+rather than assumed.
+
+**Three tool defects the pilot found, all now fixed**, and none of which reading
+the plan would have surfaced:
+
+1. A same-repository Markdown link was written as a bare filename, which resolves
+   only from inside `docs/adr/`. From a `README.md` at the repository root it
+   dangles. Links are now relative to the citing file.
+2. The generated index stripped links out of Status summaries, so a citation of
+   another repository's record became a label pointing nowhere. Qualified
+   citations now keep their link; everything else still collapses to plain text,
+   because a truncated table cell must not carry a dangling marker.
+3. The PDF export's cross-check counted the generated index as a record missing
+   from `nav:`. It is exempt now, and the index is listed in `nav:` so it is not
+   published as an orphan.
+
+**One consequence for P4, which the plan did not anticipate.** Contracts carries
+63 links of the form `architecture#N` to records left behind. They are correct
+today and **will break when `platform`'s records move**, because those numbers
+leave `architecture`'s index. The lint catches it — a dangling `repo#N` is
+exactly rule 2 — but it means **P4 must re-run the rewrite over every
+already-migrated repository, not only the one it is moving.** Phase N's outbound
+links are phase N+1's work.
+
+**Two mappings are needed, not one.** Records that have not moved keep the old
+spelling until their own phase, so the other repositories are rewritten against
+the moved set alone. Inside the moving repository a second, complete mapping is
+required, or its links back to records left behind become relative paths to files
+in another repository.
+
+**The gate is wired in `contracts` but unverified.** Its image is
+`golang:1.25-bookworm` and carries no interpreter, so `Dockerfile.test` now
+installs `python3`. That change cannot be built here (E2), so the first CI run is
+its verification. The compose file and the workflow carry identical steps, which
+is that repository's own standing rule.
+
+---
+
 ## P4 — roll out the remaining twelve
 
 Ascending by size, so the hardest is last with the most practice behind it:
