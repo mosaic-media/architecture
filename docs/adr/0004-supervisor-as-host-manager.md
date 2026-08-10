@@ -1,4 +1,4 @@
-# 4. Supervisor as Mosaic host manager
+# Supervisor as Mosaic host manager
 
 **Status:** Accepted
 **Date:** 2026-07-14

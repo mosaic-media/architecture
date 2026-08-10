@@ -1,4 +1,4 @@
-# 98. Claiming an unclaimed server
+# Claiming an unclaimed server
 
 **Status:** Accepted, built, **withdrawn on 2026-07-25** with the pre-session
 surface it rode on ([ADR 0097](0097-the-pre-session-tree.md)), and **rebuilt on

@@ -1,4 +1,4 @@
-# 24. Primitives and definitions: no component holdouts
+# Primitives and definitions: no component holdouts
 
 **Status:** Accepted
 **Date:** 2026-07-20

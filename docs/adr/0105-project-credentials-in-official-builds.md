@@ -1,4 +1,4 @@
-# 105. Official builds carry project credentials, and a personal key replaces one
+# Official builds carry project credentials, and a personal key replaces one
 
 **Status:** Accepted. **Built for both modules.** `module-tmdb` is core, so
 `platform`'s release workflow links `defaultReadAccessToken`;

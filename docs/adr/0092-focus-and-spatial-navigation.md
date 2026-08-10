@@ -1,4 +1,4 @@
-# 92. Focus and spatial navigation
+# Focus and spatial navigation
 
 **Status:** Accepted (built)
 

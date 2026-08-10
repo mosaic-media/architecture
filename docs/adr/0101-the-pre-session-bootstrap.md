@@ -1,4 +1,4 @@
-# 101. The pre-session bootstrap carries its own vocabulary
+# The pre-session bootstrap carries its own vocabulary
 
 **Status:** Accepted and built. M0.2 landed the RPC, the transitively-closed
 definition subset, the skin and the negotiated tree; the **forms** landed in M1,

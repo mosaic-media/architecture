@@ -1,4 +1,4 @@
-# 2. Module storage and delivery model
+# Module storage and delivery model
 
 **Status:** Accepted
 **Date:** 2026-07-18

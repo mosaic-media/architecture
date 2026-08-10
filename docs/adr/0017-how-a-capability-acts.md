@@ -1,4 +1,4 @@
-# 17. How a capability acts
+# How a capability acts
 
 **Status:** Accepted and built. Refines [ADR 0008](0008-sdk-as-public-contract-language.md).
 The deferred **system principal** was built in M0.1: it is a caller like any

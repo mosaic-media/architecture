@@ -1,4 +1,4 @@
-# 85. Module types are namespaced
+# Module types are namespaced
 
 **Status:** Accepted (built)
 

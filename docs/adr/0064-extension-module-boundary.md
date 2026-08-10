@@ -1,4 +1,4 @@
-# 64. The extension module boundary
+# The extension module boundary
 
 **Status:** Accepted; built in part. The wire, the harness, the Platform-side
 host and the invocation-scoped `Caller` handle are built and exercised against a

@@ -1,4 +1,4 @@
-# 102. The session credential is a bearer pair every client can hold
+# The session credential is a bearer pair every client can hold
 
 **Status:** Accepted and built in part (M0.3): the pair, rotation, reuse
 detection, the device binding, idle expiry inside absolute expiry, per-device

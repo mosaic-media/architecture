@@ -1,4 +1,4 @@
-# 106. The pre-session action lane
+# The pre-session action lane
 
 **Status:** Accepted and built (M1.1, M1.2). Extends
 [ADR 0101](0101-the-pre-session-bootstrap.md), which decided how a doorway

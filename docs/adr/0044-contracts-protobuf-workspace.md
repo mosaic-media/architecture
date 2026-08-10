@@ -1,4 +1,4 @@
-# 44. The SDUI and session contracts are protobuf in one workspace
+# The SDUI and session contracts are protobuf in one workspace
 
 **Status:** Accepted (built) — the `proto` workspace, generated Go and
 TypeScript are built; encoding option (b) landed, with the typed

@@ -1,4 +1,4 @@
-# 18. First-administrator bootstrap
+# First-administrator bootstrap
 
 **Status:** Accepted. Expected to be superseded when Supervisor onboarding exists.
 **Date:** 2026-07-20

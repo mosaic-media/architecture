@@ -1,4 +1,4 @@
-# 16. The published contract surface
+# The published contract surface
 
 **Status:** Accepted. Refines [ADR 0008](0008-sdk-as-public-contract-language.md).
 **Date:** 2026-07-19

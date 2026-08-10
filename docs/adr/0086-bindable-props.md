@@ -1,4 +1,4 @@
-# 86. Bindable props, and no expression language
+# Bindable props, and no expression language
 
 **Status:** Accepted (built)
 

@@ -1,4 +1,4 @@
-# 134. The install key
+# The install key
 
 **Status:** Proposed. The sealing envelope is built (`internal/adapters/crypto/sealer.go`); the key it needs is not, which is what this record is for. Nothing generates, stores or reads an install key today.
 **Date:** 2026-08-10

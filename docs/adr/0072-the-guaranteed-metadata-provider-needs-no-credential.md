@@ -1,4 +1,4 @@
-# 72. The guaranteed metadata provider needs no credential
+# The guaranteed metadata provider needs no credential
 
 **Status:** Built. `module-cinemeta` v0.1.0 is published and registered in the
 Platform's composition root, and `module-stremio-addons` v0.20.0 has dropped its

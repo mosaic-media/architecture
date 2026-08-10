@@ -1,4 +1,4 @@
-# 120. The children listen on Unix sockets
+# The children listen on Unix sockets
 
 **Status:** Built.
 **Date:** 2026-08-08

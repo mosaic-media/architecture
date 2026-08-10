@@ -1,4 +1,4 @@
-# 40. Definitions and the skin are server-delivered data
+# Definitions and the skin are server-delivered data
 
 **Status:** Accepted; **both tiers now built**. **Partly superseded: the
 bundled-fallback clause was reversed by [ADR 0082](0082-components-are-authored-only-in-the-contract.md)

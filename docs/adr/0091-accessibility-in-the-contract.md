@@ -1,4 +1,4 @@
-# 91. Accessibility in the contract
+# Accessibility in the contract
 
 **Status:** Accepted (built)
 

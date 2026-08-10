@@ -11,3 +11,4 @@ node_modules/
 
 # macOS junk
 .DS_Store
+__pycache__/

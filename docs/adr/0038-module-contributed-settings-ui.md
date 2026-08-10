@@ -1,4 +1,4 @@
-# 38. Module-contributed settings UI
+# Module-contributed settings UI
 
 **Status:** Accepted (built)
 **Date:** 2026-07-21

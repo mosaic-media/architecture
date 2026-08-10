@@ -1,4 +1,4 @@
-# 130. The module metric surface
+# The module metric surface
 
 **Status:** Built. `v1.Telemetry` carries `Count` and `Measure`, the harness carries them to out-of-process modules, the Platform backs them with an OpenTelemetry meter over a `ManualReader`, and the Metrics screen reads them. Not built: retention. The values live in the Platform process and reset when it restarts, which is stated on the screen rather than left for a reader to discover.
 **Date:** 2026-08-09

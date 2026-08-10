@@ -1,4 +1,4 @@
-# 82. Components are authored only in the contract, and clients bundle none
+# Components are authored only in the contract, and clients bundle none
 
 **Status:** Accepted (built)
 **Date:** 2026-07-24

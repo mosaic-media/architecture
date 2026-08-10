@@ -1,4 +1,4 @@
-# 70. The web player is the browser, not a media framework
+# The web player is the browser, not a media framework
 
 **Status:** Accepted (built)
 **Date:** 2026-07-23

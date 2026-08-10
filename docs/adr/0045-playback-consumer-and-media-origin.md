@@ -1,4 +1,4 @@
-# 45. The playback consumer contract and the Platform-hosted media origin
+# The playback consumer contract and the Platform-hosted media origin
 
 **Status:** Accepted (built for `Direct`). `RolePlayback`/`PlaybackProvider`,
 the sealed session-bound ticket and the `GET /playback/{ticket}` origin are

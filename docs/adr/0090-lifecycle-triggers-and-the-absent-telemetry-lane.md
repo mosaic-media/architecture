@@ -1,4 +1,4 @@
-# 90. Lifecycle triggers, and the telemetry lane that is not needed
+# Lifecycle triggers, and the telemetry lane that is not needed
 
 **Status:** Accepted (built)
 

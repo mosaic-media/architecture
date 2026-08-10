@@ -1,4 +1,4 @@
-# 112. Language is a person's preference, and subtitles answer to whether it was met
+# Language is a person's preference, and subtitles answer to whether it was met
 
 **Status:** Accepted. **Built for embedded subtitle tracks on the transcoded
 path.** The preference key, the settings surface, the per-user audio selection,

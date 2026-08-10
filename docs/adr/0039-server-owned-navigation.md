@@ -1,4 +1,4 @@
-# 39. Server-owned navigation: a screen-agnostic client
+# Server-owned navigation: a screen-agnostic client
 
 **Status:** Proposed, and **not** what is built. The Shell maps URLs to screens
 itself — `history.ts` parses `location.pathname` into a `{screen, params}` route

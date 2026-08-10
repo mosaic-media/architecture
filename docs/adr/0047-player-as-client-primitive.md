@@ -1,4 +1,4 @@
-# 47. The player is a client primitive over a server-issued ticket
+# The player is a client primitive over a server-issued ticket
 
 **Status:** Accepted (built, except progress reporting). `playPart` resolves to
 a `Player` node carrying a ticket URL, and the web runtime renders it. **The

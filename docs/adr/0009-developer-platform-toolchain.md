@@ -1,4 +1,4 @@
-# 9. Developer Platform as an integrated toolchain
+# Developer Platform as an integrated toolchain
 
 **Status:** Accepted
 **Date:** 2026-07-14

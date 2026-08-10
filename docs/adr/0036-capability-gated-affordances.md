@@ -1,4 +1,4 @@
-# 36. Capability-gated affordances and consumer roles
+# Capability-gated affordances and consumer roles
 
 **Status:** Proposed
 **Date:** 2026-07-21

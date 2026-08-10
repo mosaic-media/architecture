@@ -1,4 +1,4 @@
-# 80. Deployment topologies: a native binary that runs in a container or on bare metal
+# Deployment topologies: a native binary that runs in a container or on bare metal
 
 **Status:** Proposed. Partly built: the reportable egress-containment posture
 (roadmap slice 5.2) — the Platform determines its posture per this table and

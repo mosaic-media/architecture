@@ -1,4 +1,4 @@
-# 41. Cross-client transport: protobuf and two lanes
+# Cross-client transport: protobuf and two lanes
 
 **Status:** Accepted — built on both sides. **Partly superseded:** the
 "split by audience" answer to the GraphQL question below was reversed by

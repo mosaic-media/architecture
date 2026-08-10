@@ -1,4 +1,4 @@
-# 95. The generated vocabulary reference
+# The generated vocabulary reference
 
 **Status:** Accepted (built)
 

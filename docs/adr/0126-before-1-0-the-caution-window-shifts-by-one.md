@@ -1,4 +1,4 @@
-# 126. Before 1.0, the upgrade caution window shifts by one
+# Before 1.0, the upgrade caution window shifts by one
 
 **Status:** Superseded by [ADR 0127](0127-the-monitored-version-is-the-contract-not-the-artefact.md). The window shift was applied to the artefact's own version and withheld from the contract's; both were the wrong way round. Never built.
 **Date:** 2026-08-09

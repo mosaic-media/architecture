@@ -1,4 +1,4 @@
-# 127. The monitored version is the contract, not the artefact
+# The monitored version is the contract, not the artefact
 
 **Status:** Proposed. Nothing here is built.
 **Date:** 2026-08-09

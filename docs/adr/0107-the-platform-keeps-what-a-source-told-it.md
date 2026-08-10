@@ -1,4 +1,4 @@
-# 107. The Platform keeps what a source told it, and tops up the tree
+# The Platform keeps what a source told it, and tops up the tree
 
 **Status:** Accepted and built in roadmap M2a, discharging M2.7's durable
 metadata cache. Amends [ADR 0034](0034-rich-metadata-preview.md)'s "re-derived

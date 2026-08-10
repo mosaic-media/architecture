@@ -1,4 +1,4 @@
-# 122. Two signing keys, held offline, rotated by overlap
+# Two signing keys, held offline, rotated by overlap
 
 **Status:** Proposed. Partly built: one of the two keys exists and is in use —
 the registry key signs the live index and the Platform verifies it. The release

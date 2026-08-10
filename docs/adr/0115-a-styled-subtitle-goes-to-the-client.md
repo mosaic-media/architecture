@@ -1,4 +1,4 @@
-# 115. A styled subtitle track goes to the client whole, and burning is what is left when it cannot
+# A styled subtitle track goes to the client whole, and burning is what is left when it cannot
 
 **Status:** Accepted. **Built**, and one step short of reachable: the Platform
 emits the prop through `ui.Prop` rather than the generated `ui.SubtitleTracks`,

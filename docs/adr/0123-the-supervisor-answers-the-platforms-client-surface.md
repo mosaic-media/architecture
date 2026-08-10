@@ -1,4 +1,4 @@
-# 123. The Supervisor answers the Platform's client surface when the Platform is absent
+# The Supervisor answers the Platform's client surface when the Platform is absent
 
 **Status:** Built. The front door switches, both services are answered, and the
 Shell needed no code for it.

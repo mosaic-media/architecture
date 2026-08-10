@@ -1,4 +1,4 @@
-# 97. The pre-session tree, and what a locked door may say
+# The pre-session tree, and what a locked door may say
 
 **Status:** Accepted, built, and **withdrawn on 2026-07-25** — the code was
 removed in contracts v0.48.0 and the Platform and Shell commits that used it were

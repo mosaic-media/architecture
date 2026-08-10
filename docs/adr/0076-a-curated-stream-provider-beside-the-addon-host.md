@@ -1,4 +1,4 @@
-# 76. A curated stream provider beside the addon host
+# A curated stream provider beside the addon host
 
 **Status:** Accepted
 **Date:** 2026-07-24

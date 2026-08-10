@@ -1,4 +1,4 @@
-# 29. The Platform's SDUI emit-side
+# The Platform's SDUI emit-side
 
 **Status:** Accepted
 **Date:** 2026-07-20

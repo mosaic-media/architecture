@@ -1,4 +1,4 @@
-# 14. Storage authority, media linking and transaction scope
+# Storage authority, media linking and transaction scope
 
 **Status:** Accepted
 **Date:** 2026-07-19

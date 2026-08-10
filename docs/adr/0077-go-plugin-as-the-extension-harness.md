@@ -1,4 +1,4 @@
-# 77. go-plugin is the extension module harness
+# go-plugin is the extension module harness
 
 **Status:** Proposed
 **Date:** 2026-07-24

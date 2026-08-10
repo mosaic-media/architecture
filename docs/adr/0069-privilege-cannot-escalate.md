@@ -1,4 +1,4 @@
-# 69. Privilege cannot escalate through delegation
+# Privilege cannot escalate through delegation
 
 **Status:** Accepted (built)
 **Date:** 2026-07-23

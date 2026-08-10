@@ -1,4 +1,4 @@
-# 60. The Supervisor observes independently
+# The Supervisor observes independently
 
 **Status:** Built in part — the writing, not the reading. The Supervisor keeps
 its own file-and-console telemetry under a shared boot id, records the lifecycle

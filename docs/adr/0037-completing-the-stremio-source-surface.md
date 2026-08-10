@@ -1,4 +1,4 @@
-# 37. Completing the Stremio source surface
+# Completing the Stremio source surface
 
 **Status:** Accepted
 **Date:** 2026-07-21

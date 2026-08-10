@@ -1,4 +1,4 @@
-# 73. Stream resolution is decoupled from metadata provenance
+# Stream resolution is decoupled from metadata provenance
 
 **Status:** Accepted
 **Date:** 2026-07-23

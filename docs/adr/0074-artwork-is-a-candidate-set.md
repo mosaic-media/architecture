@@ -1,4 +1,4 @@
-# 74. Artwork is a candidate set
+# Artwork is a candidate set
 
 **Status:** Proposed
 **Date:** 2026-07-24

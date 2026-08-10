@@ -1,4 +1,4 @@
-# 65. Module distribution and trust: signed binaries and user-added repositories
+# Module distribution and trust: signed binaries and user-added repositories
 
 **Status:** Proposed; built in part. Partly superseded: the **actor** is reversed
 by [ADR 0079](0079-the-platform-manages-extension-modules.md) — the Platform, not

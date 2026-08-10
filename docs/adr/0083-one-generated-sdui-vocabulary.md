@@ -1,4 +1,4 @@
-# 83. One generated SDUI vocabulary
+# One generated SDUI vocabulary
 
 **Status:** Accepted (built)
 **Date:** 2026-07-25

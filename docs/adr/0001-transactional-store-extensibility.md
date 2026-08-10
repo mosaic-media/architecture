@@ -1,4 +1,4 @@
-# 1. Transactional store extensibility
+# Transactional store extensibility
 
 **Status:** Superseded by [ADR 0012](0012-capabilities-do-not-own-stores.md)
 **Date:** 2026-07-18

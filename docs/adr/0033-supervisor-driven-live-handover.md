@@ -1,4 +1,4 @@
-# 33. Supervisor-driven live-session handover
+# Supervisor-driven live-session handover
 
 **Status:** Superseded by [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
 — its bespoke going-away/reconnect handover folds into ADR 0041's stream resume

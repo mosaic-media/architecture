@@ -1,4 +1,4 @@
-# 11. Platform transports events, modules own domain events
+# Platform transports events, modules own domain events
 
 **Status:** Accepted
 **Date:** 2026-07-14

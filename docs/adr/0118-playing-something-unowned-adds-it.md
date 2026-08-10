@@ -1,4 +1,4 @@
-# 118. Playing something unowned adds it
+# Playing something unowned adds it
 
 **Status:** Accepted. **Built.**
 

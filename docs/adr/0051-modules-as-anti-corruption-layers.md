@@ -1,4 +1,4 @@
-# 51. Modules as anti-corruption layers: source dialects and a tested-source registry
+# Modules as anti-corruption layers: source dialects and a tested-source registry
 
 **Status:** Accepted (built) — `module-stremio-addons` translates at the
 boundary with a dialect table keyed on addon manifest id, and fills the SDK's

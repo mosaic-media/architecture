@@ -1,4 +1,4 @@
-# 78. Core modules keep their repositories; CI carries the version bump
+# Core modules keep their repositories; CI carries the version bump
 
 **Status:** Proposed
 **Date:** 2026-07-24

@@ -1,4 +1,4 @@
-# 21. User-managed module settings
+# User-managed module settings
 
 **Status:** Accepted
 **Date:** 2026-07-20

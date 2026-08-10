@@ -1,4 +1,4 @@
-# 67. Authorization has three mechanisms, not one
+# Authorization has three mechanisms, not one
 
 **Status:** Proposed
 **Date:** 2026-07-23

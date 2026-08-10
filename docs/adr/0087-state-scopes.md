@@ -1,4 +1,4 @@
-# 87. State scopes
+# State scopes
 
 **Status:** Accepted (built)
 

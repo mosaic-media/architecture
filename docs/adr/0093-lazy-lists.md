@@ -1,4 +1,4 @@
-# 93. Lazy lists
+# Lazy lists
 
 **Status:** Accepted (built). The catalog-paging consequence it recorded as owed
 is **half discharged**: SDK `v0.23.0` added `CatalogItemsResponse.HasMore` and

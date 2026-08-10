@@ -1,4 +1,4 @@
-# 116. A preference is a default, an override is one sitting
+# A preference is a default, an override is one sitting
 
 **Status:** Accepted. **Built.** The candidate list, the picker screen, the
 no-candidate state and the per-play audio and subtitle overrides are in. The

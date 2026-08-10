@@ -1,4 +1,4 @@
-# 50. Probing, and the per-stream playback decision
+# Probing, and the per-stream playback decision
 
 **Status:** Accepted (built, except HLS). The probe, the per-stream plan and the
 audio-encode-video-copy path are built, and implementation added one thing this

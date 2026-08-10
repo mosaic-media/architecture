@@ -1,4 +1,4 @@
-# 10. Test Harness as development modules
+# Test Harness as development modules
 
 **Status:** Accepted
 **Date:** 2026-07-14

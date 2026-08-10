@@ -1,4 +1,4 @@
-# 6. Supervisor orchestrates isolated runtime builds
+# Supervisor orchestrates isolated runtime builds
 
 **Status:** Accepted
 **Date:** 2026-07-14

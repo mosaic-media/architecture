@@ -1,4 +1,4 @@
-# 79. The Platform manages extension modules; the Supervisor manages the binary
+# The Platform manages extension modules; the Supervisor manages the binary
 
 **Status:** Proposed
 **Date:** 2026-07-24

@@ -1,4 +1,4 @@
-# 31. The Shell is a pure renderer; the app shell is server-emitted
+# The Shell is a pure renderer; the app shell is server-emitted
 
 **Status:** Accepted
 **Date:** 2026-07-20

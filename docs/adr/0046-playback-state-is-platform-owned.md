@@ -1,4 +1,4 @@
-# 46. Playback state is Platform-owned
+# Playback state is Platform-owned
 
 **Status:** Accepted (built, except the continue-watching rail and watched marks
 on `EpisodeRow`, which are slice 6). The store, the commands and queries, the

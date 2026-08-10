@@ -1,4 +1,4 @@
-# 61. One client transport: retire GraphQL
+# One client transport: retire GraphQL
 
 **Status:** Accepted — built (the GraphQL transport is deleted; `AuthService`
 mints sessions over Connect). Partly superseded: the removal of the `query`

@@ -1,4 +1,4 @@
-# 58. Telemetry storage, retention, and expert mode
+# Telemetry storage, retention, and expert mode
 
 **Status:** Accepted (built for logs and spans). Both sinks exist, the
 PostgreSQL side lands in migrations `0014` and `0015`, and expert mode serves the

@@ -1,4 +1,4 @@
-# 132. TOTP is the second factor that works everywhere
+# TOTP is the second factor that works everywhere
 
 **Status:** Proposed. Nothing is built. `domain.RecoveryFactor` already exists — single-use, hashed, with `ConsumedAt` — and has never had a caller; this is what gives it one.
 **Date:** 2026-08-10

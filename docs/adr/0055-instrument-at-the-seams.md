@@ -1,4 +1,4 @@
-# 55. Instrument at the seams
+# Instrument at the seams
 
 **Status:** Accepted (built) — all nine seams, including seam nine:
 `netguard.ModuleClient` is handed to every module in place of `nil`, which closed

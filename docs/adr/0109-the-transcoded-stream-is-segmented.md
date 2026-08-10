@@ -1,4 +1,4 @@
-# 109. The transcoded stream is segmented, not byte-addressed
+# The transcoded stream is segmented, not byte-addressed
 
 **Status:** Accepted. **Built on both sides, and never played.**
 `internal/transport/playback` serves `index.m3u8`, `init.mp4` and numbered

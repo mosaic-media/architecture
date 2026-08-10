@@ -1,4 +1,4 @@
-# 114. A subtitle track has a form, and only one form can be burned into the picture
+# A subtitle track has a form, and only one form can be burned into the picture
 
 **Status:** Accepted. **Built.** The classification, the three delivery paths and
 the opt-in setting are in. The picture-overlay path is verified as a filtergraph

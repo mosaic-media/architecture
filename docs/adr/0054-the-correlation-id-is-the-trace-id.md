@@ -1,4 +1,4 @@
-# 54. The correlation ID is the trace ID
+# The correlation ID is the trace ID
 
 **Status:** Accepted (built) — the Shell mints the trace where the user clicks, a
 Connect interceptor carries `traceparent` on every call, and `Event.CorrelationID`

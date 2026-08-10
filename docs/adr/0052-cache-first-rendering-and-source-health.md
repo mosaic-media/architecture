@@ -1,4 +1,4 @@
-# 52. Cache-first rendering, and telling the truth when a source is down
+# Cache-first rendering, and telling the truth when a source is down
 
 **Status:** Accepted and built (roadmap M2.6). **Built in part in one respect:**
 only home and its catalogs render cache-first, as this record scopes them; a

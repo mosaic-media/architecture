@@ -1,4 +1,4 @@
-# 104. The library is built from rules, and a job maintains it
+# The library is built from rules, and a job maintains it
 
 **Status:** Accepted and **built in part** in roadmap M2a, on M0.1's runner,
 scheduler and system principal. Built: the rule store, the settings surface, the

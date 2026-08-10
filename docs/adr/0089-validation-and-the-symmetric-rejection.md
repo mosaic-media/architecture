@@ -1,4 +1,4 @@
-# 89. Validation, and the symmetric rejection
+# Validation, and the symmetric rejection
 
 **Status:** Accepted (built)
 

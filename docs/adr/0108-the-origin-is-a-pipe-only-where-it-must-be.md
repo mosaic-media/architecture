@@ -1,4 +1,4 @@
-# 108. The origin is a pipe only where it must be
+# The origin is a pipe only where it must be
 
 **Status:** Accepted, and **partly wrong as written**. The measurement stands.
 Decision point 2's inference does not: a ranging upstream makes an offset

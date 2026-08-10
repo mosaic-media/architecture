@@ -1,4 +1,4 @@
-# 26. The React SDUI runtime is a shared package
+# The React SDUI runtime is a shared package
 
 **Status:** Accepted; amended by [ADR 0042](0042-frontend-workspace.md) — the runtime now lives in the `web` workspace, not its own repository (the "shared, versioned package" intent is unchanged)
 **Date:** 2026-07-20

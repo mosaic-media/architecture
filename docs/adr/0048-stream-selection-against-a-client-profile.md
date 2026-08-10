@@ -1,4 +1,4 @@
-# 48. Stream selection against a client profile
+# Stream selection against a client profile
 
 **Status:** Accepted (built, against a client-declared profile). Candidate
 gathering, profile filtering and ranking are built inside `ResolvePlayback`,

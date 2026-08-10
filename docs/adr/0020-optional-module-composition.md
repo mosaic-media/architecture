@@ -1,4 +1,4 @@
-# 20. Optional-module composition
+# Optional-module composition
 
 **Status:** Accepted. Parts are a deliberate bridge until the Supervisor's Build Pipeline exists.
 **Date:** 2026-07-20

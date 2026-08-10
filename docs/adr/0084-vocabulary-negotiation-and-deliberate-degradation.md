@@ -1,4 +1,4 @@
-# 84. Vocabulary negotiation and deliberate degradation
+# Vocabulary negotiation and deliberate degradation
 
 **Status:** Accepted (built)
 **Date:** 2026-07-25

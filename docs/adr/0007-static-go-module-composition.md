@@ -1,4 +1,4 @@
-# 7. Static Go module composition
+# Static Go module composition
 
 **Status:** Accepted
 **Date:** 2026-07-14

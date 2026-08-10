@@ -1,4 +1,4 @@
-# 96. Retiring `$value`, and the merge rule it hid
+# Retiring `$value`, and the merge rule it hid
 
 **Status:** Accepted (built). The `$value` substitution and the `SubmitField`
 primitive are gone from the contract, the client and all four external module

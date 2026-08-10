@@ -1,4 +1,4 @@
-# 113. Subtitles are a rendition, extracted a window at a time
+# Subtitles are a rendition, extracted a window at a time
 
 **Status:** Accepted. **Built for embedded tracks on the transcoded path.** Not
 built for direct-played releases or for module-provided subtitles; both are named

@@ -1,4 +1,4 @@
-# 57. Audit is a store, not a log stream
+# Audit is a store, not a log stream
 
 **Status:** Proposed. **Partly superseded:** the claim below that a bootstrapped
 administrator does not receive `audit.read` was reversed by

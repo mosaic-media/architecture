@@ -1,4 +1,4 @@
-# 117. The subtitles role gets a consumer, and the Platform fetches what it finds
+# The subtitles role gets a consumer, and the Platform fetches what it finds
 
 **Status:** Accepted. **Built.**
 

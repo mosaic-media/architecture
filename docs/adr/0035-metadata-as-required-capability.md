@@ -1,4 +1,4 @@
-# 35. Metadata is a required capability with a default provider
+# Metadata is a required capability with a default provider
 
 **Status:** Accepted (the requirement is met; the mechanism differs from the one
 specified here). Metadata and search work on first boot with zero configuration,

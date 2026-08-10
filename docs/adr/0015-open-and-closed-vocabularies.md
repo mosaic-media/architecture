@@ -1,4 +1,4 @@
-# 15. Open and closed vocabularies in the object graph
+# Open and closed vocabularies in the object graph
 
 **Status:** Accepted. Refines [ADR 0013](0013-object-graph.md).
 **Date:** 2026-07-19

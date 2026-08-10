@@ -1,4 +1,4 @@
-# 32. The live session over a bidirectional WebSocket
+# The live session over a bidirectional WebSocket
 
 **Status:** Superseded by [ADR 0041](0041-cross-client-transport-two-lane-rpc.md)
 — its goals (streaming input, server push, region updates, a

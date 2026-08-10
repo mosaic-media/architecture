@@ -1,4 +1,4 @@
-# 88. Fields and forms
+# Fields and forms
 
 **Status:** Partly superseded: the merge rule — "the scope's values merge *under*
 the action's input" — was reversed by [ADR 0096](0096-retiring-value.md), which

@@ -1,4 +1,4 @@
-# 66. Authorization is carried in the type
+# Authorization is carried in the type
 
 **Status:** Accepted (built)
 **Date:** 2026-07-23

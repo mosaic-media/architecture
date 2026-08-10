@@ -1,4 +1,4 @@
-# 81. Extension installation is user-initiated and persistent
+# Extension installation is user-initiated and persistent
 
 **Status:** Proposed
 **Date:** 2026-07-24

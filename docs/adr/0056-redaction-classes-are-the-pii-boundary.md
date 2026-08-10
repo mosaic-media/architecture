@@ -1,4 +1,4 @@
-# 56. Redaction classes are the PII boundary
+# Redaction classes are the PII boundary
 
 **Status:** Accepted (built, except its enforcement). Redaction happens at
 construction and `Identifier` carries a salted hash, so a sensitive value is

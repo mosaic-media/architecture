@@ -1,4 +1,4 @@
-# 42. The web frontend is one workspace; split repos only to enforce a boundary
+# The web frontend is one workspace; split repos only to enforce a boundary
 
 **Status:** Accepted — executed (the `web` workspace holds the runtime, Shell and storybook as independent packages; the three source repos are archived)
 **Date:** 2026-07-21

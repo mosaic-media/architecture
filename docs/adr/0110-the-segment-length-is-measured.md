@@ -1,4 +1,4 @@
-# 110. The segment length is measured from the source, not chosen
+# The segment length is measured from the source, not chosen
 
 **Status:** **Superseded wholly by
 [ADR 0111](0111-the-playlist-is-a-nominal-grid.md), and never built.** Both

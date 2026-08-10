@@ -1,4 +1,4 @@
-# 27. Modules as typed capability providers
+# Modules as typed capability providers
 
 **Status:** Accepted
 **Date:** 2026-07-20

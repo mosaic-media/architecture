@@ -1,4 +1,4 @@
-# 75. The artwork provider role
+# The artwork provider role
 
 **Status:** Proposed
 **Date:** 2026-07-24

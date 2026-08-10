@@ -1,4 +1,4 @@
-# 99. The development module repository, and the build tag that keeps it out of releases
+# The development module repository, and the build tag that keeps it out of releases
 
 **Status:** Proposed. Built: the override, its build-tag guard and the dev
 stack's local registry all land with this record, and the loop below was

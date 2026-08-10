@@ -1,4 +1,4 @@
-# 3. Platform as execution kernel
+# Platform as execution kernel
 
 **Status:** Accepted
 **Date:** 2026-07-14

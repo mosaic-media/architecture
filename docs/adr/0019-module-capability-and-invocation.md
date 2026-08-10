@@ -1,4 +1,4 @@
-# 19. The module capability and invocation contract
+# The module capability and invocation contract
 
 **Status:** Accepted
 **Date:** 2026-07-20

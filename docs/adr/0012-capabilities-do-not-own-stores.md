@@ -1,4 +1,4 @@
-# 12. Capabilities do not own stores
+# Capabilities do not own stores
 
 **Status:** Accepted. Supersedes [ADR 0001](0001-transactional-store-extensibility.md).
 **Date:** 2026-07-19

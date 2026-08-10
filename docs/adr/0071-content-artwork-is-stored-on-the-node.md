@@ -1,4 +1,4 @@
-# 71. Content artwork is stored on the node
+# Content artwork is stored on the node
 
 **Status:** Accepted, and **extended twice on its own reasoning**. M2b moved a
 second value onto the node under this record's test — genres, because they are

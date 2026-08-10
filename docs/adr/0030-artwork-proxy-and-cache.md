@@ -1,4 +1,4 @@
-# 30. The artwork proxy (and cache)
+# The artwork proxy (and cache)
 
 **Status:** Accepted
 **Date:** 2026-07-20

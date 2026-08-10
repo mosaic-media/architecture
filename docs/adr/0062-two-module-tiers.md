@@ -1,4 +1,4 @@
-# 62. Two module tiers
+# Two module tiers
 
 **Status:** Proposed; the classification half is built (two core metadata
 modules exist). The guarantee clause is refined by

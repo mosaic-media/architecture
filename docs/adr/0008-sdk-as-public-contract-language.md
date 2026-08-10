@@ -1,4 +1,4 @@
-# 8. SDK as public contract language
+# SDK as public contract language
 
 **Status:** Accepted
 **Date:** 2026-07-14

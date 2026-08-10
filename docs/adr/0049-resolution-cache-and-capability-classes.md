@@ -1,4 +1,4 @@
-# 49. The resolution cache and capability classes
+# The resolution cache and capability classes
 
 **Status:** Accepted (built, except the refresh job). **Invalidate-on-read
 landed**: the ticket carries the part and the capability class, and the origin

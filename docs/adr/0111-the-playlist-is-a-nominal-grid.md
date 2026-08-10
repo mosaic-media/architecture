@@ -1,4 +1,4 @@
-# 111. The playlist is a nominal grid, and a segment index is a seek instruction
+# The playlist is a nominal grid, and a segment index is a seek instruction
 
 **Status:** Accepted. **Built, and never played.** The nominal grid is computed
 in `internal/transport/playback/playlist.go` and the restart-at-`-ss` in

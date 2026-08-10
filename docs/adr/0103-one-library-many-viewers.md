@@ -1,4 +1,4 @@
-# 103. One library, many viewers
+# One library, many viewers
 
 **Status:** Accepted and built. **Watch history landed in M1**, as a
 Platform query deliberately kept off the SDK's `ContentService` — no module

@@ -1,4 +1,4 @@
-# 63. The Platform binary is built by CI; the Supervisor selects, not compiles
+# The Platform binary is built by CI; the Supervisor selects, not compiles
 
 **Status:** Proposed; the CI release matrix is built (the producing half). A
 version tag cross-compiles the one Platform binary to linux/amd64, linux/arm64,
