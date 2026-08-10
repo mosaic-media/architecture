@@ -2700,14 +2700,27 @@ certificate and warns on every new device.
    is folded rather than dropped, because dropping makes a counter under-report
    and a wrong number is worse than a coarse one.
 
-   **Two costs stated rather than discovered later.** The SDK's zero-dependency
-   rule ends, replaced by "the OTel API modules and nothing else" — measured at
-   three modules, against twelve for the SDK a binary wires, and enforced by the
-   allowlist that used to assert emptiness. And `go.opentelemetry.io/otel/log` is
-   `v0.21.0`, which says in its own package documentation that its interfaces may
-   gain methods without a major bump; the tracing half is `v1.45.0` and carries
-   that project's compatibility guarantee, and the logging half is the half
-   Mosaic uses most.
+   **One cost was taken and then given back.** ADR 0128 ended the SDK's
+   zero-dependency rule, replacing it with "the OTel API modules and nothing
+   else" — and two days of building on it showed the line was in the wrong
+   place. The module-facing surface never named an OpenTelemetry type and a test
+   enforced that; but the *host*-facing half sat in the same published package,
+   and it is what put four modules into every third party's build for something
+   no module calls. [ADR 0135](adr/0135-the-sdk-carries-no-implementation.md)
+   reverses that clause and restores zero dependencies, leaving ADR 0128's
+   central decision — OpenTelemetry is the implementation, in every process —
+   untouched. The classification rule stays in the SDK expressed in plain Go,
+   because the Platform and the harness both need it and a second copy of a
+   fail-closed rule is how the guarantee stops being one; only the final
+   attribute construction moves to the hosts. **Unbuilt as this is written** —
+   the SDK's `go.mod` still requires the four.
+
+   **The cost that stands:** `go.opentelemetry.io/otel/log` is `v0.21.0`, which
+   says in its own package documentation that its interfaces may gain methods
+   without a major bump; the tracing half is `v1.45.0` and carries that
+   project's compatibility guarantee, and the logging half is the half Mosaic
+   uses most. That risk now sits in the Platform and the harness rather than in
+   a published contract, which is most of why the reversal is worth making.
 
    **Two things the implementation found that the record did not predict.** The
    logs API at `v0.21.0` carries `attribute.KeyValue` rather than a type of its
