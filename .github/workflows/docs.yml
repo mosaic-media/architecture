@@ -42,7 +42,7 @@ jobs:
       - name: Check every record citation names its repository
         run: |
           python scripts/adr_lint.py --repo architecture \
-            --max-unqualified 1449 \
+            --max-unqualified 0 \
             --exclude adr-migration-audit.md --exclude 'scripts/adr_*.py'
 
       - name: Build site

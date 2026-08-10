@@ -4,7 +4,7 @@
 
 Every row here is a working application service — validated, authorised,
 transactional, tested — with no way for a user or a client to reach it.
-[ADR 0061](adr/0061-one-client-transport.md) created most of this register by
+[platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) created most of this register by
 deleting the GraphQL transport; it did not create the *situation*, because a
 GraphQL mutation with no UI behind it was already unreachable by anyone who was
 not holding a `curl` command. What changed is that the debt is now written down
@@ -23,7 +23,7 @@ get right. None of those tests notice that no transport calls them. `go build`,
 `go vet`, `go test ./...` and every CI gate stay green forever with this
 register at any length.
 
-**The roadmap says "done".** [ADR 0021](adr/0021-module-settings.md) module
+**The roadmap says "done".** [platform#17](https://github.com/mosaic-media/platform/blob/main/docs/adr/0017-module-settings.md) module
 settings, permissions management, config versioning — each of these landed as a
 real slice, was demonstrated working, and was correctly recorded as complete.
 They *are* complete as Platform capability. The slice that was never scheduled
@@ -80,18 +80,18 @@ nothing needs it yet.
 | Choosing an audio track for one playback | `playEnvelope.AudioIndex`, applied by `playback.WithAudioOverride` | **No client path.** No screen offers the tracks; a client that sends the index gets it. |
 
 **The audio-override row was created deliberately, in the same change that built
-the mechanism** ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)).
+the mechanism** ([platform#71](https://github.com/mosaic-media/platform/blob/main/docs/adr/0071-a-preference-is-a-default-an-override-is-a-sitting.md)).
 The play path honours a named audio stream and re-decides the plan around it, so
 switching to a track the client cannot decode correctly becomes a transcode
 rather than silence. What does not exist is a control that offers the tracks: the
 source picker lists *releases*, and the panel that would list a release's streams
 beside them is not built. Subtitles are not in the same position — embedded
 tracks are HLS renditions and switchable in the player's own menu
-([ADR 0113](adr/0113-subtitles-are-a-rendition.md)) — so the gap is audio alone,
+([platform#68](https://github.com/mosaic-media/platform/blob/main/docs/adr/0068-subtitles-are-a-rendition.md)) — so the gap is audio alone,
 which is why it is one row rather than two.
 
 **This row was created deliberately in M2a rather than discovered afterwards.**
-[ADR 0104](adr/0104-the-library-is-built-from-rules.md) names two kinds of rule
+[platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md) names two kinds of rule
 and both are built: the store carries the kind, the command validates it, the
 evaluator runs it against one module's search role, and the maintenance pass
 reconciles from it exactly as it does from a collection. What does not exist is a
@@ -148,7 +148,7 @@ library alone.
 misjudged in either direction.**
 
 They are *not* dead code. They are the published SDK surface
-([ADR 0016](adr/0016-published-contract-surface.md)) that every module writes
+([platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)) that every module writes
 through — the Stremio module builds an entire content tree with them on every
 import, exercised end to end against real PostgreSQL. They are among the
 best-tested code in the repository.
@@ -182,10 +182,10 @@ that a feature is missing, and cannot see that a feature is lying.
 
 **M2b built the refresh, and it departed from what this row predicted.**
 Refreshing the module's own attribute would need the Platform writing into a
-document [ADR 0013](adr/0013-object-graph.md) says it never interprets, or a
+document [platform#9](https://github.com/mosaic-media/platform/blob/main/docs/adr/0009-object-graph.md) says it never interprets, or a
 refresh verb on the SDK and a release of every module. What landed reads
 `ContentMetadata.Watch` — a typed contract field
-[ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)'s pass already
+[platform#62](https://github.com/mosaic-media/platform/blob/main/docs/adr/0062-the-platform-keeps-what-a-source-told-it.md)'s pass already
 fetches — and projects it into the Platform's own indexed store. The facet is
 therefore not TMDB's: any metadata provider that fills `Watch` populates it.
 
@@ -220,7 +220,7 @@ question this register should not pretend to settle.
 
 **This row was added when the role stopped being incomplete, not when it stopped
 being reachable** — it was never reachable. The role landed under
-[ADR 0037](adr/0037-completing-the-stremio-source-surface.md) ahead of the player
+[module-stremio-addons#1](https://github.com/mosaic-media/module-stremio-addons/blob/main/docs/adr/0001-completing-the-stremio-source-surface.md) ahead of the player
 that would consume it, which was the deliberate and correct order; what it did
 not have until SDK `v0.26.0` was the ability to name an episode.
 `SubtitlesRequest` carried no season or episode, so a provider asked about
@@ -248,7 +248,7 @@ gate green throughout.
 
 **The reason this row exists changed, and it did not discharge.** It was added
 because the origin served HLS and the Shell could not read it —
-[ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s condition met and its
+[web#5](https://github.com/mosaic-media/web/blob/main/docs/adr/0005-the-web-player-is-the-browser.md)'s condition met and its
 consequence unpaid. The consequence is now paid: the `Player` primitive reads a
 playlist natively on Safari and through hls.js elsewhere.
 
@@ -282,7 +282,7 @@ most likely to be re-read as still open.
 | `GetRolesForUser` / `GetEffectivePermissions` | A person's panel: the roles they hold and the flattened set the policy engine decides with |
 | `ListUsers` / `GetUserByID` | Settings › People, and each row's Manage |
 | `SetUserStatus` | Suspend / Reactivate on a person's panel |
-| `GrantablePermissions` | What the create form says it will grant, computed from the grantor's own authority (ADR 0069) |
+| `GrantablePermissions` | What the create form says it will grant, computed from the grantor's own authority ([platform#44](https://github.com/mosaic-media/platform/blob/main/docs/adr/0044-privilege-cannot-escalate.md)) |
 
 `CreateLocalUser` was this document's stated exemplar — "unreachable since the
 day it was written, behind a permanently green build and a suite that asserts it
@@ -309,12 +309,12 @@ Each one is a service that worked perfectly and a product that did not.
 
 | Capability | What discharges it |
 |---|---|
-| Checking the release catalogue, and installing what it offers | [ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md) — the Supervisor checks on a schedule and spools an available version as a finding; Settings › Problems draws it with an *Install it* control; pressing it records a request naming that version; the Supervisor reads it from `GET /upgrade` on the private handoff and carries it out. |
+| Checking the release catalogue, and installing what it offers | [platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md) — the Supervisor checks on a schedule and spools an available version as a finding; Settings › Problems draws it with an *Install it* control; pressing it records a request naming that version; the Supervisor reads it from `GET /upgrade` on the private handoff and carries it out. |
 
 **It invented no channel**, which is why it took one slice rather than a
 milestone. The offer travels on the findings spool and the request on the
 handoff, and both already carried this shape of message — the handoff has
-reported an owed *configuration* escalation since M4's slice 4, and ADR 0125 had
+reported an owed *configuration* escalation since M4's slice 4, and [supervisor#9](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0009-major-upgrades-are-never-automatic.md) had
 already written down that a version waiting should be a finding.
 
 **Nothing acknowledges anything.** A request settles when the Platform is
@@ -324,7 +324,7 @@ that field. An acknowledgement would have been written by a process the upgrade
 was about to replace, about an activation that might still revert.
 
 **What did not come with it** is the backward direction, which is now its own
-row above, and ADR 0125's automation policy: every upgrade today is a person
+row above, and [supervisor#9](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0009-major-upgrades-are-never-automatic.md)'s automation policy: every upgrade today is a person
 pressing something, which is that record's Manual level.
 
 ## Discharged in M4 — configuration versioning
@@ -369,7 +369,7 @@ the values they already had. The other three:
   default. The transport parses at the boundary.
 - **The stored payload is not what is in force.** Each reader applies its own
   default for an unset field, falls back again for an unusable one, and the
-  audit floor ([ADR 0057](adr/0057-audit-is-a-store-not-a-log-stream.md)) is applied after
+  audit floor ([platform#35](https://github.com/mosaic-media/platform/blob/main/docs/adr/0035-audit-is-a-store-not-a-log-stream.md)) is applied after
   both — so a panel formatting the payload would have shown "not set" on a
   fresh install while the Platform kept logs for a fortnight. The panel asks the
   readers, which are the definition of what applies.
@@ -387,14 +387,14 @@ Recorded so nobody reading the deleted schema rebuilds them.
 
 | Removed operation | Now reached by |
 |---|---|
-| `signIn` / `signOut` | `mosaic.auth.v1.AuthService` ([ADR 0061](adr/0061-one-client-transport.md)), and since M1 the doorway's own form and the account cluster's Sign out |
+| `signIn` / `signOut` | `mosaic.auth.v1.AuthService` ([platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md)), and since M1 the doorway's own form and the account cluster's Sign out |
 | `screen(name, params)` | The session push lane — the Platform renders and pushes region updates ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)) |
 | `importContent` | The `importContent` action, via session `Invoke` |
 | `configureModule` | The `configureModule` action, via session `Invoke` |
 | `contentNode` | The detail screen (`GetContentNode`) |
 | `searchAvailableContent` | The search screen |
 | `moduleCatalogs` / `catalogItems` | The collections and catalog screens |
-| `moduleSettingsUI` | The settings screen ([ADR 0038](adr/0038-module-contributed-settings-ui.md)) — for *every* module that fills the role since [ADR 0076](adr/0076-a-curated-stream-provider-beside-the-addon-host.md) added the index. Until then the host named one module by constant, so `module-tmdb`'s credential form was reachable only by hand-crafting a `moduleId` param: the operation was reachable, one of its answers was not. |
+| `moduleSettingsUI` | The settings screen ([sdk#4](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0004-module-contributed-settings-ui.md)) — for *every* module that fills the role since [module-aiostreams#1](https://github.com/mosaic-media/module-aiostreams/blob/main/docs/adr/0001-a-curated-stream-provider-beside-the-addon-host.md) added the index. Until then the host named one module by constant, so `module-tmdb`'s credential form was reachable only by hand-crafting a `moduleId` param: the operation was reachable, one of its answers was not. |
 
 ## Never worked
 
@@ -406,13 +406,13 @@ nothing, and building the feature is what the roadmap should say.
 |---|---|
 | ~~`jobs` / `job` / `jobLogs`~~ | **Discharged.** The runner landed with M0.1, and a Jobs screen behind `job.read` shows the queue, each job's attempt history and the lines it recorded — reachable by a human in expert mode. `retryJob` is *not* discharged: a dead-lettered job is visible and there is no way to ask for another attempt, which is the row that remains. |
 | `componentHealth` | No cross-component diagnostics query service. |
-| ~~`refreshSession`~~ | **Discharged.** `AuthService.Refresh` exchanges a refresh token for a new pair (M0.3, [ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)), and the Shell calls it — ahead of an expiry, and once after an `Unauthenticated`. |
+| ~~`refreshSession`~~ | **Discharged.** `AuthService.Refresh` exchanges a refresh token for a new pair (M0.3, [platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)), and the Shell calls it — ahead of an expiry, and once after an `Unauthenticated`. |
 | `remoteSignInChallengeStatus` | No device-pairing or challenge flow exists. |
 
 ## Also owed, though never removed
 
 These belong on this register though GraphQL never carried them, because the
-honest question is "what can a user not reach", not "what did ADR 0061 delete":
+honest question is "what can a user not reach", not "what did [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) delete":
 
 - **Rolling back to the previous Generation has no client path.**
   `Activator.Rollback` swaps the pointers rather than dropping one — the design
@@ -422,7 +422,7 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
     **This is what is left of the upgrade row, and the remainder is the sharper
     half.** Going forwards now has a control
-    ([ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md),
+    ([platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md),
     below); going backwards does not, which is the wrong way round for the case
     that matters. A version that installs, comes up, and is simply *worse* is
     exactly what the automatic revert cannot catch, because that revert gates on
@@ -438,9 +438,9 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
 - **`SetContentArtwork` has no client path, and the artwork picker it exists for
   does not exist.** The command is implemented, validated, authorised and
   transactional; the artwork enrichment pass calls it
-  ([ADR 0075](adr/0075-the-artwork-provider-role.md)), so it is exercised
+  ([sdk#6](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0006-the-artwork-provider-role.md)), so it is exercised
   server-side and its tests pass. What nobody can press is the half it was
-  *designed* for: [ADR 0074](adr/0074-artwork-is-a-candidate-set.md) stores every
+  *designed* for: [platform#47](https://github.com/mosaic-media/platform/blob/main/docs/adr/0047-artwork-is-a-candidate-set.md) stores every
   poster, logo and backdrop a source offered as candidates specifically so a user
   can choose among them, and there is no screen that renders the alternatives.
   Selection resolves by a stated rule and a user cannot override it.
@@ -448,7 +448,7 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     This is the register's own failure mode in miniature: the rule produces
     visibly better art than before, so the feature *looks* delivered, and the
     reason artwork was moved onto the node at all
-    ([ADR 0071](adr/0071-content-artwork-is-stored-on-the-node.md) — "user-swappable
+    ([platform#45](https://github.com/mosaic-media/platform/blob/main/docs/adr/0045-content-artwork-is-stored-on-the-node.md) — "user-swappable
     artwork becomes possible") is the part still owed. It also has a second-order
     debt: `SetContentArtwork` replaces rather than merges, so once a picker
     exists, a user's choice needs marking as theirs or the next enrichment pass
@@ -461,14 +461,14 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
     is the point. A real library of 152 works already carries a logo on 130 of
     them, a backdrop on 151 and a poster on 152, all from TMDB. What fanart adds
     is *alternatives*: forty variants where TMDB returns one. Those are exactly
-    what [ADR 0074](adr/0074-artwork-is-a-candidate-set.md) stores and what this
+    what [platform#47](https://github.com/mosaic-media/platform/blob/main/docs/adr/0047-artwork-is-a-candidate-set.md) stores and what this
     row says nobody can choose between. **The credential was a prerequisite, not
     the gap.**
 
 - **`recordImpression` has nothing that can cause one.** The action is
   implemented, authorised against the session it arrived on, and it writes a
   telemetry record naming the node that was seen
-  ([ADR 0090](adr/0090-lifecycle-triggers-and-the-absent-telemetry-lane.md)).
+  ([web#6](https://github.com/mosaic-media/web/blob/main/docs/adr/0006-lifecycle-triggers-and-the-absent-telemetry-lane.md)).
   Reaching it requires a screen carrying an `onAppear` trigger, and no screen
   carries one — the emit-side has the helpers and uses none of them. So the
   Platform can record what a user actually looked at, and nothing in Mosaic can
@@ -491,19 +491,19 @@ honest question is "what can a user not reach", not "what did ADR 0061 delete":
 
 ## How a row is discharged
 
-[ADR 0061](adr/0061-one-client-transport.md) chose deletion over re-porting on
+[platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) chose deletion over re-porting on
 the grounds that these surfaces return *as screens*, not as a second set of
 RPCs. Concretely, discharging a row means:
 
 1. **A screen builder** in `internal/transport/screens`, reading the application
-   query service and emitting a `UINode` tree ([ADR 0029](adr/0029-sdui-emit-side.md)).
+   query service and emitting a `UINode` tree ([platform#19](https://github.com/mosaic-media/platform/blob/main/docs/adr/0019-sdui-emit-side.md)).
 2. **A `dispatch` case** in `internal/transport/session` for each write, decoding
    the action envelope into the command. The dispatch switch is the complete
    enumeration of what a client can invoke — if it is not there, it does not
    exist.
 3. **A route** the shell screen can navigate to, so the screen is reachable by
    pressing something rather than only by an intent a developer sends by hand.
-4. **Capability gating** ([ADR 0036](adr/0036-capability-gated-affordances.md)):
+4. **Capability gating** ([platform#24](https://github.com/mosaic-media/platform/blob/main/docs/adr/0024-capability-gated-affordances.md)):
    an affordance the caller could not exercise should not be rendered. The open
    problem this step used to name is closed — `domain.Session.Capabilities` is
    populated at issue time and re-resolved on every refresh, and

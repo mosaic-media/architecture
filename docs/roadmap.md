@@ -40,22 +40,22 @@ remote source requires the user to name one.
 |---|---|---|---|
 | 1 | Stream remote debrid sources with complete metadata | Built and verified live | — |
 | 2 | Support several users, sharing one library | Built — four accounts on one box, created through the People panel | — |
-| 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([ADR 0103](adr/0103-one-library-many-viewers.md)) | — |
+| 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md)) | — |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port, answering the Platform's own client surface while it is down; a publicly trusted certificate needs the owed domain | — |
-| 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential. A **TOTP second factor** on top of it is decided and unbuilt ([ADR 0132](adr/0132-totp-is-the-second-factor-that-works-everywhere.md)) | M5 |
-| 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface. Scoped down: an **optional** layer for installs with a public origin, never the foundation ([ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)) | M5 |
-| 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)) | — |
+| 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential. A **TOTP second factor** on top of it is decided and unbuilt ([platform#79](https://github.com/mosaic-media/platform/blob/main/docs/adr/0079-totp-is-the-second-factor-that-works-everywhere.md)) | M5 |
+| 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface. Scoped down: an **optional** layer for installs with a public origin, never the foundation ([platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)) | M5 |
+| 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)) | — |
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
 | 8 | Ask-and-receive, plus unprompted server push | Built — the two-lane transport | — |
 | 9 | Run asynchronous work to maintain itself | Built — runner, interval scheduler and system principal; two of six queued callers wired | — |
-| 10 | A library an administrator builds from queries and collections | Collections built, with a scheduled pass keeping them current ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)); the query kind is stored, validated and run by the same code and has no surface to create one from | M2 |
+| 10 | A library an administrator builds from queries and collections | Collections built, with a scheduled pass keeping them current ([platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md)); the query kind is stored, validated and run by the same code and has no surface to create one from | M2 |
 | 11 | Search across every provider and the library at once | Built | — |
 | 12 | Add an item, or play it without adding | Add built; play-without-adding deferred | M3 |
 | 13 | Playing something unowned adds it, so it can be tracked | Not built | M3 |
 | 14 | A device declaring what it can physically play | Built — `ClientProfile` on Attach | — |
 | 15 | Remote playback that feels instant | Built — 3.75 s cold, 11 ms warm | — |
 | 16 | Browse by streaming service or genre without involved setup | Genre is reachable on both surfaces — a facet over the shelf and a filter on a source's catalogue; streaming service is browsable as a source's catalogue asked live, and the union with what the library already holds is unbuilt | M2 |
-| 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) | — |
+| 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)) | — |
 | 18 | A Shell that is its own binary, decoupled from the Platform | Built — `mosaic-shell` embeds the bundle and is told the endpoint at runtime; served through the front door, where it drew the real setup wizard | — |
 
 Five requirements were not in that list because they were not asked for and the
@@ -65,7 +65,7 @@ the live session, so a shared device can be handed over. The other four stand:
 **seek and resume on a remuxed stream** (impossible today — see M3),
 **subtitles** (a module fills the role and nothing consumes it) and **backup and
 restore**. The fourth, **a durable metadata cache**, landed in M2a
-([ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)): a library
+([platform#62](https://github.com/mosaic-media/platform/blob/main/docs/adr/0062-the-platform-keeps-what-a-source-told-it.md)): a library
 detail now renders from the object graph rather than asking the provider again.
 
 ---
@@ -83,22 +83,22 @@ parked before it had a repository of its own — its history moved with it via
 with a module-linking exception, the Supervisor plain AGPL-3.0 with no
 exception (it links no Module), the SDK Apache-2.0, optional modules their
 authors' choice, this documentation CC-BY-4.0
-([ADR 0022](adr/0022-licensing.md)).
+([platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md)).
 
 **The content model and the extension thesis.** `nodes`, `parts`, `relations`
-and `source_bindings` ([ADR 0013](adr/0013-object-graph.md),
-[ADR 0014](adr/0014-storage-authority-and-transaction-scope.md)) under nine
+and `source_bindings` ([platform#9](https://github.com/mosaic-media/platform/blob/main/docs/adr/0009-object-graph.md),
+[platform#10](https://github.com/mosaic-media/platform/blob/main/docs/adr/0010-storage-authority-and-transaction-scope.md)) under nine
 application services that validate, authenticate, authorise and — for writes —
 commit state and an outbox event in one transaction. The published surface left
 the repository as [`github.com/mosaic-media/sdk`](https://github.com/mosaic-media/sdk)
-([ADR 0016](adr/0016-published-contract-surface.md)), and a reference capability
+([platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)), and a reference capability
 built against it alone proved a third party can extend Mosaic without touching
 Platform internals. Boundary tests keep it honest: an external probe module
 cannot compile if a public signature leaks an `internal/` type.
 
 **The client transport.** One transport, two lanes
 ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md),
-[ADR 0061](adr/0061-one-client-transport.md)): unary intents
+[platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md)): unary intents
 (`Navigate`/`Invoke`/`SubmitInput`/`Attach`) and one server-streaming
 `Subscribe` per session, over h2c. A per-session outbound mailbox, a monotonic
 `seq` with a bounded replay buffer for resume, and the full `RegionUpdate`
@@ -114,7 +114,7 @@ stale since M1; `setPreference` now carries a viewer's home arrangement as well
 as the expert-mode flag, which is why no nineteenth was needed. Every call on the session
 service now authenticates at the transport, and a session's live state is keyed
 by session id rather than by the credential, which rotates
-([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
+([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)).
 
 **The SDUI vocabulary.** All thirteen slices of the vocabulary overhaul landed
 ([contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md)–[contracts#18](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0018-the-generated-vocabulary-reference.md)):
@@ -147,21 +147,21 @@ panels behind `user.read`, a device list on the account panel, a real 404, and
 the Shell's one remaining hand-written state (a Platform that could not describe its own door;
 the other became the doorway). Home rotates a full-viewport hero over rails
 that ride its floor, with continue-watching carrying resume progress and time
-remaining. **It renders cache-first** ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)):
+remaining. **It renders cache-first** ([platform#30](https://github.com/mosaic-media/platform/blob/main/docs/adr/0030-cache-first-rendering-and-source-health.md)):
 the rows come from a durable snapshot of what each source last said, the live
 answer arrives behind them as a `RegionUpdate`, and a source that is not
 answering earns a standing notice rather than an empty screen blaming the
 install. **Which rows appear, and in what order, is each viewer's own**
-([ADR 0103](adr/0103-one-library-many-viewers.md)), stored as the decisions they
+([platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md)), stored as the decisions they
 made so a row nobody has decided about still appears. Detail emits hero,
 episodes, cast, a technical-facts grid and
 related rails. Settings is one frame with a Platform-owned nav that a module's
-own form renders inside ([ADR 0038](adr/0038-module-contributed-settings-ui.md)),
+own form renders inside ([sdk#4](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0004-module-contributed-settings-ui.md)),
 with a drill-down arrangement on a phone carried in the same payload. `library`
 is the one screen over the object graph rather than over a provider, so it is
 the only one that can state a real total rather than "128+".
 
-**What the library should contain** ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)).
+**What the library should contain** ([platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md)).
 Rules are Platform state — a table, a contract and its own contract-suite rows —
 and a scheduled pass reconciles the library against them as the system principal,
 bounded and best-effort, recording created, refreshed, skipped and failed on each
@@ -169,13 +169,13 @@ rule. Rules add and never remove: deleting a rule deletes nothing it added, and 
 rule outlives its module being uninstalled, degraded and visibly so.
 
 **Modules and the two tiers.** Roles, not verbs
-([ADR 0027](adr/0027-modules-as-typed-capability-providers.md)): metadata,
+([sdk#2](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0002-modules-as-typed-capability-providers.md)): metadata,
 search, catalog, stream, subtitles, playback, settings UI and artwork, resolved
 through a registry that requires a role be both declared in a signed manifest
 and implemented. Stream resolution is decoupled from metadata provenance
-([ADR 0073](adr/0073-stream-resolution-is-decoupled-from-metadata-provenance.md)),
+([platform#46](https://github.com/mosaic-media/platform/blob/main/docs/adr/0046-stream-resolution-is-decoupled-from-metadata-provenance.md)),
 so a TMDB import gets Stremio Parts. Artwork is a candidate set
-([ADR 0074](adr/0074-artwork-is-a-candidate-set.md)). The extension tier runs
+([platform#47](https://github.com/mosaic-media/platform/blob/main/docs/adr/0047-artwork-is-a-candidate-set.md)). The extension tier runs
 out of process end to end: the gRPC wire, `sdk/host`, the extension host, an
 invocation-scoped `Caller` handle, supervised lifecycle with backoff, a
 per-module egress proxy that closes the loopback hole `ProxyFromEnvironment`
@@ -183,23 +183,23 @@ leaves open, signature and digest verification before a binary runs, a signed
 repository index on GitHub Pages the Platform trusts at boot, runtime
 install/uninstall with a registry mutable while serving, boot re-adoption from
 the on-disk cache, a consent step in front of every install, and a local signed
-registry for development ([ADR 0062](adr/0062-two-module-tiers.md)–[ADR 0065](adr/0065-module-distribution-and-trust.md),
-[ADR 0077](adr/0077-go-plugin-as-the-extension-harness.md)–[ADR 0081](adr/0081-extension-installation-is-user-initiated-and-persistent.md),
-[ADR 0099](adr/0099-the-development-module-repository.md)).
+registry for development ([platform#3](https://github.com/mosaic-media/platform/blob/main/docs/adr/0003-platform-as-execution-kernel.md)–[platform#40](https://github.com/mosaic-media/platform/blob/main/docs/adr/0040-module-distribution-and-trust.md),
+[sdk#7](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0007-go-plugin-as-the-extension-harness.md)–[platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md),
+[platform#55](https://github.com/mosaic-media/platform/blob/main/docs/adr/0055-the-development-module-repository.md)).
 
 **Playback.** A resolution is `Direct` or `Served`
-([ADR 0045](adr/0045-playback-consumer-and-media-origin.md)); the module never
+([platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md)); the module never
 speaks HTTP and the Platform mints a signed, session-bound ticket and serves
 `/playback/{ticket}` itself. Import writes the whole candidate set as Parts, and
 selection ranks them against the client's declared profile
-([ADR 0048](adr/0048-stream-selection-against-a-client-profile.md)) rather than
+([platform#27](https://github.com/mosaic-media/platform/blob/main/docs/adr/0027-stream-selection-against-a-client-profile.md)) rather than
 transcoding a bad pick. ffprobe settles what a release actually is, and the
 decision is **per stream** — copy the video, re-encode only the audio the
-browser cannot decode ([ADR 0050](adr/0050-probing-and-the-per-stream-playback-decision.md)).
+browser cannot decode ([platform#29](https://github.com/mosaic-media/platform/blob/main/docs/adr/0029-probing-and-the-per-stream-playback-decision.md)).
 The probe and the resolved URL are both persisted, keyed by capability class,
 which is what took a repeat play from 3.75 s to 11 ms
-([ADR 0049](adr/0049-resolution-cache-and-capability-classes.md)). Position is
-Platform-owned, keyed by (user, node) ([ADR 0046](adr/0046-playback-state-is-platform-owned.md)),
+([platform#28](https://github.com/mosaic-media/platform/blob/main/docs/adr/0028-resolution-cache-and-capability-classes.md)). Position is
+Platform-owned, keyed by (user, node) ([platform#26](https://github.com/mosaic-media/platform/blob/main/docs/adr/0026-playback-state-is-platform-owned.md)),
 and surfaced as resume, a continue-watching rail, watched marks and a next-episode
 control.
 
@@ -207,7 +207,7 @@ control.
 Shell mints where the user clicks, instrumented at nine seams, redacted at
 construction by class, stored to both a file and PostgreSQL, and readable inside
 Mosaic as logs and a trace waterfall behind `telemetry.read`
-([ADR 0053](adr/0053-telemetry-is-ambient-in-context.md)–[ADR 0060](adr/0060-the-supervisor-observes-independently.md)).
+([platform#31](https://github.com/mosaic-media/platform/blob/main/docs/adr/0031-telemetry-is-ambient-in-context.md)–[supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md)).
 Modules observe through a dependency-free SDK interface the Platform attributes
 and quota-bounds. Retention is a scheduled job as of M0.1 rather than a
 goroutine that only existed while the process did — a Platform down for a month
@@ -215,14 +215,14 @@ used to come back with a month of records it had intended to drop. The Superviso
 keeps its own smaller file in the same format under the same boot id, for the
 failures where the process that would normally report is the one that is broken;
 nothing merges or serves it yet. All three implementations are hand-written and
-[ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md) replaces
+[sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md) replaces
 them with OpenTelemetry, which is M5's fifth thread and not yet built.
 
 **Authorization.** Argon2id password verification, ABAC roles, an `authorized`
 value only the boundary can construct with a reflection-enforced conformance
-suite ([ADR 0066](adr/0066-authorization-is-carried-in-the-type.md)), and
+suite ([platform#41](https://github.com/mosaic-media/platform/blob/main/docs/adr/0041-authorization-is-carried-in-the-type.md)), and
 delegation that intersects with what the granter holds so `role.create` is no
-longer "hold every permission" ([ADR 0069](adr/0069-privilege-cannot-escalate.md)).
+longer "hold every permission" ([platform#44](https://github.com/mosaic-media/platform/blob/main/docs/adr/0044-privilege-cannot-escalate.md)).
 Suspension enforces itself as of M1 — it wrote a column nothing read, so a
 suspended account could sign in and one already signed in stayed so for ninety
 days — and a session carries the caller's flattened authority at issue time, for
@@ -281,7 +281,7 @@ the subsystem worth opening.
 | [stremio-core](https://github.com/Stremio/stremio-core) (Rust) | M7 | `src/models/` as a list of the surfaces a Stremio-shaped product needs |
 
 Two hazards when reading them. **They assume a local seekable file**; Mosaic's
-sources are remote, which is what ADR 0108's measurement settled. And *transport*
+sources are remote, which is what [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md)'s measurement settled. And *transport*
 in the Stremio protocol and in stremio-core's `addon_transport/` means the addon
 protocol's HTTP binding — the word is theirs, and the [controlled
 vocabulary](index.md#controlled-vocabulary) reserves it here.
@@ -316,13 +316,13 @@ is named below.
    enqueued from inside a command would not commit with it; nothing enqueues
    from a command today and the honest fix when one does is an `Enqueue` on
    `Tx`, not one that pretends.
-2. ~~**The pre-session bootstrap**~~ ([ADR 0101](adr/0101-the-pre-session-bootstrap.md),
-   superseding [ADR 0097](adr/0097-the-pre-session-tree.md)). **Built.**
+2. ~~**The pre-session bootstrap**~~ ([platform#57](https://github.com/mosaic-media/platform/blob/main/docs/adr/0057-the-pre-session-bootstrap.md),
+   superseding [platform#53](https://github.com/mosaic-media/platform/blob/main/docs/adr/0053-the-pre-session-tree.md)). **Built.**
    `AuthService.Bootstrap` answers with the token set, the definition subset and
    the tree in one response. The subset is transitively closed over the tree and
    nothing more — three definitions for today's doorway out of forty-three — and
    the request carries `mosaic.session.v1.VocabularyProfile` itself, so
-   [ADR 0084](adr/0084-vocabulary-negotiation-and-deliberate-degradation.md)'s
+   [platform#52](https://github.com/mosaic-media/platform/blob/main/docs/adr/0052-vocabulary-negotiation-and-deliberate-degradation.md)'s
    negotiation applies unchanged rather than through a second declaration that
    could drift. The server picks the tree and nothing on the wire says which.
    The Shell renders it in place of a hand-written state, so the client's only
@@ -332,9 +332,9 @@ is named below.
    **Left out: the form.** This slice delivered the doorway's *vocabulary*, not
    the doorway. Each state says what it is and offers nothing it cannot do,
    because a control wired to nothing is the dead end
-   [ADR 0036](adr/0036-capability-gated-affordances.md) names; sign-in and claim
+   [platform#24](https://github.com/mosaic-media/platform/blob/main/docs/adr/0024-capability-gated-affordances.md) names; sign-in and claim
    are M1. The payload is deliberately not cached, per the ADR.
-3. ~~**Sessions that survive being away**~~ ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)).
+3. ~~**Sessions that survive being away**~~ ([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)).
    **Built.** A ten-minute opaque access token on every call and a ninety-day
    refresh token bound to the device, rotated on every use, with reuse detection
    revoking the chain; thirty-day idle expiry sitting inside the absolute
@@ -365,7 +365,7 @@ this was the largest single block in the register and no other row gated as
 much. Four accounts now exist on a box that was claimed through a browser, with
 no environment variable set anywhere.
 
-1. ~~**Claiming and onboarding**~~ ([ADR 0098](adr/0098-claiming-an-unclaimed-server.md),
+1. ~~**Claiming and onboarding**~~ ([platform#54](https://github.com/mosaic-media/platform/blob/main/docs/adr/0054-claiming-an-unclaimed-server.md),
    decided, withdrawn with the pre-session tree, **rebuilt here**). **Built.**
    `ClaimServer` is the one write no caller authorises, and the only one that
    can be: emptiness stands in for authorisation, checked again inside the
@@ -373,7 +373,7 @@ no environment variable set anywhere.
    Conflict. It creates the owner, its Superuser role, the grant and its first
    session together — claiming signs you in — and then does two things allowed
    to fail without failing the claim: writing the server's name, and installing
-   the stream source that was chosen. **Four steps rather than the one ADR 0098
+   the stream source that was chosen. **Four steps rather than the one [platform#54](https://github.com/mosaic-media/platform/blob/main/docs/adr/0054-claiming-an-unclaimed-server.md)
    could support:** the jobs runner has landed since, and a server-name field
    and a stream-source connection turned out to be buildable, so three of the
    five steps that record dropped came back. **Instance identity is a durable
@@ -383,7 +383,7 @@ no environment variable set anywhere.
    boot shows the doorway exactly as a household's would.
 
    **Left out:** the claim audit record and the claim window, both named in
-   ADR 0098 as later increments and both still unbuilt — the accepted threat is
+   [platform#54](https://github.com/mosaic-media/platform/blob/main/docs/adr/0054-claiming-an-unclaimed-server.md) as later increments and both still unbuilt — the accepted threat is
    unchanged, and the mitigations for it remain operational. The steps are one
    tree with one State scope, stepped by `visibleWhen`, which costs the
    client-side validation of off-screen fields: a hidden `Box` unmounts its
@@ -393,7 +393,7 @@ no environment variable set anywhere.
    step's tree.
 2. ~~**Sign in, sign out, switch account.**~~ **Built.** The doorway carries
    both forms, on a pre-session action lane of its own
-   ([ADR 0106](adr/0106-the-pre-session-action-lane.md)) — a doorway's controls
+   ([platform#61](https://github.com/mosaic-media/platform/blob/main/docs/adr/0061-the-pre-session-action-lane.md)) — a doorway's controls
    emit ordinary SDUI actions and there is no push lane for the outcome, so it
    rides the unary response as one of three: a minted session, a replacement
    door, or the fields that were refused. **The client interprets none of them**,
@@ -405,14 +405,14 @@ no environment variable set anywhere.
 
    **Left out:** the Shell no longer signs in from `VITE_DEV_USERNAME` /
    `VITE_DEV_PASSWORD`, which is the removal that mattered, and a third doorway
-   state was added that ADR 0098 did not name — a server that cannot read its
+   state was added that [platform#54](https://github.com/mosaic-media/platform/blob/main/docs/adr/0054-claiming-an-unclaimed-server.md) did not name — a server that cannot read its
    own accounts says the lock is broken rather than drawing a form that refuses
    every attempt with "invalid credentials".
 3. ~~**User and role administration.**~~ **Built.** Settings › People lists the
    accounts, leads into each one, and adds a viewer or an administrator; a
    person's panel shows their roles, their flattened authority and the two
    things that can be done to them. **The offer is computed from what the caller
-   holds** ([ADR 0069](adr/0069-privilege-cannot-escalate.md)) — an
+   holds** ([platform#44](https://github.com/mosaic-media/platform/blob/main/docs/adr/0044-privilege-cannot-escalate.md)) — an
    administrator creating another administrator sees which permissions are
    withheld because they do not hold them. Presets are snapshotted, and
    **a role's name is unique across the install**, so a preset role is an
@@ -437,10 +437,10 @@ no environment variable set anywhere.
    instead is the gating the second account made urgent — the settings nav, the
    People affordances and the detail screen's library controls are each drawn
    only for a caller who could use them.
-5. ~~**The per-user pass**~~ ([ADR 0103](adr/0103-one-library-many-viewers.md)).
+5. ~~**The per-user pass**~~ ([platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md)).
    **Built, for its M1 share.** Watch history is a Platform query and
    deliberately **not** on the SDK's `ContentService`: no module needs to read a
-   person's viewing back, and the one list ADR 0103 is most emphatic is private
+   person's viewing back, and the one list [platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md) is most emphatic is private
    should not sit on the surface every installed extension holds. It takes no
    user parameter, so there is no version of the screen that shows somebody
    else's.
@@ -531,7 +531,7 @@ browser is named at the end.
    reads, but a prop shape nothing evaluates, and equally silent. Found by
    clicking Next and watching nothing happen. Fixing it is a `contracts` change
    and a release, and nothing emits `Pagination` now.
-2. ~~**Library rules**~~ ([ADR 0104](adr/0104-the-library-is-built-from-rules.md)).
+2. ~~**Library rules**~~ ([platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md)).
    **Built.** A Platform-owned store — its own table, contract and contract-suite
    rows — of rules an administrator manages from Settings › Library. **Rules add
    and never remove** is enforced in three places rather than asserted in one:
@@ -542,7 +542,7 @@ browser is named at the end.
    **Nothing is created before its consequence is shown.** Following a collection
    opens a confirmation that has *evaluated* the rule — matched, already here,
    what the first run will add, the first few titles by name, and the bound as
-   chips that re-evaluate — because ADR 0104 calls the first run the one most
+   chips that re-evaluate — because [platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md) calls the first run the one most
    likely to surprise its author. Preview and reconcile walk one implementation,
    so a preview cannot disagree with the run it previews.
 
@@ -605,7 +605,7 @@ browser is named at the end.
    alone.
 
    **Library-side, genre is a `text[]` column on `nodes` with a partial GIN
-   index**, and the reason is ADR 0071's plus one it did not have. Artwork moved
+   index**, and the reason is [platform#45](https://github.com/mosaic-media/platform/blob/main/docs/adr/0045-content-artwork-is-stored-on-the-node.md)'s plus one it did not have. Artwork moved
    because it is *rendered* in bulk; genre moves because it is *filtered* in
    bulk, and there is no number of round trips that answers one question asked
    across the whole library. The sharper reason: a facet must be **complete**, and
@@ -644,12 +644,12 @@ browser is named at the end.
    The plan was a `Schedule` and a handler over the halves that already existed —
    `module-tmdb` writing availability into the node's *attributes* at import, and
    `SearchContentQuery.AttributesContain` filtering it. Refreshing that would
-   have needed the Platform to write into a module's own document, which ADR 0013
+   have needed the Platform to write into a module's own document, which [platform#9](https://github.com/mosaic-media/platform/blob/main/docs/adr/0009-object-graph.md)
    forbids, or a refresh verb on the SDK's `Capability` and a release of every
    module, which is the same change 7 named and left out.
 
    What landed instead reads the value the **SDK already models**:
-   `ContentMetadata.Watch` is a typed contract field that ADR 0107's enrichment
+   `ContentMetadata.Watch` is a typed contract field that [platform#62](https://github.com/mosaic-media/platform/blob/main/docs/adr/0062-the-platform-keeps-what-a-source-told-it.md)'s enrichment
    pass already fetches on every refresh, and the Platform projects it into its
    own indexed `node_watch_availability`. That is not the Platform learning a
    module's key — it is the Platform storing a field the contract defines, as it
@@ -661,8 +661,8 @@ browser is named at the end.
    the system principal. That is the difference from the maintenance pass beside
    it, which walks the *rules*: anything added by hand from search was never
    revisited at all. **It re-asks using the ref out of the stored document**,
-   which answers a problem ADR 0071 wrote down as open — a materialised node
-   cannot be turned back into a provider-bearing ref, and ADR 0107 storing the
+   which answers a problem [platform#45](https://github.com/mosaic-media/platform/blob/main/docs/adr/0045-content-artwork-is-stored-on-the-node.md) wrote down as open — a materialised node
+   cannot be turned back into a provider-bearing ref, and [platform#62](https://github.com/mosaic-media/platform/blob/main/docs/adr/0062-the-platform-keeps-what-a-source-told-it.md) storing the
    provider's whole answer, `Ref` included, is what changed that.
 
    Two behaviours carry the correctness and both are tested. **An empty answer is
@@ -698,7 +698,7 @@ browser is named at the end.
    and the `checkedAt` the refresh sorts by is not rendered, so a user could not
    tell a fresh answer from one eleven days old if they were shown either.
 6. ~~**Cache-first rendering**~~
-   ([ADR 0052](adr/0052-cache-first-rendering-and-source-health.md)). **Built.**
+   ([platform#30](https://github.com/mosaic-media/platform/blob/main/docs/adr/0030-cache-first-rendering-and-source-health.md)). **Built.**
    The defect reproduced exactly as written: the Platform restarted with its
    upstreams blackholed rendered *"Nothing to show yet — try adding an addon in
    Settings"* over a library of 152 titles and a configured source.
@@ -721,7 +721,7 @@ browser is named at the end.
    **The `RegionUpdate` op-set is exercised for the first time.** Every region
    update before this was the answer to a navigate; a revalidation is the first
    genuinely unsolicited push. It runs in the requesting session's context, so
-   ADR 0017's reserved system-principal gap stays reserved, and it re-reads the
+   [platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)'s reserved system-principal gap stays reserved, and it re-reads the
    route *after* rendering — a fan-out takes seconds, and replacing the content
    region of a screen somebody has already left is worse than not refreshing.
    The plumbing held; the surprise was elsewhere (below).
@@ -754,9 +754,9 @@ browser is named at the end.
    because that flag is driven by the client's own intents and a server-scheduled
    refresh is not one — the notice carries the statement instead, with its age.
 7. ~~**A durable metadata cache.**~~ **Built**
-   ([ADR 0107](adr/0107-the-platform-keeps-what-a-source-told-it.md)), pulled
+   ([platform#62](https://github.com/mosaic-media/platform/blob/main/docs/adr/0062-the-platform-keeps-what-a-source-told-it.md)), pulled
    forward into M2a because M2.1 made it urgent: a Library card opens its node by
-   **id** and ADR 0034's detail is keyed by a **ref**, so the two never met and
+   **id** and [sdk#3](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0003-rich-metadata-preview.md)'s detail is keyed by a **ref**, so the two never met and
    a library detail rendered a title, a media type and a grid of blank cards.
 
    What a metadata provider says about a materialised title is stored in
@@ -770,8 +770,8 @@ browser is named at the end.
 
    **The same pass grows the tree**, which is the repair for 3's gap. It reads
    the episode preview it was already given and adds the seasons and episodes
-   the tree is missing — building a tree, which ADR 0028 gave to the module, on
-   ADR 0073's ground that season and episode are facts about television the
+   the tree is missing — building a tree, which [platform#18](https://github.com/mosaic-media/platform/blob/main/docs/adr/0018-virtual-and-materialized-content.md) gave to the module, on
+   [platform#46](https://github.com/mosaic-media/platform/blob/main/docs/adr/0046-stream-resolution-is-decoupled-from-metadata-provenance.md)'s ground that season and episode are facts about television the
    Platform already models. It composes no provider's addressing: it reads two
    integers the SDK carries neutrally. It adds and never removes, so an episode
    that leaves a source's listing stays.
@@ -794,7 +794,7 @@ browser is named at the end.
    which is a cache degrading rather than data lost. And **`module-tmdb` files an
    episode still under `Poster` rather than `Landscape`** — the read takes either,
    and the module filing it correctly is a change in that repository.
-8. ~~**Home composition, per user**~~ ([ADR 0103](adr/0103-one-library-many-viewers.md)).
+8. ~~**Home composition, per user**~~ ([platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md)).
    **Built.** Which rows appear, in what order, and which are hidden — a
    **preference, not a scope**: a hidden row stays reachable by search, by the
    Library screen and by link, and anything that must not be reachable is the
@@ -814,7 +814,7 @@ browser is named at the end.
    **One read, in the pass that builds home**, and applied *before* the items are
    fetched — a row this viewer turned off must not cost a provider round trip to
    draw nothing with. Capability omission composes ahead of preference
-   ([ADR 0036](adr/0036-capability-gated-affordances.md)). The hero and the
+   ([platform#24](https://github.com/mosaic-media/platform/blob/main/docs/adr/0024-capability-gated-affordances.md)). The hero and the
    "Trending now" rail follow the arrangement rather than being arranged
    separately, because both are drawn from the first catalog that has items: one
    decision, not three.
@@ -841,19 +841,19 @@ browser is named at the end.
    switch is a sibling rather than a label; this screen surfaces that gap rather
    than causing it, and closing it is a vocabulary change.
 9. ~~**The project-credential chain, end to end**~~
-   ([ADR 0105](adr/0105-project-credentials-in-official-builds.md)). **Built for
+   ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)). **Built for
    the chain; the demonstration is not done** — see below, and it is the half
    this slice was written to force.
 
    The defect was exactly as described. `module-fanart-tv` carried the symbol,
    the three-state settings screen, the single-reader function and a doc comment
    stating the whole policy — and the comment named `./cmd/mosaic-platform`,
-   which ADR 0081 stopped building this module into. No workflow injected the
+   which [platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md) stopped building this module into. No workflow injected the
    key, nothing checked, every released binary shipped an empty one.
 
    `release.yml`'s `binaries` job now applies the `-X` from a
    `FANART_PROJECT_KEY` secret, in **that** repository because that is the
-   workflow building the artefact carrying it (ADR 0105 rule 2) — the inverse of
+   workflow building the artefact carrying it ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md) rule 2) — the inverse of
    `module-tmdb`, whose own workflow says in as many words that `TMDB_RAC` does
    not belong in its secrets. `linkercheck_test.go` is the mandatory guard (rule
    3), asserting the symbol arrives *and* that `resolveKeys` and
@@ -878,7 +878,7 @@ browser is named at the end.
    module is not installed on any box that has been looked at. What its key
    unblocks is not "artwork" — that works — but *better* artwork and, more to the
    point, **artwork a user can choose between**: fanart returns forty variants
-   where TMDB returns one, which is [ADR 0074](adr/0074-artwork-is-a-candidate-set.md)'s
+   where TMDB returns one, which is [platform#47](https://github.com/mosaic-media/platform/blob/main/docs/adr/0047-artwork-is-a-candidate-set.md)'s
    candidate set and the picker that
    [does not exist](unreachable-capability.md#also-owed-though-never-removed).
    That is where this credential earns its keep, and it is scheduled behind the
@@ -957,21 +957,21 @@ over in front of a real decoder. The [register](unreachable-capability.md#the-se
 carries the row.
 
 1. ~~**Playing something unowned adds it.**~~ **Built**
-   ([ADR 0118](adr/0118-playing-something-unowned-adds-it.md)). `playPart` takes
+   ([platform#73](https://github.com/mosaic-media/platform/blob/main/docs/adr/0073-playing-something-unowned-adds-it.md)). `playPart` takes
    the same ref envelope `importContent` takes and materialises before resolving
    anything, so a virtual item now offers Play beside Add rather than only Add,
    then find it again, then play.
 
    Materialising at play *start* dissolves the collision that deferred this
    rather than solving it: by the time anything reports a position there is a
-   node to key it against, so [ADR 0046](adr/0046-playback-state-is-platform-owned.md)
-   needs no change and [ADR 0028](adr/0028-virtual-and-materialized-content.md)'s
+   node to key it against, so [platform#26](https://github.com/mosaic-media/platform/blob/main/docs/adr/0026-playback-state-is-platform-owned.md)
+   needs no change and [platform#18](https://github.com/mosaic-media/platform/blob/main/docs/adr/0018-virtual-and-materialized-content.md)'s
    two crossings are untouched. Materialise-on-*commitment* would still need
    somewhere to hold progress for a node that does not exist.
 
    **It authorises as the import it is.** A viewer without `content.import` is
    refused here exactly as at the Add button, so Play is not a way around the
-   authority that curates the library — the same correction ADR 0069 made when
+   authority that curates the library — the same correction [platform#44](https://github.com/mosaic-media/platform/blob/main/docs/adr/0044-privilege-cannot-escalate.md) made when
    the first ordinary account pressed Add and got nothing.
 
    A film starts; a series does not. One playable item is unambiguous, and
@@ -984,7 +984,7 @@ carries the row.
    after ninety seconds. Removing those, if it is ever wanted, belongs with the
    library-rule maintenance pass rather than here.
 2. ~~**A source picker and an honest no-candidate state.**~~ **Built**
-   ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)).
+   ([platform#71](https://github.com/mosaic-media/platform/blob/main/docs/adr/0071-a-preference-is-a-default-an-override-is-a-sitting.md)).
    `PlaybackSources` returns the ranked candidate list rather than its length,
    each release saying what would have to happen to play it — a video re-encode,
    a tone-map, an audio re-encode, or nothing. The phrasing is about the client
@@ -1009,7 +1009,7 @@ carries the row.
    source's own order, because without a stable tiebreak the list moves under a
    viewer reaching for the third row.
 3. ~~**Invalidate-on-read**~~ **Built**
-   ([ADR 0049](adr/0049-resolution-cache-and-capability-classes.md)). The ticket
+   ([platform#28](https://github.com/mosaic-media/platform/blob/main/docs/adr/0028-resolution-cache-and-capability-classes.md)). The ticket
    now carries the release and the capability class, sealed, so the origin can
    ask the source again when a cached address stops working — which it does on
    all three serving paths, each before a byte reaches the client, so the retry
@@ -1026,7 +1026,7 @@ carries the row.
    never in a loop.
 
    Left out: the background refresh job, still blocked on the jobs runner, the
-   scheduler and the system principal, exactly as ADR 0049 anticipated.
+   scheduler and the system principal, exactly as [platform#28](https://github.com/mosaic-media/platform/blob/main/docs/adr/0028-resolution-cache-and-capability-classes.md) anticipated.
 4. ~~**Segmented output (HLS).**~~ **Built.** The narrative below is kept in full
    because it is the most instructive thing in this release: two designs were
    built and disproved live before the third worked, and the disproofs are worth
@@ -1125,9 +1125,9 @@ carries the row.
    continue-watching rail.
 
    The superseded path is unwired and the honest pipe restored;
-   [ADR 0108](adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
+   [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
    line records which half of it was wrong. **The superseding record is
-   [ADR 0109](adr/0109-the-transcoded-stream-is-segmented.md), and it is
+   [platform#64](https://github.com/mosaic-media/platform/blob/main/docs/adr/0064-the-transcoded-stream-is-segmented.md), and it is
    decided: the transcoded stream is segmented rather than byte-addressed.**
    The reasoning is in the record; the finding that forced it is three
    paragraphs below.
@@ -1173,20 +1173,20 @@ carries the row.
    file, and its own uniform-2 s fallback is the tell. **So slice 4 is now
    `remux`'s shape and not `seanime`'s** — a computed uniform playlist rather
    than an exact one off a keyframe index — which
-   [ADR 0109](adr/0109-the-transcoded-stream-is-segmented.md) records. It also
+   [platform#64](https://github.com/mosaic-media/platform/blob/main/docs/adr/0064-the-transcoded-stream-is-segmented.md) records. It also
    settles the client: this is
-   [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s stated condition
-   firing rather than ADR 0070 being reversed. Segmenting is additionally what
+   [web#5](https://github.com/mosaic-media/web/blob/main/docs/adr/0005-the-web-player-is-the-browser.md)'s stated condition
+   firing rather than [web#5](https://github.com/mosaic-media/web/blob/main/docs/adr/0005-the-web-player-is-the-browser.md) being reversed. Segmenting is additionally what
    gives eviction a unit, and so what lets the spool live in memory — `Spool` is
    already a port with a substitutable factory, and only the unbounded working
    set stops it being one today.
 
    **A segment index is a seek instruction, not a description**
-   ([ADR 0111](adr/0111-the-playlist-is-a-nominal-grid.md), superseding
-   [ADR 0110](adr/0110-the-segment-length-is-measured.md) wholly). It is true
+   ([platform#66](https://github.com/mosaic-media/platform/blob/main/docs/adr/0066-the-playlist-is-a-nominal-grid.md), superseding
+   [platform#65](https://github.com/mosaic-media/platform/blob/main/docs/adr/0065-the-segment-length-is-measured.md) wholly). It is true
    that a copied stream cuts at the source's keyframes and nowhere else, so
    asking for 6 s of a release with 10 s keyframes yields six 10-second
-   segments. ADR 0110 concluded from that the origin must measure the interval,
+   segments. [platform#65](https://github.com/mosaic-media/platform/blob/main/docs/adr/0065-the-segment-length-is-measured.md) concluded from that the origin must measure the interval,
    and was wrong twice.
 
    The probe it rests on does not exist: `-read_intervals` bounds what ffprobe
@@ -1201,7 +1201,7 @@ carries the row.
    was 60.000000 and one at 42 s emitted 40.000000 — off by the keyframe a copy
    can begin at, and **not accumulating**, because each seek anchors to the
    playlist's arithmetic rather than to the segment before it. That is how
-   `remux` resumes from anywhere, and the machinery is ADR 0108's `-ss`/`-copyts`
+   `remux` resumes from anywhere, and the machinery is [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md)'s `-ss`/`-copyts`
    already.
 
    **The server half is built.** A release that must go through ffmpeg is three
@@ -1218,7 +1218,7 @@ carries the row.
 
    Deleted with it: `contentLength`, `offsetAt`, `parseByteRangeStart`,
    `serveSeekableRemux`, the byte spool and its registry, and `ShouldRemux` —
-   dead since ADR 0108 named it. The unseekable pipe survives for a source that
+   dead since [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md) named it. The unseekable pipe survives for a source that
    reports no duration, and its test pins that fallback rather than the only
    behaviour.
 
@@ -1228,7 +1228,7 @@ carries the row.
    through hls.js everywhere else, behind a dynamic import so it stays out of the
    bundle every other playback loads. A relayed stream keeps a plain `src` and no
    library in the path. This is
-   [ADR 0070](adr/0070-the-web-player-is-the-browser.md)'s own stated condition
+   [web#5](https://github.com/mosaic-media/web/blob/main/docs/adr/0005-the-web-player-is-the-browser.md)'s own stated condition
    firing rather than a reversal of it.
 
    **What is left is the demonstration, and it is not a formality.** No release
@@ -1296,7 +1296,7 @@ carries the row.
 
    The addressing came first. `SubtitlesRequest` gained `Season` and `Episode` in SDK `v0.26.0` —
    the same two coordinates `StreamRequest` took under
-   [ADR 0073](adr/0073-stream-resolution-is-decoupled-from-metadata-provenance.md),
+   [platform#46](https://github.com/mosaic-media/platform/blob/main/docs/adr/0046-stream-resolution-is-decoupled-from-metadata-provenance.md),
    with `module.proto` fields and converter lines in each direction — and both
    modules filling the role now pass them through instead of composing an
    address from two literal zeroes. A subtitles provider handed a foreign ref
@@ -1304,7 +1304,7 @@ carries the row.
    of the gap on the source side.
 
    **The module side now has its consumer too**
-   ([ADR 0117](adr/0117-the-subtitles-role-gets-a-consumer.md)), which closes the
+   ([platform#72](https://github.com/mosaic-media/platform/blob/main/docs/adr/0072-the-subtitles-role-gets-a-consumer.md)), which closes the
    item. The gap was not what "unbuilt" usually looks like: the registry could
    resolve a subtitles provider *by name* and no code path anywhere knew a name
    to ask for, so the plural enumerator every other fanned-out role has did not
@@ -1312,14 +1312,14 @@ carries the row.
    unreachable — a missing call rather than a missing feature.
 
    `PlaybackSubtitles` asks every installed provider at play time, handed the
-   work's shared identities exactly as stream enrichment is and for ADR 0073's
+   work's shared identities exactly as stream enrichment is and for [platform#46](https://github.com/mosaic-media/platform/blob/main/docs/adr/0046-stream-resolution-is-decoupled-from-metadata-provenance.md)'s
    reason. Asked at play rather than stored at import, because a subtitle URL is
    perishable the way a debrid link is. Best-effort throughout, so a source that
    is down costs the extra tracks and never the playback. Deduped by URL, or a
    title with both an IMDb and a TMDB id lists every file twice.
 
    **The origin fetches them, and this is the one subtitle path a direct-played
-   release can have.** ADR 0045's rule has a concrete reason here — the URL may
+   release can have.** [platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md)'s rule has a concrete reason here — the URL may
    carry a credential, and pointing a browser at it hands a third party the
    viewer's address — and the payoff is that a file from elsewhere needs no
    playlist to hang a rendition off, so it works where the embedded path cannot.
@@ -1328,8 +1328,8 @@ carries the row.
    own tracks are what a preference was resolved against.
 
    **The *embedded* side landed** under
-   [ADR 0113](adr/0113-subtitles-are-a-rendition.md), which is what makes
-   ADR 0112's escalation visible instead of merely computed. A release going
+   [platform#68](https://github.com/mosaic-media/platform/blob/main/docs/adr/0068-subtitles-are-a-rendition.md), which is what makes
+   [platform#67](https://github.com/mosaic-media/platform/blob/main/docs/adr/0067-language-is-a-persons-preference.md)'s escalation visible instead of merely computed. A release going
    through ffmpeg now serves a master playlist declaring one HLS subtitle
    rendition per embedded track, `DEFAULT=YES` on whichever the preference and
    its escalation chose; windows of WebVTT are extracted from the source a
@@ -1340,7 +1340,7 @@ carries the row.
    (item 6) that exists.
 
    **A subtitle track's codec then turned out to decide all of this**, which is
-   [ADR 0114](adr/0114-a-subtitle-track-has-a-form.md) and which corrected a bug
+   [platform#69](https://github.com/mosaic-media/platform/blob/main/docs/adr/0069-a-subtitle-track-has-a-form.md) and which corrected a bug
    the paragraph above shipped. Offering *every* embedded track as a rendition is
    right only for plain text. Picture tracks — PGS from a Blu-ray, VobSub from a
    DVD — have no text in them at all, and ffmpeg refuses to invent some; the
@@ -1365,7 +1365,7 @@ carries the row.
    switched off**, since by then it is part of the picture.
 
    **That asymmetry is why the third answer then got built too**
-   ([ADR 0115](adr/0115-a-styled-subtitle-goes-to-the-client.md)), which ADR 0114
+   ([platform#70](https://github.com/mosaic-media/platform/blob/main/docs/adr/0070-a-styled-subtitle-goes-to-the-client.md)), which [platform#69](https://github.com/mosaic-media/platform/blob/main/docs/adr/0069-a-subtitle-track-has-a-form.md)
    had rejected as blocked. The Platform now serves the ASS script itself and the
    Shell's player draws it with libass, preserving every position, colour and
    font at **no encode cost** — so the viewer's choice is three-valued (`plain`,
@@ -1401,7 +1401,7 @@ carries the row.
      with the pictures and there is no way to reach the text without them.
      Extracting inside the video's own ffmpeg run would cost nothing extra and
      was the preferred design going in; ffmpeg 5.1 refuses all three ways of
-     asking for it, which ADR 0113 records.
+     asking for it, which [platform#68](https://github.com/mosaic-media/platform/blob/main/docs/adr/0068-subtitles-are-a-rendition.md) records.
    - **One claim is unverified and it is client-side.** The origin's two clocks
      were measured to agree. Whether hls.js maps a raw WebVTT segment onto an
      fMP4 timeline without an `X-TIMESTAMP-MAP` header needs a browser, and a
@@ -1417,7 +1417,7 @@ carries the row.
    column — and the plan picks one.
 
    **The preference half landed** under
-   [ADR 0112](adr/0112-language-is-a-persons-preference.md), which is the part
+   [platform#67](https://github.com/mosaic-media/platform/blob/main/docs/adr/0067-language-is-a-persons-preference.md), which is the part
    that was wrong rather than merely missing: the plan ranked audio tracks
    against `PreferredLanguages`, a package variable, and both callers passed
    `nil` — so on a machine built for four people, every viewer got one person's
@@ -1434,7 +1434,7 @@ carries the row.
    direct-played one honours its audio half.
 
    **The per-play override landed too**
-   ([ADR 0116](adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md)):
+   ([platform#71](https://github.com/mosaic-media/platform/blob/main/docs/adr/0071-a-preference-is-a-default-an-override-is-a-sitting.md)):
    `playPart` takes an audio and a subtitle stream index for this playback only,
    and neither is written back — sampling the Japanese audio on one episode has
    not changed what somebody wants on the next. Both are pointers because zero is
@@ -1458,7 +1458,7 @@ carries the row.
    One consequence is recorded rather than fixed. `SummaryAudioCodec` still
    picks a track with the install-wide list and stores its codec on the Part,
    where it feeds candidate ranking
-   ([ADR 0048](adr/0048-stream-selection-against-a-client-profile.md)). It stays
+   ([platform#27](https://github.com/mosaic-media/platform/blob/main/docs/adr/0027-stream-selection-against-a-client-profile.md)). It stays
    install-wide on purpose: ranking only asks "will this need an audio encode at
    all", the full track list is on the Part for the per-user decision that
    follows, and a per-user column would be a column with no single right value.
@@ -1493,7 +1493,7 @@ carries the row.
 
    Two fields from the same family were deliberately left out rather than
    forgotten: **HDR format and audio channel count**. Both are real properties a
-   release names and both are things ADR 0048's decision would eventually want —
+   release names and both are things [platform#27](https://github.com/mosaic-media/platform/blob/main/docs/adr/0027-stream-selection-against-a-client-profile.md)'s decision would eventually want —
    `Part` already has `HDRFormat` — but neither module parses either today, so
    adding them would have shipped a field every source leaves empty. They are a
    later additive bump, on the same terms as these three.
@@ -1504,14 +1504,14 @@ chosen release; and a stale link recovers without the user seeing it.*
 
 ### M4 — The Supervisor, the Shell binary and the front door — **landed; a publicly trusted certificate is the one thing not in it**
 
-[ADR 0004](adr/0004-supervisor-as-host-manager.md)–[ADR 0006](adr/0006-supervisor-orchestrates-isolated-builds.md)
+[supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)–[supervisor#3](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0003-supervisor-orchestrates-isolated-builds.md)
 have been decided since the beginning, and [`supervisor`](https://github.com/mosaic-media/supervisor)
 is now its own repository, extracted from `platform` with its history
 (`git subtree split`) once it had somewhere to go. What it is responsible for
 has since shrunk a long way: extension modules are the
-Platform's throughout ([ADR 0079](adr/0079-the-platform-manages-extension-modules.md)),
+Platform's throughout ([platform#49](https://github.com/mosaic-media/platform/blob/main/docs/adr/0049-the-platform-manages-extension-modules.md)),
 and per-install builds were deleted in favour of a CI-built binary
-([ADR 0063](adr/0063-platform-binary-built-by-ci.md)). What is left is process
+([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)). What is left is process
 lifecycle, the front door, the artefact, and somewhere for what the Supervisor
 decides on the user's behalf to be recorded.
 
@@ -1553,7 +1553,7 @@ decides on the user's behalf to be recorded.
    loaded in headless Chromium, its same-origin Connect call routed to an
    absent Platform, and the Supervisor's own "unavailable" rendered inside the
    Shell's offline state. Stopping the Shell dropped to the bootstrap page.
-   That is [ADR 0005](adr/0005-supervisor-guarantees-an-interface.md)'s ladder
+   That is [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md)'s ladder
    working, which is more than the tests could say.
 
    **Process supervision now runs something.** `docker-compose.supervisor.yml`
@@ -1568,7 +1568,7 @@ decides on the user's behalf to be recorded.
    paths stay unpublished used invented paths, proving only that the router
    ignores paths nobody serves.
 
-   **It now owns both children, and ADR 0060 is honoured end to end.**
+   **It now owns both children, and [supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md) is honoured end to end.**
    `docker-compose.supervisor.yml` runs one process tree — the Supervisor at
    the root, the Platform and the Shell as its children on its own loopback,
    reachable only through the front door, as a deployed install has it. All
@@ -1591,7 +1591,7 @@ decides on the user's behalf to be recorded.
    Platform through the front door directly, never through the Shell — so
    stopping the Shell first drained nothing and only discarded the richest
    screen still standing, which is the one thing
-   [ADR 0005](adr/0005-supervisor-guarantees-an-interface.md) says not to do.
+   [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md) says not to do.
    Closing the front door first, as it also did, made the whole ordering
    unobservable: a client got a refused connection either way.
 
@@ -1639,7 +1639,7 @@ decides on the user's behalf to be recorded.
    **What choosing the client-side probe turned up, and it is not the
    Supervisor's to fix.** The obvious target — `AuthService/Bootstrap`, the
    one surface reachable before authentication — is rate-limited
-   ([ADR 0101](adr/0101-the-pre-session-bootstrap.md)), and `peerOf` keys
+   ([platform#57](https://github.com/mosaic-media/platform/blob/main/docs/adr/0057-the-pre-session-bootstrap.md)), and `peerOf` keys
    that limit on the socket address. Now that every client arrives through
    the front door, that address is the Supervisor's for all of them: **the
    per-peer limit has become effectively global, and one abusive client can
@@ -1659,13 +1659,13 @@ decides on the user's behalf to be recorded.
    to be counting.
 
    **The front door is a property now, not a convention**
-   ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)). **Built.**
+   ([platform#75](https://github.com/mosaic-media/platform/blob/main/docs/adr/0075-the-children-listen-on-unix-sockets.md)). **Built.**
    The Platform's two listeners and the Shell's are Unix sockets, mode `0600`
    in a `0700` runtime directory the Supervisor creates, and the Supervisor
    holds the only TCP listener. Mosaic had already made this decision for
    *third-party* code — an extension module is reached over a socket for "no
    accidental network exposure, and filesystem permissions as the access
-   control" (ADR 0064) — and never applied it to its own two processes.
+   control" ([platform#39](https://github.com/mosaic-media/platform/blob/main/docs/adr/0039-extension-module-boundary.md)) — and never applied it to its own two processes.
 
    Verified by counting listeners rather than by reading the configuration:
    inside the running container the only TCP socket is `:8443`, and 8080,
@@ -1674,7 +1674,7 @@ decides on the user's behalf to be recorded.
    handoff channel to anything that could reach the client API.
 
    **The Platform reads the forwarded address, and only on a socket.** That
-   repairs ADR 0101's per-peer ceiling, which the front door had already
+   repairs [platform#57](https://github.com/mosaic-media/platform/blob/main/docs/adr/0057-the-pre-session-bootstrap.md)'s per-peer ceiling, which the front door had already
    turned into one household-wide bucket and which sockets would have made
    worse still, a socket having no peer address at all. The transport is the
    proof: a listener nothing can reach except through the front door is the
@@ -1721,14 +1721,14 @@ decides on the user's behalf to be recorded.
    one either way.
 
    **The Recovery SDUI emitter is built**, served as an HTML fragment and an
-   event stream under `/supervisor/ui/`, and **all three of ADR 0005's rungs now
+   event stream under `/supervisor/ui/`, and **all three of [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md)'s rungs now
    draw it** — the embedded renderer, and the Shell. There was a `/supervisor/ui`
    beside them serving the same tree as JSON, and
-   [ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)
+   [supervisor#7](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0007-the-supervisor-answers-the-platforms-client-surface.md)
    deleted it: a second source is a rule every client would have to reimplement
    correctly.
 
-   **There is one SDUI source, not two** ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)).
+   **There is one SDUI source, not two** ([supervisor#7](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0007-the-supervisor-answers-the-platforms-client-surface.md)).
    The Supervisor answers the Platform's *own* Connect services — `AuthService`
    and `SessionService` — while the Platform is not serving, and the front door
    switches on the Platform child's readiness. A client calls the address it
@@ -1761,7 +1761,7 @@ decides on the user's behalf to be recorded.
    module moved from transitive to direct.
 
    **Standby has shrunk to what it is for**: the unsupervised deployment
-   ([ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md)'s DIY path) and
+   ([supervisor#6](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0006-two-supervised-images-and-a-diy-path.md)'s DIY path) and
    a Supervisor that is unreachable too. In both, the Shell genuinely has
    nothing to report but its own failure to connect.
 
@@ -1848,7 +1848,7 @@ decides on the user's behalf to be recorded.
    0005 puts onboarding on Supervisor-emitted SDUI, because at that point the
    Platform does not exist to emit any. How the emitter obtains the contract
    without breaking the Supervisor's import boundary was open until
-   [ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md), and the
+   [supervisor#6](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0006-two-supervised-images-and-a-diy-path.md), and the
    boundary has now widened by exactly one module, with the emitter that needed
    it. **Onboarding itself is not built**; what exists is the emitter it will
    use and the three renderers that draw what it emits.
@@ -1871,7 +1871,7 @@ decides on the user's behalf to be recorded.
    extension modules, which is correct and was never at risk.
 
    **The Supervisor now writes down what it saw, and nothing reads it back**
-   ([ADR 0060](adr/0060-the-supervisor-observes-independently.md)). That record
+   ([supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md)). That record
    was written eight months before there was a Supervisor to put a file in, and
    until this the process narrated everything to stdout and nowhere else — so on
    a box where nobody is watching the console it said it to no one, which is
@@ -1886,7 +1886,7 @@ decides on the user's behalf to be recorded.
    database, no exporter and no collector, because each is a thing that can be
    unavailable at the moment it is needed.
 
-   **The record format is duplicated from the Platform's, which ADR 0060 left
+   **The record format is duplicated from the Platform's, which [supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md) left
    open and named as a hazard.** The Platform's telemetry package is `internal/`,
    the Supervisor's boundary is two published modules wide and that is not one of
    them, and a third published module carrying one struct would be a thing to
@@ -1898,13 +1898,13 @@ decides on the user's behalf to be recorded.
    rather than empty (`trace`, `span`, `module`), since the Supervisor runs no
    traces and links no Module.
 
-   **What it left out is the reading, and that is the whole of ADR 0060's second
+   **What it left out is the reading, and that is the whole of [supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md)'s second
    half.** Neither read path exists: expert mode does not merge these records,
    and the Supervisor serves no status-and-log page. The support bundle carries
    no log file from either process, so it is a slice rather than a wiring change.
    Finding out what the Supervisor saw therefore still means shell access to the
    host — which is the requirement
-   [ADR 0058](adr/0058-telemetry-storage-retention-and-expert-mode.md) was
+   [platform#36](https://github.com/mosaic-media/platform/blob/main/docs/adr/0036-telemetry-storage-retention-and-expert-mode.md) was
    written to remove, restated rather than met, and it is
    [owed](unreachable-capability.md).
 
@@ -2016,7 +2016,7 @@ decides on the user's behalf to be recorded.
 
    **Still no schedule and no surface.** Nothing polls the catalogue and nothing
    upgrades a *running* install; whether one updates itself unattended is a
-   product decision this does not make. That surface is where ADR 0033's handover
+   product decision this does not make. That surface is where [supervisor#4](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0004-supervisor-driven-live-handover.md)'s handover
    belongs, since a user watching a screen is what it exists to keep connected.
 
    **There is no default release URL, and that is a gap rather than a policy.**
@@ -2029,17 +2029,17 @@ decides on the user's behalf to be recorded.
 
    Remaining: signing the binaries and the checksums, which
    waits on key custody — **now decided rather than open**
-   ([ADR 0122](adr/0122-the-signing-key-hierarchy.md)): a second keypair,
+   ([platform#76](https://github.com/mosaic-media/platform/blob/main/docs/adr/0076-the-signing-key-hierarchy.md)): a second keypair,
    separate from the registry's because that one is exercised on every module
    release and a compromise of it must not reach the Platform binary, held
    offline as well as in CI, and rotated through the overlapping trust
    `Keyring.verify` already supports and nothing has ever used. What is left is
    generating it, which is the owner's to do; and the Supervisor downloading,
    verifying and activating a Generation, with the handover
-   ([ADR 0033](adr/0033-supervisor-driven-live-handover.md)) folded into the
+   ([supervisor#4](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0004-supervisor-driven-live-handover.md)) folded into the
    transport's stream resume rather than built as a separate dance.
 
-   **[ADR 0121](adr/0121-two-supervised-images-and-a-diy-path.md) settles what
+   **[supervisor#6](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0006-two-supervised-images-and-a-diy-path.md) settles what
    is being installed and by whom**, and names three gaps that have to close
    before any of the above is reachable:
 
@@ -2095,9 +2095,9 @@ decides on the user's behalf to be recorded.
      executed; and "cannot verify" is not "did not verify", so an unconfigured
      build does not report an attack.
 
-     **No key ships**, and the code fails closed rather than skipping — ADR 0122
+     **No key ships**, and the code fails closed rather than skipping — [platform#76](https://github.com/mosaic-media/platform/blob/main/docs/adr/0076-the-signing-key-hierarchy.md)
      decided the hierarchy and generating the key is custody work that happens
-     off CI. The development override is [ADR 0099](adr/0099-the-development-module-repository.md)'s
+     off CI. The development override is [platform#55](https://github.com/mosaic-media/platform/blob/main/docs/adr/0055-the-development-module-repository.md)'s
      build tag rather than a flag: a shipped Supervisor does not contain the code
      that reads `MOSAIC_DEV_RELEASE_KEY`, and both configurations are gated,
      because the tagged path is otherwise code nothing executes and the untagged
@@ -2150,8 +2150,8 @@ decides on the user's behalf to be recorded.
    says the updater validates signatures. The code does not. Worth knowing
    before taking any of it as a reference.) Mosaic already signs the registry
    index, the per-module manifests and the binary digests
-   ([ADR 0065](adr/0065-module-distribution-and-trust.md),
-   [ADR 0079](adr/0079-the-platform-manages-extension-modules.md)), so what is
+   ([platform#40](https://github.com/mosaic-media/platform/blob/main/docs/adr/0040-module-distribution-and-trust.md),
+   [platform#49](https://github.com/mosaic-media/platform/blob/main/docs/adr/0049-the-platform-manages-extension-modules.md)), so what is
    missing here is key custody and nothing conceptual.
 4. ~~**Configuration versioning gets its door.**~~ **Built — the escalation
    and the screen. `MOSAIC_MODULES` is what it left out**, still bridging
@@ -2226,7 +2226,7 @@ decides on the user's behalf to be recorded.
    Recovery-class, secret, and the pair that locks an operator out of their
    own install.
 5. ~~**Operational findings become durable state**~~ **Built**
-   ([ADR 0119](adr/0119-operational-findings-are-durable-state.md)), including
+   ([platform#74](https://github.com/mosaic-media/platform/blob/main/docs/adr/0074-operational-findings-are-durable-state.md)), including
    the screen it does not land without.
 
    An `Issue` is a durable typed statement that something is wrong, created at
@@ -2238,7 +2238,7 @@ decides on the user's behalf to be recorded.
    rule deliberately to prove it is guarded: an upsert that touched `first_seen`
    would be a working, passing, entirely wrong implementation.
 
-   Issue types are closed by ADR 0015's test and `CHECK`-constrained in the
+   Issue types are closed by [platform#11](https://github.com/mosaic-media/platform/blob/main/docs/adr/0011-open-and-closed-vocabularies.md)'s test and `CHECK`-constrained in the
    schema. **Suggestions carry no prose and are derived on read rather than
    stored**, so a row written by an older build cannot pin an offer this one no
    longer honours, and a withdrawn suggestion disappears instead of failing when
@@ -2273,7 +2273,7 @@ decides on the user's behalf to be recorded.
    is an error now; withdrawing from one is still success, because raising into
    nothing loses information and clearing from nothing loses none.
 
-   **Left out:** `unhealthy` and `unsupported` — ADR 0119's system-level states,
+   **Left out:** `unhealthy` and `unsupported` — [platform#74](https://github.com/mosaic-media/platform/blob/main/docs/adr/0074-operational-findings-are-durable-state.md)'s system-level states,
    distinct from a list of things that went wrong and each carrying enumerated
    reasons — are not built; nothing computes either, and no surface reports one.
    `reinstall_extension` is modelled and deliberately undrawn: the record names
@@ -2301,13 +2301,13 @@ to prevent.**
   because that needs the domain this milestone owes and nothing else.
 - **Kill the Platform and the Supervisor answers in its place — met.** It
   answers the Platform's *own* Connect services while the Platform is not
-  serving ([ADR 0123](adr/0123-the-supervisor-answers-the-platforms-client-surface.md)),
+  serving ([supervisor#7](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0007-the-supervisor-answers-the-platforms-client-surface.md)),
   so a client calls the address it always calls and contains no code about the
   Supervisor at all. Demonstrated as a takeover and a handback of a live session
   with a JavaScript marker surviving and no main-frame navigation.
 - **Upgrade in place without the page in front of you dying — met.** The
   mechanism was complete and demonstrated long before anything could ask it to
-  run; [ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md)
+  run; [platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md)
   closed the trigger and the surface, and it invented no channel to do it. The
   Supervisor checks the signed catalogue on a schedule and spools an available
   version as a **finding**; Settings › Problems draws it with an *Install it*
@@ -2329,17 +2329,17 @@ to prevent.**
 **Carried out of M4, each with why rather than a bare list:**
 
 - **The upgrade automation *policy*.** The trigger and the surface landed
-  (ADR 0129); what has not is ADR 0125's three levels, so every upgrade today is
+  ([platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md)); what has not is [supervisor#9](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0009-major-upgrades-are-never-automatic.md)'s three levels, so every upgrade today is
   a person pressing something. That is the Manual level and the safest of the
   three, and turning on the others means deciding how the setting reaches the
-  Supervisor — the same channel question ADR 0129 answered for the request, so it
+  Supervisor — the same channel question [platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md) answered for the request, so it
   is now a small change rather than an open one.
 - **A publicly trusted certificate**, which needs a domain the owner supplies.
-  It no longer blocks M5's passkeys: [ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)
+  It no longer blocks M5's passkeys: [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)
   made them an optional layer enrolled only from a public origin, so an install
   without one authenticates by password and offers no passkey rather than
   waiting for a decision.
-- **Generating both signing keys.** [ADR 0122](adr/0122-the-signing-key-hierarchy.md)
+- **Generating both signing keys.** [platform#76](https://github.com/mosaic-media/platform/blob/main/docs/adr/0076-the-signing-key-hierarchy.md)
   decided the hierarchy; creating them is custody work that happens off CI and is
   the owner's. Verification fails closed meanwhile, so a build with no key
   refuses rather than skipping.
@@ -2350,7 +2350,7 @@ to prevent.**
 - **`MOSAIC_MODULES` as Generation-class configuration**, still bridging through
   the environment — it waits on the same trigger as the first item.
 - **Reading the Supervisor's records without shell access.**
-  [ADR 0060](adr/0060-the-supervisor-observes-independently.md)'s two read paths
+  [supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md)'s two read paths
   are unbuilt; the file is written and nothing serves it, which is a register
   row rather than a milestone item.
 
@@ -2358,7 +2358,7 @@ to prevent.**
 `GetConfigVersion` — slice 4's screen landed, and the escalation beneath it is
 now reachable by a person as well as by the Supervisor. Reading one version by
 id stays owed, because nothing lists the versions. And **upgrading in place**,
-by [ADR 0129](adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md):
+by [platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md):
 a person can see an available version and press *Install it*. What is left of
 that row is the backward direction — rolling back, and installing a named older
 version, are still Go-only, which is the wrong way round for the case a person's
@@ -2366,9 +2366,9 @@ judgement is actually needed on.
 
 **Decisions owed:** a domain, for a publicly trusted certificate. It is now a
 thing the owner needs to *have* rather than a decision Mosaic was waiting on: the
-session credential never waited ([ADR 0102](adr/0102-the-session-credential-is-a-bearer-pair.md)
+session credential never waited ([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)
 is deliberately origin-independent), and the passkey relying-party id stopped
-waiting when [ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)
+waiting when [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)
 made passkeys an optional layer enrolled only from a public origin the owner
 supplies. What remains is that a `.local` install serves a self-signed
 certificate and warns on every new device.
@@ -2376,8 +2376,8 @@ certificate and warns on every new device.
 ### M5 — Passkeys and hardening
 
 1. **Passkeys — an optional layer, not the foundation**
-   ([ADR 0068](adr/0068-one-principal-many-credentials.md),
-   [ADR 0131](adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md)).
+   ([platform#43](https://github.com/mosaic-media/platform/blob/main/docs/adr/0043-one-principal-many-credentials.md),
+   [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)).
    `PasskeyCredential`, `SavePasskey` and `ListPasskeys` exist; there is no
    ceremony, no verifier, no RPC and no surface. No JWT anywhere — a
    claims-carrying token makes a tightened limit take effect only when the token
@@ -2395,7 +2395,7 @@ certificate and warns on every new device.
    final**, which is a policy Mosaic owns rather than a decision it was waiting
    on.
 
-   ADR 0131 settles it: **username and password is the foundation and stays
+   [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md) settles it: **username and password is the foundation and stays
    mandatory**, on an IP and on `.local` and on day one; passkeys are an optional
    second credential the superuser enables on an install that has a public
    origin, from that origin, with the relying-party id as explicit
@@ -2405,12 +2405,12 @@ certificate and warns on every new device.
    stops being offered.
 
    **How it is offered is
-   [ADR 0133](adr/0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md).**
+   [platform#80](https://github.com/mosaic-media/platform/blob/main/docs/adr/0080-an-optional-capability-is-announced-once-when-it-becomes-possible.md).**
    Mosaic says nothing about passkeys on an install that cannot have them — no
    greyed control, no "unavailable" row — and announces them exactly once, at the
    superuser's first sign-in via the public origin. Enable now or later; both
    answers end the announcement permanently, and the settings row stays available
-   so "once" is not a dead end. ADR 0133 chooses a `Banner` with two
+   so "once" is not a dead end. [platform#80](https://github.com/mosaic-media/platform/blob/main/docs/adr/0080-an-optional-capability-is-announced-once-when-it-becomes-possible.md) chooses a `Banner` with two
    `Button`s over a modal — **on the interruption argument only.** Its stated
    second reason, that the contract has no overlay mechanism, is wrong and its
    Status line says so: `OpenOverlay`/`CloseOverlay` are action kinds,
@@ -2425,7 +2425,7 @@ certificate and warns on every new device.
    name their server.
 
 2. **TOTP — the second factor that works everywhere**
-   ([ADR 0132](adr/0132-totp-is-the-second-factor-that-works-everywhere.md)).
+   ([platform#79](https://github.com/mosaic-media/platform/blob/main/docs/adr/0079-totp-is-the-second-factor-that-works-everywhere.md)).
    Passkeys leave a gap they cannot close: an install reached at
    `192.168.1.50` or `<name>.local` has **one secret** between an attacker and
    every account on it, and no path to a second, because WebAuthn cannot run
@@ -2459,13 +2459,13 @@ certificate and warns on every new device.
    salt. `internal/platform/secrets` looks like custody and is not — it has no
    production caller at all, nothing supplies the recovery key its vault needs,
    and its purpose is `secret://` indirection for operator configuration. So
-   this is [ADR 0134](adr/0134-the-install-key.md), the first durable key in the
+   this is [platform#81](https://github.com/mosaic-media/platform/blob/main/docs/adr/0081-the-install-key.md), the first durable key in the
    repository, and the telemetry salt is a second consumer already waiting on
    exactly it.
 
    Two things fall out that are worth knowing before starting. It is a *factor*
    rather than a credential, so it adds no fifth arrow to
-   [ADR 0068](adr/0068-one-principal-many-credentials.md)'s Principal
+   [platform#43](https://github.com/mosaic-media/platform/blob/main/docs/adr/0043-one-principal-many-credentials.md)'s Principal
    constructor — it makes the password arrow two-step, and `domain.AuthStrength`
    is what records the difference, becoming load-bearing after only ever holding
    one value. And **`domain.RecoveryFactor` finally gets a caller**: single-use,
@@ -2475,8 +2475,8 @@ certificate and warns on every new device.
 3. **Backup and restore.** One PostgreSQL and no documented restore path.
 4. **The hardening sweep.** The redaction-class vet check was decided and not built, which
    leaves the PII boundary as developer discipline
-   ([ADR 0056](adr/0056-redaction-classes-are-the-pii-boundary.md)) — an
-   arrangement [ADR 0066](adr/0066-authorization-is-carried-in-the-type.md)
+   ([platform#34](https://github.com/mosaic-media/platform/blob/main/docs/adr/0034-redaction-classes-are-the-pii-boundary.md)) — an
+   arrangement [platform#41](https://github.com/mosaic-media/platform/blob/main/docs/adr/0041-authorization-is-carried-in-the-type.md)
    demonstrated does not hold. A module settings write replaces the whole
    document, so an API key rides inside a screen's action payload where redaction
    cannot see it; the fix is a merge semantic or a write-only field in the SDK.
@@ -2489,11 +2489,11 @@ certificate and warns on every new device.
    **Fixed in M4**, where it was caused: the Platform reads the forwarded
    address, and believes it only on a listener nothing can reach except
    through the front door
-   ([ADR 0120](adr/0120-the-children-listen-on-unix-sockets.md)).
+   ([platform#75](https://github.com/mosaic-media/platform/blob/main/docs/adr/0075-the-children-listen-on-unix-sockets.md)).
 5. **Dead code.** The Shell's `mock/` and `gallery/`.
 6. **Telemetry moves onto OpenTelemetry** — **three of four landed**, and the
-   metric surface ADR 0059 had withheld landed beside it
-   ([ADR 0128](adr/0128-opentelemetry-is-the-telemetry-implementation.md)).
+   metric surface [sdk#5](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0005-modules-observe-through-the-sdk.md) had withheld landed beside it
+   ([sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md)).
    Mosaic has hand-written the same thing three times — the Platform's ~1,300
    lines, the SDK's smaller copy for modules, and the Supervisor's third, whose
    record format is duplicated from the Platform's with a test naming the JSON
@@ -2519,7 +2519,7 @@ certificate and warns on every new device.
    wants a full URL, so an operator writing `http://collector:4318` would have
    had every record POSTed to `/`. The cost is stated: `otlploghttp` brings gRPC,
    grpc-gateway and genproto into the process whose value is being small, 22
-   modules against 12. It is linked and not run when unconfigured, so ADR 0060's
+   modules against 12. It is linked and not run when unconfigured, so [supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md)'s
    actual property — no aliveness assumptions — is untouched. `sdk` `v0.28.0` backs `v1.Telemetry`,
    `v1.Span` and the classified `v1.Field` with OTel's API, adding `v1.Encoder` —
    where classification becomes an attribute, exported so the Platform and the
@@ -2532,13 +2532,13 @@ certificate and warns on every new device.
    it is the part with design content left in it.** Everything above is
    *logging*: the Supervisor emits records and no spans, and what stitches its
    timeline to the Platform's is a boot id carried as a resource attribute
-   rather than a trace. ADR 0060 decided "no traces" for the Supervisor
+   rather than a trace. [supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md) decided "no traces" for the Supervisor
    deliberately, so changing it earns a new record, and the questions that
    record has to answer are real rather than mechanical — whether a boot is
    honestly a trace when its spans last minutes; whether the Supervisor should
    hand a `traceparent` to its children so the Platform's boot span descends
-   from the activation that caused it (ADR 0054 has the Platform mint its own);
-   and whether the out-of-process module harness (ADR 0077) propagates context
+   from the activation that caused it ([platform#32](https://github.com/mosaic-media/platform/blob/main/docs/adr/0032-the-correlation-id-is-the-trace-id.md) has the Platform mint its own);
+   and whether the out-of-process module harness ([sdk#7](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0007-go-plugin-as-the-extension-harness.md)) propagates context
    as OTel's gRPC instrumentation would give it for free. None of it is written
    down yet, and it is the next decision rather than the next task.
 
@@ -2568,11 +2568,11 @@ certificate and warns on every new device.
    wrong.** `TraceContext` ↔ OpenTelemetry `SpanContext` is a field-for-field
    bridge, tested both ways, round-trip, and on a traceparent from the wire. It
    is first because the trace id *is* Mosaic's correlation id
-   ([ADR 0054](adr/0054-the-correlation-id-is-the-trace-id.md)) — on every log
+   ([platform#32](https://github.com/mosaic-media/platform/blob/main/docs/adr/0032-the-correlation-id-is-the-trace-id.md)) — on every log
    record, span, event and outbox row — so a conversion producing *a* trace id
    rather than *the same* one would pass any test asserting one exists while
    severing the join the whole telemetry thread is arranged around. The mapping
-   needing nothing invented is ADR 0054's choice of W3C being collected rather
+   needing nothing invented is [platform#32](https://github.com/mosaic-media/platform/blob/main/docs/adr/0032-the-correlation-id-is-the-trace-id.md)'s choice of W3C being collected rather
    than luck. The root-trace case is guarded specifically: `NewRootTrace`'s zero
    span id means "nothing precedes this", and the plausible mistake — gating on
    `SpanContext.IsValid` — silently zeroes the trace id of every request.
@@ -2614,7 +2614,7 @@ certificate and warns on every new device.
    trace and start its own, which is how it was proven rather than assumed.
 
    Two choices stated rather than left to be found. **Sampling is
-   `AlwaysSample`**: [ADR 0054](adr/0054-the-correlation-id-is-the-trace-id.md)
+   `AlwaysSample`**: [platform#32](https://github.com/mosaic-media/platform/blob/main/docs/adr/0032-the-correlation-id-is-the-trace-id.md)
    says the flag governs whether spans are recorded, and the implementation it
    describes has always written every span to the sink regardless — so a
    parent-based sampler would have silently stopped recording spans for
@@ -2648,7 +2648,7 @@ certificate and warns on every new device.
    **Not landed: the module adapter, and the sinks themselves.**
    `internal/platform/app`'s `convertFields` still carries its own copy of the
    classification mapping rather than the SDK's `Encoder` — the duplication
-   ADR 0128 exists to remove. Both halves it needed now exist, so what is left
+   [sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md) exists to remove. Both halves it needed now exist, so what is left
    is the adapter itself. The `Sink` implementations are also still Mosaic's:
    `JSONSink`, `ConsoleSink`, the batching buffer and the PostgreSQL writer are
    the destination rather than OTel exporters, which is what an OTLP export
@@ -2661,8 +2661,8 @@ certificate and warns on every new device.
    the wire shape and the schema and therefore wants its own slice.
 
    **Landed alongside: the module metric surface**
-   ([ADR 0130](adr/0130-the-module-metric-surface.md)). It is not part of the
-   conversion and would not have been reachable without it — ADR 0059 published
+   ([sdk#9](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0009-the-module-metric-surface.md)). It is not part of the
+   conversion and would not have been reachable without it — [sdk#5](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0005-modules-observe-through-the-sdk.md) published
    no counter and no histogram, because "publishing a counter that silently
    discards is worse than publishing nothing", and said they would join the
    surface when the Platform could back them. Running the OTel SDK is what let
@@ -2687,12 +2687,12 @@ certificate and warns on every new device.
    retained series is a schema, a retention policy and a rollup and earns its own
    slice. And nothing exports to a collector yet: the reader is not an OTLP
    exporter, so the values are readable in Mosaic and nowhere else — which is
-   precisely the benefit ADR 0128 was taken for, still untaken here.
+   precisely the benefit [sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md) was taken for, still untaken here.
 
    **Two things worth recording from the build.** The metric API is `v1.45.0`
    and stable, unlike the logs API this conversion had to take at `v0.21.0` — so
    the fourth allowlisted OTel module is the least risky of the four. And the
-   cardinality bound needed a *different lifetime* from ADR 0059's record quota,
+   cardinality bound needed a *different lifetime* from [sdk#5](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0005-modules-observe-through-the-sdk.md)'s record quota,
    which is the kind of thing only building it reveals: a record quota is per
    invocation because a chatty module should degrade its own call, but a series
    is created once and outlives the invocation, so a per-invocation cap would
@@ -2700,14 +2700,14 @@ certificate and warns on every new device.
    is folded rather than dropped, because dropping makes a counter under-report
    and a wrong number is worse than a coarse one.
 
-   **One cost was taken and then given back.** ADR 0128 ended the SDK's
+   **One cost was taken and then given back.** [sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md) ended the SDK's
    zero-dependency rule, replacing it with "the OTel API modules and nothing
    else" — and two days of building on it showed the line was in the wrong
    place. The module-facing surface never named an OpenTelemetry type and a test
    enforced that; but the *host*-facing half sat in the same published package,
    and it is what put four modules into every third party's build for something
-   no module calls. [ADR 0135](adr/0135-the-sdk-carries-no-implementation.md)
-   reverses that clause and restores zero dependencies, leaving ADR 0128's
+   no module calls. [sdk#10](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0010-the-sdk-carries-no-implementation.md)
+   reverses that clause and restores zero dependencies, leaving [sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md)'s
    central decision — OpenTelemetry is the implementation, in every process —
    untouched. The classification rule stays in the SDK expressed in plain Go,
    because the Platform and the harness both need it and a second copy of a
@@ -2759,10 +2759,10 @@ Stated as what a module cannot do, each with the decision that prevents it:
 |---|---|
 | **Act** | `dispatch` in `internal/transport/session` is the complete enumeration of what any client can invoke, and it is Platform-authored |
 | **React** | It is called and returns. No event subscription, no progress push, no schedule, no way to ask a question mid-operation |
-| **Show** | [ADR 0038](adr/0038-module-contributed-settings-ui.md) scopes module UI to settings — content screens stay Platform-emitted |
+| **Show** | [sdk#4](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0004-module-contributed-settings-ui.md) scopes module UI to settings — content screens stay Platform-emitted |
 | **Annotate** | Only a node's own metadata provider can say anything about it; a second module has no way to add a fact |
 | **Store** | Modules produce metadata, never bytes. The scratch directory is named once, for the torrent engine, and is unbuilt |
-| **Serve** | [ADR 0045](adr/0045-playback-consumer-and-media-origin.md) — the module never speaks HTTP. *Gateway* is reserved in the vocabulary and nothing fills it |
+| **Serve** | [platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md) — the module never speaks HTTP. *Gateway* is reserved in the vocabulary and nothing fills it |
 | **Compose** | `ListLibrary` was deliberately kept off the SDK. The reasoning held for sources; a module deriving something from the library is not sourcing |
 | **Authenticate** | Identity is wholly Platform-owned |
 | **Reach a LAN device** | Egress is an HTTP proxy; discovery is multicast and Discord presence is a local socket |
@@ -2786,7 +2786,7 @@ The slices, in dependency order. Each is a decision record before it is code.
    per person.
 3. **Lifecycle.** Event subscription, progress push, mid-operation prompts,
    module-declared cron, dependency declaration. Confirms or replaces
-   [ADR 0011](adr/0011-platform-transports-events.md), which is inherited and
+   [platform#7](https://github.com/mosaic-media/platform/blob/main/docs/adr/0007-platform-transports-events.md), which is inherited and
    unconfirmed.
 4. **Contribution points.** Named slots on Platform-owned screens
    (`home.rails`, `library.sections`, `discovery.rows`, `detail.facts`), declared
@@ -2821,7 +2821,7 @@ contributes a settings screen — with nothing in `platform` changed to allow it
 - **Modules shipping client code.** Breaks [contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)
   and the multi-client promise.
 - **Modules contributing shell chrome.** Contribution points are slots on
-  screens; the shell is [ADR 0031](adr/0031-server-owned-app-shell.md)'s.
+  screens; the shell is [platform#21](https://github.com/mosaic-media/platform/blob/main/docs/adr/0021-server-owned-app-shell.md)'s.
 - **Modules reading watch history.** The exclusion was right. An anime-scoped
   continue-watching rail is the Platform composing and the module supplying the
   filter.
@@ -2845,7 +2845,7 @@ while there is one.
 Deferred, named, and not omitted. A trigger is given where one exists.
 
 **Playback and media.** The torrent engine — the `Served` half of
-[ADR 0045](adr/0045-playback-consumer-and-media-origin.md), with sequential piece
+[platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md), with sequential piece
 selection, cache and eviction, forcing module `Start`/`Stop` and a
 Platform-granted scratch directory; until it lands a magnet no debrid service
 resolves is honestly unplayable rather than silently broken. Full transcoding
@@ -2869,7 +2869,7 @@ rather than faked. Casting.
 exists for, blocked on two things that are not authorization problems: ratings
 arrive in unvalidated JSONB whose correctness belongs to the writing capability,
 and the discovery plane returns virtual results with no stored attributes, so
-scoping the library does not scope search ([ADR 0067](adr/0067-three-authorization-mechanisms.md)).
+scoping the library does not scope search ([platform#42](https://github.com/mosaic-media/platform/blob/main/docs/adr/0042-three-authorization-mechanisms.md)).
 Per-user provider credentials — module settings are per module, so one debrid
 account serves the whole install; harmless while the Platform relays and no
 credential reaches a client. Taste preferences that something actually reads,
@@ -2901,14 +2901,14 @@ one.
 
 **Extension updates.** An install pins the version it installed and re-adopts
 exactly those bytes across restarts
-([ADR 0081](adr/0081-extension-installation-is-user-initiated-and-persistent.md)),
+([platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)),
 so an extension never moves on its own and a rebuilt index does not reach an
 already-installed module — the pin working, rather than a gap. The Platform
 should be able to update one automatically **when a user turns it on**: opt-in,
 never a default, because an automatic update is the Platform downloading and
 spawning new third-party code with its own authority on a schedule nobody is
 watching. It is also what would let a rotated project credential
-([ADR 0105](adr/0105-project-credentials-in-official-builds.md)) reach an install
+([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)) reach an install
 without every user acting. The **policy** is not designed and is deliberately out
 of the release — when it checks, whether it follows a major version, what happens
 when a signature or digest fails halfway, whether a failed update rolls back to

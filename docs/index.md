@@ -57,7 +57,7 @@ These were stated directly and are load-bearing.
 | Single PostgreSQL; node tree plus relation graph; links not a store; no DuckDB | Flexibility for new formats without schema change |
 | SDUI | Chosen deliberately as the interface model |
 | Mosaic Design Language — acrylic with weight, artwork as light source | Premium feel; media carries emotional connection |
-| Open source: AGPL-3.0 Platform with a module-linking exception, permissive SDK ([ADR 0022](adr/0022-licensing.md)) | Protect the core from closed-SaaS forks while keeping the module ecosystem open under any license |
+| Open source: AGPL-3.0 Platform with a module-linking exception, permissive SDK ([platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md)) | Protect the core from closed-SaaS forks while keeping the module ecosystem open under any license |
 
 ### Inherited from prior sessions — needs confirmation
 
@@ -65,19 +65,19 @@ These were recorded before the reset as full decision records with context, alte
 
 | Record | What it decides |
 |---|---|
-| [ADR 0001](adr/0001-transactional-store-extensibility.md) | Stores resolved uniformly through a typed accessor rather than named methods; storage behind a `StorageAdapter` port so PostgreSQL can be replaced; the SDK exposes storage for use, not modification |
-| [ADR 0002](adr/0002-module-storage-and-delivery-model.md) | A Module is a Go library compiled into the binary; the Platform owns storage and schema; essential and community modules differ only in delivery, not architecture; analytical processing sits behind a port |
-| [ADR 0003](adr/0003-platform-as-execution-kernel.md) | The Platform is a runtime, not an application. It owns contracts and orchestration; Modules own business behaviour |
-| [ADR 0004](adr/0004-supervisor-as-host-manager.md) | The Supervisor is the always-running host-level manager, sitting below Shell, Platform and Generations |
-| [ADR 0005](adr/0005-supervisor-guarantees-an-interface.md) | The Supervisor is the only public entry point and degrades through progressively simpler interfaces rather than disappearing |
-| [ADR 0006](adr/0006-supervisor-orchestrates-isolated-builds.md) | The Supervisor orchestrates isolated runtime builds |
-| [ADR 0007](adr/0007-static-go-module-composition.md) | Modules are Go libraries compiled into one binary — no plugins, no RPC |
-| [ADR 0008](adr/0008-sdk-as-public-contract-language.md) | The SDK is the public contract language between Platform and Modules |
-| [ADR 0009](adr/0009-developer-platform-toolchain.md) | The Developer Platform is an integrated toolchain |
-| [ADR 0010](adr/0010-test-harness-as-development-modules.md) | The Test Harness is built from development-only Modules |
-| [ADR 0011](adr/0011-platform-transports-events.md) | The Platform transports events; Modules own domain events and their names |
+| [platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md) | Stores resolved uniformly through a typed accessor rather than named methods; storage behind a `StorageAdapter` port so PostgreSQL can be replaced; the SDK exposes storage for use, not modification |
+| [platform#2](https://github.com/mosaic-media/platform/blob/main/docs/adr/0002-module-storage-and-delivery-model.md) | A Module is a Go library compiled into the binary; the Platform owns storage and schema; essential and community modules differ only in delivery, not architecture; analytical processing sits behind a port |
+| [platform#3](https://github.com/mosaic-media/platform/blob/main/docs/adr/0003-platform-as-execution-kernel.md) | The Platform is a runtime, not an application. It owns contracts and orchestration; Modules own business behaviour |
+| [supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md) | The Supervisor is the always-running host-level manager, sitting below Shell, Platform and Generations |
+| [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md) | The Supervisor is the only public entry point and degrades through progressively simpler interfaces rather than disappearing |
+| [supervisor#3](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0003-supervisor-orchestrates-isolated-builds.md) | The Supervisor orchestrates isolated runtime builds |
+| [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md) | Modules are Go libraries compiled into one binary — no plugins, no RPC |
+| [sdk#1](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0001-sdk-as-public-contract-language.md) | The SDK is the public contract language between Platform and Modules |
+| [platform#5](https://github.com/mosaic-media/platform/blob/main/docs/adr/0005-developer-platform-toolchain.md) | The Developer Platform is an integrated toolchain |
+| [platform#6](https://github.com/mosaic-media/platform/blob/main/docs/adr/0006-test-harness-as-development-modules.md) | The Test Harness is built from development-only Modules |
+| [platform#7](https://github.com/mosaic-media/platform/blob/main/docs/adr/0007-platform-transports-events.md) | The Platform transports events; Modules own domain events and their names |
 
-ADR 0004 and ADR 0005 are the recorded form of the "not your own IT support" goal. **ADR 0007 is the recorded form of the static-compilation choice**, and therefore the origin of the isolation trade-off below.
+[supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md) and [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md) are the recorded form of the "not your own IT support" goal. **[platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md) is the recorded form of the static-compilation choice**, and therefore the origin of the isolation trade-off below.
 
 ---
 
@@ -103,16 +103,16 @@ Each of these words must carry exactly one meaning, everywhere.
 |---|---|---|
 | **Transport** | Reserved. Do not use unqualified. Say *inbound adapter* for HTTP/GraphQL, *light transport* for the material system | Anything to do with modules |
 | **Module** | A Go library compiled into the Platform Binary, extending Mosaic | A plugin, an extension, a separate process |
-| **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built (ADR 0043) | An inbound source, or anything Mosaic *consumes* |
-| **Stale-while-revalidate** | Serving the last known-good *read* from a snapshot while a fresh one is fetched, then replacing it (ADR 0052) | *Optimistic UI*, which renders a predicted **write** outcome before the server confirms it. Mosaic predicts nothing |
+| **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built ([platform#2](https://github.com/mosaic-media/platform/blob/main/docs/adr/0002-module-storage-and-delivery-model.md)) | An inbound source, or anything Mosaic *consumes* |
+| **Stale-while-revalidate** | Serving the last known-good *read* from a snapshot while a fresh one is fetched, then replacing it ([platform#30](https://github.com/mosaic-media/platform/blob/main/docs/adr/0030-cache-first-rendering-and-source-health.md)) | *Optimistic UI*, which renders a predicted **write** outcome before the server confirms it. Mosaic predicts nothing |
 | **Platform** | Mosaic's own code and contracts | The binary; say *Platform Binary* for that |
-| **Supervisor** | The host-level process manager and single front door: runs the Platform and the Shell, terminates TLS, activates a Generation (ADR 0004, ADR 0005) | The Platform, or the Runtime. It no longer selects modules (ADR 0079) or builds anything (ADR 0063) |
-| **Issue** | A durable, typed statement that something is operationally wrong, held by the Platform until resolved (ADR 0119) | A GitHub issue, a log line, or a health state — health says whether traffic should arrive, an Issue says what a person should do |
-| **Suggestion** | A named action offered against an Issue, rendered into words by the client (ADR 0119) | A recommendation to the user about content |
+| **Supervisor** | The host-level process manager and single front door: runs the Platform and the Shell, terminates TLS, activates a Generation ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md), [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md)) | The Platform, or the Runtime. It no longer selects modules ([platform#49](https://github.com/mosaic-media/platform/blob/main/docs/adr/0049-the-platform-manages-extension-modules.md)) or builds anything ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)) |
+| **Issue** | A durable, typed statement that something is operationally wrong, held by the Platform until resolved ([platform#74](https://github.com/mosaic-media/platform/blob/main/docs/adr/0074-operational-findings-are-durable-state.md)) | A GitHub issue, a log line, or a health state — health says whether traffic should arrive, an Issue says what a person should do |
+| **Suggestion** | A named action offered against an Issue, rendered into words by the client ([platform#74](https://github.com/mosaic-media/platform/blob/main/docs/adr/0074-operational-findings-are-durable-state.md)) | A recommendation to the user about content |
 | **Store** | A typed persistence contract resolved within a transaction | The database |
 | **Node tree** | The content-agnostic object model | A filesystem |
-| **Single binary** | The Platform Binary the Supervisor compiles Modules into (ADR 0007) | The database, which runs as its own process. "Single binary dropped" referred only to not bundling PostgreSQL |
-| **Canon** | Reserved. The database is authoritative (ADR 0014) | `.mos` and NFO, which are exports |
+| **Single binary** | The Platform Binary the Supervisor compiles Modules into ([platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)) | The database, which runs as its own process. "Single binary dropped" referred only to not bundling PostgreSQL |
+| **Canon** | Reserved. The database is authoritative ([platform#10](https://github.com/mosaic-media/platform/blob/main/docs/adr/0010-storage-authority-and-transaction-scope.md)) | `.mos` and NFO, which are exports |
 | **Part** | The bytes an item plays, local path or remote reference | A section of a file, or a node |
 
 Add to this table whenever a word starts carrying two meanings. Removing an ambiguity is cheaper than debugging what it generated.
@@ -121,7 +121,7 @@ Add to this table whenever a word starts carrying two meanings. Removing an ambi
 
 ## Settled In Code
 
-The `platform` repository has the full critical path standing — a runnable process, the first optional module and its user-managed settings — with two slices built and then reverted under [ADR 0012](adr/0012-capabilities-do-not-own-stores.md). Where code exists, **the code is authoritative** and this repository does not restate it. Questions the old corpus argued about for chapters are already answered:
+The `platform` repository has the full critical path standing — a runnable process, the first optional module and its user-managed settings — with two slices built and then reverted under [platform#8](https://github.com/mosaic-media/platform/blob/main/docs/adr/0008-capabilities-do-not-own-stores.md). Where code exists, **the code is authoritative** and this repository does not restate it. Questions the old corpus argued about for chapters are already answered:
 
 | Question | Answer, in code |
 |---|---|
@@ -130,17 +130,17 @@ The `platform` repository has the full critical path standing — a runnable pro
 | Delivery semantics | At-least-once. Subscribers must be idempotent; a retry redelivers to every subscriber of that type |
 | Error taxonomy | Seven categories — `InvalidArgument`, `Unauthenticated`, `PermissionDenied`, `NotFound`, `Conflict`, `Unavailable`, `Internal`. No driver type escapes a module boundary |
 | Command boundary | Validate, authenticate, authorise, open `UnitOfWork`, load, apply, persist state and outbox in one transaction, return a Platform type |
-| Storage extensibility | `Tx` names a closed, Platform-owned store set; capabilities own no schema, so there is nothing to register. `StorageAdapter` remains a port. ADR 0012, superseding ADR 0001 |
+| Storage extensibility | `Tx` names a closed, Platform-owned store set; capabilities own no schema, so there is nothing to register. `StorageAdapter` remains a port. [platform#8](https://github.com/mosaic-media/platform/blob/main/docs/adr/0008-capabilities-do-not-own-stores.md), superseding [platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md) |
 | Package tiers | Core Platform, built-in module, external module. Postgres is a built-in module, not an adapter |
 | User authorisation | Real ABAC-shaped policy engine, default-deny, enforced at the application service |
 
 ## Deliberately Undecided
 
-- **Module-granular permissions.** A capability acts as its invoking user ([ADR 0017](adr/0017-how-a-capability-acts.md)), so the acting-principal question is decided. What a *module* may do *differently* from that user — who grants it, whether an operator approves at install, what a declaration commits to — is scoped to its own future ADR, triggered by the first capability that needs authority distinct from its user's.
-- **The module manifest's *full* shape**, and whether the declared unit is the module or the capability. The optional-module composition and invocation path now exists — an external-shaped module (the Stremio module) is registered and invoked through a capability registry with a *minimal* `Manifest` ([ADR 0019](adr/0019-module-capability-and-invocation.md), [ADR 0020](adr/0020-optional-module-composition.md)). What the manifest grows to carry (declared permissions, sourced media types) is still open, as is the Supervisor's build-time *selection* of modules.
+- **Module-granular permissions.** A capability acts as its invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)), so the acting-principal question is decided. What a *module* may do *differently* from that user — who grants it, whether an operator approves at install, what a declaration commits to — is scoped to its own future ADR, triggered by the first capability that needs authority distinct from its user's.
+- **The module manifest's *full* shape**, and whether the declared unit is the module or the capability. The optional-module composition and invocation path now exists — an external-shaped module (the Stremio module) is registered and invoked through a capability registry with a *minimal* `Manifest` ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md), [platform#16](https://github.com/mosaic-media/platform/blob/main/docs/adr/0016-optional-module-composition.md)). What the manifest grows to carry (declared permissions, sourced media types) is still open, as is the Supervisor's build-time *selection* of modules.
 - **Backpressure thresholds and queue bounds.**
-- **The first-administrator injection channel.** The Platform seeds the first admin from environment variables today, as a deliberate bridge ([ADR 0018](adr/0018-first-admin-bootstrap.md)). The eventual owner is Supervisor onboarding, and how it hands the initial credential to the Platform — a `secret://` reference, standard input, one-time material — is left to the work that designs that onboarding flow. `EnsureAdmin` stays the seam; only the channel changes.
-- **The public SDK surface** is published, proven and extracted ([ADR 0016](adr/0016-published-contract-surface.md)). It is its own module — [`github.com/mosaic-media/sdk`](https://github.com/mosaic-media/sdk) — carrying the content services, models and an opaque `Caller`, with the store contracts kept internal. `v0.1.0` extracted the content surface; `v0.2.0` adds the `Capability` interface a module implements ([ADR 0019](adr/0019-module-capability-and-invocation.md)); `v0.3.0` adds the `ImportRequest` struct that hands a module its user-managed settings ([ADR 0021](adr/0021-module-settings.md)). The Platform depends on it as an external module; the reference capability imported an anime end to end against a real database, and the first optional module (the Stremio addon source) is now composed in, invoked through the capability registry, and configured at runtime by a user pasting an addon manifest URL. The critical path is complete, and the composition-and-invocation half of the extension story with it.
+- **The first-administrator injection channel.** The Platform seeds the first admin from environment variables today, as a deliberate bridge ([platform#14](https://github.com/mosaic-media/platform/blob/main/docs/adr/0014-first-admin-bootstrap.md)). The eventual owner is Supervisor onboarding, and how it hands the initial credential to the Platform — a `secret://` reference, standard input, one-time material — is left to the work that designs that onboarding flow. `EnsureAdmin` stays the seam; only the channel changes.
+- **The public SDK surface** is published, proven and extracted ([platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)). It is its own module — [`github.com/mosaic-media/sdk`](https://github.com/mosaic-media/sdk) — carrying the content services, models and an opaque `Caller`, with the store contracts kept internal. `v0.1.0` extracted the content surface; `v0.2.0` adds the `Capability` interface a module implements ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md)); `v0.3.0` adds the `ImportRequest` struct that hands a module its user-managed settings ([platform#17](https://github.com/mosaic-media/platform/blob/main/docs/adr/0017-module-settings.md)). The Platform depends on it as an external module; the reference capability imported an anime end to end against a real database, and the first optional module (the Stremio addon source) is now composed in, invoked through the capability registry, and configured at runtime by a user pasting an addon manifest URL. The critical path is complete, and the composition-and-invocation half of the extension story with it.
 
 ---
 

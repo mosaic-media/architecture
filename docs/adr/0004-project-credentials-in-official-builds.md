@@ -11,20 +11,20 @@ the same symbol path its release build uses.
 `module-fanart-tv` had the symbol, the three-state screen, the single-reader
 function and this record's whole policy in a doc comment — and the comment named
 `./cmd/mosaic-platform`, a build
-[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md) had
+[platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md) had
 taken it out of. No workflow injected the key, nothing checked, and every
 released binary shipped an empty one while the module answered "fanart.tv API key
 not set". **The chain is built and has not been seen working**: nobody has yet
 put a fanart clearlogo on a hero and looked at it, which is what the roadmap
 slice asked for and what a green gate cannot stand in for. **Partly supersedes
-[ADR 0072](0072-the-guaranteed-metadata-provider-needs-no-credential.md): the
-Mosaic-held-key alternative it rejected is reversed here. The rest of ADR 0072
+[module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md): the
+Mosaic-held-key alternative it rejected is reversed here. The rest of [module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md)
 stands, and `module-cinemeta` remains the zero-configuration floor.**
 **Date:** 2026-07-26
 
 ## Context
 
-[ADR 0072](0072-the-guaranteed-metadata-provider-needs-no-credential.md) rejected
+[module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md) rejected
 shipping a Mosaic-held key on four grounds: a key in a public binary is not a
 secret; one key means one rate limit shared by every install; it makes Mosaic a
 party to a third party's terms on behalf of its users; and it is a cost and
@@ -32,7 +32,7 @@ distribution commitment. All four are still true.
 
 Two things changed since.
 
-**The product's requirement moved from identification to presentation.** ADR 0072
+**The product's requirement moved from identification to presentation.** [module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md)
 answered *can a fresh install identify content*, and `module-cinemeta` answers it
 with no credential at all. The first release asks whether a fresh install can
 *present* content — similar and related titles, collections, certifications,
@@ -51,8 +51,8 @@ carefully in a Go comment and nothing that implements it.
 that got missed. A core module is linked into `cmd/mosaic-platform`, so
 `platform`'s release workflow is the only place a `-X` can reach it. An
 **extension** module is cross-compiled by its own repository and distributed
-through the signed registry ([ADR 0065](0065-module-distribution-and-trust.md),
-[ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md)), so
+through the signed registry ([platform#40](https://github.com/mosaic-media/platform/blob/main/docs/adr/0040-module-distribution-and-trust.md),
+[platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)), so
 its `-X` belongs in *its* `release.yml`. `module-fanart-tv`'s comment still names
 the core path it was moved off, which is exactly how a credential can be
 thoroughly documented and never linked.
@@ -105,13 +105,13 @@ clearable, with clearing stated to fall back rather than to break).
 guarantee-clause provider. `module-cinemeta` stays core and stays the
 zero-configuration floor, because a shared credential can be revoked or throttled
 and a guarantee resting on one is not a guarantee. This record narrows what
-ADR 0072's guarantee is claimed to deliver: **installability, not richness.**
+[module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md)'s guarantee is claimed to deliver: **installability, not richness.**
 
 ## Alternatives considered
 
 **Collect a key during onboarding.** *Rejected.* It puts a third-party sign-up in
 the middle of a first run, and every screen the release cares about is degraded
-until somebody finishes it. It was ADR 0072's other rejected option, for the same
+until somebody finishes it. It was [module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md)'s other rejected option, for the same
 reason.
 
 **Ship no project credentials and accept Cinemeta-grade richness by default.**
@@ -148,7 +148,7 @@ is a new record when it does.
   extension module's key is a module release, a registry catalogue bump and a
   republish — and an install **pins the version it installed** and re-adopts it
   from disk across restarts
-  ([ADR 0081](0081-extension-installation-is-user-initiated-and-persistent.md)),
+  ([platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)),
   so a rotated key does not reach it until that user updates the extension. A
   revoked extension credential is therefore a degraded capability on every
   install until each one acts. Opt-in automatic extension updates would close

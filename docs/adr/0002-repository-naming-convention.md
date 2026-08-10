@@ -1,6 +1,6 @@
 # Repository names encode role, not the org — drop the redundant prefix
 
-**Status:** Accepted; the convention stands and the table below is the state of the day it was applied. Two of its rows have moved since: `sdui` was renamed again to `contracts` by [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md) (`github.com/mosaic-media/contracts`), and the three web repositories left untouched here were consolidated into `web` and archived by [ADR 0042](0042-frontend-workspace.md)
+**Status:** Accepted; the convention stands and the table below is the state of the day it was applied. Two of its rows have moved since: `sdui` was renamed again to `contracts` by [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md) (`github.com/mosaic-media/contracts`), and the three web repositories left untouched here were consolidated into `web` and archived by [web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md)
 **Date:** 2026-07-21
 
 ## Context
@@ -20,8 +20,8 @@ edges and point opposite ways:
 
 - **Inbound** — Mosaic consumes a foreign system. The Stremio integration is a
   Go client of the Stremio addon protocol, built against the SDK, importing
-  nothing of the Platform ([ADR 0019](0019-module-capability-and-invocation.md),
-  [ADR 0037](0037-completing-the-stremio-source-surface.md)). It is an
+  nothing of the Platform ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md),
+  [module-stremio-addons#1](https://github.com/mosaic-media/module-stremio-addons/blob/main/docs/adr/0001-completing-the-stremio-source-surface.md)). It is an
   anti-corruption layer: the foreign shape stops at its boundary.
 - **Outbound** — Mosaic exposes *itself* through a foreign client's protocol, so
   that client can talk to Mosaic thinking it is talking to something else. A
@@ -32,7 +32,7 @@ These are inverses. A bare name — `stremio`, `jellyfin` — hides the directio
 *and* reads as a fork or mirror of the upstream project rather than as Mosaic's
 adaptor to it. This is the one place a prefix earns its keep.
 
-[ADR 0042](0042-frontend-workspace.md) asked a related but distinct question —
+[web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md) asked a related but distinct question —
 *how many* repositories should exist, and which boundaries justify a split. This
 ADR asks the orthogonal question: *whatever* repositories exist, **what are they
 called.** The two compose: 0042 decides the web packages collapse into one
@@ -48,17 +48,17 @@ an integration, not merely that the repo belongs to Mosaic.**
 |---|---|---|
 | **Core / contracts** | bare name | `platform`, `sdk`, `sdui`, `architecture` |
 | **Modules** — inbound, Mosaic consumes an upstream (ACL) | `module-<system>` | `module-stremio-addons` |
-| **Consumer modules** — act on the materialised library rather than sourcing from an upstream | `module-<capability>` | `module-remote-playback` ([ADR 0045](0045-playback-consumer-and-media-origin.md)) |
+| **Consumer modules** — act on the materialised library rather than sourcing from an upstream | `module-<capability>` | `module-remote-playback` ([platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md)) |
 | **Gateways** — outbound, Mosaic hosts a foreign protocol for downstream clients (facade) | `gateway-<system>` | *reserved — none built; e.g. a future `gateway-jellyfin`* |
-| **Clients** — web / native | target name, not framework name | `web` ([ADR 0042](0042-frontend-workspace.md)); future `ios`, `android` |
+| **Clients** — web / native | target name, not framework name | `web` ([web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md)); future `ios`, `android` |
 
 Four points of the scheme are load-bearing:
 
 - **A consumer module names its *capability*, because it has no upstream.**
-  [ADR 0036](0036-capability-gated-affordances.md)'s consumer roles act on the
+  [platform#24](https://github.com/mosaic-media/platform/blob/main/docs/adr/0024-capability-gated-affordances.md)'s consumer roles act on the
   materialised library rather than pulling a system in, so `<system>` has nothing
   to fill it. `module-remote-playback` names what it does. It keeps the `module-`
-  prefix because it is a Module in the [ADR 0007](0007-static-go-module-composition.md)
+  prefix because it is a Module in the [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)
   sense — compiled in, SDK-only, independently versioned — and the prefix marks
   that shape, not the direction.
 - **`module-<system>` names the *foreign system*, precisely.** The Stremio repo
@@ -70,7 +70,7 @@ Four points of the scheme are load-bearing:
   Mosaic's surface *out* under a foreign protocol. Different direction, different
   prefix, so the two never read alike in a repo list. No gateway is built, and
   its implementation shape — whether a gateway is itself a Module in the
-  [ADR 0007](0007-static-go-module-composition.md) sense or Platform transport
+  [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md) sense or Platform transport
   code — is out of scope here and undecided.
 - **Clients take the *target* name, never the framework.** `mosaic-media/web`,
   not `mosaic-media/react`: a framework name reads as a fork of that framework
@@ -79,7 +79,7 @@ Four points of the scheme are load-bearing:
 
 **Package identity is not repository identity.** The npm scope already decouples
 them — `@mosaic-media/sdui-react` is unchanged by any repo rename, because the
-package boundary ([ADR 0016](0016-published-contract-surface.md)), not the repo
+package boundary ([platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)), not the repo
 boundary, is what a consumer depends on. Only two things move with a repo name:
 the GitHub URL (which GitHub redirects) and the **Go module path** (which it does
 not — see Consequences).
@@ -99,7 +99,7 @@ published tag; the module *identity* changing warranted a minor bump on each.
 | `mosaic-module-stremio` | `module-stremio-addons` | `github.com/mosaic-media/module-stremio-addons` | v0.8.0 |
 
 The three web repos (`mosaic-shell`, `mosaic-sdui-react`, `mosaic-storybook`)
-were left untouched pending the [ADR 0042](0042-frontend-workspace.md)
+were left untouched pending the [web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md)
 consolidation into `web`; renaming them individually would be work thrown away by
 that merge.
 
@@ -141,7 +141,7 @@ does not say *which* client it is. The target name does both jobs.
   Jellyfin-compatible gateway is the anticipated one — instantiates the category
   and will trigger its own ADR for *what a gateway is*, distinct from this ADR's
   concern of what it is *called*.
-- **This refines [ADR 0042](0042-frontend-workspace.md).** That ADR used the
+- **This refines [web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md).** That ADR used the
   working name `mosaic-web`; under this convention the consolidated client
   workspace is `web`.
 - **"Gateway" enters the controlled vocabulary** (`docs/index.md`) as a reserved

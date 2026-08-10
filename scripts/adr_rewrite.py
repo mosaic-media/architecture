@@ -42,12 +42,22 @@ SKIP_NAMES = {"package-lock.json", "go.sum"}
 TEXT_SUFFIXES = {
     ".md", ".go", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".py", ".sh", ".yml", ".yaml",
     ".json", ".proto", ".toml", ".txt", ".sql", ".css", ".html",
+    # Extensionless files carry citations too — Dockerfile, .gitignore. This set
+    # must stay equal to the lint's, or the lint reports what the rewriter
+    # cannot reach and the ratchet stops at a floor nobody can lower.
+    "",
 }
 
 # `[ADR 0012](anything)` — an existing link, whose target is replaced wholesale.
 LINKED = re.compile(r"\[ADR[\s-]?(\d{1,4})\]\([^)]*\)")
 # A bare `ADR 0012` / `ADR-0012` / `ADR0012` not already consumed above.
 BARE = re.compile(r"\bADR[\s-]?(\d{1,4})\b")
+# An already-qualified citation of a record that is about to move *again*.
+# A repository migrated in an earlier phase carries links to records still in
+# their old home; when those move, the links break. Phase N's outbound links
+# are phase N+1's work, which the pilot found the hard way.
+def requalify_pattern(repo: str) -> re.Pattern:
+    return re.compile(r"\[" + re.escape(repo) + r"#(\d+)\]\([^)]*\)|\b" + re.escape(repo) + r"#(\d+)\b")
 # The number buried in an identifier — `TestRoleClassTableMatchesADR0063`. It
 # cannot be rewritten: `platform#42` is not a legal identifier in any language
 # here. So it is reported instead, because a test asserting against a record
@@ -95,7 +105,8 @@ def load_mapping(path: Path) -> dict[int, Home]:
 
 
 def rewrite_markdown(
-    text: str, mapping: dict[int, Home], repo: str, from_dir: Path, adr_dir: Path
+    text: str, mapping: dict[int, Home], repo: str, from_dir: Path, adr_dir: Path,
+    requalify: str | None = None,
 ) -> tuple[str, Counter]:
     hits: Counter = Counter()
 
@@ -126,10 +137,25 @@ def rewrite_markdown(
 
     text = LINKED.sub(on_linked, text)
     text = BARE.sub(on_bare, text)
+    if requalify:
+        def on_requalify(m: re.Match) -> str:
+            number = int(m.group(1) or m.group(2))
+            home = mapping.get(number)
+            # Skip only when nothing changed. A record that stays in the same
+            # repository can still be renumbered — architecture#22 became
+            # architecture#1 — and skipping on repository alone leaves a
+            # citation naming a number that no longer exists.
+            if home is None or (home.repo == requalify and home.number == number):
+                return m.group(0)
+            hits["requalified"] += 1
+            return link_for(home)
+        text = requalify_pattern(requalify).sub(on_requalify, text)
     return text, hits
 
 
-def rewrite_plain(text: str, mapping: dict[int, Home]) -> tuple[str, Counter]:
+def rewrite_plain(
+    text: str, mapping: dict[int, Home], requalify: str | None = None
+) -> tuple[str, Counter]:
     """Everything that is not Markdown: the label alone, no link.
 
     Go, TypeScript, YAML and shell carry these in comments and test names,
@@ -146,7 +172,21 @@ def rewrite_plain(text: str, mapping: dict[int, Home]) -> tuple[str, Counter]:
         hits["bare"] += 1
         return home.label()
 
-    return BARE.sub(on_bare, text), hits
+    text = BARE.sub(on_bare, text)
+    if requalify:
+        def on_requalify(m: re.Match) -> str:
+            number = int(m.group(1) or m.group(2))
+            home = mapping.get(number)
+            # Skip only when nothing changed. A record that stays in the same
+            # repository can still be renumbered — architecture#22 became
+            # architecture#1 — and skipping on repository alone leaves a
+            # citation naming a number that no longer exists.
+            if home is None or (home.repo == requalify and home.number == number):
+                return m.group(0)
+            hits["requalified"] += 1
+            return home.label()
+        text = requalify_pattern(requalify).sub(on_requalify, text)
+    return text, hits
 
 
 def main() -> None:
@@ -164,6 +204,12 @@ def main() -> None:
              "the repository's own guard — contracts declares its set in "
              "scripts/check-generated.sh — rather than guessing from filenames: ts/ui.ts is "
              "generated and buf.gen.yaml is not, and no naming rule gets both right.",
+    )
+    ap.add_argument(
+        "--requalify", default=None, metavar="REPO",
+        help="also rewrite citations already qualified against REPO, whose records are "
+             "moving again. A repository migrated in an earlier phase links to records "
+             "still in their old home, and those links break when they move.",
     )
     ap.add_argument("--show", type=int, default=10)
     ap.add_argument(
@@ -192,7 +238,11 @@ def main() -> None:
             text = path.read_text()
         except (UnicodeDecodeError, OSError):
             continue
-        if "ADR" not in text:
+        # Cheap early-out. It must also consider the requalify prefix: a file
+        # migrated in an earlier phase carries only qualified citations and no
+        # longer contains the literal "ADR" at all, so testing for that alone
+        # skips exactly the files requalification exists to fix.
+        if "ADR" not in text and not (args.requalify and f"{args.requalify}#" in text):
             continue
 
         # A generated file's citations came from its source; change them there
@@ -213,20 +263,23 @@ def main() -> None:
 
         if path.suffix == ".md":
             new, hits = rewrite_markdown(
-                text, mapping, args.repo, path.parent, (args.root / args.adr_dir).resolve()
+                text, mapping, args.repo, path.parent,
+                (args.root / args.adr_dir).resolve(), args.requalify,
             )
         else:
-            new, hits = rewrite_plain(text, mapping)
+            new, hits = rewrite_plain(text, mapping, args.requalify)
         totals.update(hits)
         if new != text:
-            changed.append((str(rel), hits["linked"] + hits["bare"]))
+            changed.append((str(rel), hits["linked"] + hits["bare"] + hits["requalified"]))
             if args.apply:
                 path.write_text(new)
 
     verb = "rewrote" if args.apply else "would rewrite"
-    print(f"{args.repo}: {verb} {totals['linked'] + totals['bare']} citations in {len(changed)} files")
+    moved_total = totals["linked"] + totals["bare"] + totals["requalified"]
+    print(f"{args.repo}: {verb} {moved_total} citations in {len(changed)} files")
     print(f"  already-linked rewritten in place : {totals['linked']}")
     print(f"  bare citations                    : {totals['bare']}")
+    print(f"  requalified from an earlier phase : {totals['requalified']}")
     print(f"  left alone, not in the mapping    : {totals['unmapped']}")
     for rel, n in sorted(changed, key=lambda x: -x[1])[: args.show]:
         print(f"    {n:5}  {rel}")

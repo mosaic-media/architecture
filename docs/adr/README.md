@@ -6,122 +6,10 @@ A record is cited from another repository as `architecture#N`, written as a link
 
 | # | Record | Status |
 |---|---|---|
-| 1 | [Transactional store extensibility](0001-transactional-store-extensibility.md) | Superseded by ADR 0012 |
-| 2 | [Module storage and delivery model](0002-module-storage-and-delivery-model.md) | Accepted |
-| 3 | [Platform as execution kernel](0003-platform-as-execution-kernel.md) | Accepted |
-| 4 | [Supervisor as Mosaic host manager](0004-supervisor-as-host-manager.md) | Accepted |
-| 5 | [Supervisor guarantees an intelligent interface](0005-supervisor-guarantees-an-interface.md) | Accepted; built in part. |
-| 6 | [Supervisor orchestrates isolated runtime builds](0006-supervisor-orchestrates-isolated-builds.md) | Accepted |
-| 7 | [Static Go module composition](0007-static-go-module-composition.md) | Accepted, and partly superseded — for the extension tier only. |
-| 8 | [SDK as public contract language](0008-sdk-as-public-contract-language.md) | Accepted |
-| 9 | [Developer Platform as an integrated toolchain](0009-developer-platform-toolchain.md) | Accepted |
-| 10 | [Test Harness as development modules](0010-test-harness-as-development-modules.md) | Accepted |
-| 11 | [Platform transports events, modules own domain events](0011-platform-transports-events.md) | Accepted |
-| 12 | [Capabilities do not own stores](0012-capabilities-do-not-own-stores.md) | Accepted. Supersedes ADR 0001. |
-| 13 | [The object graph: Node, Part, Relation](0013-object-graph.md) | Accepted. Refined by ADR 0015, which settles whether the type vocabularies below are open or closed. |
-| 14 | [Storage authority, media linking and transaction scope](0014-storage-authority-and-transaction-scope.md) | Accepted |
-| 15 | [Open and closed vocabularies in the object graph](0015-open-and-closed-vocabularies.md) | Accepted. Refines ADR 0013. |
-| 16 | [The published contract surface](0016-published-contract-surface.md) | Accepted. Refines ADR 0008. |
-| 17 | [How a capability acts](0017-how-a-capability-acts.md) | Accepted and built. Refines ADR 0008. |
-| 18 | [First-administrator bootstrap](0018-first-admin-bootstrap.md) | Accepted. Expected to be superseded when Supervisor onboarding exists. |
-| 19 | [The module capability and invocation contract](0019-module-capability-and-invocation.md) | Accepted |
-| 20 | [Optional-module composition](0020-optional-module-composition.md) | Accepted. Parts are a deliberate bridge until the Supervisor's Build Pipeline exists. |
-| 21 | [User-managed module settings](0021-module-settings.md) | Accepted |
-| 22 | [Licensing](0022-licensing.md) | Accepted; the licensing is unchanged. |
-| 26 | [The React SDUI runtime is a shared package](0026-react-sdui-runtime.md) | Accepted; |
-| 27 | [Modules as typed capability providers](0027-modules-as-typed-capability-providers.md) | Accepted |
-| 28 | [Virtual browse and materialized library](0028-virtual-and-materialized-content.md) | Accepted |
-| 29 | [The Platform's SDUI emit-side](0029-sdui-emit-side.md) | Accepted |
-| 30 | [The artwork proxy (and cache)](0030-artwork-proxy-and-cache.md) | Accepted |
-| 31 | [The Shell is a pure renderer; the app shell is server-emitted](0031-server-owned-app-shell.md) | Accepted |
-| 32 | [The live session over a bidirectional WebSocket](0032-live-session-websocket.md) | Superseded by [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) — its goals (streaming input, server push, region updates, a technology-agnostic client) are unchanged and carried forward; |
-| 33 | [Supervisor-driven live-session handover](0033-supervisor-driven-live-handover.md) | Superseded by [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) — its bespoke going-away/reconnect handover folds into [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)'s stream resume (the Subscribe cursor replays or rebuilds across a rolling upgrade). |
-| 34 | [Rich metadata: the descriptive surface grows a preview](0034-rich-metadata-preview.md) | Accepted. |
-| 35 | [Metadata is a required capability with a default provider](0035-metadata-as-required-capability.md) | Accepted (the requirement is met; the mechanism differs from the one specified here). |
-| 36 | [Capability-gated affordances and consumer roles](0036-capability-gated-affordances.md) | Accepted; built in part, and the gate reads something else than this record specifies. |
-| 37 | [Completing the Stremio source surface](0037-completing-the-stremio-source-surface.md) | Accepted |
-| 38 | [Module-contributed settings UI](0038-module-contributed-settings-ui.md) | Accepted (built) |
-| 39 | [Server-owned navigation: a screen-agnostic client](0039-server-owned-navigation.md) | Proposed, and not what is built. |
-| 42 | [The web frontend is one workspace; split repos only to enforce a boundary](0042-frontend-workspace.md) | Accepted — executed (the web workspace holds the runtime, Shell and storybook as independent packages; the three source repos are archived) |
-| 43 | [Repository names encode role, not the org — drop the redundant prefix](0043-repository-naming-convention.md) | Accepted; the convention stands and the table below is the state of the day it was applied. |
-| 45 | [The playback consumer contract and the Platform-hosted media origin](0045-playback-consumer-and-media-origin.md) | Accepted (built for Direct). |
-| 46 | [Playback state is Platform-owned](0046-playback-state-is-platform-owned.md) | Accepted (built, except the continue-watching rail and watched marks on EpisodeRow, which are slice 6). |
-| 47 | [The player is a client primitive over a server-issued ticket](0047-player-as-client-primitive.md) | Accepted; built. playPart resolves to a Player node carrying a ticket URL, and the web runtime renders it. |
-| 48 | [Stream selection against a client profile](0048-stream-selection-against-a-client-profile.md) | Accepted (built, against a client-declared profile). |
-| 49 | [The resolution cache and capability classes](0049-resolution-cache-and-capability-classes.md) | Accepted (built, except the refresh job). |
-| 50 | [Probing, and the per-stream playback decision](0050-probing-and-the-per-stream-playback-decision.md) | Accepted; built. |
-| 51 | [Modules as anti-corruption layers: source dialects and a tested-source registry](0051-modules-as-anti-corruption-layers.md) | Accepted; built in part — the typed fields, not the dialect table. |
-| 52 | [Cache-first rendering, and telling the truth when a source is down](0052-cache-first-rendering-and-source-health.md) | Accepted and built (roadmap M2.6). Built in part in one respect: only home and its catalogs render cache-first, as this record scopes them; |
-| 53 | [Telemetry is ambient in context](0053-telemetry-is-ambient-in-context.md) | Accepted (built) — no constructor takes a logger, telemetry.From(ctx) is the call, and two Printfs survive in non-test code. |
-| 54 | [The correlation ID is the trace ID](0054-the-correlation-id-is-the-trace-id.md) | Accepted (built) — the Shell mints the trace where the user clicks, a Connect interceptor carries traceparent on every call, and Event.CorrelationID has a source. |
-| 55 | [Instrument at the seams](0055-instrument-at-the-seams.md) | Accepted (built) — all nine seams, including seam nine: netguard.ModuleClient is handed to every module in place of nil, which closed the SSRF gap alongside the tracing. |
-| 56 | [Redaction classes are the PII boundary](0056-redaction-classes-are-the-pii-boundary.md) | Accepted (built, except its enforcement). |
-| 57 | [Audit is a store, not a log stream](0057-audit-is-a-store-not-a-log-stream.md) | Proposed. |
-| 58 | [Telemetry storage, retention, and expert mode](0058-telemetry-storage-retention-and-expert-mode.md) | Accepted (built for logs and spans). |
-| 59 | [Modules observe through the SDK](0059-modules-observe-through-the-sdk.md) | Built, and partly superseded by ADR 0128: the decision stands — the Platform owns the observability plane, the SDK declares the surface, a module configures nothing — and the rejection of the OpenTelemetry API does not. |
-| 60 | [The Supervisor observes independently](0060-the-supervisor-observes-independently.md) | Built in part — the writing, not the reading. |
-| 61 | [One client transport: retire GraphQL](0061-one-client-transport.md) | Accepted — built (the GraphQL transport is deleted; AuthService mints sessions over Connect). |
-| 62 | [Two module tiers](0062-two-module-tiers.md) | Proposed; the classification half is built (two core metadata modules exist). |
-| 63 | [The Platform binary is built by CI; the Supervisor selects, not compiles](0063-platform-binary-built-by-ci.md) | Proposed; the CI release matrix is built (the producing half). |
-| 64 | [The extension module boundary](0064-extension-module-boundary.md) | Accepted; built in part. |
-| 65 | [Module distribution and trust: signed binaries and user-added repositories](0065-module-distribution-and-trust.md) | Proposed; built in part. |
-| 66 | [Authorization is carried in the type](0066-authorization-is-carried-in-the-type.md) | Accepted (built) |
-| 67 | [Authorization has three mechanisms, not one](0067-three-authorization-mechanisms.md) | Proposed |
-| 68 | [One principal, many credentials](0068-one-principal-many-credentials.md) | Proposed. Unbuilt apart from domain.PasskeyCredential and two store methods. |
-| 69 | [Privilege cannot escalate through delegation](0069-privilege-cannot-escalate.md) | Accepted (built) |
-| 70 | [The web player is the browser, not a media framework](0070-the-web-player-is-the-browser.md) | Accepted (built) |
-| 71 | [Content artwork is stored on the node](0071-content-artwork-is-stored-on-the-node.md) | Accepted, and extended twice on its own reasoning. |
-| 72 | [The guaranteed metadata provider needs no credential](0072-the-guaranteed-metadata-provider-needs-no-credential.md) | Built. |
-| 73 | [Stream resolution is decoupled from metadata provenance](0073-stream-resolution-is-decoupled-from-metadata-provenance.md) | Accepted |
-| 74 | [Artwork is a candidate set](0074-artwork-is-a-candidate-set.md) | Accepted; built, except the user's half of the selection rule. |
-| 75 | [The artwork provider role](0075-the-artwork-provider-role.md) | Accepted; built. |
-| 76 | [A curated stream provider beside the addon host](0076-a-curated-stream-provider-beside-the-addon-host.md) | Accepted |
-| 77 | [go-plugin is the extension module harness](0077-go-plugin-as-the-extension-harness.md) | Accepted; built. |
-| 78 | [Core modules keep their repositories; CI carries the version bump](0078-core-modules-keep-their-repositories.md) | Proposed |
-| 79 | [The Platform manages extension modules; the Supervisor manages the binary](0079-the-platform-manages-extension-modules.md) | Accepted; built, except the third-party repository surface. |
-| 80 | [Deployment topologies: a native binary that runs in a container or on bare metal](0080-deployment-topologies.md) | Proposed. |
-| 81 | [Extension installation is user-initiated and persistent](0081-extension-installation-is-user-initiated-and-persistent.md) | Accepted; built. |
-| 84 | [Vocabulary negotiation and deliberate degradation](0084-vocabulary-negotiation-and-deliberate-degradation.md) | Accepted (built) |
-| 90 | [Lifecycle triggers, and the telemetry lane that is not needed](0090-lifecycle-triggers-and-the-absent-telemetry-lane.md) | Accepted (built) |
-| 97 | [The pre-session tree, and what a locked door may say](0097-the-pre-session-tree.md) | Accepted, built, and withdrawn on 2026-07-25 — the code was removed in contracts v0.48.0 and the Platform and Shell commits that used it were reverted. |
-| 98 | [Claiming an unclaimed server](0098-claiming-an-unclaimed-server.md) | Accepted, built, withdrawn on 2026-07-25 with the pre-session surface it rode on (ADR 0097), and rebuilt on 2026-07-27 (M1.1) over ADR 0101's bootstrap and ADR 0106's action lane. |
-| 99 | [The development module repository, and the build tag that keeps it out of releases](0099-the-development-module-repository.md) | Accepted; built. |
-| 100 | [The browse roles rank their providers; they do not union them](0100-browse-roles-rank-their-providers.md) | Built. |
-| 101 | [The pre-session bootstrap carries its own vocabulary](0101-the-pre-session-bootstrap.md) | Accepted and built. M0.2 landed the RPC, the transitively-closed definition subset, the skin and the negotiated tree; |
-| 102 | [The session credential is a bearer pair every client can hold](0102-the-session-credential-is-a-bearer-pair.md) | Accepted and built in part (M0.3): the pair, rotation, reuse detection, the device binding, idle expiry inside absolute expiry, per-device revocation and the device list all landed, and the web client stores the pair in localStorage. |
-| 103 | [One library, many viewers](0103-one-library-many-viewers.md) | Accepted and built. |
-| 104 | [The library is built from rules, and a job maintains it](0104-the-library-is-built-from-rules.md) | Accepted and built in part in roadmap M2a, on M0.1's runner, scheduler and system principal. |
-| 105 | [Official builds carry project credentials, and a personal key replaces one](0105-project-credentials-in-official-builds.md) | Accepted. Built for both modules. module-tmdb is core, so platform's release workflow links defaultReadAccessToken; |
-| 106 | [The pre-session action lane](0106-the-pre-session-action-lane.md) | Accepted and built (M1.1, M1.2). Extends ADR 0101, which decided how a doorway arrives and left open how its controls act. |
-| 107 | [The Platform keeps what a source told it, and tops up the tree](0107-the-platform-keeps-what-a-source-told-it.md) | Accepted and built in roadmap M2a, discharging M2.7's durable metadata cache. |
-| 108 | [The origin is a pipe only where it must be](0108-the-origin-is-a-pipe-only-where-it-must-be.md) | Accepted, and partly wrong as written. The measurement stands. |
-| 109 | [The transcoded stream is segmented, not byte-addressed](0109-the-transcoded-stream-is-segmented.md) | Accepted. Built on both sides, and never played. internal/transport/playback serves index.m3u8, init.mp4 and numbered segments; |
-| 110 | [The segment length is measured from the source, not chosen](0110-the-segment-length-is-measured.md) | Superseded wholly by ADR 0111, and never built. Both decisions here are wrong. |
-| 111 | [The playlist is a nominal grid, and a segment index is a seek instruction](0111-the-playlist-is-a-nominal-grid.md) | Accepted. Built, and never played. |
-| 112 | [Language is a person's preference, and subtitles answer to whether it was met](0112-language-is-a-persons-preference.md) | Accepted. Built for embedded subtitle tracks on the transcoded path. |
-| 113 | [Subtitles are a rendition, extracted a window at a time](0113-subtitles-are-a-rendition.md) | Accepted. Built for embedded tracks on the transcoded path. Not built for direct-played releases or for module-provided subtitles; |
-| 114 | [A subtitle track has a form, and only one form can be burned into the picture](0114-a-subtitle-track-has-a-form.md) | Accepted. Built. The classification, the three delivery paths and the opt-in setting are in. |
-| 115 | [A styled subtitle track goes to the client whole, and burning is what is left when it cannot](0115-a-styled-subtitle-goes-to-the-client.md) | Accepted. |
-| 116 | [A preference is a default, an override is one sitting](0116-a-preference-is-a-default-an-override-is-a-sitting.md) | Accepted. Built. The candidate list, the picker screen, the no-candidate state and the per-play audio and subtitle overrides are in. |
-| 117 | [The subtitles role gets a consumer, and the Platform fetches what it finds](0117-the-subtitles-role-gets-a-consumer.md) | Accepted. Built. |
-| 118 | [Playing something unowned adds it](0118-playing-something-unowned-adds-it.md) | Accepted. Built. |
-| 119 | [Operational findings are durable state](0119-operational-findings-are-durable-state.md) | Built. The register, its screen and the Supervisor's spool all landed; unhealthy and unsupported did not — see the roadmap. |
-| 120 | [The children listen on Unix sockets](0120-the-children-listen-on-unix-sockets.md) | Built. |
-| 121 | [Two supervised images, a DIY path, and the Supervisor's own contract dependency](0121-two-supervised-images-and-a-diy-path.md) | Built in part, and partly superseded: the import boundary was widened again by ADR 0123; the rest stands. |
-| 122 | [Two signing keys, held offline, rotated by overlap](0122-the-signing-key-hierarchy.md) | Proposed. Partly built: one of the two keys exists and is in use — the registry key signs the live index and the Platform verifies it. |
-| 123 | [The Supervisor answers the Platform's client surface when the Platform is absent](0123-the-supervisor-answers-the-platforms-client-surface.md) | Built. The front door switches, both services are answered, and the Shell needed no code for it. |
-| 124 | [The Platform and the Shell are resolved independently and paired by contract major](0124-artefacts-are-paired-by-contract-major.md) | Proposed and partly superseded: the pairing shape stands, and the component it reads was corrected by ADR 0127 — pre-1.0 it is the contract minor, not the major. |
-| 125 | [Major upgrades are staged, never automatic](0125-major-upgrades-are-never-automatic.md) | Proposed and partly superseded: the three levels and the never-automatic invariant stand, and the version they read was corrected by ADR 0127 — the contract's, not the artefact's. |
-| 126 | [Before 1.0, the upgrade caution window shifts by one](0126-before-1-0-the-caution-window-shifts-by-one.md) | Superseded by ADR 0127. The window shift was applied to the artefact's own version and withheld from the contract's; |
-| 127 | [The monitored version is the contract, not the artefact](0127-the-monitored-version-is-the-contract-not-the-artefact.md) | Proposed. Nothing here is built. |
-| 128 | [OpenTelemetry is the telemetry implementation](0128-opentelemetry-is-the-telemetry-implementation.md) | Built in part, and partly superseded by ADR 0135: the decision that OpenTelemetry is Mosaic's telemetry implementation stands in every process, and the dependency clause — that the SDK may require the OTel API modules — is reversed. |
-| 129 | [The upgrade channel is the handoff and the register](0129-the-upgrade-channel-is-the-handoff-and-the-register.md) | Built. The Supervisor checks the catalogue on a schedule and spools an offer, polls GET /upgrade and carries out what it finds; |
-| 130 | [The module metric surface](0130-the-module-metric-surface.md) | Built. |
-| 131 | [Passkeys are an optional layer on a public origin](0131-passkeys-are-an-optional-layer-on-a-public-origin.md) | Proposed. Nothing here is built — PasskeyCredential, SavePasskey and ListPasskeys are the whole of what exists, exactly as before. |
-| 132 | [TOTP is the second factor that works everywhere](0132-totp-is-the-second-factor-that-works-everywhere.md) | Proposed. Nothing is built. domain.RecoveryFactor already exists — single-use, hashed, with ConsumedAt — and has never had a caller; |
-| 133 | [An optional capability is announced once, when it becomes possible](0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md) | Proposed. Nothing is built. |
-| 134 | [The install key](0134-the-install-key.md) | Proposed. The sealing envelope is built (internal/adapters/crypto/sealer.go); the key it needs is not, which is what this record is for. |
-| 135 | [The SDK carries no implementation](0135-the-sdk-carries-no-implementation.md) | Proposed. The SDK's go.mod still requires four OpenTelemetry API modules as this is written. |
+| 1 | [Licensing](0001-licensing.md) | Accepted; the licensing is unchanged. |
+| 2 | [Repository names encode role, not the org — drop the redundant prefix](0002-repository-naming-convention.md) | Accepted; the convention stands and the table below is the state of the day it was applied. |
+| 3 | [Two module tiers](0003-two-module-tiers.md) | Proposed; the classification half is built (two core metadata modules exist). |
+| 4 | [Official builds carry project credentials, and a personal key replaces one](0004-project-credentials-in-official-builds.md) | Accepted. Built for both modules. module-tmdb is core, so platform's release workflow links defaultReadAccessToken; |
 
 ## Records this repository depends on
 
@@ -129,13 +17,40 @@ Decisions held elsewhere that these records cite. They bind work here and are no
 
 **`contracts`**
 
-- [contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md)
-- [contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)
 - [contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)
-- [contracts#4](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0004-server-delivered-definitions-and-skin.md)
-- [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)
 - [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)
-- [contracts#7](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0007-components-are-authored-only-in-the-contract.md)
-- [contracts#8](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0008-one-generated-sdui-vocabulary.md)
-- [contracts#13](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0013-validation-and-the-symmetric-rejection.md)
-- [contracts#17](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0017-the-conformance-corpus.md)
+
+**`module-cinemeta`**
+
+- [module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md)
+
+**`module-stremio-addons`**
+
+- [module-stremio-addons#1](https://github.com/mosaic-media/module-stremio-addons/blob/main/docs/adr/0001-completing-the-stremio-source-surface.md)
+
+**`platform`**
+
+- [platform#2](https://github.com/mosaic-media/platform/blob/main/docs/adr/0002-module-storage-and-delivery-model.md)
+- [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)
+- [platform#10](https://github.com/mosaic-media/platform/blob/main/docs/adr/0010-storage-authority-and-transaction-scope.md)
+- [platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)
+- [platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md)
+- [platform#16](https://github.com/mosaic-media/platform/blob/main/docs/adr/0016-optional-module-composition.md)
+- [platform#23](https://github.com/mosaic-media/platform/blob/main/docs/adr/0023-metadata-as-required-capability.md)
+- [platform#24](https://github.com/mosaic-media/platform/blob/main/docs/adr/0024-capability-gated-affordances.md)
+- [platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md)
+- [platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)
+- [platform#39](https://github.com/mosaic-media/platform/blob/main/docs/adr/0039-extension-module-boundary.md)
+- [platform#40](https://github.com/mosaic-media/platform/blob/main/docs/adr/0040-module-distribution-and-trust.md)
+- [platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)
+
+**`sdk`**
+
+- [sdk#1](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0001-sdk-as-public-contract-language.md)
+- [sdk#2](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0002-modules-as-typed-capability-providers.md)
+- [sdk#5](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0005-modules-observe-through-the-sdk.md)
+
+**`web`**
+
+- [web#1](https://github.com/mosaic-media/web/blob/main/docs/adr/0001-react-sdui-runtime.md)
+- [web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md)

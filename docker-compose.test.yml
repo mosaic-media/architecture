@@ -57,7 +57,7 @@ services:
         python -m pip install -r requirements.txt
         python scripts/adr_index.py --repo architecture --check
         python scripts/adr_lint.py --repo architecture \
-          --max-unqualified 1449 \
+          --max-unqualified 0 \
           --exclude adr-migration-audit.md --exclude 'scripts/adr_*.py'
         mkdocs build --strict
 

@@ -36,7 +36,7 @@ TOP_LEVEL = {
 }
 
 # Words that are acronyms rather than words, so the PDF filename reads
-# `ADR-0008-SDK-...` rather than `ADR-0008-Sdk-...`.
+# `sdk#1-SDK-...` rather than `sdk#1-Sdk-...`.
 ACRONYMS = {"sdk", "sdui", "ui", "api", "ci", "cd", "pdf", "tv", "hls", "totp", "rpc", "id"}
 
 # The `nav:` entry for a decision record, e.g.
