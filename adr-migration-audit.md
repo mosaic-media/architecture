@@ -465,155 +465,177 @@ Replacing §8's ordering, given the stated reason:
 
 # Part IV — the action plan
 
-Written to be executed by this session and its subagents. Every task names the repository it touches, who can do it, what it depends on, and a **done-when** check that is mechanical wherever one exists.
-
-Two things are **blocked on you** and everything downstream waits on them; they are stated first. Two more are **environment blockers** that no amount of planning removes.
+**Revised 2026-08-10 after D1 and D2 were taken, `supervisor` was attached, and two design constraints were added.** Written to be executed by an agent session. Every task names its repository, its owner, its dependency, and a **done-when** check that is mechanical wherever one exists.
 
 ```mermaid
 graph TD
-  D[D · your two decisions] --> P2[P2 · build the tooling]
-  P1[P1 · fix in place<br/>needs no decision] --> P3
-  D --> P3[P3 · pilot one repo]
+  P0[P0 · settled: rubric, citation form,<br/>identity, supervisor attached]
+  P0 --> P1[P1 · fix records in place]
+  P0 --> P2[P2 · build the tooling]
+  P1 --> P3[P3 · pilot: contracts]
   P2 --> P3
-  P3 --> P4[P4 · roll out remaining repos]
-  P4 --> P5[P5 · CLAUDE.md restructure]
+  P3 --> P4[P4 · roll out remaining 11 repos]
+  P4 --> P5[P5 · write the CLAUDE.md corpus fresh]
   P5 --> P6[P6 · consolidation, optional]
   P6 --> P7[P7 · close out]
-  E[E · attach supervisor<br/>start Docker] --> P1
-  E --> P3
 ```
 
+## P0 — what is now settled
+
+| | Decision | Consequence |
+|---|---|---|
+| **D1** | **Option B — stewardship/locality.** Accepted. | The Part I mapping is the working plan: `platform` 81, `contracts` 19, `supervisor` 11, `sdk` 10, `web` 6, `architecture` 4, module repos 4. No carve-out was named, so `architecture` keeps the four the rubric gives it (0022, 0043, 0062, 0105). Say so if you want more. |
+| **D2** | **`repo#N`.** Accepted. | Textually distinct from `ADR NNNN`, so a stale citation fails loudly. The lint (P2.1) enforces it. |
+| **D4** | **A cross-repo reference must be an actual link, not a bare token.** New. | See "identity and citation" below. |
+| **D5** | **The number does not appear in the heading.** New. | Removes one of the three places it lives (§5) — the one whose omission builds green. |
+| **E1** | **Resolved.** `supervisor` is cloned at `/workspace/supervisor`, linked as `/home/user/supervisor`. | Measured below. |
+| **E2** | **Relaxed.** Docker is not required. | Checks run on the host where a toolchain exists; where none does, the check is *stated as unrun* rather than assumed. This is a deliberate departure from the container rule, which is itself being rewritten (P5). |
+
+### `supervisor`, now measured
+
+The one unmeasured number in this audit: **204 reference sites** — 189 bare prose citations and 15 absolute ADR URLs, across 44 files, citing 27 distinct records, in 11,746 lines of Go.
+
+**Revised fleet total: 4,879 reference sites, of which 3,236 are bare prose.** §2 and §3's proportions are unchanged; everything got 4% larger.
+
+Two mapping corrections follow from having it on disk, and both were flagged as low-confidence guesses in Part I:
+
+- **0122 (the signing key hierarchy) splits.** Part I assigned it to `platform` and marked it the weakest call in its batch. Citation density says `platform` 0, `supervisor` 15 — but the mechanism is genuinely in both: `platform/tools/modulesign` and `internal/adapters/extension/keyring.go` sign *modules*; `supervisor/trust.go`, `artefact.go`, `provision.go` and `update.go` verify *artefacts*. The record is about **two** keys with different holders, so it is a split (§11), not a placement.
+- **0120 (children listen on Unix sockets)** is `platform` 13 / `supervisor` 12 — near-even. Re-examine before moving it; it is a split or a genuine cross-cutting record, not plainly `platform`.
+- **0003, 0009 and 0010 have zero citations in either repository**, consistent with Part II's finding that they describe things never built.
+
+**And `supervisor` has no `CLAUDE.md` and no `docs/` at all.** Twelve repositories carry instructions; the thirteenth — the one that must run when the Platform cannot — carries none. P5 writes its first.
+
+Worth copying rather than fixing: `supervisor/go.mod` opens with a 25-line comment explaining ADRs 0121, 0123, 0128 and 0060 **at the point the dependencies are declared**. That is the locality principle already practised, and it is the best example of it in the fleet.
+
+## Identity and citation, settled (D2, D4, D5)
+
+**The slug is the identity. The number is a label.**
+
+| | Form | Why |
+|---|---|---|
+| **Filename** | `0012-capabilities-do-not-own-stores.md` | Number kept: it orders the directory and satisfies "each repo starts at 1". It changes only in the one-off split. |
+| **Heading** | `# Capabilities do not own stores` | **Number removed.** It was pure duplication, and §5 found that a renumber missing it builds green. Removing it also fixes the anchor: `#capabilities-do-not-own-stores` is stable forever. |
+| **Index label** | `platform#12` | The number lives here and in the filename. Nowhere else. |
+
+**A citation is a real link, in the form the file allows:**
+
+- **Markdown, same repo:** `[platform#12](0012-capabilities-do-not-own-stores.md)` — relative, and checkable by an ordinary link checker.
+- **Markdown, another repo:** `[platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-capabilities-do-not-own-stores.md)` — absolute and clickable, which is D4.
+- **Go doc comment:** the link-reference form Go already renders, and which `platform/internal/platform/domain/library_rule.go:27` already uses:
+  `// [platform#12]: https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-….md`
+- **Plain code comment or test name:** `platform#12` bare. No URL is possible; the lint resolves it against the index.
+
+**The property this buys:** if a number ever changes, the link text is briefly wrong but *the link still resolves to the right document*. Compare today's failure mode, where a stale `ADR 0012` silently resolves to a different record (§3). Wrong label, right document beats right label, wrong document.
+
 ---
 
-## D — decisions only you can make
+## P1 — fix the records in place, before anything moves
 
-| # | Decision | Options | Why it blocks |
+Depends on nothing. Cheap now, expensive later.
+
+| # | Task | Repo | Done when |
 |---|---|---|---|
-| **D1** | Placement rubric | **Option B (stewardship/locality)** — recommended, §1 and §15 — or Option A, or B-with-a-carve-out naming which extra records stay in `architecture` | Every task from P3 on writes a destination path. Nothing can move first. |
-| **D2** | Citation form | **`repo#N`** recommended (§4). Requirement is only that it be textually distinct from `ADR NNNN` so a stale citation fails loudly | P2.1 builds the lint that enforces it; 4,675 sites get rewritten to it |
+| **P1.1** | Generate `PAGES` in `scripts/build_pdfs.py` from `nav:`, or complete it and add a check that the two agree (§7.1 — it exports 14 of 135 and omits `unreachable-capability.md`) | `architecture` | the two lists cannot diverge silently |
+| **P1.2** | Strip status from the 4 contradicting nav labels and derive all 135 labels from each file's H1 (§7.2) | `architecture` | no label contains "(proposed)"; no label differs from its H1 |
+| **P1.3** | **Remove the number from all 135 H1 headings** (D5). Update `nav:` labels in the same pass | `architecture` | no ADR H1 matches `^# [0-9]` |
+| **P1.4** | Close the 0007 reversal with Status-line pointers both ways (§7.3). **Status lines only — bodies are append-only** | `architecture` | 0007's Status is no longer a bare "Accepted" |
+| **P1.5** | Correct the Status lines proven stale: 0049, 0047, 0050, 0036, 0074, 0075, 0099, 0128 (§13.12, §19.16) | `architecture` | each Status matches the code |
+| **P1.6** | Resolve 0079/0081 (§7.5); record 0051's dialect table as unbuilt (§19.23) | `architecture` | no Status contradicts another or the code |
+| **P1.7** | Fix the claims that are wrong about their **own** repo: the single-reader property in both credentialed modules (§19.17 — fix the code comment too, or route `settingsui.go` through the resolver and make it true); `sdk`'s two false sentences (§19.20 — delete, don't annotate); `contracts`' obsolete quicktype workaround (§19.25) | `module-tmdb`, `module-fanart-tv`, `sdk`, `contracts` | each verified against source |
+| **P1.8** | Add the missing `-tags linkercheck` step to `module-fanart-tv`'s `verify.yml` (§19.24) | `module-fanart-tv` | workflow mirrors the compose file |
 
-**D3 (smaller, and can come later):** whether to consolidate at all (§14). P6 is optional and sequenced last precisely so this can stay open.
+P1.1–P1.6 are one agent working serially in `architecture`. P1.7–P1.8 run in parallel, one agent per repo. **Commit per repository, separately.**
 
-## E — environment blockers
-
-| # | Blocker | Effect | Fix |
-|---|---|---|---|
-| **E1** | `supervisor` not attached to this session | 11 records have no destination; its reference load is the one unmeasured number in this audit | `add_repo` for `mosaic-media/supervisor`, then clone. It exists and is pushable. |
-| **E2** | Docker daemon unreachable | No repository's gate can be run — not `mkdocs --strict`, not any container suite. Every "done-when" below that names a container is unverifiable until this is fixed | Start the daemon, or run these phases where one is available |
-
-**E2 is not optional for P2–P4.** The whole plan turns on replacing a check that disappears mid-migration; building its replacement without being able to run it repeats the mistake the audit documents.
-
----
-
-## P1 — fix in place, before anything moves
-
-Cheap now, expensive later: while all 135 records are in one repository, `mkdocs --strict` still covers 1,210 links, and the stale claims are wrong *today* regardless of whether the migration ever happens. **P1 depends on no decision and can start immediately.**
-
-| # | Task | Repo | Who | Done when |
-|---|---|---|---|---|
-| **P1.1** | Fix `PAGES` in `scripts/build_pdfs.py` — it exports 14 of 135 ADRs and omits `unreachable-capability.md` (§7.1). Either generate it from `nav:` or complete it, and add a check that the two lists agree | `architecture` | agent | a script fails when `PAGES` and `nav:` diverge; PDF job emits 135 + 4 |
-| **P1.2** | Fix the 4 nav labels contradicting their record's Status, and the 61 whose text differs from the file's H1 (§7.2). Prefer deleting the status from the label — it is a second copy of a fact (§18) | `architecture` | agent | no nav label contains "(proposed)"; label text derives from H1 |
-| **P1.3** | Close the ADR 0007 reversal (§7.3): add a Status-line pointer on 0007 naming its successor, and on 0064/0077/0081 naming 0007. **Status lines only — bodies are append-only** | `architecture` | agent | `0007` Status is no longer a bare "Accepted"; pointers resolve both ways |
-| **P1.4** | Correct the Status lines proven stale: 0049 (system principal is built — §19.16), 0047, 0050, 0036, 0074, 0075, 0099, 0128 (§13.12). **Status line only** | `architecture` | agent | each Status matches what P1.4's evidence found in code |
-| **P1.5** | Resolve the 0079/0081 same-day contradiction (§7.5) and record 0051's dialect table as unbuilt (§19.23) — its Status asserts a table the code does not have | `architecture` | agent | Status lines no longer contradict each other or the code |
-| **P1.6** | **Restore two missing rules.** Add the commit-author rule to `architecture/CLAUDE.md`; restore the container prohibition and add the import-boundary rule to `module-fanart-tv/CLAUDE.md` (§16) | `architecture`, `module-fanart-tv` | agent | `grep -l AdamNi-7080 */CLAUDE.md` returns 12; fanart carries both rules |
-| **P1.7** | **Delete the 62 stale cross-repo derived facts** from the 12 `CLAUDE.md` files (§15, §19). Three actively mislead and should go first: `platform/CLAUDE.md:383` (tells an agent to build a jobs runner, scheduler and system principal that exist), `module-remote-playback`'s "optional" opening line, `module-aiostreams`'s "the Platform half is still open" | all 12 | **4 agents, one per group of 3 repos** | no `CLAUDE.md` asserts a fact about another repository except as a link |
-| **P1.8** | Fix the claims that are wrong about their *own* repo: the single-reader property in both credentialed modules (§19.17 — fix the code comment *and* the CLAUDE.md, or make it true again by routing `settingsui.go` through the resolver), `web`'s three-package table (§19.19), `sdk`'s self-contradiction (§19.20 — delete the two false sentences, keep line 80), `contracts`' obsolete quicktype workaround (§19.25), stremio's egress section (§19.22) | 5 repos | agent | each claim verified against source |
-| **P1.9** | Add the missing `-tags linkercheck` step to `module-fanart-tv/.github/workflows/verify.yml` (§19.24) — ADR 0105 makes that guard mandatory and it runs locally only | `module-fanart-tv` | agent | workflow mirrors the compose file step for step |
-
-**P1 parallelism:** P1.1–P1.5 are all `architecture` and should be one agent working serially to avoid conflicting edits. P1.6–P1.9 touch different repositories and run in parallel, 4 agents. **Commit per repository, separately** — that rule is real and universal.
-
-**Done-when for P1 as a whole:** `docker compose -f docker-compose.test.yml run --rm test` green in `architecture` (E2), and every touched repository's own gate green.
+**Note:** the 62 stale cross-repo facts in `CLAUDE.md` files are *not* fixed here. They are deleted wholesale in P5, because those files are being rewritten rather than repaired.
 
 ---
 
 ## P2 — build the tooling that replaces the check you are about to lose
 
-Depends on **D2**. Nothing moves until this exists and has been run against the current corpus to establish a clean baseline.
+Depends on D2/D4/D5. Nothing moves until this exists and has been run against the current corpus.
 
-| # | Task | Who | Done when |
-|---|---|---|---|
-| **P2.1** | **The citation lint.** ~30 lines, vendored into each repo's existing gate. Fails on (a) any unqualified `ADR \d+`, (b) any `repo#N` naming a record that does not exist in that repo's index | agent | run against today's corpus: reports 3,047 unqualified citations and 0 dangling — the expected baseline |
-| **P2.2** | **The index generator.** Emits `docs/adr/README.md` per repo: one line per record from its H1 and `**Status:**`, plus a "records this repository depends on" section listing foreign `repo#N` citations found in its own records | agent | generated index for `architecture` today lists 135 records and matches `nav:` exactly |
-| **P2.3** | **Drift-guard both.** Wire into each repo's container gate using the pattern `contracts/scripts/check-generated.sh` already establishes | agent | editing a record without regenerating the index fails the gate |
-| **P2.4** | **The rewrite tool.** Mechanical citation rewriter driven by the Part I mapping table: old number → `repo#N`. Must handle the four forms (§2) and refuse to touch `contracts`' 129 citations in generated files — those change at source and regenerate | agent | dry-run against `architecture` produces a diff whose count matches §2 |
+| # | Task | Done when |
+|---|---|---|
+| **P2.1** | **The citation lint.** Fails on (a) any unqualified `ADR \d+`, (b) any `repo#N` naming a record absent from that repo's index, (c) any cross-repo citation in a Markdown file that is not a real link (D4) | run against today's corpus: reports ~3,236 unqualified citations, 0 dangling — the baseline |
+| **P2.2** | **The index generator.** Emits `docs/adr/README.md` per repo: number, title from the H1, status, and a "records this repository depends on" section listing foreign `repo#N` links | `architecture`'s generated index today lists 135 and matches `nav:` |
+| **P2.3** | **Drift-guard both** in each repo's gate, following `contracts/scripts/check-generated.sh` | editing a record without regenerating fails |
+| **P2.4** | **The rewrite tool**, driven by the Appendix mapping: old number → `repo#N` plus the correct link form per file type (four forms, §2). Must refuse `contracts`' 129 citations inside generated files — those change at source and regenerate | dry-run on `architecture` produces a diff matching §2's counts |
 
-**Done-when for P2:** P2.1 and P2.2 run green in a container on the unmigrated corpus. **Do not proceed to P3 until this is true** — a rewrite tool nobody has run is how 4,675 sites get corrupted in one commit.
-
----
-
-## P3 — pilot one repository
-
-Depends on **D1**, **P2**, **E1** (if the pilot is `supervisor`). Do not pilot on `platform`; at 81 records it is the wrong place to learn.
-
-**Recommended pilot: `contracts` (19 records)** — large enough to hit real problems, small enough to reverse, and it already has the generated-artefact discipline P2.3 depends on. `supervisor` (11) is the alternative and has the advantage of exercising E1 early.
-
-| # | Task | Who | Done when |
-|---|---|---|---|
-| **P3.1** | Tag the current corpus `pre-adr-split-2026-08-10` (§12A) | me | tag pushed; **note tag pushes may 403 (§19.21)** — if so, record the SHA in this document instead and say so |
-| **P3.2** | Create `contracts/docs/adr/`, move its records, renumber from 1 — filename, **H1 number**, and every internal link (§5: the number lives in three places, in two formats) | agent | `contracts/docs/adr/` holds N records numbered 1..N with no gaps; every H1 number matches its filename |
-| **P3.3** | Generate the index (P2.2); rewrite every citation of a moved record, fleet-wide, to `contracts#N` (P2.4) | agent | P2.1 reports 0 unqualified citations *of moved records* across all 12 repos |
-| **P3.4** | Rewrite `architecture`'s `nav:`, `PAGES` and the four documents' links for the records that left | agent | `mkdocs build --strict` green with no orphan files |
-| **P3.5** | Update `contracts/CLAUDE.md` to point at its index instead of summarising decisions (§18) | agent | file states rules + own-repo mechanics only |
-
-**Done-when for P3:** both repositories' gates green; the lint reports zero unqualified citations of moved records; a human can find any moved record from either repo in one step. **Stop here and review before P4.**
+**Do not start P3 until P2.1 and P2.2 have been run.** A rewrite tool nobody has executed is how 4,879 sites get corrupted in one commit.
 
 ---
 
-## P4 — roll out the remaining repositories
+## P3 — pilot on `contracts` (19 records)
 
-Depends on **P3** reviewed. One repository at a time, same five steps, **in ascending order of size** so the hardest comes last with the most practice behind it:
+| # | Task | Done when |
+|---|---|---|
+| **P3.1** | Tag the corpus `pre-adr-split-2026-08-10` | tag pushed — **or**, if tag pushes 403 (§19.21), record the SHA here and say so |
+| **P3.2** | Create `contracts/docs/adr/`, move its 19 records, renumber 1..19 — filename and internal links. **Headings need no edit; P1.3 removed the number** | 19 records, no gaps, no H1 carries a number |
+| **P3.3** | Generate the index; rewrite every citation of a moved record fleet-wide to a linked `contracts#N` | lint reports 0 unqualified citations *of moved records* across 13 repos |
+| **P3.4** | Update `architecture`'s `nav:`, `PAGES` and the four documents for the records that left | no orphan files; internal links resolve |
+| **P3.5** | Write `contracts/CLAUDE.md` fresh on the §18 rule, pointing at its index | states rules and own-repo mechanics only |
 
-`architecture` (4) → `web` (6) → `sdk` (10) → `supervisor` (11) → module repos (4 total) → **`platform` (81)**
-
-| # | Task | Who | Done when |
-|---|---|---|---|
-| **P4.1** | Repeat P3.2–P3.5 per repository | one agent per repo, **serially** — the lint is fleet-wide and concurrent rewrites will conflict | per-repo gate green, lint clean |
-| **P4.2** | After the last move: delete `architecture/docs/adr/` and its `nav:` section; keep the four documents | agent | `mkdocs build --strict` green; `architecture` holds only the records D1 assigned it |
-| **P4.3** | Rewrite the 223 links from the four documents, and the 130 in `roadmap.md` especially, to the new `repo#N` form | agent | lint clean across `architecture/docs/` |
-
-**Watch item:** `platform` at 81 records / ~133k tokens is the case P2.2's index exists for (§17). If the index is not carrying its weight by the time `platform` moves, stop and fix the index rather than proceeding.
+**Stop and review before P4.** The pilot exists to test whether `repo#N` and the linked form read well in prose. If they do not, change them here.
 
 ---
 
-## P5 — the CLAUDE.md restructure
+## P4 — roll out the remaining twelve
 
-Depends on **P4**, because the files can only stop caching remote decisions once those decisions are local.
+Ascending by size, so the hardest is last with the most practice behind it:
 
-| # | Task | Who | Done when |
-|---|---|---|---|
-| **P5.1** | Deduplicate the shared governance block: one generated artefact, checksum-gated per repo (§16, §18.5) | agent | all 12 copies byte-identical; editing one without regenerating fails the gate |
-| **P5.2** | Point every `CLAUDE.md` at its own `docs/adr/README.md` and delete the decision summaries the index now carries | agent | no `CLAUDE.md` restates a record's content |
-| **P5.3** | Encode the §18 rule in the shared block itself: *a `CLAUDE.md` may state rules, and facts about its own repository; never facts about another* | agent | rule present in all 12 |
+`architecture` (4) → `web` (6) → `sdk` (10) → `supervisor` (11) → module repos (4) → **`platform` (81)**
+
+| # | Task | Done when |
+|---|---|---|
+| **P4.1** | Repeat P3.2–P3.4 per repository, **serially** — the lint is fleet-wide and concurrent rewrites conflict | per-repo checks pass, lint clean |
+| **P4.2** | Re-examine **0122** (split: module key → `platform`, artefact key → `supervisor`) and **0120** (near-even) before moving either | each has a stated owner or is deliberately split |
+| **P4.3** | After the last move, delete `architecture/docs/adr/` and its `nav:` block | `architecture` holds only its four records; site builds |
+| **P4.4** | Rewrite the 223 links from the four documents — 130 in `roadmap.md` alone — to linked `repo#N` | lint clean across `architecture/docs/` |
+
+**Watch item:** `platform` at 81 records / ~133k tokens is what P2.2's index exists for (§17). If the index is not carrying its weight by then, fix the index rather than proceeding.
 
 ---
 
-## P6 — consolidation (optional, D3)
+## P5 — write the CLAUDE.md corpus fresh
 
-Depends on **P5** and sequenced last so the 4,675-site rewrite is paid once (§14.4).
+**Not a repair. The rules are being wiped and rewritten**, so the 62 stale cross-repo facts are deleted by not being carried forward. This runs after P4 because the files can only stop caching remote decisions once those decisions are local.
 
-| # | Task | Who | Done when |
-|---|---|---|---|
-| **P6.1** | The **12 splits** — the move that actually improves where records live (§11). Each split record gains one owner by construction | agent per repo | each output record has exactly one destination |
-| **P6.2** | The **4 clean merges** only: playback 4→1, subtitles 5→1, upgrade 3→1, bindings/scopes/fields 3→1 (§14.2). None crosses a reversal | agent | merged record's Status carries every input's build state, including "built and never played" |
-| **P6.3** | **Leave the reversal chains alone** (§10). This is a task because it needs enforcing, not doing | — | 0001/0012, 0059/0128/0135, 0068/0102, 0088/0096 all still separate records |
+| # | Task | Done when |
+|---|---|---|
+| **P5.1** | Write the shared block **once**, as a generated artefact with a checksum gate per repo (§16 — today it is 591 lines pasted eleven times in four variants) | all copies byte-identical; editing one without regenerating fails |
+| **P5.2** | Rewrite each repo's `CLAUDE.md` on the §18 rule: **rules, plus facts about its own repository, and links for everything else** | no file asserts a fact about another repository except as a link |
+| **P5.3** | Carry forward **every rule** — none was stale (§15) — including the two currently missing: the commit-author rule absent from `architecture`, and the container prohibition plus import-boundary rule absent from `module-fanart-tv` (§16) | `grep -l AdamNi-7080 */CLAUDE.md` returns 13 |
+| **P5.4** | **Write `supervisor/CLAUDE.md`, which has never existed.** Its `go.mod` header is the model | file exists, states its boundary rule, points at its index |
+| **P5.5** | Decide the container rule deliberately rather than inheriting it. E2 was relaxed here by fiat; either restate it with its reasoning or drop it, in all 13 files | the rule is present-and-argued or absent-on-purpose, not copied |
+
+---
+
+## P6 — consolidation (optional)
+
+Sequenced last so the reference rewrite is paid once (§14.4).
+
+| # | Task | Done when |
+|---|---|---|
+| **P6.1** | The **12 splits** — the move that actually improves where records live (§11), now 13 with 0122 | each output has exactly one owner |
+| **P6.2** | The **4 clean merges** only: playback 4→1, subtitles 5→1, upgrade 3→1, bindings/scopes/fields 3→1. None crosses a reversal | merged Status carries every input's build state |
+| **P6.3** | **Leave the reversal chains alone** (§10) — a task because it needs enforcing | 0001/0012, 0059/0128/0135, 0068/0102, 0088/0096 still separate |
 
 ---
 
 ## P7 — close out
 
-| # | Task | Who | Done when |
-|---|---|---|---|
-| **P7.1** | Update the roadmap in the same session as the change that dated it — the fleet's own standing rule | agent | roadmap describes the dispersed corpus |
-| **P7.2** | **Delete this document** (§8) | me | file gone; its findings live in the records, the indexes and the lint |
+| # | Task | Done when |
+|---|---|---|
+| **P7.1** | Update the roadmap in the same session as the change that dated it | roadmap describes the dispersed corpus |
+| **P7.2** | **Delete this document** | gone; its findings live in the records, the indexes and the lint |
 
 ---
 
-## What this plan does not cover
+## What this plan still does not cover
 
-- **`supervisor`'s inbound reference load is unmeasured** (E1). P4's estimate for it may be wrong in either direction.
-- **Every "gate green" check is unverified in this environment** (E2). The audit's structural claims were verified by reading; the container claims were not run.
-- **Whether `repo#N` survives contact with a real reader** is untested. P3 is the pilot for exactly that; if it reads badly in prose, change it at P3 and not at P4.
+- **`repo#N` and the linked form are untested against a real reader.** P3 exists to find out before twelve more repositories adopt them.
+- **E2 was relaxed, not solved.** Where a check cannot be run, the plan requires saying so rather than assuming it passed — the distinction the fleet's own rules call *demonstrated, not asserted*.
+- **`supervisor`'s records are classified from its code, not from its history.** The clone is shallow and it has no `docs/`, so its ADR mapping rests on citation density and file evidence alone.
 
 ---
 
