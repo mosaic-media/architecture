@@ -173,6 +173,7 @@ nav:
       - 131. Passkeys are an optional layer on a public origin: adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md
       - 132. TOTP is the second factor that works everywhere: adr/0132-totp-is-the-second-factor-that-works-everywhere.md
       - 133. An optional capability is announced once, when it becomes possible: adr/0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md
+      - 134. The install key: adr/0134-the-install-key.md
 
 markdown_extensions:
   - admonition

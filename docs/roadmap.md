@@ -2444,6 +2444,25 @@ certificate and warns on every new device.
    a re-expansion of a flow that was deliberately cut down and is recorded as
    such.
 
+   **Three slices have landed and the fourth is blocked on a decision that was
+   not visible from any document.** The RFC 6238 core is built and tested
+   against the specification's own published vectors; the storage layer is built
+   with its contract tests passing against real PostgreSQL; and the sealing
+   envelope for the secret is built. The secret is encrypted at rest, because a
+   code is computed from it so it cannot be hashed — which makes the row
+   strictly more dangerous than a password hash, and a leaked backup would hand
+   an attacker permanent code-minting for every enrolled user.
+
+   Encrypting it needs a key, and **there is no durable encryption key anywhere
+   in the Platform**. Every key that exists is deliberately process-scoped: the
+   artwork URL HMAC, the playback ticket key, the telemetry pseudonymisation
+   salt. `internal/platform/secrets` looks like custody and is not — it has no
+   production caller at all, nothing supplies the recovery key its vault needs,
+   and its purpose is `secret://` indirection for operator configuration. So
+   this is [ADR 0134](adr/0134-the-install-key.md), the first durable key in the
+   repository, and the telemetry salt is a second consumer already waiting on
+   exactly it.
+
    Two things fall out that are worth knowing before starting. It is a *factor*
    rather than a credential, so it adds no fifth arrow to
    [ADR 0068](adr/0068-one-principal-many-credentials.md)'s Principal
