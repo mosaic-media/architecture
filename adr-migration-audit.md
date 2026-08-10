@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-10 · **Scope:** all 135 records in `docs/adr/`, and every reference to them across the twelve repositories on disk.
 
-This is a working document for one decision: moving the decision records out of `architecture` and into the repositories that own them, with each repository's series restarting at 1. **Part I** decides where each record goes. **Part II** asks whether 135 is the right number of records, and re-scopes those whose wording straddles repositories. It is not part of the published site and is not in `mkdocs.yml`. **It should be deleted once the migration lands or is abandoned** — leaving it is the "delete, do not annotate" rule broken by a document about following rules.
+This is a working document for one decision: moving the decision records out of `architecture` and into the repositories that own them, with each repository's series restarting at 1. **Part I** decides where each record goes. **Part II** asks whether 135 is the right number of records, and re-scopes those whose wording straddles repositories. **Part III** audits the twelve `CLAUDE.md` files against their own source and derives the principle the whole project rests on: a fact about your own repository stays true; a fact about someone else's rots unwatched. It is not part of the published site and is not in `mkdocs.yml`. **It should be deleted once the migration lands or is abandoned** — leaving it is the "delete, do not annotate" rule broken by a document about following rules.
 
 > **On the "do not create new documents" rule.** `CLAUDE.md` caps the corpus at three pages plus the unreachable-capability register. This file is deliberately outside `docs/`, so it publishes nowhere and adds no page. It is scaffolding for a migration, not a fifth document. If it survives past the migration, that reasoning has failed and it should go.
 
@@ -322,6 +322,142 @@ Consolidation is worth doing, but **not for the record count**, and it should no
 2. **Do the four clean merges** — the playback run (4→1), the subtitle run (5→1), the upgrade run (3→1), the bindings/scopes/fields run (3→1). Together they account for 11 of the 24 removed records and none crosses a reversal.
 3. **Leave the reversal chains alone.** They are 18% of the corpus and most of its value.
 4. **Treat consolidation as optional and sequence it after the citation namespace (§4) exists** — merging records changes numbers a second time, and doing that before the lint exists means paying the 4,675-site rewrite twice.
+
+---
+
+---
+
+# Part III — the CLAUDE.md corpus, and why locality is the right principle
+
+Added 2026-08-10, third pass, prompted by the stated reason for the whole project: **drift and agent context.** A single port for all documentation across many repositories was hard for agents and humans to keep on top of; decisions should live next to the code they affect, referring across repositories where relevant.
+
+That reason changes the rubric. Part I weighed *coupling* ("if reversed, whose code changes?") and *stewardship* ("who owns the mechanism?"). The operative test is neither. It is **locality**: *an agent editing a file must meet the decision governing it without knowing to go looking.* Locality and stewardship agree almost everywhere, so **Option B stands** — but locality explains *why*, and it makes `architecture` keeping four or five records the intended outcome rather than an awkward one.
+
+## 15. The two problems are one problem
+
+All twelve `CLAUDE.md` files were audited against their own repositories' source. **74 claims are stale.** The distribution of *what* rotted is the finding:
+
+| Class of statement | Stale |
+|---|---|
+| **RULE** — normative, no expiry | **0 of ~180** |
+| **MECHANIC** — how to do something here | 12 |
+| **DERIVED FACT** — the current state of the world | 62 |
+
+**Not one rule was wrong.** Every "dependencies point inward", "never declare `RoleMetadata`", "import only the SDK", "commit as AdamNi-7080" still holds. All rot is in statements of fact.
+
+### The law: ownership predicts rot, not ratio
+
+The obvious hypothesis — files with more facts than rules rot faster — is **false**, and the counter-example is decisive:
+
+- **`registry/CLAUDE.md`** has the *worst* rule-to-fact ratio in the fleet (1 : 2.3) and **zero stale claims.** Its facts describe its own files.
+- **`architecture/CLAUDE.md`** has one of the *best* ratios (1.6 : 1) and a **50% miss rate.** Its facts describe other repositories.
+
+**A fact about your own repository stays true because you edit it when you edit the code. A fact about another repository rots the moment that repository changes, and nothing anywhere tells you.** Every count of something not-owned was wrong. The one fact-shaped sentence in the corpus that cannot go stale is `platform/CLAUDE.md`'s *"Read `go.mod` for the version in use rather than trusting a number written here"* — because it refuses to carry the number.
+
+That law is the mechanism behind the stated reason, and it is why locality is the right principle rather than merely a convenient one.
+
+### Why the files grew the facts in the first place
+
+**There are 128 ADR citations inside `CLAUDE.md` files** — 39 in `platform`'s alone — plus whole sections ("Standing facts a new session needs", "The bundled key", "Modules are the forcing function for the SDK") that summarise decisions recorded in another repository.
+
+Those sections are a **cache of a remote source with no invalidation.** They exist because an agent working in `platform` does not read `architecture`, so the decisions were copied to where the work happens — and then the original moved. The line-count contradiction is this exactly: `platform/CLAUDE.md` says ~37,500 lines of Go, `architecture/CLAUDE.md` says ~86,350, the truth is 93,518 total / 55,917 non-test. Three copies of one fact, none generated, none checked, all wrong.
+
+**Moving the records next to the code removes the reason the cache exists.** The ADR migration and the `CLAUDE.md` problem are the same project.
+
+## 16. The shared block has already drifted, and lost a rule
+
+**591 of the corpus's 2,446 lines (24%) are the same governance block, pasted eleven times — in at least four variants.**
+
+| Variant | Repos | "Append-only" block |
+|---|---|---|
+| Full | `sdk`, `contracts`, `module-cinemeta`, `module-stremio-addons`, `module-remote-playback`, `web` | 27 lines |
+| Truncated | `module-tmdb`, `module-aiostreams` | 20 lines |
+| Abridged | `module-fanart-tv` | **10 lines** |
+| Different form | `registry` | — |
+| Expanded | `platform` | 80 lines |
+
+The abridgements deleted the reasoning and kept the rules — which is backwards, because the reasoning is the part that survives contact with a well-intentioned agent. `module-fanart-tv` dropped *"An ADR is an account of what was decided and why, at a time. It is evidence, not documentation, and its value is that it was not edited afterwards"*, and reduced *"'Built' with no qualifier is a claim that the whole slice shipped; if part of it did not, say which part and why in the same sentence"* to *"A slice that lands is marked landed, with what was left out."*
+
+**One abridgement deleted a rule, not rationale.** `module-fanart-tv`'s container section omits the prohibition every sibling carries — *"Do not run `go build`, `go test`, `go vet` or `gofmt` directly on this machine."* It states no import-boundary rule at all, though `boundary_test.go` enforces one.
+
+**Abridgement severity tracks staleness severity exactly:** cinemeta (0 lines cut, 2 stale) → tmdb (9 cut, 7 stale) → fanart (27 cut, 5 stale + a deleted rule). Whoever trimmed the shared block to make room for local narrative was trimming the only part of the file that cannot rot.
+
+A fleet-wide rule is also simply **missing** from one file: `architecture/CLAUDE.md` is the only one of twelve that does not state the commit-author identity — and it is the repository this document is committed to. The good pattern already exists and is used exactly once: `architecture/AGENTS.md` is five lines that *point* at `CLAUDE.md` rather than copying it, for the stated reason that *"the rules live in one place so they cannot drift apart."*
+
+## 17. Dispersal relocates the context problem unless a third piece is added
+
+Locality solves *where*. It does not solve *how much*. Reading weight per repository after dispersal:
+
+| Repo | ADRs | Lines | ~Tokens |
+|---|---:|---:|---:|
+| **`platform`** | **81** | **10,729** | **~133,000** |
+| `contracts` | 19 | 2,181 | ~27,600 |
+| `sdk` | 10 | 1,488 | ~17,900 |
+| `supervisor` | 11 | 1,270 | ~15,400 |
+| `web` | 6 | 705 | ~8,600 |
+| `architecture` | 4 | 532 | ~7,000 |
+| module repos | 4 | 549 | ~6,600 |
+
+`platform` receives a corpus an agent still cannot read — ~133k tokens before a line of code, ~100k after the Part II consolidation. **An unreadable local corpus fails the same way a remote one does: the agent doesn't read it, and writes a local summary that rots.** That is precisely how today's `CLAUDE.md` files came to be.
+
+So the migration needs a third piece beside dispersal and the citation namespace:
+
+**A generated per-repo index — `docs/adr/README.md`** — one line per record from its `#` heading and `**Status:**` line, plus a short "records this repository depends on" section listing the foreign `repo#N` references its own records cite. Eighty-one lines for `platform`, cheap to read, and the entry point `CLAUDE.md` points at instead of summarising.
+
+Generate it and **drift-guard it in each repo's existing container gate** — the pattern `contracts` already runs as `scripts/check-generated.sh`. A generated index cannot go stale in the way a hand-written one does, and it is the artefact that replaces `nav:` as the corpus's only map (§5).
+
+## 18. What a CLAUDE.md should contain after this
+
+One rule, mechanically checkable, derived from §15:
+
+> **A `CLAUDE.md` may state rules, and facts about its own repository. It may not state facts about any other repository — it links to them.**
+
+That is the same rule the fleet already applies to the roadmap (*"Do not restate the roadmap here… a second copy of 'what is built' is how the first copy goes stale unnoticed"*), applied to the other 128 citations as well.
+
+Concretely:
+
+1. **Keep every RULE.** None was wrong. They are the files' entire proven value.
+2. **Keep MECHANICs about this repository** — the container command, the boundary test, the release path. Verify them; twelve rotted.
+3. **Delete every DERIVED FACT about another repository.** Sixty-two stale claims live here. Replace with a link to the record or file that owns it.
+4. **Delete derived facts about this repository that a generated artefact already carries** — counts, versions, build state. Point at `go.mod`, at the index, at the roadmap.
+5. **Deduplicate the shared block.** Either one generated block with a checksum gate per repo (recommended — same pattern as the index), or reduce each copy to a pointer as `AGENTS.md` already does. Not eleven hand-maintained copies in four variants.
+6. **Add the commit-author rule to `architecture/CLAUDE.md`.**
+
+## 19. Defects found in this pass
+
+Additional to §7 and §13. Every one verified against source.
+
+**16. `platform/CLAUDE.md:383` tells an agent to build three things that exist.** It names module-declared cron/jobs as blocked on "the jobs runner, a scheduler, and the system principal." All three are built: `internal/platform/jobs/runner.go`, `internal/platform/jobs/scheduler.go`, and `SystemCaller()` at `internal/platform/app/system_principal.go:83`, live at `library_maintenance.go:206` and `refresh_availability.go:159`. **This also resolves §7 item 4 the other way:** ADR 0058's Status was correct; ADR 0049's Status and this file are both stale.
+
+**17. The single-reader property for bundled credentials is false in both credentialed modules.** `module-tmdb/capability.go:264` states *"This is the only function that reads `defaultReadAccessToken`"*; `settingsui.go:105` and `:122` also read it. `module-fanart-tv/capability.go:205` makes the same claim; `capability.go:220` and `settingsui.go:102,119` also read it. ADR 0105 rule 4 requires exactly one reader. **The claim sits in three places per module — CLAUDE.md, the code's doc comment, and the ADR — all agreeing, all false**, so a session checking the file against the source finds corroboration and stops. The extra reads are presence checks rather than uses of the value, so nothing leaks; what broke is the property that made the guarantee checkable by reading.
+
+**18. `module-remote-playback/CLAUDE.md`'s opening sentence calls it "an optional Mosaic module."** It is core: `platform/go.mod:55`, `main.go:24`, `main.go:248`. `platform/CLAUDE.md` correctly lists it among the three core modules — so two files disagree about one module's tier, and the wrong one is the module's own.
+
+**19. `web/CLAUDE.md` omits the package that is actually served.** It opens with a table of exactly three packages. `web/mosaic-shell/` is a fourth: a real Go module (`github.com/mosaic-media/web/mosaic-shell`), 13 tracked files, wired into three `platform` compose files and three `web` workflows including its own `release-shell.yml`. **This corrects §7 item 10**, which called it a stray tree.
+
+**20. `sdk/CLAUDE.md` states one fact three times and is wrong twice.** Line 35 *"`go.mod` is a module line and a Go version — no require block at all"* and line 75 *"`nodeps_test.go` asserts **emptiness**"* are both false — `sdk/go.mod` requires four OTel modules plus xxhash, and `nodeps_test.go` carries a five-entry allowlist the current file passes. Line 80 admits it. **The correction was appended and the false sentences left standing** — "delete, do not annotate" broken inside the file that governs the rule. The same false claim is asserted in `module-tmdb`, `module-fanart-tv` and `module-cinemeta`.
+
+**21. The documented release path is not the one in use for two repos.** `sdk`, `contracts` and `web` all document `git tag && git push` as the whole publish. `platform/go.mod` consumes `contracts` and `sdk` at **pseudo-versions**, and `roadmap.md:2558` records why — *"GitHub answers 403 on a tag ref while accepting branch pushes."* The fact is recorded in ADR 0128's Status, in another repository; the instructions beside the code do not know it. The three core modules *are* on ordinary tags, so the failure is scoped, not universal.
+
+**22. `module-stremio-addons/CLAUDE.md` documents an egress requirement its tests do not have.** A section warns that missing `ca-certificates` "fails in a way that reads exactly like an addon being down." The suite is hermetic; the only `strem.io` strings are literals in a URL-normalisation table.
+
+**23. The addon dialect table does not exist.** Both `module-stremio-addons/CLAUDE.md` and **ADR 0051's own Status line** describe a dialect table keyed on addon manifest id plus a tested-source list. The code has one universal regex set and reads no manifest id. Record and code disagree, and Part II's consolidation pass found the same thing independently.
+
+**24. `module-fanart-tv/.github/workflows/verify.yml:6`** claims to mirror its compose file step for step while omitting the fifth step — the `-tags linkercheck` canary that ADR 0105 makes mandatory. That guard runs locally and not in CI.
+
+**25. Four nav-adjacent facts confirmed stale in `web`:** the renderer is no longer "a bare `<video>`" — `hls.js` is a real `sdui-react` dependency and `player.tsx:11` says so. And `contracts/CLAUDE.md`'s quicktype `ActionKind` "type union" workaround is obsolete: `ts/contract.gen.ts:43` is `export enum ActionKind`, and the documented `git checkout` workaround would now fail the drift gate.
+
+## 20. Revised sequence
+
+Replacing §8's ordering, given the stated reason:
+
+1. **Fix the rules first, cheaply.** Add the commit-author rule to `architecture/CLAUDE.md`; restore the container prohibition and the import-boundary rule to `module-fanart-tv`. Rules are the proven-valuable part and two are missing.
+2. **Delete the 62 stale cross-repo facts now**, before the move. They are wrong today and several actively mislead — §19 items 16, 17 and 18 each invite an agent to do the wrong thing.
+3. **Then disperse** (Option B), with the citation namespace and its lint in place first (§4).
+4. **Generate the per-repo index in the same commit as the move**, so no repository ever has records without a map.
+5. **Deduplicate the shared block** into one generated artefact with a checksum gate.
+6. **Consolidate last, optionally** (§14) — the splits are worth it, the count is not the point.
+7. **Delete this document.**
 
 ---
 
