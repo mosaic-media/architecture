@@ -55,6 +55,7 @@ services:
       - -c
       - |
         python -m pip install -r requirements.txt
+        python scripts/shared_rules.py --fleet .. --repo architecture
         python scripts/adr_index.py --repo architecture --check
         python scripts/adr_lint.py --repo architecture \
           --max-unqualified 0 \

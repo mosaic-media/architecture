@@ -55,7 +55,7 @@ remote source requires the user to name one.
 | 14 | A device declaring what it can physically play | Built — `ClientProfile` on Attach | — |
 | 15 | Remote playback that feels instant | Built — 3.75 s cold, 11 ms warm | — |
 | 16 | Browse by streaming service or genre without involved setup | Genre is reachable on both surfaces — a facet over the shelf and a filter on a source's catalogue; streaming service is browsable as a source's catalogue asked live, and the union with what the library already holds is unbuilt | M2 |
-| 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)) | — |
+| 17 | Similar and related titles that are not limited to the library | Built on the detail screen; official builds carry the project credential it needs ([architecture#4](adr/0004-project-credentials-in-official-builds.md)) | — |
 | 18 | A Shell that is its own binary, decoupled from the Platform | Built — `mosaic-shell` embeds the bundle and is told the endpoint at runtime; served through the front door, where it drew the real setup wizard | — |
 
 Five requirements were not in that list because they were not asked for and the
@@ -83,7 +83,7 @@ parked before it had a repository of its own — its history moved with it via
 with a module-linking exception, the Supervisor plain AGPL-3.0 with no
 exception (it links no Module), the SDK Apache-2.0, optional modules their
 authors' choice, this documentation CC-BY-4.0
-([platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md)).
+([architecture#1](adr/0001-licensing.md)).
 
 **The content model and the extension thesis.** `nodes`, `parts`, `relations`
 and `source_bindings` ([platform#9](https://github.com/mosaic-media/platform/blob/main/docs/adr/0009-object-graph.md),
@@ -183,7 +183,7 @@ leaves open, signature and digest verification before a binary runs, a signed
 repository index on GitHub Pages the Platform trusts at boot, runtime
 install/uninstall with a registry mutable while serving, boot re-adoption from
 the on-disk cache, a consent step in front of every install, and a local signed
-registry for development ([platform#3](https://github.com/mosaic-media/platform/blob/main/docs/adr/0003-platform-as-execution-kernel.md)–[platform#40](https://github.com/mosaic-media/platform/blob/main/docs/adr/0040-module-distribution-and-trust.md),
+registry for development ([architecture#3](adr/0003-two-module-tiers.md)–[platform#40](https://github.com/mosaic-media/platform/blob/main/docs/adr/0040-module-distribution-and-trust.md),
 [sdk#7](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0007-go-plugin-as-the-extension-harness.md)–[platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md),
 [platform#55](https://github.com/mosaic-media/platform/blob/main/docs/adr/0055-the-development-module-repository.md)).
 
@@ -841,7 +841,7 @@ browser is named at the end.
    switch is a sibling rather than a label; this screen surfaces that gap rather
    than causing it, and closing it is a vocabulary change.
 9. ~~**The project-credential chain, end to end**~~
-   ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)). **Built for
+   ([architecture#4](adr/0004-project-credentials-in-official-builds.md)). **Built for
    the chain; the demonstration is not done** — see below, and it is the half
    this slice was written to force.
 
@@ -853,7 +853,7 @@ browser is named at the end.
 
    `release.yml`'s `binaries` job now applies the `-X` from a
    `FANART_PROJECT_KEY` secret, in **that** repository because that is the
-   workflow building the artefact carrying it ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md) rule 2) — the inverse of
+   workflow building the artefact carrying it ([architecture#4](adr/0004-project-credentials-in-official-builds.md) rule 2) — the inverse of
    `module-tmdb`, whose own workflow says in as many words that `TMDB_RAC` does
    not belong in its secrets. `linkercheck_test.go` is the mandatory guard (rule
    3), asserting the symbol arrives *and* that `resolveKeys` and
@@ -2908,7 +2908,7 @@ should be able to update one automatically **when a user turns it on**: opt-in,
 never a default, because an automatic update is the Platform downloading and
 spawning new third-party code with its own authority on a schedule nobody is
 watching. It is also what would let a rotated project credential
-([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md)) reach an install
+([architecture#4](adr/0004-project-credentials-in-official-builds.md)) reach an install
 without every user acting. The **policy** is not designed and is deliberately out
 of the release — when it checks, whether it follows a major version, what happens
 when a signature or digest fails halfway, whether a failed update rolls back to

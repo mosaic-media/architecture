@@ -1,6 +1,6 @@
 # Licensing
 
-**Status:** Accepted; the licensing is unchanged. Only the repositories it names have moved: `mosaic-shell`, `mosaic-sdui-react` and `mosaic-storybook` are packages in the `web` workspace ([web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md)) and `mosaic-sdui` is `contracts` ([platform#2](https://github.com/mosaic-media/platform/blob/main/docs/adr/0002-module-storage-and-delivery-model.md), [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)). AGPL-3.0-only for the first-party clients, Apache-2.0 for the contract, applies to them where they now live
+**Status:** Accepted; the licensing is unchanged. Only the repositories it names have moved: `mosaic-shell`, `mosaic-sdui-react` and `mosaic-storybook` are packages in the `web` workspace ([web#3](https://github.com/mosaic-media/web/blob/main/docs/adr/0003-frontend-workspace.md)) and `mosaic-sdui` is `contracts` ([architecture#2](0002-repository-naming-convention.md), [contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)). AGPL-3.0-only for the first-party clients, Apache-2.0 for the contract, applies to them where they now live
 **Date:** 2026-07-20
 
 ## Context

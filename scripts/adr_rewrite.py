@@ -116,7 +116,12 @@ def rewrite_markdown(
         # Relative to the *citing file*, not to the record directory. A README
         # at the repository root and a record inside docs/adr/ do not share a
         # parent, and a bare filename resolves only from the second.
-        target = os.path.relpath(adr_dir / home.filename, from_dir)
+        # Both sides resolved, or neither: resolving only one of them walks a
+        # symlink out of the repository. /home/user/supervisor is a link to
+        # /workspace/supervisor, and the mismatch produced ../../../../../workspace/…
+        # in four committed links — paths that work here and 404 on GitHub.
+        target = os.path.relpath(adr_dir.resolve(), from_dir.resolve())
+        target = os.path.join(target, home.filename) if target != "." else home.filename
         return f"[{home.label()}]({target})"
 
     def on_linked(m: re.Match) -> str:
@@ -135,8 +140,11 @@ def rewrite_markdown(
         hits["bare"] += 1
         return link_for(home)
 
-    text = LINKED.sub(on_linked, text)
-    text = BARE.sub(on_bare, text)
+    # Requalification runs FIRST, and the order is load-bearing. Run it after,
+    # and a citation the bare pass has just rewritten to `architecture#4` is
+    # re-read as though 4 were an *old* record number and mapped a second time.
+    # The two number spaces are different and only collide once a repository has
+    # been renumbered — which is why the pilot did not catch this.
     if requalify:
         def on_requalify(m: re.Match) -> str:
             number = int(m.group(1) or m.group(2))
@@ -150,6 +158,8 @@ def rewrite_markdown(
             hits["requalified"] += 1
             return link_for(home)
         text = requalify_pattern(requalify).sub(on_requalify, text)
+    text = LINKED.sub(on_linked, text)
+    text = BARE.sub(on_bare, text)
     return text, hits
 
 
@@ -172,7 +182,6 @@ def rewrite_plain(
         hits["bare"] += 1
         return home.label()
 
-    text = BARE.sub(on_bare, text)
     if requalify:
         def on_requalify(m: re.Match) -> str:
             number = int(m.group(1) or m.group(2))
@@ -186,6 +195,7 @@ def rewrite_plain(
             hits["requalified"] += 1
             return home.label()
         text = requalify_pattern(requalify).sub(on_requalify, text)
+    text = BARE.sub(on_bare, text)
     return text, hits
 
 

@@ -57,7 +57,7 @@ These were stated directly and are load-bearing.
 | Single PostgreSQL; node tree plus relation graph; links not a store; no DuckDB | Flexibility for new formats without schema change |
 | SDUI | Chosen deliberately as the interface model |
 | Mosaic Design Language — acrylic with weight, artwork as light source | Premium feel; media carries emotional connection |
-| Open source: AGPL-3.0 Platform with a module-linking exception, permissive SDK ([platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md)) | Protect the core from closed-SaaS forks while keeping the module ecosystem open under any license |
+| Open source: AGPL-3.0 Platform with a module-linking exception, permissive SDK ([architecture#1](adr/0001-licensing.md)) | Protect the core from closed-SaaS forks while keeping the module ecosystem open under any license |
 
 ### Inherited from prior sessions — needs confirmation
 
@@ -103,7 +103,7 @@ Each of these words must carry exactly one meaning, everywhere.
 |---|---|---|
 | **Transport** | Reserved. Do not use unqualified. Say *inbound adapter* for HTTP/GraphQL, *light transport* for the material system | Anything to do with modules |
 | **Module** | A Go library compiled into the Platform Binary, extending Mosaic | A plugin, an extension, a separate process |
-| **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built ([platform#2](https://github.com/mosaic-media/platform/blob/main/docs/adr/0002-module-storage-and-delivery-model.md)) | An inbound source, or anything Mosaic *consumes* |
+| **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built ([architecture#2](adr/0002-repository-naming-convention.md)) | An inbound source, or anything Mosaic *consumes* |
 | **Stale-while-revalidate** | Serving the last known-good *read* from a snapshot while a fresh one is fetched, then replacing it ([platform#30](https://github.com/mosaic-media/platform/blob/main/docs/adr/0030-cache-first-rendering-and-source-health.md)) | *Optimistic UI*, which renders a predicted **write** outcome before the server confirms it. Mosaic predicts nothing |
 | **Platform** | Mosaic's own code and contracts | The binary; say *Platform Binary* for that |
 | **Supervisor** | The host-level process manager and single front door: runs the Platform and the Shell, terminates TLS, activates a Generation ([supervisor#1](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0001-supervisor-as-host-manager.md), [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md)) | The Platform, or the Runtime. It no longer selects modules ([platform#49](https://github.com/mosaic-media/platform/blob/main/docs/adr/0049-the-platform-manages-extension-modules.md)) or builds anything ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)) |

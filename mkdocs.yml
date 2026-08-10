@@ -41,10 +41,122 @@ nav:
   - Unreachable capability: unreachable-capability.md
   - Decisions:
       - Index: adr/README.md
-      - 1. Licensing: adr/0001-licensing.md
-      - 2. Repository names encode role, not the org — drop the redundant prefix: adr/0002-repository-naming-convention.md
-      - 3. Two module tiers: adr/0003-two-module-tiers.md
-      - 4. Official builds carry project credentials, and a personal key replaces one: adr/0004-project-credentials-in-official-builds.md
+      - 1. Transactional store extensibility: adr/0001-transactional-store-extensibility.md
+      - 2. Module storage and delivery model: adr/0002-module-storage-and-delivery-model.md
+      - 3. Platform as execution kernel: adr/0003-platform-as-execution-kernel.md
+      - 4. Supervisor as Mosaic host manager: adr/0004-supervisor-as-host-manager.md
+      - 5. Supervisor guarantees an intelligent interface: adr/0005-supervisor-guarantees-an-interface.md
+      - 6. Supervisor orchestrates isolated runtime builds: adr/0006-supervisor-orchestrates-isolated-builds.md
+      - 7. Static Go module composition: adr/0007-static-go-module-composition.md
+      - 8. SDK as public contract language: adr/0008-sdk-as-public-contract-language.md
+      - 9. Developer Platform as an integrated toolchain: adr/0009-developer-platform-toolchain.md
+      - 10. Test Harness as development modules: adr/0010-test-harness-as-development-modules.md
+      - 11. Platform transports events, modules own domain events: adr/0011-platform-transports-events.md
+      - 12. Capabilities do not own stores: adr/0012-capabilities-do-not-own-stores.md
+      - 13. The object graph: Node, Part, Relation: adr/0013-object-graph.md
+      - 14. Storage authority, media linking and transaction scope: adr/0014-storage-authority-and-transaction-scope.md
+      - 15. Open and closed vocabularies in the object graph: adr/0015-open-and-closed-vocabularies.md
+      - 16. The published contract surface: adr/0016-published-contract-surface.md
+      - 17. How a capability acts: adr/0017-how-a-capability-acts.md
+      - 18. First-administrator bootstrap: adr/0018-first-admin-bootstrap.md
+      - 19. The module capability and invocation contract: adr/0019-module-capability-and-invocation.md
+      - 20. Optional-module composition: adr/0020-optional-module-composition.md
+      - 21. User-managed module settings: adr/0021-module-settings.md
+      - 22. Licensing: adr/0022-licensing.md
+      - 26. The React SDUI runtime is a shared package: adr/0026-react-sdui-runtime.md
+      - 27. Modules as typed capability providers: adr/0027-modules-as-typed-capability-providers.md
+      - 28. Virtual browse and materialized library: adr/0028-virtual-and-materialized-content.md
+      - 29. The Platform's SDUI emit-side: adr/0029-sdui-emit-side.md
+      - 30. The artwork proxy (and cache): adr/0030-artwork-proxy-and-cache.md
+      - 31. The Shell is a pure renderer; the app shell is server-emitted: adr/0031-server-owned-app-shell.md
+      - 32. The live session over a bidirectional WebSocket: adr/0032-live-session-websocket.md
+      - 33. Supervisor-driven live-session handover: adr/0033-supervisor-driven-live-handover.md
+      - 34. Rich metadata: the descriptive surface grows a preview: adr/0034-rich-metadata-preview.md
+      - 35. Metadata is a required capability with a default provider: adr/0035-metadata-as-required-capability.md
+      - 36. Capability-gated affordances and consumer roles: adr/0036-capability-gated-affordances.md
+      - 37. Completing the Stremio source surface: adr/0037-completing-the-stremio-source-surface.md
+      - 38. Module-contributed settings UI: adr/0038-module-contributed-settings-ui.md
+      - 39. Server-owned navigation: a screen-agnostic client: adr/0039-server-owned-navigation.md
+      - 42. The web frontend is one workspace; split repos only to enforce a boundary: adr/0042-frontend-workspace.md
+      - 43. Repository names encode role, not the org — drop the redundant prefix: adr/0043-repository-naming-convention.md
+      - 45. The playback consumer contract and the Platform-hosted media origin: adr/0045-playback-consumer-and-media-origin.md
+      - 46. Playback state is Platform-owned: adr/0046-playback-state-is-platform-owned.md
+      - 47. The player is a client primitive over a server-issued ticket: adr/0047-player-as-client-primitive.md
+      - 48. Stream selection against a client profile: adr/0048-stream-selection-against-a-client-profile.md
+      - 49. The resolution cache and capability classes: adr/0049-resolution-cache-and-capability-classes.md
+      - 50. Probing, and the per-stream playback decision: adr/0050-probing-and-the-per-stream-playback-decision.md
+      - 51. Modules as anti-corruption layers: source dialects and a tested-source registry: adr/0051-modules-as-anti-corruption-layers.md
+      - 52. Cache-first rendering, and telling the truth when a source is down: adr/0052-cache-first-rendering-and-source-health.md
+      - 53. Telemetry is ambient in context: adr/0053-telemetry-is-ambient-in-context.md
+      - 54. The correlation ID is the trace ID: adr/0054-the-correlation-id-is-the-trace-id.md
+      - 55. Instrument at the seams: adr/0055-instrument-at-the-seams.md
+      - 56. Redaction classes are the PII boundary: adr/0056-redaction-classes-are-the-pii-boundary.md
+      - 57. Audit is a store, not a log stream: adr/0057-audit-is-a-store-not-a-log-stream.md
+      - 58. Telemetry storage, retention, and expert mode: adr/0058-telemetry-storage-retention-and-expert-mode.md
+      - 59. Modules observe through the SDK: adr/0059-modules-observe-through-the-sdk.md
+      - 60. The Supervisor observes independently: adr/0060-the-supervisor-observes-independently.md
+      - 61. One client transport: retire GraphQL: adr/0061-one-client-transport.md
+      - 62. Two module tiers: adr/0062-two-module-tiers.md
+      - 63. The Platform binary is built by CI; the Supervisor selects, not compiles: adr/0063-platform-binary-built-by-ci.md
+      - 64. The extension module boundary: adr/0064-extension-module-boundary.md
+      - 65. Module distribution and trust: signed binaries and user-added repositories: adr/0065-module-distribution-and-trust.md
+      - 66. Authorization is carried in the type: adr/0066-authorization-is-carried-in-the-type.md
+      - 67. Authorization has three mechanisms, not one: adr/0067-three-authorization-mechanisms.md
+      - 68. One principal, many credentials: adr/0068-one-principal-many-credentials.md
+      - 69. Privilege cannot escalate through delegation: adr/0069-privilege-cannot-escalate.md
+      - 70. The web player is the browser, not a media framework: adr/0070-the-web-player-is-the-browser.md
+      - 71. Content artwork is stored on the node: adr/0071-content-artwork-is-stored-on-the-node.md
+      - 72. The guaranteed metadata provider needs no credential: adr/0072-the-guaranteed-metadata-provider-needs-no-credential.md
+      - 73. Stream resolution is decoupled from metadata provenance: adr/0073-stream-resolution-is-decoupled-from-metadata-provenance.md
+      - 74. Artwork is a candidate set: adr/0074-artwork-is-a-candidate-set.md
+      - 75. The artwork provider role: adr/0075-the-artwork-provider-role.md
+      - 76. A curated stream provider beside the addon host: adr/0076-a-curated-stream-provider-beside-the-addon-host.md
+      - 77. go-plugin is the extension module harness: adr/0077-go-plugin-as-the-extension-harness.md
+      - 78. Core modules keep their repositories; CI carries the version bump: adr/0078-core-modules-keep-their-repositories.md
+      - 79. The Platform manages extension modules; the Supervisor manages the binary: adr/0079-the-platform-manages-extension-modules.md
+      - 80. Deployment topologies: a native binary that runs in a container or on bare metal: adr/0080-deployment-topologies.md
+      - 81. Extension installation is user-initiated and persistent: adr/0081-extension-installation-is-user-initiated-and-persistent.md
+      - 84. Vocabulary negotiation and deliberate degradation: adr/0084-vocabulary-negotiation-and-deliberate-degradation.md
+      - 90. Lifecycle triggers, and the telemetry lane that is not needed: adr/0090-lifecycle-triggers-and-the-absent-telemetry-lane.md
+      - 97. The pre-session tree, and what a locked door may say: adr/0097-the-pre-session-tree.md
+      - 98. Claiming an unclaimed server: adr/0098-claiming-an-unclaimed-server.md
+      - 99. The development module repository, and the build tag that keeps it out of releases: adr/0099-the-development-module-repository.md
+      - 100. The browse roles rank their providers; they do not union them: adr/0100-browse-roles-rank-their-providers.md
+      - 101. The pre-session bootstrap carries its own vocabulary: adr/0101-the-pre-session-bootstrap.md
+      - 102. The session credential is a bearer pair every client can hold: adr/0102-the-session-credential-is-a-bearer-pair.md
+      - 103. One library, many viewers: adr/0103-one-library-many-viewers.md
+      - 104. The library is built from rules, and a job maintains it: adr/0104-the-library-is-built-from-rules.md
+      - 105. Official builds carry project credentials, and a personal key replaces one: adr/0105-project-credentials-in-official-builds.md
+      - 106. The pre-session action lane: adr/0106-the-pre-session-action-lane.md
+      - 107. The Platform keeps what a source told it, and tops up the tree: adr/0107-the-platform-keeps-what-a-source-told-it.md
+      - 108. The origin is a pipe only where it must be: adr/0108-the-origin-is-a-pipe-only-where-it-must-be.md
+      - 109. The transcoded stream is segmented, not byte-addressed: adr/0109-the-transcoded-stream-is-segmented.md
+      - 110. The segment length is measured from the source, not chosen: adr/0110-the-segment-length-is-measured.md
+      - 111. The playlist is a nominal grid, and a segment index is a seek instruction: adr/0111-the-playlist-is-a-nominal-grid.md
+      - 112. Language is a person's preference, and subtitles answer to whether it was met: adr/0112-language-is-a-persons-preference.md
+      - 113. Subtitles are a rendition, extracted a window at a time: adr/0113-subtitles-are-a-rendition.md
+      - 114. A subtitle track has a form, and only one form can be burned into the picture: adr/0114-a-subtitle-track-has-a-form.md
+      - 115. A styled subtitle track goes to the client whole, and burning is what is left when it cannot: adr/0115-a-styled-subtitle-goes-to-the-client.md
+      - 116. A preference is a default, an override is one sitting: adr/0116-a-preference-is-a-default-an-override-is-a-sitting.md
+      - 117. The subtitles role gets a consumer, and the Platform fetches what it finds: adr/0117-the-subtitles-role-gets-a-consumer.md
+      - 118. Playing something unowned adds it: adr/0118-playing-something-unowned-adds-it.md
+      - 119. Operational findings are durable state: adr/0119-operational-findings-are-durable-state.md
+      - 120. The children listen on Unix sockets: adr/0120-the-children-listen-on-unix-sockets.md
+      - 121. Two supervised images, a DIY path, and the Supervisor's own contract dependency: adr/0121-two-supervised-images-and-a-diy-path.md
+      - 122. Two signing keys, held offline, rotated by overlap: adr/0122-the-signing-key-hierarchy.md
+      - 123. The Supervisor answers the Platform's client surface when the Platform is absent: adr/0123-the-supervisor-answers-the-platforms-client-surface.md
+      - 124. The Platform and the Shell are resolved independently and paired by contract major: adr/0124-artefacts-are-paired-by-contract-major.md
+      - 125. Major upgrades are staged, never automatic: adr/0125-major-upgrades-are-never-automatic.md
+      - 126. Before 1.0, the upgrade caution window shifts by one: adr/0126-before-1-0-the-caution-window-shifts-by-one.md
+      - 127. The monitored version is the contract, not the artefact: adr/0127-the-monitored-version-is-the-contract-not-the-artefact.md
+      - 128. OpenTelemetry is the telemetry implementation: adr/0128-opentelemetry-is-the-telemetry-implementation.md
+      - 129. The upgrade channel is the handoff and the register: adr/0129-the-upgrade-channel-is-the-handoff-and-the-register.md
+      - 130. The module metric surface: adr/0130-the-module-metric-surface.md
+      - 131. Passkeys are an optional layer on a public origin: adr/0131-passkeys-are-an-optional-layer-on-a-public-origin.md
+      - 132. TOTP is the second factor that works everywhere: adr/0132-totp-is-the-second-factor-that-works-everywhere.md
+      - 133. An optional capability is announced once, when it becomes possible: adr/0133-an-optional-capability-is-announced-once-when-it-becomes-possible.md
+      - 134. The install key: adr/0134-the-install-key.md
+      - 135. The SDK carries no implementation: adr/0135-the-sdk-carries-no-implementation.md
 
 markdown_extensions:
   - admonition

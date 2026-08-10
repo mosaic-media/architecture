@@ -34,6 +34,12 @@ jobs:
       # Both run before the site build, because `mkdocs --strict` validates a
       # link only while both ends live in `docs/` — it stops helping exactly
       # when records start moving to the repositories that own them.
+      # The shared block is generated into every repository's CLAUDE.md. In CI
+      # only this repository is checked out, so only its own copy can be
+      # compared; the others are checked by their own gates.
+      - name: Check the shared rules block is not stale
+        run: python scripts/shared_rules.py --fleet .. --repo architecture
+
       - name: Check the decision-record index is not stale
         run: python scripts/adr_index.py --repo architecture --check
 
