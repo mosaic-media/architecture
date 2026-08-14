@@ -87,7 +87,7 @@ rather than silence. What does not exist is a control that offers the tracks: th
 source picker lists *releases*, and the panel that would list a release's streams
 beside them is not built. Subtitles are not in the same position — embedded
 tracks are HLS renditions and switchable in the player's own menu
-([platform#68](https://github.com/mosaic-media/platform/blob/main/docs/adr/0068-subtitles-are-a-rendition.md)) — so the gap is audio alone,
+([platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md)) — so the gap is audio alone,
 which is why it is one row rather than two.
 
 **This row was created deliberately in M2a rather than discovered afterwards.**
@@ -314,7 +314,7 @@ Each one is a service that worked perfectly and a product that did not.
 **It invented no channel**, which is why it took one slice rather than a
 milestone. The offer travels on the findings spool and the request on the
 handoff, and both already carried this shape of message — the handoff has
-reported an owed *configuration* escalation since M4's slice 4, and [supervisor#9](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0009-major-upgrades-are-never-automatic.md) had
+reported an owed *configuration* escalation since M4's slice 4, and [supervisor#12](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0012-upgrade-automation-is-staged-against-the-contract-version.md) had
 already written down that a version waiting should be a finding.
 
 **Nothing acknowledges anything.** A request settles when the Platform is
@@ -324,7 +324,7 @@ that field. An acknowledgement would have been written by a process the upgrade
 was about to replace, about an activation that might still revert.
 
 **What did not come with it** is the backward direction, which is now its own
-row above, and [supervisor#9](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0009-major-upgrades-are-never-automatic.md)'s automation policy: every upgrade today is a person
+row above, and [supervisor#12](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0012-upgrade-automation-is-staged-against-the-contract-version.md)'s automation policy: every upgrade today is a person
 pressing something, which is that record's Manual level.
 
 ## Discharged in M4 — configuration versioning

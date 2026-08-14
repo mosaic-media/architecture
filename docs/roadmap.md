@@ -281,7 +281,7 @@ the subsystem worth opening.
 | [stremio-core](https://github.com/Stremio/stremio-core) (Rust) | M7 | `src/models/` as a list of the surfaces a Stremio-shaped product needs |
 
 Two hazards when reading them. **They assume a local seekable file**; Mosaic's
-sources are remote, which is what [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md)'s measurement settled. And *transport*
+sources are remote, which is what [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md)'s measurement settled. And *transport*
 in the Stremio protocol and in stremio-core's `addon_transport/` means the addon
 protocol's HTTP binding — the word is theirs, and the [controlled
 vocabulary](index.md#controlled-vocabulary) reserves it here.
@@ -1125,9 +1125,9 @@ carries the row.
    continue-watching rail.
 
    The superseded path is unwired and the honest pipe restored;
-   [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md)'s status
+   [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md)'s status
    line records which half of it was wrong. **The superseding record is
-   [platform#64](https://github.com/mosaic-media/platform/blob/main/docs/adr/0064-the-transcoded-stream-is-segmented.md), and it is
+   [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md), and it is
    decided: the transcoded stream is segmented rather than byte-addressed.**
    The reasoning is in the record; the finding that forced it is three
    paragraphs below.
@@ -1173,7 +1173,7 @@ carries the row.
    file, and its own uniform-2 s fallback is the tell. **So slice 4 is now
    `remux`'s shape and not `seanime`'s** — a computed uniform playlist rather
    than an exact one off a keyframe index — which
-   [platform#64](https://github.com/mosaic-media/platform/blob/main/docs/adr/0064-the-transcoded-stream-is-segmented.md) records. It also
+   [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md) records. It also
    settles the client: this is
    [web#5](https://github.com/mosaic-media/web/blob/main/docs/adr/0005-the-web-player-is-the-browser.md)'s stated condition
    firing rather than [web#5](https://github.com/mosaic-media/web/blob/main/docs/adr/0005-the-web-player-is-the-browser.md) being reversed. Segmenting is additionally what
@@ -1182,11 +1182,11 @@ carries the row.
    set stops it being one today.
 
    **A segment index is a seek instruction, not a description**
-   ([platform#66](https://github.com/mosaic-media/platform/blob/main/docs/adr/0066-the-playlist-is-a-nominal-grid.md), superseding
-   [platform#65](https://github.com/mosaic-media/platform/blob/main/docs/adr/0065-the-segment-length-is-measured.md) wholly). It is true
+   ([platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md), superseding
+   [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md) wholly). It is true
    that a copied stream cuts at the source's keyframes and nowhere else, so
    asking for 6 s of a release with 10 s keyframes yields six 10-second
-   segments. [platform#65](https://github.com/mosaic-media/platform/blob/main/docs/adr/0065-the-segment-length-is-measured.md) concluded from that the origin must measure the interval,
+   segments. [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md) concluded from that the origin must measure the interval,
    and was wrong twice.
 
    The probe it rests on does not exist: `-read_intervals` bounds what ffprobe
@@ -1201,7 +1201,7 @@ carries the row.
    was 60.000000 and one at 42 s emitted 40.000000 — off by the keyframe a copy
    can begin at, and **not accumulating**, because each seek anchors to the
    playlist's arithmetic rather than to the segment before it. That is how
-   `remux` resumes from anywhere, and the machinery is [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md)'s `-ss`/`-copyts`
+   `remux` resumes from anywhere, and the machinery is [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md)'s `-ss`/`-copyts`
    already.
 
    **The server half is built.** A release that must go through ffmpeg is three
@@ -1218,7 +1218,7 @@ carries the row.
 
    Deleted with it: `contentLength`, `offsetAt`, `parseByteRangeStart`,
    `serveSeekableRemux`, the byte spool and its registry, and `ShouldRemux` —
-   dead since [platform#63](https://github.com/mosaic-media/platform/blob/main/docs/adr/0063-the-origin-is-a-pipe-only-where-it-must-be.md) named it. The unseekable pipe survives for a source that
+   dead since [platform#82](https://github.com/mosaic-media/platform/blob/main/docs/adr/0082-the-origin-relays-or-serves-a-nominal-segment-grid.md) named it. The unseekable pipe survives for a source that
    reports no duration, and its test pins that fallback rather than the only
    behaviour.
 
@@ -1304,7 +1304,7 @@ carries the row.
    of the gap on the source side.
 
    **The module side now has its consumer too**
-   ([platform#72](https://github.com/mosaic-media/platform/blob/main/docs/adr/0072-the-subtitles-role-gets-a-consumer.md)), which closes the
+   ([platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md)), which closes the
    item. The gap was not what "unbuilt" usually looks like: the registry could
    resolve a subtitles provider *by name* and no code path anywhere knew a name
    to ask for, so the plural enumerator every other fanned-out role has did not
@@ -1328,8 +1328,8 @@ carries the row.
    own tracks are what a preference was resolved against.
 
    **The *embedded* side landed** under
-   [platform#68](https://github.com/mosaic-media/platform/blob/main/docs/adr/0068-subtitles-are-a-rendition.md), which is what makes
-   [platform#67](https://github.com/mosaic-media/platform/blob/main/docs/adr/0067-language-is-a-persons-preference.md)'s escalation visible instead of merely computed. A release going
+   [platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md), which is what makes
+   [platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md)'s escalation visible instead of merely computed. A release going
    through ffmpeg now serves a master playlist declaring one HLS subtitle
    rendition per embedded track, `DEFAULT=YES` on whichever the preference and
    its escalation chose; windows of WebVTT are extracted from the source a
@@ -1340,7 +1340,7 @@ carries the row.
    (item 6) that exists.
 
    **A subtitle track's codec then turned out to decide all of this**, which is
-   [platform#69](https://github.com/mosaic-media/platform/blob/main/docs/adr/0069-a-subtitle-track-has-a-form.md) and which corrected a bug
+   [platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md) and which corrected a bug
    the paragraph above shipped. Offering *every* embedded track as a rendition is
    right only for plain text. Picture tracks — PGS from a Blu-ray, VobSub from a
    DVD — have no text in them at all, and ffmpeg refuses to invent some; the
@@ -1365,7 +1365,7 @@ carries the row.
    switched off**, since by then it is part of the picture.
 
    **That asymmetry is why the third answer then got built too**
-   ([platform#70](https://github.com/mosaic-media/platform/blob/main/docs/adr/0070-a-styled-subtitle-goes-to-the-client.md)), which [platform#69](https://github.com/mosaic-media/platform/blob/main/docs/adr/0069-a-subtitle-track-has-a-form.md)
+   ([platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md)), which [platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md)
    had rejected as blocked. The Platform now serves the ASS script itself and the
    Shell's player draws it with libass, preserving every position, colour and
    font at **no encode cost** — so the viewer's choice is three-valued (`plain`,
@@ -1401,7 +1401,7 @@ carries the row.
      with the pictures and there is no way to reach the text without them.
      Extracting inside the video's own ffmpeg run would cost nothing extra and
      was the preferred design going in; ffmpeg 5.1 refuses all three ways of
-     asking for it, which [platform#68](https://github.com/mosaic-media/platform/blob/main/docs/adr/0068-subtitles-are-a-rendition.md) records.
+     asking for it, which [platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md) records.
    - **One claim is unverified and it is client-side.** The origin's two clocks
      were measured to agree. Whether hls.js maps a raw WebVTT segment onto an
      fMP4 timeline without an `X-TIMESTAMP-MAP` header needs a browser, and a
@@ -1417,7 +1417,7 @@ carries the row.
    column — and the plan picks one.
 
    **The preference half landed** under
-   [platform#67](https://github.com/mosaic-media/platform/blob/main/docs/adr/0067-language-is-a-persons-preference.md), which is the part
+   [platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md), which is the part
    that was wrong rather than merely missing: the plan ranked audio tracks
    against `PreferredLanguages`, a package variable, and both callers passed
    `nil` — so on a machine built for four people, every viewer got one person's
@@ -1844,8 +1844,7 @@ decides on the user's behalf to be recorded.
    is server-rendered into the page body, so a browser with scripting off shows
    it from the ordinary DOM and the meta refresh keeps it current.
 
-   **The emitter is on the first-boot path, not only the failure path** — ADR
-   0005 puts onboarding on Supervisor-emitted SDUI, because at that point the
+   **The emitter is on the first-boot path, not only the failure path** — [supervisor#2](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0002-supervisor-guarantees-an-interface.md) puts onboarding on Supervisor-emitted SDUI, because at that point the
    Platform does not exist to emit any. How the emitter obtains the contract
    without breaking the Supervisor's import boundary was open until
    [supervisor#6](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0006-two-supervised-images-and-a-diy-path.md), and the
@@ -2329,7 +2328,7 @@ to prevent.**
 **Carried out of M4, each with why rather than a bare list:**
 
 - **The upgrade automation *policy*.** The trigger and the surface landed
-  ([platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md)); what has not is [supervisor#9](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0009-major-upgrades-are-never-automatic.md)'s three levels, so every upgrade today is
+  ([platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md)); what has not is [supervisor#12](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0012-upgrade-automation-is-staged-against-the-contract-version.md)'s three levels, so every upgrade today is
   a person pressing something. That is the Manual level and the safest of the
   three, and turning on the others means deciding how the setting reaches the
   Supervisor — the same channel question [platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md) answered for the request, so it
