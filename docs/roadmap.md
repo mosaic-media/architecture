@@ -208,15 +208,22 @@ Shell mints where the user clicks, instrumented at nine seams, redacted at
 construction by class, stored to both a file and PostgreSQL, and readable inside
 Mosaic as logs and a trace waterfall behind `telemetry.read`
 ([platform#31](https://github.com/mosaic-media/platform/blob/main/docs/adr/0031-telemetry-is-ambient-in-context.md)–[supervisor#5](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0005-the-supervisor-observes-independently.md)).
-Modules observe through a dependency-free SDK interface the Platform attributes
-and quota-bounds. Retention is a scheduled job as of M0.1 rather than a
-goroutine that only existed while the process did — a Platform down for a month
-used to come back with a month of records it had intended to drop. The Supervisor
-keeps its own smaller file in the same format under the same boot id, for the
-failures where the process that would normally report is the one that is broken;
-nothing merges or serves it yet. All three implementations are hand-written and
-[sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md) replaces
-them with OpenTelemetry, which is M5's fifth thread and not yet built.
+Modules observe through an SDK interface that names no OpenTelemetry type, which
+the Platform attributes and quota-bounds. Retention is a scheduled job as of M0.1
+rather than a goroutine that only existed while the process did — a Platform down
+for a month used to come back with a month of records it had intended to drop.
+The Supervisor keeps its own smaller file in the same format under the same boot
+id, for the failures where the process that would normally report is the one that
+is broken; nothing merges or serves it yet. The implementations are no longer
+hand-written: the Supervisor is on the OpenTelemetry SDK with a file exporter,
+and the Platform produces records, spans and metrics as OpenTelemetry's while
+keeping its own `Sink`, so the JSON file, the store, the retention job and the
+expert-mode viewer did not move ([sdk#8](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0008-opentelemetry-is-the-telemetry-implementation.md)).
+Two things are left, both in M5's sixth thread: the Platform's module adapter
+still carries its own copy of the classification mapping instead of the SDK's,
+and the SDK's `go.mod` still requires four OpenTelemetry API modules that
+[sdk#10](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0010-the-sdk-carries-no-implementation.md)
+decides to remove and has not.
 
 **Authorization.** Argon2id password verification, ABAC roles, an `authorized`
 value only the boundary can construct with a reflection-enforced conformance
@@ -1025,8 +1032,11 @@ carries the row.
    rather than as grounds for an identical second attempt. And it retries once,
    never in a loop.
 
-   Left out: the background refresh job, still blocked on the jobs runner, the
-   scheduler and the system principal, exactly as [platform#28](https://github.com/mosaic-media/platform/blob/main/docs/adr/0028-resolution-cache-and-capability-classes.md) anticipated.
+   Left out: the background refresh job, which is unbuilt and **no longer
+   blocked** — the jobs runner, the interval scheduler and the system principal
+   all landed in M0.1 and four handlers are registered on them. The
+   resolution-cache refresh is simply not one of them, so it is queued work now
+   rather than the prerequisite [platform#28](https://github.com/mosaic-media/platform/blob/main/docs/adr/0028-resolution-cache-and-capability-classes.md) anticipated.
 4. ~~**Segmented output (HLS).**~~ **Built.** The narrative below is kept in full
    because it is the most instructive thing in this release: two designs were
    built and disproved live before the third worked, and the disproofs are worth
@@ -2942,7 +2952,7 @@ stated language behind it is not written.
 
 ## Findings worth keeping
 
-Thirteen failure shapes that recurred, none of which a gate caught.
+Fourteen failure shapes that recurred, none of which a gate caught.
 
 1. **A screen that has not been rendered has not been verified.** Sign-in was
    verified end to end on the server, declared blocked in the browser, and the
@@ -3042,6 +3052,28 @@ Thirteen failure shapes that recurred, none of which a gate caught.
     exist to prevent, in somebody else's repository. And **check the direction
     of the comparison before adopting** — on update trust Mosaic is ahead, so
     copying would have been a downgrade.
+14. **A reference that fails open is worse than one that dangles, and the tool
+    written to catch it fails the same way.** The decision records were one
+    repository's 135, cited from 4,618 sites as `ADR NNNN`. Moving each to the
+    repository whose mechanism enforces it — 124 records across nine
+    repositories now, each numbered from 1 — means a citation that is not
+    rewritten no longer 404s: it *resolves*, to that repository's own record of
+    the same number, which is a different decision. It reads as valid, and
+    nothing in the fleet could detect it. The qualified `repo#N` form and its
+    lint exist for exactly that.
+
+    **Then the lint did it twice more, and both times reported zero.** Its
+    separator class matched one character, so `ADR` and a number split across a
+    line break was invisible and three real citations survived the entire
+    migration under a green gate. And the rewriter's requalification pass ran
+    *after* the bare pass, so a citation it had just written as
+    `architecture#4` was re-read as though 4 were an old record number and
+    mapped a second time: 184 sites silently repointed at the wrong record,
+    every one of them resolving. Both were found by reading, not by running.
+    **When the failure mode of the thing you are checking is "wrong but
+    plausible", that is also the failure mode of your checker** — so the check
+    needs its own adversarial case, and a count of zero is evidence of nothing
+    until something known-bad has been shown to make it non-zero.
 
 ---
 
