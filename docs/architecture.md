@@ -1,36 +1,49 @@
 # Architecture
 
-How Mosaic is built. This document describes the system as it exists in `platform` — 473 Go files, ~86,350 lines — not a system that is planned. Where it describes something unbuilt, it says so.
+How Mosaic is built. This document describes the system as it exists in `platform`, not a system that is planned. Where it describes something unbuilt, it says so.
 
-Read this before changing anything. For what Mosaic is and why, see [MOSAIC.md](index.md). For what is being built next, see [ROADMAP.md](roadmap.md).
+Read this before changing anything. For what Mosaic is and why, see [what Mosaic is](index.md). For what is being built next, see [the roadmap](roadmap.md).
 
 ---
 
 ## Bird's eye view
 
-Mosaic is a self-hosted media server built as a single Go binary. A Supervisor selects which modules a user wants, compiles them into that binary, and manages the running process. There are no plugins, no dynamic libraries, and no RPC between local components.
+Mosaic is a self-hosted media server built as a Go binary that CI compiles from a version tag ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)). The core modules are linked into it — no plugin, no dynamic library, no RPC between them. **Extension modules are not in that binary**: they are installed by a user at runtime and run in their own process behind a gRPC harness ([architecture#3](adr/0003-two-module-tiers.md), [platform#39](https://github.com/mosaic-media/platform/blob/main/docs/adr/0039-extension-module-boundary.md)), which is the one place Mosaic does pay a transport cost, deliberately, for a boundary.
 
-The Platform is hexagonal. Its core defines contracts — interfaces describing what it needs — and everything technological satisfies them from outside. PostgreSQL is not privileged; it is a module that implements the storage port and could be replaced by another.
+The Platform is hexagonal. Its core defines contracts — interfaces describing what it needs — and everything technological satisfies them from outside.
 
 ```mermaid
 flowchart LR
     RPC["Connect: Auth + Session"]
     HTTP["Health endpoints"]
     APP["Application services"]
-    CON["Contracts"]
+    CON["Platform contracts"]
     DOM["Domain"]
-    MOD["Modules"]
+    SDK["Published SDK"]
+    BM["Built-in module"]
+    CM["Core module"]
+    HOST["Extension host"]
     PG[("PostgreSQL")]
+
+    subgraph own ["its own process"]
+        EM["Extension module"]
+    end
 
     RPC --> APP
     HTTP --> APP
     APP --> CON
+    APP --> SDK
     CON --> DOM
-    MOD --> CON
-    MOD --> PG
+    BM --> CON
+    BM --> PG
+    HOST --> CON
+    CM --> SDK
+    EM --> SDK
 ```
 
-Arrows mean *depends upon*. Dependencies point inward: transports depend on application services, which depend on contracts, which depend on the domain. Modules depend on contracts too, from the outside. **The domain imports nothing.**
+Arrows mean *depends upon*, and nothing else — the process boundary is drawn as a box rather than an arrow, because an arrow that sometimes meant "calls over gRPC" would be the ambiguity this repository keeps paying for. Dependencies point inward: transports depend on application services, which depend on contracts, which depend on the domain. **The domain imports nothing.**
+
+The two module halves depend on different things, and it matters. A **built-in** module implements the Platform's own contracts from outside — which is why PostgreSQL is not privileged and could be replaced. A **core** or **extension** module never sees those contracts at all; it compiles against the published SDK, which is what makes the tier a delivery decision rather than a rewrite. The extension host is Platform code, on the Platform's side of that line.
 
 ---
 
@@ -49,14 +62,13 @@ Trusted, compiled in, defines the rules everything else follows. Imports no modu
 | `UnitOfWork` | `WithinTx(ctx, fn)` — the transaction boundary |
 | `Tx` | Transaction scope. Stores reached through one `Tx` share one transaction |
 | `StorageAdapter` | The storage port an engine implements |
-| `UserStore`, `SessionStore`, `PermissionStore`, `ConfigStore`, `CredentialStore` | Persistence contracts |
-| `NodeStore`, `PartStore`, `RelationStore`, `SourceBindingStore` | The content model — containment tree, bytes, association graph, identity |
+| the store set | Persistence contracts, reached through `Tx` and **enumerated only in `contracts/unit_of_work.go`**, each accessor carrying the record that added it. It grows with the Platform, so a second list here would be a stale one — read the type |
 | `EventOutbox`, `EventPublisher` | Event durability and delivery |
 | `SecretBroker` | Secret resolution and rotation |
 | `Clock`, `IDGenerator` | Determinism seams for testing |
 | `HealthProbe`, `ComponentHealthReporter` | Health reporting |
 
-**`app/`** — application services. One file per command or query: `create_local_user`, `authenticate_local_user`, `revoke_session`, `set_user_status`, `draft_config_version`, `validate_config_version`, `activate_config_version`, and read-side queries for users, permissions and configuration.
+**`app/`** — application services, **one file per command or query**, which is the convention rather than a list: the directory is the index and it is long, spanning identity, roles and delegation, configuration versions, content and enrichment, library rules, playback and watch state, modules and extensions, telemetry, jobs and server setup. Two files there are load-bearing beyond their own command — `service.go` holds `enter`, the single authenticate-and-authorise gate every entry point passes through, and `system_principal.go` is the caller background work acts as.
 
 **`policy/`** — an ABAC-shaped engine. `Subject`, `Action`, `Resource`, `PolicyContext` produce a `Decision`, resolved by RBAC lookups against `PermissionStore`. Default-deny.
 
@@ -74,13 +86,15 @@ Trusted, compiled in, defines the rules everything else follows. Imports no modu
 
 ### `internal/modules/` — built-in modules
 
-Infrastructure implementing Platform contracts, using the same registration and manifest shape an external module would use, but compiled in, required and trusted.
+Infrastructure implementing Platform contracts, using the same registration and manifest shape a module of either outer tier would use, but compiled in, required and trusted.
 
-`postgres/` is the only one today: `pgx/v5`, twenty-seven embedded SQL migrations, a deterministic migrator, implementations of every store contract, and SQLSTATE-to-category error mapping. **No pgx type, row or SQLSTATE escapes this package.**
+`postgres/` is the only one today: `pgx/v5`, embedded and versioned SQL migrations, a deterministic migrator, implementations of every store contract, and SQLSTATE-to-category error mapping. **No pgx type, row or SQLSTATE escapes this package.**
 
 ### `internal/adapters/` — not module-shaped
 
-Helpers that don't implement a full contract surface: `crypto/` (AES-GCM for the secret vault, and an Argon2id `PasswordHasher`) and `filesystem/` (atomic writes). Storage engines do **not** belong here.
+Helpers that don't implement a full contract surface: `crypto/` (AES-GCM for the secret vault, and an Argon2id `PasswordHasher`), `filesystem/` (atomic writes), and two smaller ones for the instance identity and for listeners. Storage engines do **not** belong here.
+
+`extension/` sits here too and is the exception worth knowing: it is the **host** of the extension tier rather than a member of any tier — the fetcher, the installer, the signature and digest verification, the go-plugin harness and the egress-containment report. Nothing above the capability registry knows it exists, because what the Platform holds is a `v1.Capability` whichever side of the process boundary answers it.
 
 An adapter is not a built-in module: there is no manifest and no registration through `internal/composition/builtin`, because each fulfils a single small port rather than a broad contract surface. It is still swappable, behind the same hexagonal seam — the composition root wires it directly. The password hasher satisfies the `domain.PasswordVerifier` port (`Hash`/`Verify`) and is chosen in `main.go`, so replacing Argon2id with bcrypt, scrypt or an HSM-backed signer is a one-line change there. The `crypto` package imports no Platform code, so the compile-time assertion that it satisfies the port lives in its external test package rather than coupling the adapter to `domain`.
 
@@ -88,19 +102,19 @@ An adapter is not a built-in module: there is no manifest and no registration th
 
 `session/` — the **first-party client transport**, a typed two-lane Connect/gRPC surface generated from one `.proto` ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)). Lane 1 is unary intents (`Attach`/`Navigate`/`Invoke`/`SubmitInput`); lane 2 is one server-streaming `Subscribe` per session over which the Platform pushes region updates, shell mutations, toasts and unsolicited events. Both lanes multiplex onto one HTTP/2 connection (served over h2c). A per-session **outbound mailbox** owns the wire — unary handlers only enqueue; a single sender goroutine drains to `Send` (gRPC `Send` is not goroutine-safe) — and a monotonic per-session `seq` with a bounded replay buffer gives stream resume, which subsumes [supervisor#4](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0004-supervisor-driven-live-handover.md)'s handover. An `Invoke` routes straight to the application services (`ImportContent`/`ConfigureModule`/`playPart`) through a `dispatch` switch that is now the complete enumeration of what a client can invoke — since [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) there is no other transport to reach a command through, so an action `dispatch` cannot map does not exist. The screen emit-side ([platform#19](https://github.com/mosaic-media/platform/blob/main/docs/adr/0019-sdui-emit-side.md)) backs it; `UINode` subtrees ride the envelope as SDUI-JSON bytes ([contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md)'s encoding option (a)). This supersedes the bespoke WebSocket of [platform#22](https://github.com/mosaic-media/platform/blob/main/docs/adr/0022-live-session-websocket.md); the first-party clients are ported and the chain works end to end.
 
-`auth/` — the Connect **`AuthService`** ([platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md)): `SignIn`/`SignOut` over `AuthenticateLocalUser`/`RevokeSession`. It is a service of its own because it is the one call made *without* a session — every `SessionService` request begins with a session ref. Together with `session/` it is the **entire** client API: [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) deleted the GraphQL transport that [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) had retained as an external/tooling surface, having found it had no caller — the Shell used exactly one operation of it (`signIn`), and its other resolvers duplicated commands the session transport already dispatched. `rpc/` — the plumbing both services share: the Platform's seven error categories mapped onto Connect status codes (the thing GraphQL's always-200 envelope could not do), and the telemetry interceptor that seeds each request's trace ([platform#33](https://github.com/mosaic-media/platform/blob/main/docs/adr/0033-instrument-at-the-seams.md)), parameterised by component so each service names itself. `screens/` — the SDUI emit-side ([platform#19](https://github.com/mosaic-media/platform/blob/main/docs/adr/0019-sdui-emit-side.md)) the session transport renders through; `artwork/` — the artwork proxy ([platform#20](https://github.com/mosaic-media/platform/blob/main/docs/adr/0020-artwork-proxy-and-cache.md)); `playback/` — the media origin ([platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md)); `health/` — the Supervisor handoff endpoints. The composition root serves the client-facing API and the operational handoff on separate ports (`:8081` and `:8080`), and constructs `app.Service` with an Argon2id password hasher. **Not every Platform capability is client-reachable** — the full list is [Unreachable capability](unreachable-capability.md), and it is longer than the transport change that prompted it. Creating roles, granting them, drafting and activating config versions and setting user status have commands, policy actions and tests, but no client surface: they had GraphQL mutations with no UI behind them, and [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) chose to delete rather than re-port them, on the grounds that they arrive properly as server-emitted screens when an admin UI exists. `bootstrap.EnsureAdmin` — env-gated and idempotent — remains the only in-band way to establish the first authority.
+`auth/` — the Connect **`AuthService`** ([platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md)): `SignIn`/`SignOut` over `AuthenticateLocalUser`/`RevokeSession`. It is a service of its own because it is the one call made *without* a session — every `SessionService` request begins with a session ref. Together with `session/` it is the **entire** client API: [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) deleted the GraphQL transport that [contracts#5](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0005-cross-client-transport-two-lane-rpc.md) had retained as an external/tooling surface, having found it had no caller — the Shell used exactly one operation of it (`signIn`), and its other resolvers duplicated commands the session transport already dispatched. `rpc/` — the plumbing both services share: the Platform's seven error categories mapped onto Connect status codes (the thing GraphQL's always-200 envelope could not do), and the telemetry interceptor that seeds each request's trace ([platform#33](https://github.com/mosaic-media/platform/blob/main/docs/adr/0033-instrument-at-the-seams.md)), parameterised by component so each service names itself. `screens/` — the SDUI emit-side ([platform#19](https://github.com/mosaic-media/platform/blob/main/docs/adr/0019-sdui-emit-side.md)) the session transport renders through; `artwork/` — the artwork proxy ([platform#20](https://github.com/mosaic-media/platform/blob/main/docs/adr/0020-artwork-proxy-and-cache.md)); `playback/` — the media origin ([platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md)); `health/` — the Supervisor handoff endpoints. The composition root serves the client-facing API and the operational handoff on separate ports (`:8081` and `:8080`), and constructs `app.Service` with an Argon2id password hasher. **Not every Platform capability is client-reachable** — the full list is [Unreachable capability](unreachable-capability.md), and it is longer than the transport change that prompted it. Creating roles, granting them, drafting and activating config versions and setting user status have commands, policy actions and tests, but no client surface: they had GraphQL mutations with no UI behind them, and [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) chose to delete rather than re-port them, on the grounds that they arrive properly as server-emitted screens when an admin UI exists. A fresh server establishes its first authority by being **claimed**: it seeds no administrator, and boots to a setup wizard where the first person to reach it becomes one ([platform#54](https://github.com/mosaic-media/platform/blob/main/docs/adr/0054-claiming-an-unclaimed-server.md)). `bootstrap.EnsureAdmin` survives beside that, env-gated, idempotent and unset by default, for an automated deployment and for a box whose login was lost.
 
 ### `internal/composition/builtin/` — module discovery
 
-A `Registry` holding modules that present a `Manifest{ID, Version, Fulfills []string}`. Discovery is by registration rather than filesystem scan, but the shape deliberately mirrors how an external module would be discovered.
+A `Registry` holding modules that present a `Manifest{ID, Version, Fulfills []string}`. Discovery is by registration rather than filesystem scan, but the shape deliberately mirrors how a module from its own repository is discovered.
 
-### Optional external-shaped modules — their own repositories
+### Core and extension modules — their own repositories
 
-Distinct from `internal/modules/` (built-in, trusted, required) and from `capabilities/reference/` (a package *inside* the Platform module): an **optional module** is its **own Go module in its own repository**, importing only the SDK, statically composed into the binary and invoked through a capability registry ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md), [platform#16](https://github.com/mosaic-media/platform/blob/main/docs/adr/0016-optional-module-composition.md)).
+Distinct from `internal/modules/` (built-in, trusted, required) and from `capabilities/reference/` (a package *inside* the Platform module): both of these tiers are a **Go module in its own repository**, importing only the SDK and invoked through the capability registry ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md), [platform#16](https://github.com/mosaic-media/platform/blob/main/docs/adr/0016-optional-module-composition.md)). What separates them is how they arrive: a **core** module is a `go.mod` dependency compiled in, an **extension** module is installed at runtime and hosted out of process. The code is written the same way for either ([architecture#3](adr/0003-two-module-tiers.md)).
 
 [`module-stremio-addons`](https://github.com/mosaic-media/module-stremio-addons) is the first: a client of the Stremio addon protocol. It implements the SDK `Capability` interface (`Manifest()` plus `Import(ctx, ContentService, ImportRequest)`), owns no schema, and reflects movies and TV into the graph — metadata as the Work and its tree, streams as `RemoteLocation` Parts, the two independent so a meta-only addon adds no Parts. A boundary test, and Go itself, keep it to the SDK and the standard library.
 
-It is an **extension** module, so the Platform does not depend on it at all ([platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)): it appears in neither `go.mod` nor the composition root, and a user installs it at runtime through the `installExtension` action, after which the extension Manager adopts it across restarts. Only the three **core** modules — `module-tmdb`, `module-cinemeta`, `module-remote-playback` — are `go.mod` dependencies at tagged versions, compiled in ([architecture#3](adr/0003-two-module-tiers.md)). A caller invokes a module through the `ImportContent` command (the session transport's `importContent` action, policy action `content.import`), which authorises the caller, resolves the capability by id, and hands it the `app.Service` as its `ContentService` — so the module's own writes each re-authorise as the invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)). Explicit registration stands in for [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)'s eventual Build-Pipeline-generated `imports.go`.
+It is an **extension** module, so the Platform does not depend on it at all ([platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)): it appears in neither `go.mod` nor the composition root, and a user installs it at runtime through the `installExtension` action, after which the extension Manager adopts it across restarts. The **core** modules — `module-tmdb`, `module-cinemeta`, `module-remote-playback` — are the `go.mod` dependencies at tagged versions, compiled in; read `go.mod` for which and at what version, rather than a list here. A caller invokes a module through the `ImportContent` command (the session transport's `importContent` action, policy action `content.import`), which authorises the caller, resolves the capability by id, and hands it the `app.Service` as its `ContentService` — so the module's own writes each re-authorise as the invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)). Explicit registration stands in for [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)'s eventual Build-Pipeline-generated `imports.go`.
 
 The addons the Stremio module sources from are **user-managed settings**, not composed-in config ([platform#17](https://github.com/mosaic-media/platform/blob/main/docs/adr/0017-module-settings.md)): a `ModuleSettingsStore` (one jsonb document per module id, joined to `Tx`) holds them, generic `configureModule`/`moduleSettings` commands (actions `module.configure`/`module.read`) set and read them, and the Platform hands them to the module on each invocation through `ImportRequest.Settings`. The Platform stores the document opaquely; the module interprets it (`{"addons":[...]}`). This is the first of the SDK gaps building the module surfaced.
 
@@ -108,7 +122,7 @@ The addons the Stremio module sources from are **user-managed settings**, not co
 
 The public contract surface ([platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)) has been **extracted into a standalone module**, [`github.com/mosaic-media/sdk`](https://github.com/mosaic-media/sdk). The Platform depends on it importing `github.com/mosaic-media/sdk/contracts/platform/v1`. It is pre-1.0 and bumps additively whenever a module finds a gap; **the version in use is `platform/go.mod` and the per-version changelog is the SDK's own `README.md`**, so neither is restated here.
 
-It carries the content models (`Node`, `Part`, `Relation`, `SourceBinding` and their vocabularies), the nine content command, query and result types, the `ContentService` interface `internal/platform/app.Service` implements, the `Capability` interface an optional module implements, and an opaque `Caller`. The store contracts, `Tx` and the identity and configuration models are **not** in it — they are Platform↔engine plumbing and stay internal. Because the SDK is a separate module, Go itself forbids it from importing the Platform's `internal/`, so an internal-type leak is a compile error rather than something a test must catch. `capabilities/reference` (the reference capability) and `test/sdkprobe` build against the SDK and nothing else of the Platform's; `test/sdkboundary` compiles the probe as a standing check.
+It carries the content models (`Node`, `Part`, `Relation`, `SourceBinding` and their vocabularies), the content command, query and result types, the `ContentService` interface `internal/platform/app.Service` implements, the `Capability` interface a module of either tier implements, the provider roles, the ambient `Telemetry` handle, and an opaque `Caller`. The store contracts, `Tx` and the identity and configuration models are **not** in it — they are Platform↔engine plumbing and stay internal. Because the SDK is a separate module, Go itself forbids it from importing the Platform's `internal/`, so an internal-type leak is a compile error rather than something a test must catch. `capabilities/reference` (the reference capability) and `test/sdkprobe` build against the SDK and nothing else of the Platform's; `test/sdkboundary` compiles the probe as a standing check.
 
 Known gap: `ContentService` exposes no *read* for relations (`ListFrom`/`ListTo`), so a capability can create edges but not query them back through the surface. The reference capability does not need it; it is a candidate addition rather than a defect.
 
@@ -120,7 +134,7 @@ Its components are **primitives or definitions** ([contracts#2](https://github.c
 
 ### The SDUI contract — its own repository
 
-[`contracts`](https://github.com/mosaic-media/contracts) is to the interface what the SDK is to content: the language-neutral contract a **producer** (the Platform's emit-side, a UI-contributing Module) emits and a **client** (the Shell, a native client) renders ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md), [contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)). It carries the schema as **JSON Schema** (`UINode` open tree, the `Action` envelope, `ComponentDefinition`) — JSON for the *authoring* layer, because the vocabulary is open and the definitions and tokens are JSON data. The *wire* is protobuf end to end: `UINode` is generated as a message too ([contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)), and since [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) protobuf/Connect is the only client transport there is. It ships a **Go producer binding** (`Node`/`Action` types plus standard-component builders), a **TypeScript** binding for the Shell, the **standard definition library** as data, and the **design tokens** (DTCG). Apache-2.0, like the SDK ([architecture#1](adr/0001-licensing.md)). Producers require it at a tagged version; a `replace` directive is for local cross-repo work and may not land in a commit.
+[`contracts`](https://github.com/mosaic-media/contracts) is to the interface what the SDK is to content: the language-neutral contract a **producer** (the Platform's emit-side, a UI-contributing Module) emits and a **client** (the Shell, a native client) renders ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md), [contracts#3](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0003-sdui-contract-repository.md)). It carries the schema as **JSON Schema** (`UINode` open tree, the `Action` envelope, `ComponentDefinition`) — JSON for the *authoring* layer, because the vocabulary is open and the definitions and tokens are JSON data. The *wire* is protobuf end to end: `UINode` is generated as a message too ([contracts#6](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0006-contracts-protobuf-workspace.md)), and since [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) protobuf/Connect is the only client transport there is. It ships a **Go producer binding** (`Node`/`Action` types plus standard-component builders), a **TypeScript** binding for the Shell, the **standard definition library** as data, and the **design tokens** (DTCG). Apache-2.0, like the SDK ([architecture#1](adr/0001-licensing.md)). A `replace` directive is for local cross-repo work and may not land in a commit. Go consumers are presently pinned to it by **pseudo-version** rather than by tag, because tag pushes are refused from the environment it is built in — an ordinary `require` resolved from the proxy, which keeps that rule intact.
 
 ### The React runtime and the storybook — packages in the `web` workspace
 
@@ -217,7 +231,7 @@ Readiness is false if any component reports Unavailable; Degraded alone does not
 
 Integration tests run against a real database, not mocks. Application service tests run without PostgreSQL, against contract fakes. Boundary tests parse import declarations rather than grepping text. Where a test could pass by construction, it was verified to fail against a deliberately introduced violation.
 
-Gate for every change: `go build ./...`, `go vet ./...`, `go test ./... -race`.
+**The gate runs in `platform`'s test container, not on the host** — `docker compose -f docker-compose.test.yml run --rm test`, which its CI runs as the same file rather than a transcription. That is not ceremony: the two dependencies that matter most fail *soft*. Without a reachable PostgreSQL the storage contract tests skip and the run still prints `ok`, and without `ffprobe` playback relays unprobed, which is a behaviour change rather than an error. A host-side `go test ./...` therefore passes while testing far less than it appears to.
 
 ### Standing gates
 
@@ -246,14 +260,12 @@ Stated plainly so nothing here is mistaken for a description of something real.
 This section covers what does not *exist*. Its counterpart is
 [Unreachable capability](unreachable-capability.md) — what exists, works, is
 tested, and has no way for a human to reach it. That register is the more
-dangerous of the two, because nothing in the build or the test suite reports it:
-`CreateLocalUser`, to take the clearest case, is a complete and well-tested
-command whose only callers are its own tests.
+dangerous of the two, because nothing in the build or the test suite reports it,
+and it is where the current examples live. **Do not copy one here**: the example
+this section used to carry was discharged, and went on asserting the opposite for
+weeks because a second copy has nothing keeping it honest.
 
-- **IPTV programme listings.** [platform#9](https://github.com/mosaic-media/platform/blob/main/docs/adr/0009-object-graph.md) gives them their own lightweight table keyed to the channel node, deliberately outside the Node machinery. That table is unbuilt.
-- **Module-granular permissions.** The policy engine governs *user* authority, and a capability acts as its invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)). Authority a module holds *distinct* from that user — and a system principal for background work — is scoped to future ADRs, not built.
-- **External modules.** Only the built-in shape exists.
-- **Jobs and diagnostics history.** Tables exist from earlier migrations with no contract or service above them. They had schema stubs that returned `Unavailable` rather than faking success; [platform#37](https://github.com/mosaic-media/platform/blob/main/docs/adr/0037-one-client-transport.md) deleted the transport those stubs lived in, so today they have no surface at all — which is the more honest statement of the same fact.
-- **Session refresh and device pairing.** No backing service.
-- **The Platform's SDUI surface.** The Shell and its Server-Driven-UI runtime exist ([contracts#1](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0001-server-driven-ui-and-the-shell.md), [contracts#2](https://github.com/mosaic-media/contracts/blob/main/docs/adr/0002-primitives-and-definitions.md)), but the Platform does not yet *emit* screens or their queries — the Shell runs on mock payloads of the shape the Platform will send.
+- **IPTV programme listings.** [platform#9](https://github.com/mosaic-media/platform/blob/main/docs/adr/0009-object-graph.md) gives them their own lightweight table keyed to the channel node, deliberately outside the Node machinery. The reasoning is written into the content-model migration as a comment; the table is not.
+- **Module-granular permissions.** The policy engine governs *user* authority, and a capability acts as its invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)). Authority a module holds *distinct* from that user is scoped to a future record and not built. **The system principal is no longer part of this gap** — background work has a caller of its own and passes the same boundary as everything else.
+- **Device pairing.** No backing service.
 - **The Mosaic Design Language.** The Shell ships a neutral, token-driven skin; the design language that will replace those token values — acrylic with weight, artwork as the light source — is not built.
