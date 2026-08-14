@@ -216,7 +216,7 @@ question this register should not pretend to settle.
 
 | Capability | Where it lives | Reachable? |
 |---|---|---|
-| Subtitle tracks resolved for an item | `v1.SubtitlesProvider`, filled by `module-stremio-addons` and `module-aiostreams`, resolvable through `CapabilityRegistry.SubtitlesProvider` | **No.** No application service calls it, so there is nothing for a client to reach. |
+| Subtitle tracks resolved for an item | `v1.SubtitlesProvider`, filled by `module-stremio-addons` and `module-aiostreams`, resolved by `PlaybackSubtitles` and reached from the `playPart` dispatch case | **The call path is complete and nobody has watched through it.** Every step exists; no viewer has yet played a release whose subtitles came from a module. |
 
 **This row was added when the role stopped being incomplete, not when it stopped
 being reachable** — it was never reachable. The role landed under
@@ -229,16 +229,26 @@ anything — could answer for a film and for nothing else. Both modules composed
 their addressing from two literal zeroes and said so in a comment.
 
 That half is now closed and the role is complete: filled by two modules,
-correctly addressable, verified across a real process boundary. **And nothing
-calls it.** The registry can resolve a subtitles provider and no caller asks it
-to; the enrichment pass that reaches stream providers for foreign content
-(`internal/platform/app/enrich_streams.go`) resolves streams only.
+correctly addressable, verified across a real process boundary.
 
-**What discharges it** is the player — M3's track-selection work, which is where
-a subtitle track is first something a person can choose. Until then this is the
-register's purest example of its own thesis: a capability made *more* correct in
-a change that brought it no closer to anyone being able to use it, with every
-gate green throughout.
+**The caller now exists too, and this row's own description missed it for a
+while** — which is worth recording, because a register that goes stale in the
+*optimistic* direction is merely untidy and one that goes stale in the
+pessimistic direction sends somebody to build what is already there.
+`internal/platform/app/playback_subtitles.go` asks every installed subtitles
+provider at play time, and `playPart` reaches it, so the chain from a client
+action to a module's answer is unbroken. It is asked at play rather than at
+import deliberately: a subtitle file is small, external and perishable in the
+same way a debrid link is.
+
+**What discharges it is therefore narrower than it was, and it is not a screen.**
+Embedded tracks are HLS renditions and switchable in the player's own menu
+([platform#83](https://github.com/mosaic-media/platform/blob/main/docs/adr/0083-subtitles-answer-to-a-persons-language-preference.md)),
+so no picker is owed; what is owed is one viewer playing one release whose
+subtitles came from a module, and seeing them. The rule at the foot of this
+document is the whole reason the row stays: a complete call path is not a
+demonstration, and this register exists precisely because the two look identical
+from inside a green build.
 
 ### The segmented playback origin
 
