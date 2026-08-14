@@ -2783,8 +2783,9 @@ new experiences from what is already there.
 
 The slices, in dependency order. Each is a decision record before it is code.
 
-1. **Module authority distinct from its user.** The record
-   [MOSAIC.md](index.md#deliberately-undecided) defers to *"the first capability
+1. **Module authority distinct from its user.** The
+   [deliberately-undecided list](index.md#deliberately-undecided) defers this to
+   *"the first capability
    that needs authority distinct from its user's"* — a verb acting on a
    third-party account is that capability, and so are the library read, the
    network reach and the filesystem grant. **This gates the rest** and is written

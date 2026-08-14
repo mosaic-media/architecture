@@ -30,7 +30,9 @@ Mosaic covers every media format, but no user wants every format. That single ob
 
 **The Platform is hexagonal, exposing functionality through ports.** Modules extend Mosaic to new media formats by implementing those ports. This is not architectural purity for its own sake — it is the extension mechanism, and it exists so that the format coverage does not have to be built by one person.
 
-**The Supervisor compiles the Platform Binary**, pulling down the optional modules a user selected. Modules are ordinary Go libraries compiled into a single binary rather than separate processes. This was chosen deliberately: Mosaic should not pay local transport overhead for extensibility. There are no runtime plugins, no dynamic libraries, and no RPC between local modules.
+**Modules come in two tiers, and only one of them is compiled in** ([architecture#3](adr/0003-two-module-tiers.md)). A **core module** is an ordinary Go library linked into the Platform Binary — no plugin, no dynamic library, no RPC — which is how the formats every install needs avoid paying local transport overhead for extensibility. An **extension module** is its own repository and its own release, installed by a user at runtime from a signed index and run **out of process** behind a harness ([platform#39](https://github.com/mosaic-media/platform/blob/main/docs/adr/0039-extension-module-boundary.md), [platform#51](https://github.com/mosaic-media/platform/blob/main/docs/adr/0051-extension-installation-is-user-initiated-and-persistent.md)). A module is written the same way for either tier; the tier is a delivery and coupling decision, not a contract one.
+
+**CI builds the Platform Binary from a version tag**, cross-compiled with checksums, rather than assembling it on the user's machine ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md), superseding [platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)'s build sequence). The Supervisor's half of that — downloading, verifying and activating a release — is decided and does not exist. Installed extensions are the **Platform's** to discover, verify and manage, not the Supervisor's ([platform#49](https://github.com/mosaic-media/platform/blob/main/docs/adr/0049-the-platform-manages-extension-modules.md)).
 
 **The SDK exposes the Platform's ports in a lightweight form**, so that the open-source community can build modules against a stable contract without needing to understand the Platform's internals.
 
@@ -52,7 +54,7 @@ These were stated directly and are load-bearing.
 | Supervisor manages the platform | The user should not be their own IT support |
 | Hexagonal architecture, functionality exposed as ports | Ports are the module extension mechanism |
 | Modules extend media formats; the community builds them | Format coverage cannot be built solo |
-| Supervisor compiles modules into one Platform Binary | Avoid local transport overhead |
+| Core modules compiled into one Platform Binary, which CI builds ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)) | Avoid local transport overhead. The extension tier pays that cost deliberately, in exchange for a process boundary ([architecture#3](adr/0003-two-module-tiers.md)) |
 | SDK exposes ports lightweight | Lower the barrier for community module authors |
 | Single PostgreSQL; node tree plus relation graph; links not a store; no DuckDB | Flexibility for new formats without schema change |
 | SDUI | Chosen deliberately as the interface model |
@@ -61,7 +63,9 @@ These were stated directly and are load-bearing.
 
 ### Inherited from prior sessions — needs confirmation
 
-These were recorded before the reset as full decision records with context, alternatives and consequences. They were the only records written in that heavyweight form, which is why they were carried forward rather than deleted. **They have not been confirmed in conversation and should each be accepted, amended or dropped.**
+These were recorded before the reset as full decision records with context, alternatives and consequences. They were the only records written in that heavyweight form, which is why they were carried forward rather than deleted. **They were never confirmed in conversation, and each should be accepted, amended or dropped.**
+
+The column below says what each one *decides*, not where it stands. **Several have since been superseded, wholly or in part, and each record's own Status line is the authoritative account of that** — read it there rather than inferring currency from this table.
 
 | Record | What it decides |
 |---|---|
@@ -85,11 +89,13 @@ These were recorded before the reset as full decision records with context, alte
 
 Stating these plainly is the point. The previous repository claimed guarantees the architecture cannot deliver, and that is worth not repeating.
 
-**Compiling modules into the binary trades isolation for speed.** Module code is ordinary Go code in the same process as Platform code. There is no runtime boundary, and Go provides no in-process sandbox. A module can reach anything the Platform can reach.
+**The isolation tradeoff differs by tier, and stating the stronger of the two is the mistake to avoid.**
 
-The consequence follows directly: **installing a community module means running arbitrary code with full Platform authority.** Module trust must therefore be established *before* the build — through curation, signing, review, or a distinction between essential and community tiers — because there is no runtime mechanism that will contain a module once it is compiled in.
+**Compiling a core module into the binary trades isolation for speed.** Its code is ordinary Go code in the same process as Platform code. There is no runtime boundary, Go provides no in-process sandbox, and it can reach anything the Platform can reach. Trust is therefore established *before* the build, which is affordable only because the core set is small, first-party and closed.
 
-A permission model is still worth having. It makes authority explicit, auditable and reviewable, and it prevents modules from *accidentally* using facilities they never declared. It is a declaration and accountability mechanism, not containment. Documentation must not describe it as containment.
+**An extension module has a process boundary, and that is a weaker guarantee than it sounds.** It runs out of process, so it cannot reach the Platform's memory — but denying it a network of its own is an operating-system mechanism needing privileges a non-root Platform does not have, and on macOS and Windows there is no low-cost mechanism at all. **Egress containment is a property of the deployment, not a guarantee the Platform can make**, so the Platform reports which posture it is in rather than claiming enforcement uniformly. Trust here rests on the signed index and the binary digest, checked at install and re-checked at boot, rather than on review before a build.
+
+A permission model is still worth having, and for neither tier is it containment. It makes authority explicit, auditable and reviewable, and it prevents modules from *accidentally* using facilities they never declared. It is a declaration and accountability mechanism. Documentation must not describe it as containment.
 
 ---
 
@@ -102,7 +108,7 @@ Each of these words must carry exactly one meaning, everywhere.
 | Term | Means | Does not mean |
 |---|---|---|
 | **Transport** | Reserved. Do not use unqualified. Say *inbound adapter* for HTTP/GraphQL, *light transport* for the material system | Anything to do with modules |
-| **Module** | A Go library compiled into the Platform Binary, extending Mosaic | A plugin, an extension, a separate process |
+| **Module** | A unit extending Mosaic through the SDK's ports, in one of two tiers ([architecture#3](adr/0003-two-module-tiers.md)): a **core** module is a Go library linked into the Platform Binary, an **extension** module is its own release, installed at runtime and run out of process | Part of the Platform itself. Say which tier when it matters — an unqualified *module* must not be read as "compiled in" |
 | **Gateway** | Reserved. An *outbound* adaptor exposing Mosaic through a foreign client's protocol (facade); the inverse of an inbound *Module* source. None built ([architecture#2](adr/0002-repository-naming-convention.md)) | An inbound source, or anything Mosaic *consumes* |
 | **Stale-while-revalidate** | Serving the last known-good *read* from a snapshot while a fresh one is fetched, then replacing it ([platform#30](https://github.com/mosaic-media/platform/blob/main/docs/adr/0030-cache-first-rendering-and-source-health.md)) | *Optimistic UI*, which renders a predicted **write** outcome before the server confirms it. Mosaic predicts nothing |
 | **Platform** | Mosaic's own code and contracts | The binary; say *Platform Binary* for that |
@@ -111,7 +117,7 @@ Each of these words must carry exactly one meaning, everywhere.
 | **Suggestion** | A named action offered against an Issue, rendered into words by the client ([platform#74](https://github.com/mosaic-media/platform/blob/main/docs/adr/0074-operational-findings-are-durable-state.md)) | A recommendation to the user about content |
 | **Store** | A typed persistence contract resolved within a transaction | The database |
 | **Node tree** | The content-agnostic object model | A filesystem |
-| **Single binary** | The Platform Binary the Supervisor compiles Modules into ([platform#4](https://github.com/mosaic-media/platform/blob/main/docs/adr/0004-static-go-module-composition.md)) | The database, which runs as its own process. "Single binary dropped" referred only to not bundling PostgreSQL |
+| **Single binary** | The Platform Binary, carrying the core modules, cross-compiled by CI from a version tag ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)) | The database, which runs as its own process — and neither does it contain an extension module, which runs as its own process too. "Single binary dropped" referred only to not bundling PostgreSQL |
 | **Canon** | Reserved. The database is authoritative ([platform#10](https://github.com/mosaic-media/platform/blob/main/docs/adr/0010-storage-authority-and-transaction-scope.md)) | `.mos` and NFO, which are exports |
 | **Part** | The bytes an item plays, local path or remote reference | A section of a file, or a node |
 
@@ -121,7 +127,7 @@ Add to this table whenever a word starts carrying two meanings. Removing an ambi
 
 ## Settled In Code
 
-The `platform` repository has the full critical path standing — a runnable process, the first optional module and its user-managed settings — with two slices built and then reverted under [platform#8](https://github.com/mosaic-media/platform/blob/main/docs/adr/0008-capabilities-do-not-own-stores.md). Where code exists, **the code is authoritative** and this repository does not restate it. Questions the old corpus argued about for chapters are already answered:
+Where code exists, **the code is authoritative** and this repository does not restate it. [The roadmap](roadmap.md) is the single record of how far the build has got; what follows is narrower and does not go stale with it — questions the old corpus argued about for chapters, which the code has since answered outright:
 
 | Question | Answer, in code |
 |---|---|
@@ -131,16 +137,14 @@ The `platform` repository has the full critical path standing — a runnable pro
 | Error taxonomy | Seven categories — `InvalidArgument`, `Unauthenticated`, `PermissionDenied`, `NotFound`, `Conflict`, `Unavailable`, `Internal`. No driver type escapes a module boundary |
 | Command boundary | Validate, authenticate, authorise, open `UnitOfWork`, load, apply, persist state and outbox in one transaction, return a Platform type |
 | Storage extensibility | `Tx` names a closed, Platform-owned store set; capabilities own no schema, so there is nothing to register. `StorageAdapter` remains a port. [platform#8](https://github.com/mosaic-media/platform/blob/main/docs/adr/0008-capabilities-do-not-own-stores.md), superseding [platform#1](https://github.com/mosaic-media/platform/blob/main/docs/adr/0001-transactional-store-extensibility.md) |
-| Package tiers | Core Platform, built-in module, external module. Postgres is a built-in module, not an adapter |
+| Package tiers | Core Platform, built-in module, extension module. Postgres is a built-in module, not an adapter |
 | User authorisation | Real ABAC-shaped policy engine, default-deny, enforced at the application service |
 
 ## Deliberately Undecided
 
-- **Module-granular permissions.** A capability acts as its invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)), so the acting-principal question is decided. What a *module* may do *differently* from that user — who grants it, whether an operator approves at install, what a declaration commits to — is scoped to its own future ADR, triggered by the first capability that needs authority distinct from its user's.
-- **The module manifest's *full* shape**, and whether the declared unit is the module or the capability. The optional-module composition and invocation path now exists — an external-shaped module (the Stremio module) is registered and invoked through a capability registry with a *minimal* `Manifest` ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md), [platform#16](https://github.com/mosaic-media/platform/blob/main/docs/adr/0016-optional-module-composition.md)). What the manifest grows to carry (declared permissions, sourced media types) is still open, as is the Supervisor's build-time *selection* of modules.
+- **Module-granular permissions.** A capability acts as its invoking user ([platform#13](https://github.com/mosaic-media/platform/blob/main/docs/adr/0013-how-a-capability-acts.md)), so the acting-principal question is decided. What a *module* may do *differently* from that user — who grants it, whether an operator approves at install, what a declaration commits to — is scoped to its own future record, triggered by the first capability that needs authority distinct from its user's. The roadmap sequences that work and treats this as the item gating the rest of it.
+- **The module manifest's *full* shape**, and whether the declared unit is the module or the capability. A *minimal* `Manifest` is what composition and invocation run on today ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md), [platform#16](https://github.com/mosaic-media/platform/blob/main/docs/adr/0016-optional-module-composition.md)); what it grows to carry — declared permissions, sourced media types — is open, as is the Supervisor's build-time *selection* of core modules.
 - **Backpressure thresholds and queue bounds.**
-- **The first-administrator injection channel.** The Platform seeds the first admin from environment variables today, as a deliberate bridge ([platform#14](https://github.com/mosaic-media/platform/blob/main/docs/adr/0014-first-admin-bootstrap.md)). The eventual owner is Supervisor onboarding, and how it hands the initial credential to the Platform — a `secret://` reference, standard input, one-time material — is left to the work that designs that onboarding flow. `EnsureAdmin` stays the seam; only the channel changes.
-- **The public SDK surface** is published, proven and extracted ([platform#12](https://github.com/mosaic-media/platform/blob/main/docs/adr/0012-published-contract-surface.md)). It is its own module — [`github.com/mosaic-media/sdk`](https://github.com/mosaic-media/sdk) — carrying the content services, models and an opaque `Caller`, with the store contracts kept internal. `v0.1.0` extracted the content surface; `v0.2.0` adds the `Capability` interface a module implements ([platform#15](https://github.com/mosaic-media/platform/blob/main/docs/adr/0015-module-capability-and-invocation.md)); `v0.3.0` adds the `ImportRequest` struct that hands a module its user-managed settings ([platform#17](https://github.com/mosaic-media/platform/blob/main/docs/adr/0017-module-settings.md)). The Platform depends on it as an external module; the reference capability imported an anime end to end against a real database, and the first optional module (the Stremio addon source) is now composed in, invoked through the capability registry, and configured at runtime by a user pasting an addon manifest URL. The critical path is complete, and the composition-and-invocation half of the extension story with it.
 
 ---
 
