@@ -107,9 +107,10 @@ other repositories vendor copies, and the copies say so in their header.
 repository's `CLAUDE.md`; its own gate will refuse it.
 
 **The lint's ceiling is a ratchet, not a target.** It is the count of citations
-still written in the old unqualified form, and it only goes down. This repository
-is at zero; lowering another repository's ceiling as its citations are fixed is
-part of the change that fixes them.
+still written in the old unqualified form, it only goes down, and it is at zero
+here. It was 4,618 across the fleet when the records were dispersed, which is why
+the flag exists at all; a repository that reintroduces the old spelling raises its
+own ceiling rather than lowering the bar, and that is the thing to refuse.
 
 ## The build runs in a container
 

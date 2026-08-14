@@ -19,12 +19,13 @@
 #
 #   * `adr_index.py --check` refuses a stale `docs/adr/README.md`. That index is
 #     generated, and it is the only complete map of the corpus once `nav:` goes.
-#   * `adr_lint.py` refuses a citation that names no repository. The ceiling is
-#     a ratchet, not a target: 4,618 sites across the fleet still use the old
-#     unqualified spelling and cannot be rewritten in one commit, so the gate
-#     holds the line at today's count and is lowered as records move. A check
-#     that merely reported until the migration finished is a check nobody would
-#     have turned on.
+#   * `adr_lint.py` refuses a citation that names no repository. It ran as a
+#     ratchet through the migration — 4,618 sites across the fleet used the old
+#     unqualified spelling and could not be rewritten in one commit, so the
+#     ceiling held at each day's count and only ever went down. Every repository
+#     is at zero now, so the ceiling is 0 and the flag is a floor rather than a
+#     concession. A check that merely reported until the migration finished is a
+#     check nobody would have turned on.
 #
 # For a shell in the same environment:
 #
@@ -59,7 +60,7 @@ services:
         python scripts/adr_index.py --repo architecture --check
         python scripts/adr_lint.py --repo architecture \
           --max-unqualified 0 \
-          --exclude adr-migration-audit.md --exclude 'scripts/adr_*.py'
+          --exclude 'scripts/adr_*.py'
         mkdocs build --strict
 
   # The PDF export, kept as a separate service because it is expensive and not
