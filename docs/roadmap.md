@@ -2722,7 +2722,11 @@ certificate and warns on every new device.
    because the Platform and the harness both need it and a second copy of a
    fail-closed rule is how the guarantee stops being one; only the final
    attribute construction moves to the hosts. **Unbuilt as this is written** —
-   the SDK's `go.mod` still requires the four.
+   the SDK's `go.mod` still requires the four, and the cost is now committed
+   where a reader trips over it rather than asserted here: `platform`'s
+   `test/sdkprobe/go.mod` is a module whose only import is the SDK, and it
+   carries five OpenTelemetry entries as `// indirect`. When this lands, `go mod
+   tidy` there deletes them, and the deletion is the proof.
 
    **The cost that stands:** `go.opentelemetry.io/otel/log` is `v0.21.0`, which
    says in its own package documentation that its interfaces may gain methods
@@ -3063,18 +3067,37 @@ Fourteen failure shapes that recurred, none of which a gate caught.
     nothing in the fleet could detect it. The qualified `repo#N` form and its
     lint exist for exactly that.
 
-    **Then the lint did it twice more, and both times reported zero.** Its
-    separator class matched one character, so `ADR` and a number split across a
-    line break was invisible and three real citations survived the entire
-    migration under a green gate. And the rewriter's requalification pass ran
-    *after* the bare pass, so a citation it had just written as
-    `architecture#4` was re-read as though 4 were an old record number and
-    mapped a second time: 184 sites silently repointed at the wrong record,
-    every one of them resolving. Both were found by reading, not by running.
-    **When the failure mode of the thing you are checking is "wrong but
-    plausible", that is also the failure mode of your checker** — so the check
-    needs its own adversarial case, and a count of zero is evidence of nothing
-    until something known-bad has been shown to make it non-zero.
+    **The tooling then reproduced the failure six times, and every time the
+    gates were green.** Four were the checker being wrong about its own subject:
+    a separator class matching one character, so `ADR` and a number split by a
+    line break was invisible and three citations survived the whole migration;
+    a requalification pass running *after* the bare pass, so a citation just
+    written as `architecture#4` was re-read as an old number and mapped again —
+    184 sites repointed at the wrong record, every one resolving; a
+    consolidation that mapped each merged record's account of its own sources
+    onto *itself*, so a Status line meant to name the five records it replaced
+    named itself five times instead, across 48 sites; and a file-suffix list
+    with no `.mod`, so four unqualified citations sat in `go.mod` files the lint
+    never opened while the ratchet reported zero across the whole fleet.
+
+    The other two were about *reach* rather than logic, and they are the ones
+    least likely to be anticipated. **Widening that suffix list fixed one copy of
+    the lint out of twelve** — every repository vendors its own and runs it in
+    its own gate, so eleven went on enforcing the rule from before the change,
+    reporting clean against exactly the citations the change existed to catch.
+    And **twelve dead cross-repository links** — records pointing at
+    `../unreachable-capability.md`, correct until the dispersal moved them —
+    were invisible to the citation lint by *class*, being ordinary Markdown
+    links rather than `repo#N` citations. They surfaced only when a site build
+    with `--strict` refused them, months of 404s later.
+
+    Every one was found by reading or by a different tool, never by the gate
+    that owned the rule. **When the failure mode of the thing you are checking is
+    "wrong but plausible", that is also the failure mode of your checker.** So a
+    check needs its own adversarial case; a count of zero means "zero in what we
+    looked at" and is evidence of nothing until something known-bad has been
+    shown to make it non-zero; and a checker that exists in twelve copies has not
+    been changed until all twelve have.
 
 ---
 
