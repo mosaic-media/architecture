@@ -1,0 +1,118 @@
+name: Pages site (reusable)
+
+# **One implementation, called by every repository that publishes a plain site.**
+#
+# The obvious alternative was a copy of this file in each of the ten repositories
+# that needed one. This corpus has spent a long session establishing what happens
+# to copies: eleven vendored lints enforcing a rule that had moved, four stale
+# claims in CLAUDE.md files, a nav carrying a second copy of every record's
+# status. A workflow is no different, so there is one of it and the callers are
+# four lines each.
+#
+# `architecture`, `web` and `registry` do NOT call this. They publish something
+# specific — a MkDocs site with PDFs, a storybook, a signed index — and each
+# already has the workflow that builds it. A second deployer would fight the
+# first for the same Pages site.
+#
+# What a caller gets: its README as the landing page, and its decision records
+# browsable beside it.
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Pinned deliberately. An unpinned theme restyles its own output, and the
+      # first anyone would know is a site that looks different for no committed
+      # reason. Matches the version `architecture` pins for its own site.
+      - name: Install MkDocs
+        run: python -m pip install mkdocs-material==9.7.6
+
+      - name: Stage the site
+        env:
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          cat > /tmp/stage_site.py <<'PYTHON'
+          """Stage a repository's README and decision records as an MkDocs site.
+
+          The repository layout is *mirrored* rather than flattened — records are
+          staged at `docs/adr/`, exactly where they sit in the repository — so a
+          README link written as `docs/adr/0012-….md` resolves on the site and on
+          GitHub without being rewritten. Flattening them to `adr/` broke every
+          such link, which is how this was found.
+          """
+          import os, re, shutil, pathlib
+
+          repo = os.environ["REPO"]
+          root = pathlib.Path(".")
+          out = pathlib.Path("_site_src")
+          if out.exists():
+              shutil.rmtree(out)
+          docs = out / "docs"
+          docs.mkdir(parents=True)
+
+          nav = ["  - Overview: index.md"]
+          adr = root / "docs" / "adr"
+          if adr.is_dir():
+              (docs / "docs").mkdir(exist_ok=True)
+              shutil.copytree(adr, docs / "docs" / "adr")
+              nav.append("  - Decisions: docs/adr/README.md")
+
+          # A README links at records, which the site carries, and at source
+          # files, which it does not and should not. Anything staged keeps its
+          # relative link; anything else becomes an absolute GitHub URL rather
+          # than a link that 404s on the published page.
+          BLOB = f"https://github.com/mosaic-media/{repo}/blob/main/"
+          text = (root / "README.md").read_text()
+
+          def fix(m):
+              label, target = m.group(1), m.group(2)
+              if target.startswith(("http://", "https://", "#", "mailto:")):
+                  return m.group(0)
+              path = target.split("#")[0].split("?")[0]
+              if path and (docs / path).exists():
+                  return m.group(0)
+              return f"[{label}]({BLOB}{target})"
+
+          (docs / "index.md").write_text(re.sub(r"\[([^\]]*)\]\(([^)]+)\)", fix, text))
+
+          (out / "mkdocs.yml").write_text(f"""site_name: mosaic {repo}
+          site_url: https://mosaic-media.github.io/{repo}/
+          repo_url: https://github.com/mosaic-media/{repo}
+          theme:
+            name: material
+            features: [navigation.instant, navigation.top, content.code.copy]
+          markdown_extensions: [admonition, pymdownx.details, tables, attr_list]
+          nav:
+          {chr(10).join(nav)}
+          """)
+          print(f"staged {repo}: {len(nav)} nav entries")
+          PYTHON
+          python3 /tmp/stage_site.py
+
+      # `--strict` because every one of these built clean under it when this was
+      # written. It is what catches a record linking at a page that moved to
+      # another repository — the failure the record dispersal introduced twelve
+      # times, none of which anything else reported.
+      - name: Build
+        run: mkdocs build --strict
+        working-directory: _site_src
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site_src/site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
