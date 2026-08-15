@@ -100,11 +100,23 @@ other repositories vendor copies, and the copies say so in their header.
 | `adr_lint.py` | refuses an unqualified citation, a `repo#N` that does not resolve, and a cross-repository citation in Markdown that is not a link |
 | `adr_rewrite.py` | rewrites citations from a mapping; `--requalify` follows records that move again |
 | `shared_rules.py` | writes `shared/repository-rules.md` into every repository's `CLAUDE.md` between its markers; `--check` fails on a copy that differs |
+| `vendored_scripts.py` | checks every repository's vendored copy against this one; `--write` re-vendors |
 | `build_pdfs.py` | renders the site to PDF, deriving the record pages from `nav:` |
 
 **`shared/repository-rules.md` is the fleet's shared block.** Edit it here and run
 `scripts/shared_rules.py --write`. Never edit the generated region in another
 repository's `CLAUDE.md`; its own gate will refuse it.
+
+**Every other repository vendors `adr_lint.py`, most also `adr_index.py`, and
+each runs its copy in its own gate.** So editing a tool here changes nothing
+anywhere else until it is re-vendored — and eleven gates go on enforcing the
+version from before the edit, reporting clean. That is not hypothetical: widening
+the lint to read `.mod` files found four citations that had survived the whole
+migration, and for three commits the other copies still could not see them.
+**Run `scripts/vendored_scripts.py --fleet .. --write` in the same session as any
+change to a tool**, and commit each repository separately. The check needs the
+siblings on disk, so it cannot run in CI here — that limit is real and is why the
+habit matters.
 
 **The lint's ceiling is a ratchet, not a target.** It is the count of citations
 still written in the old unqualified form, it only goes down, and it is at zero
