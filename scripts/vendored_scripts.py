@@ -14,8 +14,7 @@ inside ``go.mod`` files. The fix landed here, and for three commits the other
 eleven copies still could not see a ``.mod`` file — so eleven gates would have
 gone on reporting zero for exactly the citations the change existed to catch.
 
-``shared_rules.py`` already solves this shape for the ``CLAUDE.md`` block. This
-is the same mechanism for the scripts, and deliberately the same two verbs:
+Two verbs, check and write:
 
     python scripts/vendored_scripts.py --fleet ..            # check every copy
     python scripts/vendored_scripts.py --fleet .. --write    # re-vendor them
@@ -24,7 +23,7 @@ is the same mechanism for the scripts, and deliberately the same two verbs:
 repository is checked out, so this cannot be a CI gate here the way the lint is;
 it is a local check, run when a tool changes. A repository cannot check its own
 copy either, having nothing to compare against. That is a real limit, stated
-rather than papered over — the same limit ``shared_rules.py`` has.
+rather than papered over.
 """
 
 from __future__ import annotations
