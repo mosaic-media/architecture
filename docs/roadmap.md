@@ -2992,8 +2992,33 @@ one of them reports a fact.*
    [platform#87](https://github.com/mosaic-media/platform/blob/main/docs/adr/0087-module-lifecycle-events-progress-and-schedules.md)'s
    "never calls out" holds. Prefix declared in the manifest, collision refuses the
    install, so **two facades for one protocol cannot coexist**.
-9. **Composers read the library**, and **authentication providers**, each on the
-   permission record from 1.
+9. **Composers and identity providers**
+   ([platform#95](https://github.com/mosaic-media/platform/blob/main/docs/adr/0095-composers-supply-expressions-and-identity-providers-attest.md)).
+   A composer supplies criteria and the Platform holds the data — generalising
+   the answer already given for the continue-watching case rather than inventing
+   a second rule. **Criteria are not limited to a filter**: a composer may supply
+   a declarative *expression* — matching, scoring, ranking, a pattern over what
+   somebody watched — because an algorithm is not the same thing as access to the
+   data it runs over, and a module can offer the first without being given the
+   second. The expression is evaluated by the Platform and module code is never
+   fed the rows, which is what makes that distinction real rather than
+   rhetorical: a module process holds egress and storage, so handing it history
+   to score *is* granting access whatever the calling convention looks like. The
+   result goes to the slot, not back to the module, since a ranking is itself a
+   statement about viewing.
+   **Identity providers attest rather than authenticate** — the module verifies
+   against its upstream and the Platform decides what the assertion means here.
+   What it means depends on *when* the provider was established, and there are
+   two modes: configured **during onboarding**, an assertion provisions an
+   account, because the install is being defined and there is nothing yet to
+   escalate into; configured **afterwards**, an operator links an existing
+   account by hand before that identity can sign in. The mode is fixed at
+   establishment and never changes, riding the same seam as
+   [platform#54](https://github.com/mosaic-media/platform/blob/main/docs/adr/0054-claiming-an-unclaimed-server.md),
+   where claiming is unauthenticated because there is nobody yet to authenticate
+   against and "refuses once any user exists" closes the window for good. No
+   assertion ever carries authority — it says who somebody is, never what they
+   may do.
 
 *Exit: an anime module, written against the published SDK by someone who cannot
 change the Platform, adds a rail to Home, annotates episodes with skip segments a
