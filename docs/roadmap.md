@@ -2787,13 +2787,35 @@ new experiences from what is already there.
 
 The slices, in dependency order. Each is a decision record before it is code.
 
-1. **Module authority distinct from its user.** The
-   [deliberately-undecided list](index.md#deliberately-undecided) defers this to
-   *"the first capability
-   that needs authority distinct from its user's"* — a verb acting on a
-   third-party account is that capability, and so are the library read, the
-   network reach and the filesystem grant. **This gates the rest** and is written
-   first.
+0. **Authorization becomes resource-scoped**
+   ([platform#84](https://github.com/mosaic-media/platform/blob/main/docs/adr/0084-authorization-is-scoped-to-the-resource.md)).
+   Not originally a slice of this milestone, and it became one on being asked
+   what a module grant is scoped to. `policy.Engine.Authorize` has always taken
+   `Resource` and always discarded it, so every rule means *may this subject do
+   this*, never *upon what*. Honouring it is a prerequisite for any module grant
+   — and it applies to every subject rather than to modules alone, so per-viewer
+   reach and parental controls become expressible by the same mechanism. The
+   cost is that every existing call site now passes a resource it was never
+   checked for, which is the bulk of the work and most of the risk; the boundary
+   conformance suite grows a resource dimension to catch it.
+1. **Module authority distinct from its user**
+   ([platform#85](https://github.com/mosaic-media/platform/blob/main/docs/adr/0085-a-modules-authority-is-declared-and-consented.md)).
+   The [deliberately-undecided list](index.md#deliberately-undecided) deferred
+   this to *"the first capability that needs authority distinct from its
+   user's"* — a verb acting on a third-party account is that capability, and so
+   are the library read, the network reach and the filesystem grant.
+   **This gates the rest.** Settled: authority is declared in the signed
+   manifest and consented at install, attaches to the module rather than to each
+   capability, and appears as a field on `policy.Subject` set by the enforcement
+   point exactly as `System` is. Two things had to be built before it could mean
+   anything — a module is handed a `ContentService` bound to its identity
+   instead of the bare `app.Service`, because otherwise the Platform cannot tell
+   which module is writing; and which module sourced a node is recorded on
+   `SourceBinding`, because `SourceProvider` is a scheme and two modules share
+   `imdb` deliberately. Actions reuse the existing vocabulary where they mean the
+   same thing and take a `module.` prefix where only a module could hold them,
+   with role creation refusing the prefixed ones so the split is enforced rather
+   than conventional.
 2. **Verbs.** How a module declares an action, how it is authorised, how it is
    dispatched. Carries per-user module settings with it, because
    `ModuleSettingsStore` holds one document per module and "my Steam library" is
