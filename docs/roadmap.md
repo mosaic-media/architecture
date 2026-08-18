@@ -2837,10 +2837,12 @@ The slices, in dependency order. Each is a decision record before it is code.
    conformance suite grows a resource dimension to catch it.
 1. **Module authority distinct from its user**
    ([platform#85](https://github.com/mosaic-media/platform/blob/main/docs/adr/0085-a-modules-authority-is-declared-and-consented.md)).
-   The [deliberately-undecided list](index.md#deliberately-undecided) deferred
-   this to *"the first capability that needs authority distinct from its
-   user's"* — a verb acting on a third-party account is that capability, and so
-   are the library read, the network reach and the filesystem grant.
+   This was the oldest item on the [deliberately-undecided
+   list](index.md#deliberately-undecided), deferred there until the first
+   capability needing authority distinct from its user's — a verb acting on a
+   third-party account is that capability, and so are the library read, the
+   network reach and the filesystem grant. The record discharges it, and the
+   list no longer carries it.
    **This gates the rest.** Settled: authority is declared in the signed
    manifest and consented at install, attaches to the module rather than to each
    capability, and appears as a field on `policy.Subject` set by the enforcement
