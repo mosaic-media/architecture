@@ -2830,10 +2830,27 @@ The slices, in dependency order. Each is a decision record before it is code.
    what a client can invoke** — the list becomes its cases plus the installed
    manifests, so any count of actions stated anywhere goes stale on the first
    module with a verb.
-3. **Lifecycle.** Event subscription, progress push, mid-operation prompts,
-   module-declared cron, dependency declaration. Confirms or replaces
-   [platform#7](https://github.com/mosaic-media/platform/blob/main/docs/adr/0007-platform-transports-events.md), which is inherited and
-   unconfirmed.
+3. **Lifecycle**
+   ([platform#87](https://github.com/mosaic-media/platform/blob/main/docs/adr/0087-module-lifecycle-events-progress-and-schedules.md)).
+   A module is called and never calls out. A subscription is declared in the
+   manifest and events arrive in **batches** bounded by count and by a latency
+   window — the amortisation a module-held stream would have bought, without
+   giving a module anything that outlives an invocation. That question was open
+   in [platform#39](https://github.com/mosaic-media/platform/blob/main/docs/adr/0039-extension-module-boundary.md)
+   and is closed on a measurement that already existed: the module process is
+   long-lived, so a callback is a sub-5ms round trip rather than a spawn.
+   Progress goes through a sink bound to the invocation; a module cannot prompt
+   mid-operation, because that would block an invocation on a human and make a
+   module the author of a screen. Schedules are manifest-declared and run as the
+   system principal, **which leaves a per-person scheduled verb inexpressible**,
+   stated as a gap rather than closed thinly.
+   **A module never depends on another module** — it declares what it satisfies
+   in the Platform, or what it needs from the Platform, and the Platform is
+   always the counterparty even where another module is what satisfies the need
+   underneath.
+   This supersedes [platform#7](https://github.com/mosaic-media/platform/blob/main/docs/adr/0007-platform-transports-events.md)
+   in part: its ownership split stands, but the SDK it assigned bus interfaces to
+   never carried them, and out of process it could not.
 4. **Contribution points.** Named slots on Platform-owned screens
    (`home.rails`, `library.sections`, `discovery.rows`, `detail.facts`), declared
    in the manifest. Three tiers — data, presentation, tree — with the rule that
