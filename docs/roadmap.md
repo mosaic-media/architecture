@@ -2892,9 +2892,26 @@ The slices, in dependency order. Each is a decision record before it is code.
    than Platform behaviour in general. Precedence is the operator's while
    placement is the viewer's, because placement is taste and precedence is a
    claim about which answer is true.
-6. **Module-served resources.** A third origin beside artwork and playback:
-   signed, session-bound URLs for bulk module output. Manga pages, lyrics, EPUB
-   content and sync maps want the same endpoint.
+6. **Module-served resources**
+   ([platform#91](https://github.com/mosaic-media/platform/blob/main/docs/adr/0091-module-served-resources.md),
+   on [platform#90](https://github.com/mosaic-media/platform/blob/main/docs/adr/0090-one-origin-facility-consumers-declare-against.md)).
+   Bulk module output — manga pages, lyrics, EPUB content, sync maps — served
+   from the Platform's origin, signed rather than sealed because a resource
+   reference is Platform-side identity and not a secret. The Platform asks the
+   module and relays; when module storage lands, serving from disk is an
+   optimisation behind the identical URL, which is why this does not wait for
+   slice 7. Caching only where the module declares immutability.
+   **Asking what this should be produced a structural answer that is not an M7
+   slice**, in the way slice 0 did: rather than a third bespoke origin, the
+   Platform grows **one origin facility** that a consumer declares against —
+   token discipline, binding, TTL, cache policy, upstream. Artwork migrates onto
+   it whole at ~250 lines; playback uses it for the token and keeps its ~6,500
+   lines of pipeline, because it is not an origin with different settings but a
+   media pipeline that has one. A gateway (slice 8) is then a consumer rather
+   than a fifth implementation. Both token disciplines stay, because signing
+   (legible, cacheable) and sealing (the reference is a credential) answer
+   different questions. A token binds to the **session id**, which survives the
+   reconnect that rotates the credential.
 7. **Module storage**, quota-bounded and Platform-granted, with what a module
    writes able to become a Part. Needed by a DVR, offline downloads and trickplay.
 8. **Gateways.** The Platform owns the listener and routes a path prefix into a
