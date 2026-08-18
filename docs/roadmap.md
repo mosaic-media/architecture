@@ -2511,9 +2511,21 @@ certificate and warns on every new device.
    leaves the PII boundary as developer discipline
    ([platform#34](https://github.com/mosaic-media/platform/blob/main/docs/adr/0034-redaction-classes-are-the-pii-boundary.md)) — an
    arrangement [platform#41](https://github.com/mosaic-media/platform/blob/main/docs/adr/0041-authorization-is-carried-in-the-type.md)
-   demonstrated does not hold. A module settings write replaces the whole
-   document, so an API key rides inside a screen's action payload where redaction
-   cannot see it; the fix is a merge semantic or a write-only field in the SDK.
+   demonstrated does not hold. The module-settings leak is now
+   [platform#96](https://github.com/mosaic-media/platform/blob/main/docs/adr/0096-module-settings-are-merged-and-secret-fields-are-sealed.md):
+   a write becomes a JSON Merge Patch and that is the only semantic, so a control
+   sends the field it changes and a credential never enters an action payload. A
+   module declares which fields are secret; the Platform seals them at rest and
+   withholds them from the screen. **The two are one fix rather than two** —
+   withholding a secret means the screen cannot send it back, which under a
+   whole-document write would delete it, so merge is what makes withholding safe
+   and neither half works alone. Breaking, and deliberately not opt-in: an
+   opt-out would leave the leak open wherever it had not been adopted while this
+   roadmap called it closed. The direction was not open —
+   [sdk#10](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0010-the-sdk-carries-no-implementation.md)
+   had already
+   decided a module reaches sealing through "a settings field marked secret,
+   sealed by the Platform".
    `verify.yml` is not a required check on `platform`'s `main`, so auto-merge is
    correctly disabled and the real fix is a ruleset. Layer-3 egress containment
    is reported honestly and provided by the deployment, which the shipped
