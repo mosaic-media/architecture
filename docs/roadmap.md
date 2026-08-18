@@ -104,14 +104,14 @@ cannot compile if a public signature leaks an `internal/` type.
 `seq` with a bounded replay buffer for resume, and the full `RegionUpdate`
 op-set. `AuthService` mints the session; GraphQL was deleted outright. The
 Shell reconnects with backoff and jitter, re-declares its route, and has
-browser history and deep links. Eighteen actions are the complete list of what
-any client can invoke: `importContent`, `configureModule`, `installExtension`,
-`uninstallExtension`, `revokeSession`, `signOut`, `createAccount`,
-`setUserStatus`, `grantPreset`, `setPreference`, `playPart`, `reportProgress`,
-`recordImpression`, `createLibraryRule`, `setLibraryRuleEnabled`,
-`deleteLibraryRule`, `runLibraryMaintenance`, `setWatched`. The count had been
-stale since M1; `setPreference` now carries a viewer's home arrangement as well
-as the expert-mode flag, which is why no nineteenth was needed. Every call on the session
+browser history and deep links. **The complete list of what any client can
+invoke is `dispatch`'s switch in `internal/transport/session`** — twenty arms as
+this is written, the two most recent being `applyConfiguration` and
+`applySuggestion`. The count is deliberately not restated here: it has gone stale
+twice, once at M1 and again when those two landed, and
+[platform#86](https://github.com/mosaic-media/platform/blob/main/docs/adr/0086-a-module-verb-is-declared-and-dispatched-by-name.md)
+ends its countability altogether — once a module can declare a verb, the list
+becomes that switch plus every installed manifest. Every call on the session
 service now authenticates at the transport, and a session's live state is keyed
 by session id rather than by the credential, which rotates
 ([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)).
@@ -2816,10 +2816,20 @@ The slices, in dependency order. Each is a decision record before it is code.
    same thing and take a `module.` prefix where only a module could hold them,
    with role creation refusing the prefixed ones so the split is enforced rather
    than conventional.
-2. **Verbs.** How a module declares an action, how it is authorised, how it is
-   dispatched. Carries per-user module settings with it, because
-   `ModuleSettingsStore` holds one document per module and "my Steam library" is
-   per person.
+2. **Verbs**
+   ([platform#86](https://github.com/mosaic-media/platform/blob/main/docs/adr/0086-a-module-verb-is-declared-and-dispatched-by-name.md)).
+   A verb is addressed as `module.<id>.<verb>` and routed from `dispatch`'s
+   default branch, with the valid set read from the installed manifest, so an
+   undeclared verb is refused before a module process is woken. Its input is
+   declared in the manifest and validated by the Platform, in the contract's
+   existing field and validator vocabulary rather than a second schema language.
+   `ModuleSettingsStore` gains a user dimension where a null user means
+   install-wide, because "my Steam library" is per person. A verb always has an
+   invoking user; schedules are slice 3's, deliberately. **The consequence worth
+   carrying forward is that `dispatch` stops being the complete enumeration of
+   what a client can invoke** — the list becomes its cases plus the installed
+   manifests, so any count of actions stated anywhere goes stale on the first
+   module with a verb.
 3. **Lifecycle.** Event subscription, progress push, mid-operation prompts,
    module-declared cron, dependency declaration. Confirms or replaces
    [platform#7](https://github.com/mosaic-media/platform/blob/main/docs/adr/0007-platform-transports-events.md), which is inherited and
