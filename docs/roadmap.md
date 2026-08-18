@@ -2959,10 +2959,39 @@ record notes the distinction that egress containment is **declared** by the
 deployment while filesystem containment is **applied** by the Platform, so only
 one of them reports a fact.*
 
-8. **Gateways.** The Platform owns the listener and routes a path prefix into a
-   module; modules never bind ports. This is the item with the highest strategic
-   return, because a Jellyfin-compatible or DLNA facade reaches televisions and
-   phones Mosaic will never write a client for.
+8. **Gateways**
+   ([platform#94](https://github.com/mosaic-media/platform/blob/main/docs/adr/0094-a-gateway-is-invoked-from-outside-and-holds-no-authority.md)).
+   **Drafted as another provider role, and every question fought its answer** —
+   which turned out to be diagnostic. The taxonomy above sorts modules by what
+   they do with data, and sources, actors and composers share something it does
+   not name: they are all *invoked by the Platform*. A gateway is invoked by the
+   outside world. It supplies no capability; it is a new **address** for
+   capability the Platform already has.
+   So a gateway is its own kind on that axis, not a fourth shape and not a new
+   tier — it is installed, signed and run out of process like any extension, with
+   a surface shaped for being called rather than calling. **It holds no authority
+   of its own**, acting wholly as the authenticated user through the same
+   services, so there is no library-read grant to argue about. **It may expose no
+   capability the Platform does not already have, and a gap it hits is a Platform
+   finding** — the same rule a screen follows against the vocabulary.
+   Credentials are translated, never verified: the gateway extracts what its
+   protocol carries and the Platform authenticates it, Jellyfin's username and
+   password being something Mosaic already has.
+   **The one exception is recorded rather than discovered.**
+   [platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)
+   rejected a non-rotating credential, and a foreign client cannot rotate. What a
+   gateway hands back is a Platform-held *reference* to a session, with the
+   Platform advancing the real pair underneath — which preserves the blast radius
+   (one gateway, one device, revocable from the device list) and **not** the
+   rotation. That sentence is in the record so nobody reads "rotates underneath"
+   as meaning the property survived.
+   A decoded request in, unary or streamed response out, with the Platform owning
+   the socket, the upgrade and every server-initiated send — a DLNA `SUBSCRIBE`
+   is Platform state and the Platform sends the `NOTIFY`, asking the module only
+   for the body shape, so
+   [platform#87](https://github.com/mosaic-media/platform/blob/main/docs/adr/0087-module-lifecycle-events-progress-and-schedules.md)'s
+   "never calls out" holds. Prefix declared in the manifest, collision refuses the
+   install, so **two facades for one protocol cannot coexist**.
 9. **Composers read the library**, and **authentication providers**, each on the
    permission record from 1.
 
