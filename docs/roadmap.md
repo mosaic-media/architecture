@@ -2851,12 +2851,26 @@ The slices, in dependency order. Each is a decision record before it is code.
    This supersedes [platform#7](https://github.com/mosaic-media/platform/blob/main/docs/adr/0007-platform-transports-events.md)
    in part: its ownership split stands, but the SDK it assigned bus interfaces to
    never carried them, and out of process it could not.
-4. **Contribution points.** Named slots on Platform-owned screens
-   (`home.rails`, `library.sections`, `discovery.rows`, `detail.facts`), declared
-   in the manifest. Three tiers — data, presentation, tree — with the rule that
-   tiers 1 and 2 must be expressive enough to make tier 3 rare, because a module
-   that draws its own tree stops inheriting the skin, the focus work and every
-   later improvement.
+4. **Contribution points**
+   ([platform#88](https://github.com/mosaic-media/platform/blob/main/docs/adr/0088-a-contribution-composes-from-published-definitions.md)).
+   Four named slots — `home.rails`, `library.sections`, `discovery.rows`,
+   `detail.facts` — filled with data plus the name of a definition already
+   published in the contract. Placement is the viewer's under
+   [platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md),
+   a slow contributor degrades exactly as a slow source does under
+   [platform#30](https://github.com/mosaic-media/platform/blob/main/docs/adr/0030-cache-first-rendering-and-source-health.md),
+   and a contribution may carry only `navigate` and an `invoke` naming that
+   module's own verb.
+   **The reason previously given here for keeping a module-drawn tree rare was
+   wrong and is corrected in that record.** A tree of primitives *does* inherit
+   the skin — primitives consume design tokens directly, so it is themed and
+   re-skinned like anything else. The actual reason is impersonation: `TextInput`,
+   `SelectInput`, `SearchBar`, `Switch` and `Slider` are native primitives, so a
+   free tree on a surface the user did not navigate to for that module can draw a
+   credential prompt and submit it to the module's own verb. Every server-side
+   gate holds; the user hands the secret over instead. That is why a module may
+   still draw a full tree in *its own* settings screen, where the context is
+   honest, and not on a borrowed one.
 5. **Annotations**, with two questions settled before code: whether the unit is a
    *fact* or a *document* (a filler flag is one bit; a read-along sync map is
    ~100k triples), and precedence — **the user is the highest-precedence
