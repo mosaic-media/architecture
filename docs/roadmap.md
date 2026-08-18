@@ -2939,6 +2939,26 @@ The slices, in dependency order. Each is a decision record before it is code.
    the sharpest and is not cashable while M5's restore path is unwritten, and
    *nothing* observes per-module RSS, CPU or disk today, so no one may write that
    the Platform manages module resource use.
+*Asked partway through, and answered before slice 8 because it would have
+invalidated several of these: **should modules be fully sandboxed?**
+([platform#93](https://github.com/mosaic-media/platform/blob/main/docs/adr/0093-filesystem-containment-is-applied-where-the-os-allows.md)).
+No — a WASM or scripted module cannot be compiled into the Platform binary as a
+Go library, so a full sandbox would split one module system into two and retire
+"a module moves between tiers as a build change rather than a rewrite", which
+[platform#39](https://github.com/mosaic-media/platform/blob/main/docs/adr/0039-extension-module-boundary.md),
+[platform#48](https://github.com/mosaic-media/platform/blob/main/docs/adr/0048-core-modules-keep-their-repositories.md)
+and `module-cinemeta`'s own boundary test all rest on. What is adopted instead is
+**Landlock**, which is the one case
+[platform#50](https://github.com/mosaic-media/platform/blob/main/docs/adr/0050-deployment-topologies.md)'s
+"needs privileges a non-root Platform lacks" does not cover: filesystem-scoped
+and unprivileged by design. It gives
+[platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md)'s
+grant boundary an actual mechanism on Linux. macOS and Windows keep a reported
+posture, shown at the consent step rather than refusing the install — and the
+record notes the distinction that egress containment is **declared** by the
+deployment while filesystem containment is **applied** by the Platform, so only
+one of them reports a fact.*
+
 8. **Gateways.** The Platform owns the listener and routes a path prefix into a
    module; modules never bind ports. This is the item with the highest strategic
    return, because a Jellyfin-compatible or DLNA facade reaches televisions and
