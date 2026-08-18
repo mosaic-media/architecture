@@ -3059,6 +3059,27 @@ one of them reports a fact.*
    assertion ever carries authority — it says who somebody is, never what they
    may do.
 
+*Asked last, because the answer was mostly already written: **what shape does the
+module manifest settle into?**
+([platform#97](https://github.com/mosaic-media/platform/blob/main/docs/adr/0097-a-manifest-names-one-capability-and-separates-asks-from-offers.md)).
+Six of the records above each added a declaration to it, so the shape was
+determined by accumulation rather than by design. Three things were settled here.
+**Module and capability are the same thing** — one binary, one capability, one
+manifest, one id — which is what the code has always done and what gives
+[platform#85](https://github.com/mosaic-media/platform/blob/main/docs/adr/0085-a-modules-authority-is-declared-and-consented.md)'s
+grants a subject that exists. **What a module *offers* and what it
+*asks for* have opposite forward-compatibility rules**: an unknown offer is
+ignored, an unknown ask refuses the install. That reverses today's behaviour,
+which refuses any unknown field and so cannot grow at all; the tempting fix —
+ignore everything unknown — fails open on exactly the declarations that matter,
+because consent is obtained over the asks and a Platform silently dropping one
+shows the user a shorter list than they are agreeing to. And **a module declares
+its kind and the media types it sources**, the second of which is what
+[platform#11](https://github.com/mosaic-media/platform/blob/main/docs/adr/0011-open-and-closed-vocabularies.md)'s
+registry has been waiting on. The mechanism is one function — `ParseManifest`,
+called by both the installer and the signing tool — so a manifest that would be
+refused at install is refused at signing instead.*
+
 *Exit: an anime module, written against the published SDK by someone who cannot
 change the Platform, adds a rail to Home, annotates episodes with skip segments a
 different module supplied, scrobbles progress to a third-party account, and
