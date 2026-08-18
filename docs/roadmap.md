@@ -2871,11 +2871,27 @@ The slices, in dependency order. Each is a decision record before it is code.
    gate holds; the user hands the secret over instead. That is why a module may
    still draw a full tree in *its own* settings screen, where the context is
    honest, and not on a borrowed one.
-5. **Annotations**, with two questions settled before code: whether the unit is a
-   *fact* or a *document* (a filler flag is one bit; a read-along sync map is
-   ~100k triples), and precedence — **the user is the highest-precedence
-   annotator**, which is what makes a manual correction survive the next
-   enrichment pass.
+5. **Annotations**
+   ([platform#89](https://github.com/mosaic-media/platform/blob/main/docs/adr/0089-annotations-are-facts-and-documents-ordered-by-the-operator.md)).
+   Both units exist and an annotation declares which: a *fact* is a typed,
+   queryable key with provenance, a *document* is an opaque payload fetched
+   rather than queried — a filler flag is one bit and a sync map is ~100k
+   triples, and one shape cannot serve both. Precedence is an order the operator
+   sets over modules at install, which is the pattern the audience already knows
+   from ordering Stremio addons and which `module-stremio-addons` already
+   implements internally over a user's configured addons. The user sits above
+   every module, unconditionally, and a user's value is never overwritten by a
+   module's — empty or otherwise.
+   **Resolution is per declared group, not per key**, taken from that same
+   module: it merges identity whole from the first source that has one because
+   "a title from one source and an overview from another is the blend this tier
+   exists to prevent", and per-key precedence would reintroduce exactly that.
+   The Platform may sort and filter on annotations and **may never authorize on
+   them** — recorded as a deliberate widening of "annotations inform, only
+   Platform-validated fields decide", since the danger is authorization rather
+   than Platform behaviour in general. Precedence is the operator's while
+   placement is the viewer's, because placement is taste and precedence is a
+   claim about which answer is true.
 6. **Module-served resources.** A third origin beside artwork and playback:
    signed, session-bound URLs for bulk module output. Manga pages, lyrics, EPUB
    content and sync maps want the same endpoint.
