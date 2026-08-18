@@ -2481,7 +2481,32 @@ certificate and warns on every new device.
    hash-only, `ConsumedAt` on use, written long ago and never used by anything. A
    second factor with no recovery path is a way to lose an account when a phone
    is lost, and a self-hosted server has no support desk to appeal to.
-3. **Backup and restore.** One PostgreSQL and no documented restore path.
+3. **Backup and restore**
+   ([supervisor#13](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0013-the-supervisor-takes-the-backup.md)).
+   "One PostgreSQL" understated it: durable state is in **three** places —
+   PostgreSQL, the extensions directory (verified binaries, cached manifests and
+   its storage grants), and the instance file, which holds the
+   install's identity outside the database deliberately "so it still answers when
+   the database does not". A `pg_dump` is not a backup of this system, and boot
+   re-adopts pinned module bytes from disk, so a database and a directory from
+   different days disagree about what is installed and boot anyway.
+   **The Supervisor takes the backup**, following Home Assistant's division of
+   Supervisor rather than Core, for the reason that makes it work: the thing
+   taking the backup must not be the thing that is broken. The Supervisor has no
+   database driver and may never grow one
+   ([supervisor#6](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0006-two-supervised-images-and-a-diy-path.md),
+   [supervisor#7](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0007-the-supervisor-answers-the-platforms-client-surface.md)),
+   so the Platform exports its half and the Supervisor assembles the archive —
+   and when the Platform is unhealthy the Supervisor still takes the filesystem
+   half and records in the manifest that the database half is missing. Full and
+   partial, encrypted with a key the operator holds, and a restore invalidates
+   every session because a surviving one would be a credential resurrected after
+   it may have been deliberately revoked. A restore refuses onto an older
+   Platform, and says out loud when a changed origin has invalidated every
+   passkey.
+   **This is what makes [platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md)'s
+   incentive real** — storage inside the grant is backed up and a module's own
+   store is not, which was the argument all along and is only now true.
 4. **The hardening sweep.** The redaction-class vet check was decided and not built, which
    leaves the PII boundary as developer discipline
    ([platform#34](https://github.com/mosaic-media/platform/blob/main/docs/adr/0034-redaction-classes-are-the-pii-boundary.md)) — an
