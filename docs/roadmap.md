@@ -3113,6 +3113,22 @@ while there is one.
 
 Deferred, named, and not omitted. A trigger is given where one exists.
 
+**What the last three decisions left to build.** The deliberately-undecided list
+is empty, and all three closing records are unbuilt. The manifest
+([platform#97](https://github.com/mosaic-media/platform/blob/main/docs/adr/0097-a-manifest-names-one-capability-and-separates-asks-from-offers.md))
+needs `ParseManifest` to stop refusing every unknown field and start refusing
+only unknown *asks*, which the Platform's installer and `modulesign` both inherit
+from the one function they already call. Core-module selection
+([supervisor#14](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0014-a-generation-carries-its-selection.md))
+needs a Generation that carries one and a screen that requests a change — the
+channel is the one the upgrade control already uses, so what is missing is the
+verb rather than the surface. Queue backpressure
+([platform#98](https://github.com/mosaic-media/platform/blob/main/docs/adr/0098-a-queue-that-is-behind-raises-an-issue.md))
+needs something that measures how far behind a queue is, which nothing does
+today: the decision rests on a measurement nobody takes, which is the same gap
+[platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md)
+named for per-module resource use.
+
 **Playback and media.** The torrent engine — the `Served` half of
 [platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md), with sequential piece
 selection, cache and eviction, forcing module `Start`/`Stop` and a

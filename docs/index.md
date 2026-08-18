@@ -142,8 +142,22 @@ Where code exists, **the code is authoritative** and this repository does not re
 
 ## Deliberately Undecided
 
-- **Where a core-module selection lives.** Not a *build-time* question any more: [platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md) put every core module in one binary, so a selection decides which are wired in rather than which are present, and the selecting half is built. What is open is where the selection lives once a Generation carries it, and whether an operator reaches it through a screen at all — today it has no client path, which makes it [owed](unreachable-capability.md).
-- **Backpressure thresholds and queue bounds.** Every queue Mosaic runs is bounded on the *drain* side — a batch per poll, an attempt ceiling, a dead-letter — and unbounded on the *fill* side: nothing refuses an enqueue. The in-memory buffers that can lose work already state a policy and count the loss; the durable queues have no depth at which anything changes. What is undecided is whether arrival is ever refused and at what depth, and the two numbers [platform#87](https://github.com/mosaic-media/platform/blob/main/docs/adr/0087-module-lifecycle-events-progress-and-schedules.md) deliberately left open — the count and the latency window bounding a module's event batch.
+Nothing. The list held three entries, which turned out to be four questions —
+one entry carried both the manifest and the selection — and each now has a record:
+
+| Was undecided | Closed by |
+|---|---|
+| What a module may do differently from its invoking user | [platform#85](https://github.com/mosaic-media/platform/blob/main/docs/adr/0085-a-modules-authority-is-declared-and-consented.md) — declared in the signed manifest, consented at install |
+| The manifest's full shape, and whether the declared unit is the module or the capability | [platform#97](https://github.com/mosaic-media/platform/blob/main/docs/adr/0097-a-manifest-names-one-capability-and-separates-asks-from-offers.md) — one capability per manifest; an unknown offer is ignored and an unknown ask refuses |
+| Where a core-module selection lives | [supervisor#14](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0014-a-generation-carries-its-selection.md) — in the Generation, so it inherits rollback; requested through a screen |
+| Backpressure thresholds and queue bounds | [platform#98](https://github.com/mosaic-media/platform/blob/main/docs/adr/0098-a-queue-that-is-behind-raises-an-issue.md) — a queue does not refuse; age past a threshold raises an Issue |
+
+Decided is not built. [The roadmap](roadmap.md) is where that distinction lives,
+and all four of these are unbuilt.
+
+Add to this list when something is deferred *on purpose* — a question whose
+answer should wait for the first case that forces it. An item here is a decision
+not yet taken; an item that is merely unimplemented belongs in the roadmap.
 
 ---
 
