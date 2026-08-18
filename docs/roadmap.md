@@ -2912,8 +2912,33 @@ The slices, in dependency order. Each is a decision record before it is code.
    (legible, cacheable) and sealing (the reference is a credential) answer
    different questions. A token binds to the **session id**, which survives the
    reconnect that rotates the credential.
-7. **Module storage**, quota-bounded and Platform-granted, with what a module
-   writes able to become a Part. Needed by a DVR, offline downloads and trickplay.
+7. **Module storage**
+   ([platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md)).
+   Two grants, because the cases differ: an object API for structured output, a
+   per-module directory for streaming bulk, since a DVR writing through a call
+   per chunk is the wrong picture. Quota is manifest-declared and consented at
+   install, lowerable after. What a module writes can become a Part with
+   `LocalLocation` — a scheme the contract has carried while nothing served it —
+   now served through
+   [platform#90](https://github.com/mosaic-media/platform/blob/main/docs/adr/0090-one-origin-facility-consumers-declare-against.md).
+   On uninstall what became content survives and scratch is reclaimed, mirroring
+   [platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md),
+   which also settles what
+   [platform#89](https://github.com/mosaic-media/platform/blob/main/docs/adr/0089-annotations-are-facts-and-documents-ordered-by-the-operator.md)
+   left open for annotation documents.
+   **It supersedes [platform#2](https://github.com/mosaic-media/platform/blob/main/docs/adr/0002-module-storage-and-delivery-model.md)
+   in part, and the reason is worth reading.** "Modules do not own storage" was a
+   guarantee only while a module was a library compiled into the binary. An
+   extension module is a separate process that can import a SQLite driver and
+   open a file, and nothing in the Platform can prevent it — so storage
+   containment is *reported* alongside egress containment rather than asserted,
+   which is the position `EgressContainment` already takes. The grant is made
+   better rather than mandatory: inside it, storage is quota-counted, inside the
+   backup boundary, reclaimed on uninstall and serveable; outside it, none of
+   that. **Two gaps are named rather than papered over** — the backup argument is
+   the sharpest and is not cashable while M5's restore path is unwritten, and
+   *nothing* observes per-module RSS, CPU or disk today, so no one may write that
+   the Platform manages module resource use.
 8. **Gateways.** The Platform owns the listener and routes a path prefix into a
    module; modules never bind ports. This is the item with the highest strategic
    return, because a Jellyfin-compatible or DLNA facade reaches televisions and
