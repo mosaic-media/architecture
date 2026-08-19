@@ -3113,21 +3113,11 @@ while there is one.
 
 Deferred, named, and not omitted. A trigger is given where one exists.
 
-**What the last three decisions left to build.** The deliberately-undecided list
-is empty, and all three closing records are unbuilt. The manifest
-([platform#97](https://github.com/mosaic-media/platform/blob/main/docs/adr/0097-a-manifest-names-one-capability-and-separates-asks-from-offers.md))
-needs `ParseManifest` to stop refusing every unknown field and start refusing
-only unknown *asks*, which the Platform's installer and `modulesign` both inherit
-from the one function they already call. Core-module selection
-([supervisor#14](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0014-a-generation-carries-its-selection.md))
-needs a Generation that carries one and a screen that requests a change — the
-channel is the one the upgrade control already uses, so what is missing is the
-verb rather than the surface. Queue backpressure
-([platform#98](https://github.com/mosaic-media/platform/blob/main/docs/adr/0098-a-queue-that-is-behind-raises-an-issue.md))
-needs something that measures how far behind a queue is, which nothing does
-today: the decision rests on a measurement nobody takes, which is the same gap
-[platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md)
-named for per-module resource use.
+**What the decision sweep left to build.** The deliberately-undecided list is empty, and so is every open question named inside a record — a sweep of all thirteen repositories found twelve more that no register was tracking, and all twelve now have records. None of them is built. The manifest ([platform#97](https://github.com/mosaic-media/platform/blob/main/docs/adr/0097-a-manifest-names-one-capability-and-separates-asks-from-offers.md)) needs `ParseManifest` to refuse only unknown *asks* rather than every unknown field. Core-module selection ([supervisor#14](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0014-a-generation-carries-its-selection.md)) and activating a named version ([supervisor#15](https://github.com/mosaic-media/supervisor/blob/main/docs/adr/0015-activate-is-the-only-verb.md)) share one panel and one request path, and neither exists. Revocation ([platform#99](https://github.com/mosaic-media/platform/blob/main/docs/adr/0099-revocation-is-a-signed-list-checked-on-a-schedule.md)) needs a signed list, a scheduled check, and the release-key verifier in the Platform, which does not carry it. Conditional auto-update ([platform#100](https://github.com/mosaic-media/platform/blob/main/docs/adr/0100-a-module-updates-itself-until-it-asks-for-more.md)) cannot be built before the manifest change it rests on. Precedence and dedup ([platform#101](https://github.com/mosaic-media/platform/blob/main/docs/adr/0101-precedence-is-ordered-by-the-operator-and-dedup-is-exact.md)) replaces the composition root's fallback tier with an operator-held order. The graph's two leftovers ([platform#102](https://github.com/mosaic-media/platform/blob/main/docs/adr/0102-two-orderings-and-a-confidence.md)) need a transactional renumber and a nightly hygiene pass, in that order of importance. Module output and containment ([platform#103](https://github.com/mosaic-media/platform/blob/main/docs/adr/0103-module-output-is-telemetry-and-containment-stays-one-mechanism.md)) is one adapter and one decision not to build anything. And queue backpressure ([platform#98](https://github.com/mosaic-media/platform/blob/main/docs/adr/0098-a-queue-that-is-behind-raises-an-issue.md)) needs something that measures how far behind a queue is, which nothing does — the same gap [platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md) named for per-module resource use.
+
+Three of the twelve are decisions *not* to build: a person stays an attribute ([platform#104](https://github.com/mosaic-media/platform/blob/main/docs/adr/0104-a-person-is-an-attribute-not-a-node.md)), `plugincontainer` stays an operator's own assembly
+([platform#103](https://github.com/mosaic-media/platform/blob/main/docs/adr/0103-module-output-is-telemetry-and-containment-stays-one-mechanism.md)),
+and the MPL-2.0 reading ([sdk#11](https://github.com/mosaic-media/sdk/blob/main/docs/adr/0011-the-mpl-dependency-check-and-its-conclusion.md)) changes no code at all.
 
 **Playback and media.** The torrent engine — the `Served` half of
 [platform#25](https://github.com/mosaic-media/platform/blob/main/docs/adr/0025-playback-consumer-and-media-origin.md), with sequential piece
