@@ -1,6 +1,6 @@
 # Two module tiers
 
-**Status:** Proposed; the classification half is built (two core metadata
+**Status:** Accepted; the classification half is built (two core metadata
 modules exist). The guarantee clause is refined by
 [module-cinemeta#1](https://github.com/mosaic-media/module-cinemeta/blob/main/docs/adr/0001-the-guaranteed-metadata-provider-needs-no-credential.md), which
 finds that "no install step that can fail" and "no configuration that can be
