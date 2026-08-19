@@ -8,7 +8,7 @@ A record is cited from another repository as `architecture#N`, written as a link
 |---|---|---|
 | 1 | [Licensing](0001-licensing.md) | Accepted; the licensing is unchanged. |
 | 2 | [Repository names encode role, not the org — drop the redundant prefix](0002-repository-naming-convention.md) | Accepted; the convention stands and the table below is the state of the day it was applied. |
-| 3 | [Two module tiers](0003-two-module-tiers.md) | Proposed; the classification half is built (two core metadata modules exist). |
+| 3 | [Two module tiers](0003-two-module-tiers.md) | Accepted; the classification half is built (two core metadata modules exist). |
 | 4 | [Official builds carry project credentials, and a personal key replaces one](0004-project-credentials-in-official-builds.md) | Accepted. Built for both modules. module-tmdb is core, so platform's release workflow links defaultReadAccessToken; |
 | 5 | [A Status says whether a record is agreed, and says built-ness separately](0005-a-status-says-whether-a-record-is-agreed.md) | Accepted, and applied in the same change — sixteen records were relabelled. |
 
