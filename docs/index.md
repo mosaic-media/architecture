@@ -155,6 +155,14 @@ one entry carried both the manifest and the selection — and each now has a rec
 Decided is not built. [The roadmap](roadmap.md) is where that distinction lives,
 and all four of these are unbuilt.
 
+**The list was never the only register.** Emptying it prompted a sweep of every
+record in every repository for open-question language, which found twelve more
+that nothing was tracking — precedence, revocation, extension updates, two
+leftovers from the object graph, and the meaning of a record's own Status among
+them. All twelve are now recorded. The lesson is the register's: a list somebody
+has to remember to add to will be incomplete, and the reliable place an open
+question lives is the record that hit it.
+
 Add to this list when something is deferred *on purpose* — a question whose
 answer should wait for the first case that forces it. An item here is a decision
 not yet taken; an item that is merely unimplemented belongs in the roadmap.
