@@ -85,12 +85,27 @@ def main() -> None:
                 missing.append(f"{repo}/scripts/{name}")
                 continue
             checked += 1
-            want = vendored_form(src.read_text(), name)
-            if dst.read_text() == want:
+            # UTF-8 named, not left to the locale. These tools are the one thing
+            # here that is *designed* to run on a host rather than in a
+            # container, and `read_text()` without an encoding uses the platform
+            # default — cp1252 on a Windows machine. Every tool carries em-dashes
+            # and so does HEADER below, and HEADER's comes from this file's
+            # source (always UTF-8) while the copies' came off disk: one em-dash
+            # against three mojibake characters, so all twenty copies were
+            # reported STALE on a machine where not one of them had drifted.
+            # `--write` on that report would have rewritten twenty files in
+            # cp1252 across twelve repositories, corrupting the very characters
+            # it was comparing.
+            want = vendored_form(src.read_text(encoding="utf-8"), name)
+            if dst.read_text(encoding="utf-8") == want:
                 continue
             stale.append(f"{repo}/scripts/{name}")
             if args.write:
-                dst.write_text(want)
+                # newline="" so the write is verbatim. `read_text` normalises
+                # every line ending to \n on the way in; without this, the way
+                # out translates them back to \r\n on Windows and re-vendoring
+                # rewrites the whole file to line endings git did not ask for.
+                dst.write_text(want, encoding="utf-8", newline="")
 
     print(f"checked {checked} vendored copies across {len(REPOS)} repositories")
     if missing:
