@@ -2060,6 +2060,19 @@ decides on the user's behalf to be recorded.
      builds `lite` and `full` from those binaries — packaging artefacts, not a
      second build.
 
+     **The five targets were four until 2026-08-26.** `child.go` carried no
+     build constraint while using `syscall.SysProcAttr{Setpgid: true}` and
+     `syscall.Kill`, neither of which exists on Windows, so `windows/amd64`
+     could not compile — and nothing said so, because this repository has never
+     been tagged and the release matrix has therefore never run. Process
+     control is now split by platform and the gate cross-builds all five, so
+     the claim above is checked rather than asserted. What Windows does at
+     *runtime* is still unverified: nothing runs tests there, and the forced
+     stop ends the child alone, because Windows has no signal-to-group
+     primitive and reaching the tree means a job object — **a decision that is
+     owed, and `child_process_windows.go` states the gap rather than papering
+     it.**
+
      **Neither image contains the Platform or the Shell**, which is the shape of
      the supervised install rather than an omission: the Supervisor fetches a
      signed Generation on first boot, and an image carrying them would pin two
