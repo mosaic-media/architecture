@@ -83,9 +83,9 @@ graph TD
   key["install-key"] --> totp["totp"]
   key --> backup["backup"]
   princ["one-principal"] --> totp
-  princ --> passkeys["passkeys"]
-  passkeys --> ann["announce-once"]
-  totp --> ann
+  princ --> oidc["oidc"]
+  oidc --> ldap["ldap"]
+  totp --> ann["announce-once"]
 ```
 
 ## Where to start
@@ -317,23 +317,45 @@ The first durable key in the repository. The telemetry salt is a second consumer
 
 **Proves it done:** An enrolled user's password path becomes two-step; a recovery factor is single-use and consumed.
 
-The secret is encrypted rather than hashed, which is why the install key gates it.
+The secret is encrypted rather than hashed, which is why the install key gates it. **[platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md) promoted this unit**: it is now the only second factor Mosaic offers on its own, so `install-key` gates the only MFA in the product rather than being first in a chain.
 
-### `passkeys` — Passkeys on a public origin
+### `oidc` — Authentication delegated to an identity provider
 
-**Records** [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md) &middot; **Repositories** platform, web &middot; **Depends on** `one-principal`
+**Records** [platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md) &middot; **Repositories** platform, web &middot; **Depends on** `one-principal`
 
-**Proves it done:** Enrolment is refused until the origin is settled; a ceremony completes in a real browser.
+**Proves it done:** an assertion from a configured provider signs a user in, under
+both of [platform#95](https://github.com/mosaic-media/platform/blob/main/docs/adr/0095-composers-supply-expressions-and-identity-providers-attest.md)'s modes — provisioning during onboarding, linking to an existing
+account afterwards — and the module never issues a session.
 
-One dependency is untested: whether a browser will run a WebAuthn ceremony on a `.local` origin behind a self-signed certificate. Find out before building.
+Native rather than a module, because the login path must work when things are
+broken and a module can be absent. What Mosaic gains transitively is the point: the
+provider brings its own passkeys, MFA and lockout policy.
+
+**This unit also removes what the reversed decision left behind.**
+`domain.PasskeyCredential` and its two store methods are the whole of what was
+ever built for passkeys, and they are dead once this lands — `architecture.md`
+lists that type today because it is genuinely there, and the page follows the
+source rather than leading it.
+
+### `ldap` — Accounts and groups from a directory
+
+**Records** [platform#106](https://github.com/mosaic-media/platform/blob/main/docs/adr/0106-ldap-is-a-directory-integration-not-an-authentication-one.md) &middot; **Repositories** platform &middot; **Depends on** `oidc`
+
+**Proves it done:** a directory entry links to a Mosaic account through
+[platform#95](https://github.com/mosaic-media/platform/blob/main/docs/adr/0095-composers-supply-expressions-and-identity-providers-attest.md)'s linking mode, and the interface states that a bind is not a second
+factor.
+
+Depends on `oidc` for sequencing rather than for code — the linking surface is
+built once and both use it. **It strengthens no authentication**, which its record
+exists to keep findable.
 
 ### `announce-once` — An optional capability is announced once
 
-**Records** [platform#80](https://github.com/mosaic-media/platform/blob/main/docs/adr/0080-an-optional-capability-is-announced-once-when-it-becomes-possible.md) &middot; **Repositories** platform, web &middot; **Depends on** `passkeys`, `totp`
+**Records** [platform#80](https://github.com/mosaic-media/platform/blob/main/docs/adr/0080-an-optional-capability-is-announced-once-when-it-becomes-possible.md) &middot; **Repositories** platform, web &middot; **Depends on** `totp`
 
 **Proves it done:** The announcement appears once when the capability becomes possible and never again.
 
-Its record carries a same-day correction: the modal it rejected is expressible after all, so the banner stands on the interruption argument alone and is worth revisiting on those terms.
+Its subject list shrank to one when [platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md) dropped passkeys. Its record also carries a same-day correction: the modal it rejected is expressible after all, so the banner stands on the interruption argument alone and is worth revisiting on those terms.
 
 ### `backup` — The Supervisor takes the backup
 
@@ -407,11 +429,9 @@ it where CI can reach it is a custody act by a person. Until it happens,
 artefact signing ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)) and revocation ([platform#99](https://github.com/mosaic-media/platform/blob/main/docs/adr/0099-revocation-is-a-signed-list-checked-on-a-schedule.md)) cannot be finished — the
 decisions are complete and the work is blocked on something that is not code.
 
-**Four things need somebody to watch a screen.** The subtitles provider role and
+**Three things need somebody to watch a screen.** The subtitles provider role and
 the segmented playback origin are written on both sides and have never been
-exercised by a human; M3's fourth slice is written and has never been played; and
-[platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md) rests on an untested fact — whether a browser will run a WebAuthn ceremony
-on a `.local` origin behind a self-signed certificate. None of these is
+exercised by a human; M3's fourth slice is written and has never been played. None of these is
 implementable work. Each is a question a person answers by looking, and the first
 finding in the roadmap is that a screen which has not been rendered has not been
 verified.

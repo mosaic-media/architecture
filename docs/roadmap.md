@@ -43,7 +43,7 @@ remote source requires the user to name one.
 | 2a | Each with their own progress, history and home screen | Built — progress, watch history, and now which home rows a viewer sees and in what order ([platform#59](https://github.com/mosaic-media/platform/blob/main/docs/adr/0059-one-library-many-viewers.md)) | — |
 | 3 | A Supervisor managing the Platform and the Shell, and fronting both | Built — one process tree, both children owned, restarted and stopped in order, behind TLS on one port, answering the Platform's own client surface while it is down; a publicly trusted certificate needs the owed domain | — |
 | 4 | Sign in with a username and password | Built — the doorway carries the form, and nothing signs in from a build-time credential. A **TOTP second factor** on top of it is decided and unbuilt ([platform#79](https://github.com/mosaic-media/platform/blob/main/docs/adr/0079-totp-is-the-second-factor-that-works-everywhere.md)) | M5 |
-| 5 | Sign in with a passkey | A domain type and two store methods; no ceremony, no surface. Scoped down: an **optional** layer for installs with a public origin, never the foundation ([platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)) | M5 |
+| 5 | Sign in without a Mosaic password | Not built, and no longer Mosaic's ceremony to run: [platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md) delegates authentication to an identity provider over OIDC and drops passkeys, so what a user signs in with is the provider's business — including its passkeys. An install with no provider has password plus TOTP. |
 | 6 | Stay signed in after a long absence | Built — a bearer pair, rotated, with per-device revocation ([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)) | — |
 | 7 | A single-page Shell that never looks like it reloaded | Built | — |
 | 8 | Ask-and-receive, plus unprompted server push | Built — the two-lane transport | — |
@@ -258,14 +258,14 @@ graph LR
   M1 --> M6[M6 RC gate]
   M2 --> M6
   M3 --> M6
-  M4[M4 Supervisor and Shell binary] --> M5[M5 Passkeys and hardening]
+  M4[M4 Supervisor and Shell binary] --> M5[M5 Delegated sign-in and hardening]
   M5 --> M6
   M0 -.-> M4
   M6 --> M7[M7 The extension surface]
 ```
 
 M4 depends on M0 only for the session model it fronts, so it can run beside
-M1–M3. M5 must follow M4: a passkey is bound to an origin, and the origin is
+M1–M3. M5 must follow M4: a provider redirects back to an origin, and the origin is
 M4's to decide. M7 follows the release candidate because the MVP does not need
 it, and precedes any invitation to the community because the surface that exists
 on the day the first outside module is written is the surface the ecosystem
@@ -362,7 +362,8 @@ is named below.
    store.
 
    **Left out:** native keystore storage (there is no native client yet), and
-   passkeys, which change what *mints* the pair and not what it is (M5).
+   delegated sign-in, which changes what *mints* the pair and not what it is
+   ([platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md), M5).
 
 ### M1 — Identity, and the doors on multi-user — **landed**
 
@@ -2357,10 +2358,11 @@ to prevent.**
   Supervisor — the same channel question [platform#77](https://github.com/mosaic-media/platform/blob/main/docs/adr/0077-the-upgrade-channel-is-the-handoff-and-the-register.md) answered for the request, so it
   is now a small change rather than an open one.
 - **A publicly trusted certificate**, which needs a domain the owner supplies.
-  It no longer blocks M5's passkeys: [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)
-  made them an optional layer enrolled only from a public origin, so an install
-  without one authenticates by password and offers no passkey rather than
-  waiting for a decision.
+  It blocks nothing in M5: [platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md) drops passkeys and delegates
+  authentication, and an identity provider redirects to whatever origin the
+  install actually has. An install with no provider authenticates by password and
+  TOTP rather than waiting for anything.
+
 - **Generating both signing keys.** [platform#76](https://github.com/mosaic-media/platform/blob/main/docs/adr/0076-the-signing-key-hierarchy.md)
   decided the hierarchy; creating them is custody work that happens off CI and is
   the owner's. Verification fails closed meanwhile, so a build with no key
@@ -2389,76 +2391,64 @@ judgement is actually needed on.
 **Decisions owed:** a domain, for a publicly trusted certificate. It is now a
 thing the owner needs to *have* rather than a decision Mosaic was waiting on: the
 session credential never waited ([platform#58](https://github.com/mosaic-media/platform/blob/main/docs/adr/0058-the-session-credential-is-a-bearer-pair.md)
-is deliberately origin-independent), and the passkey relying-party id stopped
-waiting when [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)
-made passkeys an optional layer enrolled only from a public origin the owner
-supplies. What remains is that a `.local` install serves a self-signed
+is deliberately origin-independent), and the relying-party id that once waited on
+one stopped mattering when [platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md) dropped passkeys
+altogether. What remains is that a `.local` install serves a self-signed
 certificate and warns on every new device.
 
-### M5 — Passkeys and hardening
+### M5 — Delegated sign-in and hardening
 
-1. **Passkeys — an optional layer, not the foundation**
-   ([platform#43](https://github.com/mosaic-media/platform/blob/main/docs/adr/0043-one-principal-many-credentials.md),
-   [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md)).
-   `PasskeyCredential`, `SavePasskey` and `ListPasskeys` exist; there is no
-   ceremony, no verifier, no RPC and no surface. No JWT anywhere — a
-   claims-carrying token makes a tightened limit take effect only when the token
-   expires.
+1. **Delegated sign-in, and no ceremony of Mosaic's own**
+   ([platform#43](https://github.com/mosaic-media/platform/blob/main/docs/adr/0043-one-principal-many-credentials.md), [platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md), [platform#106](https://github.com/mosaic-media/platform/blob/main/docs/adr/0106-ldap-is-a-directory-integration-not-an-authentication-one.md)).
+   Authentication goes to an identity provider over OIDC, native to the Platform
+   rather than a module, because the login path has to work when things are
+   broken and a module can be absent. It implements [platform#95](https://github.com/mosaic-media/platform/blob/main/docs/adr/0095-composers-supply-expressions-and-identity-providers-attest.md)'s attestation
+   contract unchanged: the provider attests and never issues a session, and what
+   an assertion means depends on when the provider was established — during
+   onboarding it provisions an account, afterwards an operator links one.
 
-   **This was recorded as blocked on a decision the owner owed, and that was
-   wrong.** WebAuthn binds a credential to a relying-party id and stores it on
-   the authenticator, so changing it destroys every passkey registered under the
-   old one — but the blocker is not that a self-hosted server has no domain. Many
-   have one free through DuckDNS, Cloudflare Tunnel or Tailscale. It is that a
-   self-hosted install's origin *changes over its life*: raw IP at first boot,
-   `<name>.local` once the owner names the server at claim, a public name once
-   they set up outside access. Three origins in sequence, and the final one
-   arrives last. So the rule is that **nobody may enrol until the origin is
-   final**, which is a policy Mosaic owns rather than a decision it was waiting
-   on.
+   **This reverses a decision rather than continuing one.** [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md) designed
+   passkeys as an optional layer and is superseded; its reasoning stands and is
+   why. WebAuthn binds a credential to a relying-party id, and a self-hosted
+   install has three origins in sequence — raw IP at first boot, `<name>.local`
+   once the owner names the server at claim, a public name once they arrange
+   outside access, arriving last. Changing the id destroys every credential
+   enrolled under the old one, so the record is a ring of constraints holding
+   that still rather than a feature. It also rested on something nobody tested:
+   whether a browser will run a ceremony on `.local` behind a self-signed
+   certificate. Delegating hands all of it to software built for it, and Mosaic
+   gets that provider's passkeys and MFA transitively.
 
-   [platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md) settles it: **username and password is the foundation and stays
-   mandatory**, on an IP and on `.local` and on day one; passkeys are an optional
-   second credential the superuser enables on an install that has a public
-   origin, from that origin, with the relying-party id as explicit
-   Generation-class configuration rather than inferred from a `Host` header. Each
-   credential records the id it was registered under, so changing the origin
-   becomes a message naming the passkeys it broke instead of one that silently
-   stops being offered.
+   **What it costs, in one place.** The answer for an internet-exposed install
+   moves from "enrol a passkey" to "run an identity provider", which is a larger
+   operational ask for a household that just wants Mosaic on a phone. Without
+   one, the posture is password plus TOTP, and **TOTP is phishable in a way a
+   passkey is not.** An OIDC client — discovery, token validation, key rotation —
+   is also Mosaic's code and Mosaic's CVEs; a smaller and better-specified
+   surface than WebAuthn, not a free one.
 
-   **How it is offered is
-   [platform#80](https://github.com/mosaic-media/platform/blob/main/docs/adr/0080-an-optional-capability-is-announced-once-when-it-becomes-possible.md).**
-   Mosaic says nothing about passkeys on an install that cannot have them — no
-   greyed control, no "unavailable" row — and announces them exactly once, at the
-   superuser's first sign-in via the public origin. Enable now or later; both
-   answers end the announcement permanently, and the settings row stays available
-   so "once" is not a dead end. [platform#80](https://github.com/mosaic-media/platform/blob/main/docs/adr/0080-an-optional-capability-is-announced-once-when-it-becomes-possible.md) chooses a `Banner` with two
-   `Button`s over a modal — **on the interruption argument only.** Its stated
-   second reason, that the contract has no overlay mechanism, is wrong and its
-   Status line says so: `OpenOverlay`/`CloseOverlay` are action kinds,
-   `modal`/`sheet`/`drawer` are declared surfaces, and the extensions screen
-   already opens a modal with them. The error was looking for a *component*
-   named Modal and not checking the action and surface tiers.
-
-   **Buildable now**, with one browser check owed first that no amount of design
-   settles: whether a WebAuthn ceremony runs at all on a `.local` origin behind a
-   self-signed certificate. It changes nothing in the record — enrolment is gated
-   on a public origin either way — but it decides what an owner is told when they
-   name their server.
+   **LDAP is a separate feature and is recorded separately** ([platform#106](https://github.com/mosaic-media/platform/blob/main/docs/adr/0106-ldap-is-a-directory-integration-not-an-authentication-one.md)). A bind
+   is a password checked against somebody else's store: it brings accounts and
+   groups, and no authentication strength at all. Reading "we support LDAP" as
+   "MFA is covered" is the mistake that record exists to prevent.
 
 2. **TOTP — the second factor that works everywhere**
    ([platform#79](https://github.com/mosaic-media/platform/blob/main/docs/adr/0079-totp-is-the-second-factor-that-works-everywhere.md)).
-   Passkeys leave a gap they cannot close: an install reached at
-   `192.168.1.50` or `<name>.local` has **one secret** between an attacker and
-   every account on it, and no path to a second, because WebAuthn cannot run
-   there at all. That is the majority deployment for a home media server.
+   It is now the **only** second factor Mosaic offers on its own
+   ([platform#105](https://github.com/mosaic-media/platform/blob/main/docs/adr/0105-authentication-is-delegated-and-the-floor-is-password-and-totp.md)), which changes its weight rather than its
+   design. An install reached at `192.168.1.50` or `<name>.local`, with no
+   identity provider in front of it, otherwise has **one secret** between an
+   attacker and every account on it. That is the majority deployment for a home
+   media server.
 
    TOTP needs no origin, no domain, no certificate and no network, so it works
    on day one everywhere. It is **not** a replacement for the password — the
    server holds the same secret the phone does, so a code proves a device rather
-   than an identity — and it is not a replacement for passkeys either, because it
-   is phishable: a relaying sign-in page defeats it in real time, and a passkey
-   cannot be relayed. The three stack rather than compete.
+   than an identity — and it is **weaker than what an identity provider offers**,
+   because it is phishable: a relaying sign-in page defeats it in real time, and a
+   passkey held at the provider cannot be relayed. It stacks with the password
+   rather than competing, and it is the floor for an install that delegates
+   nothing.
 
    Because it works from day one it is offered **in onboarding as its own
    optional step**, not behind a later prompt — a factor deferred to settings is
@@ -2515,8 +2505,8 @@ certificate and warns on every new device.
    partial, encrypted with a key the operator holds, and a restore invalidates
    every session because a surviving one would be a credential resurrected after
    it may have been deliberately revoked. A restore refuses onto an older
-   Platform, and says out loud when a changed origin has invalidated every
-   passkey.
+   Platform, and says out loud when a changed origin has invalidated anything
+   bound to the old one.
    **This is what makes [platform#92](https://github.com/mosaic-media/platform/blob/main/docs/adr/0092-module-storage-is-granted-not-enforced.md)'s
    incentive real** — storage inside the grant is backed up and a module's own
    store is not, which was the argument all along and is only now true.
