@@ -153,7 +153,10 @@ one entry carried both the manifest and the selection — and each now has a rec
 | Backpressure thresholds and queue bounds | [platform#98](https://github.com/mosaic-media/platform/blob/main/docs/adr/0098-a-queue-that-is-behind-raises-an-issue.md) — a queue does not refuse; age past a threshold raises an Issue |
 
 Decided is not built. [The roadmap](roadmap.md) is where that distinction lives,
-and all four of these are unbuilt.
+and all four of these are unbuilt. [The work graph](work-graph.md) is where the
+unbuilt part is decomposed into units, with what each depends on and what proves
+it done — it deliberately carries no status, so that the roadmap stays the one
+answer to how far the build has got.
 
 **The list was never the only register.** Emptying it prompted a sweep of every
 record in every repository for open-question language, which found twelve more

@@ -33,6 +33,7 @@ TOP_LEVEL = {
     "architecture/": "Mosaic-Architecture.pdf",
     "roadmap/": "Mosaic-Roadmap.pdf",
     "unreachable-capability/": "Mosaic-Unreachable-Capability.pdf",
+    "work-graph/": "Mosaic-Work-Graph.pdf",
 }
 
 # Words that are acronyms rather than words, so the PDF filename reads

@@ -109,9 +109,13 @@ status and had drifted on four of them.
 descriptions of the system may not. If it is not built, omit it or say plainly
 that it does not exist.
 
-**Do not create new documents.** Four pages plus the decision records. A fifth
+**Do not create new documents.** Five pages plus the decision records. A sixth
 needs a reason that survives being asked why it does not belong in one of the
-four.
+five. The fifth is `docs/work-graph.md`, and its reason is that it carries
+dependencies and acceptance criteria and **never status** — status is the
+roadmap's, and a second copy of it is the duplication these rules exist to
+prevent. The roadmap is narrative and changes per slice; the graph is a lookup
+and changes per unit. Neither is a good shape for the other.
 
 **Do not resurrect the old taxonomy.** No MDL, MDS, MEG, MAC, MIP, MOP, MAD or
 MDP identifiers, no document-type system, no chapter numbering, no metadata
