@@ -45,6 +45,7 @@ nav:
       - "2. Repository names encode role, not the org — drop the redundant prefix": adr/0002-repository-naming-convention.md
       - "3. Two module tiers": adr/0003-two-module-tiers.md
       - "4. Official builds carry project credentials, and a personal key replaces one": adr/0004-project-credentials-in-official-builds.md
+      - "5. A Status says whether a record is agreed, and says built-ness separately": adr/0005-a-status-says-whether-a-record-is-agreed.md
 
 markdown_extensions:
   - admonition
