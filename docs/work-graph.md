@@ -90,6 +90,12 @@ graph TD
 
 ## Where to start
 
+**Every unit above comes from an unbuilt decision record; four more do not, and
+are further down.** A graph built only from records omits the
+[owed capabilities](unreachable-capability.md) — code that works and nobody can
+reach — and M6's acceptance script, which has no record because it is not a
+decision. Read to the end before planning.
+
 `authz-resource-scope` and `manifest-asks-offers` have no dependencies, block
 almost everything else, and are independent of each other — so they are the two
 units that can start at once. `queue-age-probe`, `module-resource-probe` and
@@ -336,6 +342,82 @@ Its record carries a same-day correction: the modal it rejected is expressible a
 **Proves it done:** A backup taken by the Supervisor restores to a working install, with the Platform contributing its half.
 
 Several records lean on a restore path existing. Until this lands, do not claim any of them.
+
+## Units the records do not produce
+
+Every unit above comes from an unbuilt decision record. Three pieces of work do
+not, and are here because a graph built only from records would silently omit
+them.
+
+**Four of them are [owed capabilities](unreachable-capability.md)** — code that
+works, is tested, and that nobody can reach. That document is the register; these
+are the entries that are a client path rather than something else.
+
+### `artwork-picker` — a screen for the candidates already stored
+
+**Records** [platform#47](https://github.com/mosaic-media/platform/blob/main/docs/adr/0047-artwork-is-a-candidate-set.md) &middot; **Repositories** platform, web &middot; **Depends on** *none*
+
+**Proves it done:** a detail screen renders the poster, logo and backdrop
+alternatives a source offered, and choosing one persists through
+`SetContentArtwork`.
+
+The command is implemented, validated, authorised and transactional, and the
+artwork enrichment pass already calls it — so the server half is exercised. What
+nobody can press is the half it was designed for: candidates are stored
+*specifically* so a user can choose among them.
+
+### `library-rule-saved-search` — the rule kind the settings surface cannot create
+
+**Records** [platform#60](https://github.com/mosaic-media/platform/blob/main/docs/adr/0060-the-library-is-built-from-rules.md) &middot; **Repositories** platform &middot; **Depends on** *none*
+
+**Proves it done:** a saved provider search can be created as a library rule from
+the settings surface, and the maintenance pass evaluates it.
+
+`domain.LibraryRuleQuery` is validated by `CreateLibraryRule`, evaluated by
+`evaluateQueryRule` and run by the maintenance pass. The settings surface creates
+collection rules only.
+
+### `audio-track-selection` — a screen for an override the player already accepts
+
+**Records** [platform#29](https://github.com/mosaic-media/platform/blob/main/docs/adr/0029-probing-and-the-per-stream-playback-decision.md) &middot; **Repositories** platform, web &middot; **Depends on** *none*
+
+**Proves it done:** the player offers the item's audio tracks and the choice
+reaches `playEnvelope.AudioIndex`.
+
+A client that sends the index today gets it. No screen offers the tracks.
+
+### `acceptance-script` — M6, and it is a document
+
+**Records** *none* &middot; **Repositories** architecture &middot; **Depends on** everything it exercises
+
+**Proves it done:** the script exists and has been run start to finish on a clean
+box — install, claim, three accounts, library from rules, each account watches and
+resumes on a second device and browses by genre and by service, upgrade in place,
+restore from backup.
+
+This is the release-candidate gate and it has no record because it is not a
+decision. **Nothing is ticked off from a passing test**, which is the whole point
+of it: it is the one check in the project that a green gate cannot substitute for.
+
+## What is not a unit, and must not become one
+
+**The release key does not exist, and no agent can create it.** [platform#76](https://github.com/mosaic-media/platform/blob/main/docs/adr/0076-the-signing-key-hierarchy.md) settles
+the hierarchy and says so plainly. Generating it, holding it offline, and putting
+it where CI can reach it is a custody act by a person. Until it happens,
+artefact signing ([platform#38](https://github.com/mosaic-media/platform/blob/main/docs/adr/0038-platform-binary-built-by-ci.md)) and revocation ([platform#99](https://github.com/mosaic-media/platform/blob/main/docs/adr/0099-revocation-is-a-signed-list-checked-on-a-schedule.md)) cannot be finished — the
+decisions are complete and the work is blocked on something that is not code.
+
+**Four things need somebody to watch a screen.** The subtitles provider role and
+the segmented playback origin are written on both sides and have never been
+exercised by a human; M3's fourth slice is written and has never been played; and
+[platform#78](https://github.com/mosaic-media/platform/blob/main/docs/adr/0078-passkeys-are-an-optional-layer-on-a-public-origin.md) rests on an untested fact — whether a browser will run a WebAuthn ceremony
+on a `.local` origin behind a self-signed certificate. None of these is
+implementable work. Each is a question a person answers by looking, and the first
+finding in the roadmap is that a screen which has not been rendered has not been
+verified.
+
+**Grouping the library by streaming service has no client path deliberately.** It
+is in the owed register as a decision already taken, not as work waiting.
 
 ## Units that are decisions not to build
 
